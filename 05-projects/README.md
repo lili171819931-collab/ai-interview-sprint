@@ -1,26 +1,44 @@
-# 项目作品夹
+# 05-projects · 项目作品夹
 
-本目录放面试可展示的项目资产。
+按**项目类别**组织，面试时按这条故事链讲：
 
-| 项目 | 类型 | 路径 | 说明 |
-|------|------|------|------|
-| 微迹 Weiji | 真实产品（Git 子模块） | [`weiji-mini/`](weiji-mini/) | 从 0 到 1 微信小程序，证明落地与产品闭环 |
-| **AI 周复盘方案** | 面试主作品（已基于微迹写完） | [`ai-feature-prd/`](ai-feature-prd/) | Weiji Weekly Insight：事实层 + 受限生成 |
-| 最小 RAG 验证 | 辅作品 | [`mini-rag-demo/`](mini-rag-demo/) | 可用周复盘黄金集做最小验证 |
+```
+真实落地（微迹） → AI 功能方案（周复盘） → 最小验证（RAG Lab）
+     执行力              产品判断力              评测思维
+```
 
-## 微迹如何服务面试
+## 目录结构
 
-上游仓库：https://github.com/lili171819931-collab/weiji-mini
+```
+05-projects/
+├── README.md                      ← 你在这里
+├── 01-weiji-product/              ← A. 真实产品
+│   ├── README.md
+│   ├── interview-story.md
+│   └── weiji-mini/                ← Git 子模块（可运行小程序）
+├── 02-ai-weekly-insight/          ← B. AI 功能主作品
+│   ├── README.md / prd.md / architecture.md / metrics.md / story.md
+└── 03-rag-validation-lab/         ← C. 辅作品 · 评测验证
+    └── README.md
+```
 
-建议叙事：
-1. **从 0 到 1**：需求 → 信息架构 → 最小路径 → 可运行交付
-2. **产品判断**：为何做微习惯、为何本地存储、砍掉了什么
-3. **AI 升级（已落方案）**：[周复盘 Weekly Insight](ai-feature-prd/) — 规则出数 + 模型写洞察，禁止代打卡
+## 类别速览
 
-详细面试转化见：[`weiji-interview.md`](weiji-interview.md)  
-完整 PRD 见：[`ai-feature-prd/prd.md`](ai-feature-prd/prd.md)
+| 序号 | 类别 | 路径 | 面试作用 | 状态 |
+|------|------|------|----------|------|
+| **01** | 真实产品 | [`01-weiji-product/`](01-weiji-product/) | 证明从 0 到 1 能交付 | ✅ 已嵌入 weiji-mini |
+| **02** | AI 功能方案 | [`02-ai-weekly-insight/`](02-ai-weekly-insight/) | 证明会做有边界的 AI 产品 | ✅ PRD 已完成 |
+| **03** | 评测验证 Lab | [`03-rag-validation-lab/`](03-rag-validation-lab/) | 证明懂评测，不只会写文档 | ⏳ 待你补黄金集练习 |
 
-## 克隆本仓库时拉取子模块
+## 推荐阅读顺序（30 分钟）
+
+1. [`01-weiji-product/README.md`](01-weiji-product/README.md) → 产品是什么  
+2. [`01-weiji-product/interview-story.md`](01-weiji-product/interview-story.md) → 怎么讲微迹  
+3. [`02-ai-weekly-insight/prd.md`](02-ai-weekly-insight/prd.md) → AI 加在哪、为何这样加  
+4. [`02-ai-weekly-insight/story.md`](02-ai-weekly-insight/story.md) → 90 秒口述  
+5. [`03-rag-validation-lab/README.md`](03-rag-validation-lab/README.md) → 如何用评测证明学会了
+
+## 克隆含子模块
 
 ```bash
 git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interview-sprint.git

@@ -15,8 +15,9 @@
   - 原产品经历 2–3 条（指标化）
   - AI 方向学习与作品占 30–40% 篇幅
   - 删除「什么都会」的空词
-- [ ] 选定主作品方向 A/B/C（写入 `05-projects/ai-feature-prd/README.md`）
-- [ ] 浏览已嵌入的微迹项目 `05-projects/weiji-mini/`，并改一版 `05-projects/weiji-interview.md` 故事
+- [ ] 通读 `05-projects/README.md`（三类作品故事链）
+- [ ] 浏览微迹：`05-projects/01-weiji-product/`，改一版 `interview-story.md`
+- [ ] 主作品已定为周复盘：浏览 `05-projects/02-ai-weekly-insight/prd.md` + 练 `story.md` 口述
 - [ ] 用思维链模板追加今天决策到 `07-thinking-chain/decisions.md`
 
 ## 晚上（面试启动）

@@ -1,13 +1,17 @@
-# 主作品：微迹 AI 周复盘（Weiji Weekly Insight）
+# 02 · AI 功能主作品：微迹周复盘（Weiji Weekly Insight）
 
-> 基于真实产品 [微迹 Weiji](../weiji-mini/) 的 AI 功能方案  
-> 选题定位：**个人数据 grounding 的轻量生成**（偏 RAG 思路，不做替用户行动的 Agent）
+> 类别：**AI Feature PRD**｜作用：证明会做有边界、可评测的 AI 产品  
+> 基于真实产品 [`../01-weiji-product/weiji-mini/`](../01-weiji-product/weiji-mini/)
 
 ## 一句话
 
 每周给用户一份「有据可查」的微习惯复盘：只基于本人打卡与习惯数据生成洞察，帮助看清节奏，而不是替你打卡或制造计划焦虑。
 
-## 为何选这个（相对另两个方向）
+## 选题定位
+
+**个人数据 grounding 的轻量生成**（偏 RAG 思路，不做替用户行动的 Agent）
+
+## 为何选这个
 
 | 候选 | 结论 | 原因 |
 |------|------|------|
@@ -16,16 +20,19 @@
 | C. 自动生成复杂计划 | 不做 | 与「微习惯 / 10 秒」品牌冲突 |
 | D. 自动代打卡 | 严禁 | 破坏产品诚信与核心行为 |
 
-对应总题库选型：这是 **RAG 思路（证据=用户自己的打卡史）**，不是企业知识库，也不是重 Agent。
+## 本目录交付物
 
-## 交付物
+| 文件 | 内容 |
+|------|------|
+| [`prd.md`](prd.md) | 完整需求与边界 |
+| [`architecture.md`](architecture.md) | 产品架构与关键决策 |
+| [`metrics.md`](metrics.md) | 指标、黄金集、上线闸门 |
+| [`story.md`](story.md) | 90 秒稿 + STAR + 追问 |
 
-- [x] [`prd.md`](prd.md)
-- [x] [`architecture.md`](architecture.md)
-- [x] [`metrics.md`](metrics.md)
-- [x] [`story.md`](story.md)
-- [x] 关联真实产品：[`../weiji-mini/`](../weiji-mini/)
-- [x] 面试对照：[`../weiji-interview.md`](../weiji-interview.md)
+## 上下游
+
+- 上游真实产品：[`../01-weiji-product/`](../01-weiji-product/)
+- 下游评测练习：[`../03-rag-validation-lab/`](../03-rag-validation-lab/)
 
 ## 自评（先自评，模拟面后再改）
 

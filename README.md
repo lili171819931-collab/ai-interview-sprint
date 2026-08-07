@@ -40,9 +40,15 @@
 
 ## 嵌入项目
 
-- **微迹 Weiji**（Git 子模块）：[`05-projects/weiji-mini/`](05-projects/weiji-mini/)  
-  上游：https://github.com/lili171819931-collab/weiji-mini  
-  面试转化：[`05-projects/weiji-interview.md`](05-projects/weiji-interview.md)
+按类别查看：[`05-projects/README.md`](05-projects/README.md)
+
+| 类别 | 路径 |
+|------|------|
+| 真实产品 · 微迹 | [`05-projects/01-weiji-product/`](05-projects/01-weiji-product/) |
+| AI 功能 · 周复盘 | [`05-projects/02-ai-weekly-insight/`](05-projects/02-ai-weekly-insight/) |
+| 评测 Lab | [`05-projects/03-rag-validation-lab/`](05-projects/03-rag-validation-lab/) |
+
+上游小程序：https://github.com/lili171819931-collab/weiji-mini
 
 克隆本仓库请带上子模块：
 

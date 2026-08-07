@@ -25,4 +25,4 @@
 - Failure：若做成催促型 Agent，会与「微习惯」冲突并难控风险
 - Abstraction：在已有产品上加 AI，先锁行为边界，再谈模型
 - Interview Translation：「微迹证明我能从 0 到 1；周复盘证明我能做有边界的 AI 产品。」
-- Next Action：练 `ai-feature-prd/story.md` 口述至 90 秒不卡
+- Next Action：练 `05-projects/02-ai-weekly-insight/story.md` 口述至 90 秒不卡
