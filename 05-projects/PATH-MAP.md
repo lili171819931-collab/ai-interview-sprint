@@ -9,6 +9,8 @@
 | 微迹面试叙事 | — | `05-projects/01-weiji-product/interview-story.md` |
 | AI 周复盘 | — | `05-projects/02-ai-weekly-insight/` |
 | 评测 Lab | — | `05-projects/03-rag-validation-lab/` |
+| 报销 WorkBuddy Skill | — | `05-projects/04-workbuddy-invoice-reimburse/` |
+| 票易报 Web MVP | — | `05-projects/05-invoice-reimburse-web/` |
 
 ## 规范 URL
 
@@ -17,6 +19,8 @@
 | AI 项目集 | https://github.com/lili171819931-collab/ai-projects |
 | 微迹（唯一） | https://github.com/lili171819931-collab/ai-projects/tree/main/products/weiji-mini |
 | 本仓内微迹（经子模块） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/ai-projects/products/weiji-mini |
+| 票易报 Web | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/05-invoice-reimburse-web |
+| 报销 WorkBuddy Skill | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/04-workbuddy-invoice-reimburse |
 
 ## 关系图
 
