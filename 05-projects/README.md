@@ -7,28 +7,32 @@
      执行力              产品判断力              评测思维
 ```
 
+> 微迹同时收录于 **[AI 项目集 ai-projects](https://github.com/lili171819931-collab/ai-projects)**：`products/weiji-mini/`  
+> 跨仓库路径对照：[`PATH-MAP.md`](PATH-MAP.md)
+
 ## 目录结构
 
 ```
 05-projects/
 ├── README.md                      ← 你在这里
-├── 01-weiji-product/              ← A. 真实产品
+├── PATH-MAP.md                    ← 与 ai-projects 路径对照
+├── 01-weiji-product/              ← A. 真实产品（∈ AI 项目集）
 │   ├── README.md
 │   ├── interview-story.md
-│   └── weiji-mini/                ← Git 子模块（可运行小程序）
+│   └── weiji-mini/                ← Git 子模块 → 上游 weiji-mini
 ├── 02-ai-weekly-insight/          ← B. AI 功能主作品
 │   ├── README.md / prd.md / architecture.md / metrics.md / story.md
 └── 03-rag-validation-lab/         ← C. 辅作品 · 评测验证
-    └── README.md
+    └── README.md / hypothesis / eval-sheet / lessons
 ```
 
 ## 类别速览
 
 | 序号 | 类别 | 路径 | 面试作用 | 状态 |
 |------|------|------|----------|------|
-| **01** | 真实产品 | [`01-weiji-product/`](01-weiji-product/) | 证明从 0 到 1 能交付 | ✅ 已嵌入 weiji-mini |
+| **01** | 真实产品 | [`01-weiji-product/`](01-weiji-product/) | 证明从 0 到 1 能交付 | ✅ 已嵌入；已入 AI 项目集 |
 | **02** | AI 功能方案 | [`02-ai-weekly-insight/`](02-ai-weekly-insight/) | 证明会做有边界的 AI 产品 | ✅ PRD 已完成 |
-| **03** | 评测验证 Lab | [`03-rag-validation-lab/`](03-rag-validation-lab/) | 证明懂评测，不只会写文档 | ⏳ 待你补黄金集练习 |
+| **03** | 评测验证 Lab | [`03-rag-validation-lab/`](03-rag-validation-lab/) | 证明懂评测，不只会写文档 | ⏳ 待补黄金集练习 |
 
 ## 推荐阅读顺序（30 分钟）
 
@@ -44,4 +48,10 @@
 git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interview-sprint.git
 # 若已克隆：
 git submodule update --init --recursive
+```
+
+浏览产品全集（含微迹）：
+
+```bash
+git clone --recurse-submodules https://github.com/lili171819931-collab/ai-projects.git
 ```

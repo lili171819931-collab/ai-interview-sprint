@@ -26,3 +26,13 @@
 - Abstraction：在已有产品上加 AI，先锁行为边界，再谈模型
 - Interview Translation：「微迹证明我能从 0 到 1；周复盘证明我能做有边界的 AI 产品。」
 - Next Action：练 `05-projects/02-ai-weekly-insight/story.md` 口述至 90 秒不卡
+
+## 2026-08-07｜创建 AI 项目集并收录微迹
+
+- Context：需要统一的 AI 产品入口，并与面试冲刺仓路径对齐
+- Goal：在 GitHub 建立 AI 项目集，放入 weiji，回写冲刺仓路径说明
+- Decision：新建公开仓 `ai-projects`，微迹以子模块挂在 `products/weiji-mini/`；冲刺仓继续用同一上游子模块，并增加 `PATH-MAP.md`
+- Evidence：https://github.com/lili171819931-collab/ai-projects
+- Abstraction：源码单一真相（weiji-mini）+ 项目集入口（ai-projects）+ 面试叙事仓（ai-interview-sprint）三层分离
+- Interview Translation：「微迹既是独立可运行产品，也收在我的 AI 项目集里，并支撑面试冲刺中的 AI 周复盘方案。」
+- Next Action：对外分享时优先给项目集链接，需要跑代码再进上游或冲刺仓子模块

@@ -1,7 +1,9 @@
 # 02 · AI 功能主作品：微迹周复盘（Weiji Weekly Insight）
 
 > 类别：**AI Feature PRD**｜作用：证明会做有边界、可评测的 AI 产品  
-> 基于真实产品 [`../01-weiji-product/weiji-mini/`](../01-weiji-product/weiji-mini/)
+> 基于真实产品 [`../01-weiji-product/weiji-mini/`](../01-weiji-product/weiji-mini/)  
+> 产品亦收录于 [AI 项目集 `products/weiji-mini`](https://github.com/lili171819931-collab/ai-projects/tree/main/products/weiji-mini)  
+> 选题定位：**个人数据 grounding 的轻量生成**（偏 RAG 思路，不做替用户行动的 Agent）
 
 ## 一句话
 
