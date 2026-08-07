@@ -1,3 +1,3 @@
-[submodule "05-projects/01-weiji-product/weiji-mini"]
-	path = 05-projects/01-weiji-product/weiji-mini
-	url = https://github.com/lili171819931-collab/weiji-mini.git
+[submodule "05-projects/ai-projects"]
+	path = 05-projects/ai-projects
+	url = https://github.com/lili171819931-collab/ai-projects.git

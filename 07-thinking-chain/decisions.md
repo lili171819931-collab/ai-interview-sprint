@@ -35,4 +35,12 @@
 - Evidence：https://github.com/lili171819931-collab/ai-projects
 - Abstraction：源码单一真相（weiji-mini）+ 项目集入口（ai-projects）+ 面试叙事仓（ai-interview-sprint）三层分离
 - Interview Translation：「微迹既是独立可运行产品，也收在我的 AI 项目集里，并支撑面试冲刺中的 AI 周复盘方案。」
-- Next Action：对外分享时优先给项目集链接，需要跑代码再进上游或冲刺仓子模块
+- Next Action：对外分享时优先给项目集链接，需要跑代码打开 `products/weiji-mini`
+
+## 2026-08-07｜微迹并入 ai-projects 并删除独立仓
+
+- Context：用户要求将 GitHub 上 weiji-mini 全部迁入 ai-projects，删除原主页项目，并更新冲刺仓路径
+- Decision：`ai-projects/products/weiji-mini` 改为普通源码目录；冲刺仓子模块改为整仓 `ai-projects`；路径统一为 `05-projects/ai-projects/products/weiji-mini/`
+- Evidence：独立 `weiji-mini` 仓库删除后仅保留项目集入口
+- Abstraction：一个产品只保留一个源码真相，面试仓用子模块引用项目集
+- Next Action：删除 GitHub 仓库 `weiji-mini` 并推送冲刺仓路径更新

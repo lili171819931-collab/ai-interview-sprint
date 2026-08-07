@@ -43,13 +43,15 @@
 按类别查看：[`05-projects/README.md`](05-projects/README.md)  
 跨仓路径对照：[`05-projects/PATH-MAP.md`](05-projects/PATH-MAP.md)
 
-| 类别 | 本仓库路径 | 项目集 / 上游 |
-|------|------------|---------------|
-| 真实产品 · 微迹 | [`05-projects/01-weiji-product/`](05-projects/01-weiji-product/) | [AI 项目集 `products/weiji-mini`](https://github.com/lili171819931-collab/ai-projects/tree/main/products/weiji-mini) · [上游 weiji-mini](https://github.com/lili171819931-collab/weiji-mini) |
+| 类别 | 本仓库路径 | 说明 |
+|------|------------|------|
+| AI 项目集（含微迹源码） | [`05-projects/ai-projects/`](05-projects/ai-projects/) | 子模块 → [ai-projects](https://github.com/lili171819931-collab/ai-projects) |
+| 微迹源码（经子模块） | [`05-projects/ai-projects/products/weiji-mini/`](05-projects/ai-projects/products/weiji-mini/) | **唯一源码路径**（原独立 `weiji-mini` 仓已删） |
+| 微迹面试叙事 | [`05-projects/01-weiji-product/`](05-projects/01-weiji-product/) | 只放故事文档 |
 | AI 功能 · 周复盘 | [`05-projects/02-ai-weekly-insight/`](05-projects/02-ai-weekly-insight/) | 本冲刺仓独有 |
 | 评测 Lab | [`05-projects/03-rag-validation-lab/`](05-projects/03-rag-validation-lab/) | 本冲刺仓独有 |
 
-**AI 项目集（产品全集入口）：** https://github.com/lili171819931-collab/ai-projects
+**AI 项目集：** https://github.com/lili171819931-collab/ai-projects
 
 克隆本仓库请带上子模块：
 
@@ -57,10 +59,10 @@
 git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interview-sprint.git
 ```
 
-克隆 AI 项目集（含微迹）：
+只克隆产品集（含微迹）：
 
 ```bash
-git clone --recurse-submodules https://github.com/lili171819931-collab/ai-projects.git
+git clone https://github.com/lili171819931-collab/ai-projects.git
 ```
 
 ## 快速入口

@@ -1,7 +1,8 @@
 # 微迹 Weiji → 面试故事转化
 
-> 归属：[AI 项目集](https://github.com/lili171819931-collab/ai-projects) · 本仓路径：`05-projects/01-weiji-product/`  
-> 项目集路径：`ai-projects/products/weiji-mini/` · 上游：https://github.com/lili171819931-collab/weiji-mini
+> 源码：[`../ai-projects/products/weiji-mini/`](../ai-projects/products/weiji-mini/)  
+> 项目集：https://github.com/lili171819931-collab/ai-projects/tree/main/products/weiji-mini  
+> （原独立仓库 `weiji-mini` 已删除并迁入项目集）
 
 ## 一句话
 
@@ -25,7 +26,7 @@
 
 ## 与主作品的关系
 
-- **01 Weiji** = 真实落地证明（执行力）；已收录进 AI 项目集
+- **微迹源码** = 在 AI 项目集中的真实落地证明
 - **02 周复盘** = 在真实产品上的 AI 产品判断力
 - **03 Lab** = 评测思维证明
-- 面试一句串起来：「我先做成微迹，再给它加有边界的 AI 周复盘，并用评测证明靠谱。」
+- 面试一句串起来：「我先做成微迹并收进 AI 项目集，再给它加有边界的 AI 周复盘，并用评测证明靠谱。」
