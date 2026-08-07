@@ -5,8 +5,8 @@
 | 项目 | 类型 | 路径 | 说明 |
 |------|------|------|------|
 | 微迹 Weiji | 真实产品（Git 子模块） | [`weiji-mini/`](weiji-mini/) | 从 0 到 1 微信小程序，证明落地与产品闭环 |
-| AI 功能方案 | 面试主作品（必做） | [`ai-feature-prd/`](ai-feature-prd/) | RAG/Agent/平台 三选一 PRD |
-| 最小 RAG 验证 | 辅作品 | [`mini-rag-demo/`](mini-rag-demo/) | 验证假设，不炫技 |
+| **AI 周复盘方案** | 面试主作品（已基于微迹写完） | [`ai-feature-prd/`](ai-feature-prd/) | Weiji Weekly Insight：事实层 + 受限生成 |
+| 最小 RAG 验证 | 辅作品 | [`mini-rag-demo/`](mini-rag-demo/) | 可用周复盘黄金集做最小验证 |
 
 ## 微迹如何服务面试
 
@@ -15,9 +15,10 @@
 建议叙事：
 1. **从 0 到 1**：需求 → 信息架构 → 最小路径 → 可运行交付
 2. **产品判断**：为何做微习惯、为何本地存储、砍掉了什么
-3. **AI 升级想象**（加分）：在已有产品上如何加 AI（提醒、复盘、个性化）且何时不该加
+3. **AI 升级（已落方案）**：[周复盘 Weekly Insight](ai-feature-prd/) — 规则出数 + 模型写洞察，禁止代打卡
 
-详细面试转化见：[`weiji-interview.md`](weiji-interview.md)
+详细面试转化见：[`weiji-interview.md`](weiji-interview.md)  
+完整 PRD 见：[`ai-feature-prd/prd.md`](ai-feature-prd/prd.md)
 
 ## 克隆本仓库时拉取子模块
 
