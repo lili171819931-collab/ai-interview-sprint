@@ -38,9 +38,22 @@
 - [ ] 模拟面总分 ≥ 75/100
 - [ ] 投递材料：简历 1 版 + 作品说明 1 页 + 岗位清单
 
+## 嵌入项目
+
+- **微迹 Weiji**（Git 子模块）：[`05-projects/weiji-mini/`](05-projects/weiji-mini/)  
+  上游：https://github.com/lili171819931-collab/weiji-mini  
+  面试转化：[`05-projects/weiji-interview.md`](05-projects/weiji-interview.md)
+
+克隆本仓库请带上子模块：
+
+```bash
+git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interview-sprint.git
+```
+
 ## 快速入口
 
 - 北极星：[`00-north-star/README.md`](00-north-star/README.md)
 - 14 天日历：[`01-curriculum/day-by-day.md`](01-curriculum/day-by-day.md)
+- 项目作品夹：[`05-projects/README.md`](05-projects/README.md)
 - 面试题库：[`06-interview/questions/README.md`](06-interview/questions/README.md)
 - 思维链模板：[`templates/thinking-chain.md`](templates/thinking-chain.md)

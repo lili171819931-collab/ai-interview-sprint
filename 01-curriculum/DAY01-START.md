@@ -16,6 +16,7 @@
   - AI 方向学习与作品占 30–40% 篇幅
   - 删除「什么都会」的空词
 - [ ] 选定主作品方向 A/B/C（写入 `05-projects/ai-feature-prd/README.md`）
+- [ ] 浏览已嵌入的微迹项目 `05-projects/weiji-mini/`，并改一版 `05-projects/weiji-interview.md` 故事
 - [ ] 用思维链模板追加今天决策到 `07-thinking-chain/decisions.md`
 
 ## 晚上（面试启动）
