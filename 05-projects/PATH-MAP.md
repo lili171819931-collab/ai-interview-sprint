@@ -21,6 +21,13 @@
 | 票迹项目包装+商业 | `05-projects/06-piaoji-product/` | PRD→上线→商业价值 |
 | 三载体对比报告 | `05-projects/06-piaoji-product/08-trio-comparison-report.md` | Skill / Web / 小程序对照 |
 
+## AI 工具雷达看板
+
+| 含义 | 本仓库路径 | 说明 |
+|------|------------|------|
+| 智衡 AI Radar（源码+文档） | `05-projects/07-ai-radar-dashboard/` | 日更看板 / 功能介绍 / 优劣势对比 |
+| 智衡项目闭环文档 | `05-projects/07-ai-radar-dashboard/docs/` | 需求/设计/PM/研发/测试/运维/复盘 |
+
 ## 规范 URL
 
 | 资源 | URL |
@@ -31,6 +38,7 @@
 | WorkBuddy Skill（04） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/04-workbuddy-invoice-reimburse |
 | 票易报 Web（05） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/05-invoice-reimburse-web |
 | 票迹项目文档（06） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/06-piaoji-product |
+| 智衡 AI Radar（07） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard |
 
 ## 关系图
 
