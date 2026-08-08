@@ -3,6 +3,9 @@
 日更数据、功能介绍、可追溯优劣势对比的 Web 看板。  
 本目录已补齐从**需求 → 设计 → 项目管理 → 研发测试 → 上线运维 → 复盘闭环**的完整项目文档。
 
+> 源码同步位置：[ai-projects/products/ai-radar-dashboard](https://github.com/lili171819931-collab/ai-projects/tree/main/products/ai-radar-dashboard)  
+> 本仓亦可通过子模块访问：`05-projects/ai-projects/products/ai-radar-dashboard/`
+
 ## 一分钟上手
 
 ```bash
