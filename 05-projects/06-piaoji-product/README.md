@@ -71,8 +71,11 @@ git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interv
 
 1. 克隆 `ai-projects` 或本仓（含子模块）  
 2. 微信开发者工具导入 `products/piaoji-mini`  
-3. 编译 → 工作台「同步邮箱」→「按情景生成报销单」→ 打开出差正式包 → 导出 HR 包并复制说明  
-4. 抽查拦截：招待超额 / 培训超期 / 乘机人不一致  
+3. 编译 → 工作台「**拍照录入发票**」或收票箱「拍照/相册」→ 看详情原图预览  
+4. 再走：同步邮箱 →「按情景生成报销单」→ 打开出差正式包 → 导出 HR 包并复制说明  
+5. 抽查拦截：招待超额 / 培训超期 / 乘机人不一致  
+6. 给他人试用：正式 AppID 上传 → 选为体验版 → 加体验成员 → 发体验码（见 [`05-ops-local-to-online.md`](05-ops-local-to-online.md)）  
+
 
 ---
 
