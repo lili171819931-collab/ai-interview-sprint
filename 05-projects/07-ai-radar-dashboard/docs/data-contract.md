@@ -28,7 +28,20 @@
 - **禁止**自动改写七维分数；抓取只更新变更摘要与看点
 - User-Agent 标明研究用途；尊重站点可用性，超时即失败降级
 
-源清单：`scripts/live-sources.ts`。
+日更抓取清单：`src/data/live-sources.ts`（`scripts/live-sources.ts` 再导出）。
+
+## 情报雷达信息源（5 监控池）
+
+- 登记表：`src/data/research-sources.ts`
+- 监控池：模型榜单 / 工具目录 / 新闻快讯 / 论文研究 / 官方发布
+- 展示页：`/sources`（矩阵）· `/radar`（日报看板）
+- 日报契约：`src/lib/radar-types.ts` + `src/lib/radar-schema.ts`
+- 日报产物：`data/radar-daily-report.json`（`npm run radar:daily`）
+- 看板字段：名称、类别、热度、排名、可信度、更新时间、来源链接、PM 机会点
+- 情报站点**不全部**进入自动抓取；`data:refresh` 会在抓取后级联生成雷达日报
+- **不自动改七维分数**
+- 方法论：`docs/12-ai-radar-research-system.md`
+- Prompt：`docs/极致Prompt-AI动态雷达日更.md`
 
 ## 评分口径
 

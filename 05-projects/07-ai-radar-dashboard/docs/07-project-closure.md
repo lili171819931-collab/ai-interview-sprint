@@ -32,7 +32,7 @@
 ## 5. AI 产品落地方法论沉淀
 
 本项目补充了 [`08-ai-product-interview-qa.md`](08-ai-product-interview-qa.md)，把 AI 功能是否值得做、幻觉如何排查、如何评测、如何上线、产品与技术冲突如何取舍整理成 5 个面试高频问题。
-同时补充了 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md) 与 [`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)，用于说明商业价值、收费路径、企业落地条件和 AI PM 的需求取舍。
+同时补充了 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md)、[`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)、[`11-thinking-chain-and-risks.md`](11-thinking-chain-and-risks.md) 与 [`极致Prompt-思维链与风险专家版.md`](极致Prompt-思维链与风险专家版.md)，用于说明商业价值、收费路径、企业落地条件、AI PM 需求取舍，以及项目/产品专家级思维链与全量风险。
 
 这些方法论在本项目中的体现：
 

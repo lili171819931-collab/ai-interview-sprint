@@ -7,8 +7,10 @@
     "build": "next build",
     "start": "next start --port 3010",
     "lint": "next lint",
-    "data:refresh": "tsx scripts/refresh-data.ts",
-    "data:refresh:offline": "RADAR_OFFLINE=1 tsx scripts/refresh-data.ts",
+    "data:refresh": "tsx scripts/refresh-data.ts && tsx scripts/refresh-radar-report.ts",
+    "data:refresh:offline": "RADAR_OFFLINE=1 tsx scripts/refresh-data.ts && tsx scripts/refresh-radar-report.ts",
+    "radar:daily": "tsx scripts/refresh-radar-report.ts",
+    "radar:weekly": "RADAR_REPORT_KIND=weekly tsx scripts/refresh-radar-report.ts",
     "setup": "npm run data:refresh"
   },
   "dependencies": {

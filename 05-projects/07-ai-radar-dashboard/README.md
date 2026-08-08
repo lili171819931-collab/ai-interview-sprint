@@ -20,10 +20,11 @@ npm run dev            # http://localhost:3010
 | 路由 | 作用 |
 |------|------|
 | `/` | 总览：数据链、能力地图、品类柱状图、今日看点 |
+| `/radar` | AI 动态雷达日报：5 监控池 + 信号看板 + 风险/机会/行动 |
 | `/tools` | 目录：筛选 + 结果区（排序/视图/多选对比） |
 | `/tools/[id]` | 功能介绍 + 优劣势 + 来源数据链 |
 | `/compare` | 维度对比 + 决策流/树 + 柱状图 + 场景建议 |
-| `/sources` | 数据来源报告：资产路径 + 公开源链接 + 抓取 |
+| `/sources` | 数据来源报告：资产路径 + 5 监控池矩阵 + 公开源抓取 |
 | `/methodology` | 评分口径与日更管道 |
 
 ## 完整项目文档地图
@@ -51,6 +52,8 @@ npm run dev            # http://localhost:3010
 ### 4) 商业价值与 AI PM 视角
 - [`docs/09-commercial-value-and-landing.md`](docs/09-commercial-value-and-landing.md)
 - [`docs/10-ai-pm-perspective.md`](docs/10-ai-pm-perspective.md)
+- [`docs/11-thinking-chain-and-risks.md`](docs/11-thinking-chain-and-risks.md)
+- [`docs/12-ai-radar-research-system.md`](docs/12-ai-radar-research-system.md)
 
 ### 5) 演示与故事化包装
 - [`docs/演示脚本.md`](docs/演示脚本.md)
@@ -58,17 +61,22 @@ npm run dev            # http://localhost:3010
 - [`docs/interview-story.md`](docs/interview-story.md)
 - [`docs/08-ai-product-interview-qa.md`](docs/08-ai-product-interview-qa.md)
 - [`docs/极致Prompt-AI雷达看板从0到1.md`](docs/极致Prompt-AI雷达看板从0到1.md)
+- [`docs/极致Prompt-思维链与风险专家版.md`](docs/极致Prompt-思维链与风险专家版.md)
+- [`docs/极致Prompt-AI动态雷达日更.md`](docs/极致Prompt-AI动态雷达日更.md)
 
-## 日更（真实公开源）
+## 日更（真实公开源 + 动态雷达日报）
 
 1. 编辑 `src/data/seed.ts`（事实与评分，人工底座）
-2. 需要时扩展 `scripts/live-sources.ts`（RSS / GitHub Atom / 公开 Changelog）
-3. `npm run data:refresh` — 并行抓取并合并 changelog / 今日看点  
+2. 维护 5 监控池：`src/data/research-sources.ts`
+3. 需要时扩展 `scripts/live-sources.ts`（RSS / GitHub Atom / 公开 Changelog）
+4. `npm run data:refresh` — 抓取公开源 + 生成 `data/radar-daily-report.json`  
+   - 仅日报：`npm run radar:daily`  
+   - 周报：`npm run radar:weekly`  
    - 无网：`npm run data:refresh:offline`
-4. 校验失败**不会**覆盖昨日 `data/daily-bundle.json`
-5. 抓取明细见「口径」页与 `data/live-fetch-report.json`
+5. 校验失败**不会**覆盖昨日 `data/daily-bundle.json`
+6. 看板看 `/radar`；抓取明细看 `/sources` 与 `data/live-fetch-report.json`
 
-**不会**因 RSS 自动改七维分数。
+**不会**因 RSS / 雷达日报自动改七维分数。
 
 ## 文档
 

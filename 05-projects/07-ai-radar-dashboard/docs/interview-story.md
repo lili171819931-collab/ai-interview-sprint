@@ -26,7 +26,7 @@
 ## AI 产品落地话术
 
 完整 Q&A 见 [`08-ai-product-interview-qa.md`](08-ai-product-interview-qa.md)。
-商业价值分析见 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md)，AI 产品经理视角方法论见 [`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)。
+商业价值分析见 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md)，AI 产品经理视角方法论见 [`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)，思维链与全量风险见 [`11-thinking-chain-and-risks.md`](11-thinking-chain-and-risks.md)。专家版 Prompt 见 [`极致Prompt-思维链与风险专家版.md`](极致Prompt-思维链与风险专家版.md)。
 
 面试收束可以这样讲：
 
@@ -35,6 +35,10 @@
 商业价值可以这样补充：
 
 > 它的商业价值不是导航流量，而是企业选型效率：把候选工具、对比维度、来源证据和风险提示沉淀成可复用流程。未来可以从个人调研工具升级为企业内部 AI 选型台，再延展到行业报告和 API 数据服务。
+
+风险与思维链可以这样补充：
+
+> 我最怕三件事：脏数据覆盖昨日好快照、跨品类硬比误导结论、文档和实现不一致。分别用原子写入与校验失败保留、对比警告卡、验收清单和演示脚本兜住。加需求前先过用户任务、可信、可运维、可演示、商业五道闸门。
 
 ## 挂钩
 

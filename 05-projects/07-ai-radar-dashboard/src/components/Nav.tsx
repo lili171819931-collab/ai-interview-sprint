@@ -2,6 +2,7 @@ import Link from "next/link";
 
 const links = [
   { href: "/", label: "总览" },
+  { href: "/radar", label: "动态雷达" },
   { href: "/tools", label: "目录" },
   { href: "/compare", label: "对比" },
   { href: "/sources", label: "来源报告" },

@@ -46,7 +46,7 @@ export default function HomePage() {
             <div className="space-y-6 rise">
               <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(139,92,246,0.45)] bg-[var(--ai-accent-dim)] px-3 py-1 text-xs text-[#d7ccff]">
                 <Sparkles size={14} aria-hidden />
-                每日扫描 13 路公开源 · 生成 AI 工具选型信号
+                每日扫描公开源 · 情报站点可追溯 · 生成 AI 工具选型信号
               </div>
               <div>
                 <p className="display hero-title text-5xl sm:text-6xl lg:text-7xl font-semibold leading-[0.98]">
@@ -80,6 +80,9 @@ export default function HomePage() {
               </div>
 
               <div className="flex flex-wrap gap-3">
+                <Link href="/radar" className="btn btn-ghost">
+                  打开动态雷达日报
+                </Link>
                 <Link href="/sources" className="btn btn-ghost">
                   查看来源报告
                 </Link>

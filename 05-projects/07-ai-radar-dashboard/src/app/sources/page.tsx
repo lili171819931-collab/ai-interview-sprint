@@ -5,7 +5,13 @@ import { BarChart } from "@/components/viz/charts/BarChart";
 import { SOURCE_LEVEL_ICONS } from "@/components/icons";
 import { getBundleView } from "@/lib/data";
 import { LIVE_SOURCES } from "@/data/live-sources";
-import { ExternalLink, Database, FileJson, Code2 } from "lucide-react";
+import {
+  RESEARCH_SOURCES,
+  MONITOR_POOL_LABELS,
+  researchSourcesByPool,
+  type MonitorPool,
+} from "@/data/research-sources";
+import { ExternalLink, Database, FileJson, Code2, Globe2, Radar } from "lucide-react";
 
 const ASSETS = [
   {
@@ -23,6 +29,13 @@ const ASSETS = [
     icon: FileJson,
   },
   {
+    name: "Radar Daily Report",
+    type: "本地 JSON",
+    path: "data/radar-daily-report.json",
+    note: "AI 动态雷达日报（5 监控池信号）",
+    icon: Radar,
+  },
+  {
     name: "Seed 底座",
     type: "源码",
     path: "src/data/seed.ts",
@@ -37,6 +50,13 @@ const ASSETS = [
     icon: Code2,
   },
   {
+    name: "Research Sources Registry",
+    type: "源码",
+    path: "src/data/research-sources.ts",
+    note: "5 监控池信息源矩阵（可点击站点）",
+    icon: Globe2,
+  },
+  {
     name: "Schema 契约",
     type: "源码",
     path: "src/lib/schema.ts",
@@ -45,10 +65,13 @@ const ASSETS = [
   },
 ];
 
+const POOL_ORDER = Object.keys(MONITOR_POOL_LABELS) as MonitorPool[];
+
 export default function SourcesPage() {
   const { bundle, freshness, lastUpdatedDate } = getBundleView();
   const live = bundle.liveFetch;
   const byId = new Map(live?.items.map((i) => [i.sourceId, i]) ?? []);
+  const researchByPool = researchSourcesByPool();
 
   const ok = live?.successCount ?? 0;
   const fail = live?.failureCount ?? 0;
@@ -58,8 +81,16 @@ export default function SourcesPage() {
       <div className="space-y-3">
         <h1 className="display text-3xl font-semibold">数据来源报告</h1>
         <p className="text-[var(--muted)] max-w-2xl leading-relaxed">
-          本页审计「数据从哪来、写到哪、是否抓取成功」。本项目使用 JSON bundle，不伪造数据库连接串。
+          本页审计「数据从哪来、写到哪、是否抓取成功」，并提供全球 AI 情报雷达信息源链接。
+          本项目使用 JSON bundle，不伪造数据库连接串。
         </p>
+        <div className="flex flex-wrap gap-2 text-xs">
+          <span className="tag tag-signal">日更公开源 {LIVE_SOURCES.length} 路</span>
+          <span className="tag">监控池站点 {RESEARCH_SOURCES.length} 个</span>
+          <Link href="/radar" className="tag tag-signal hover:opacity-90">
+            打开动态雷达日报 →
+          </Link>
+        </div>
         <FreshnessBadge freshness={freshness} lastUpdatedDate={lastUpdatedDate} />
         <p className="text-sm text-[var(--muted)]">{bundle.methodNote}</p>
       </div>
@@ -131,8 +162,59 @@ export default function SourcesPage() {
         </div>
       </section>
 
+      <section className="space-y-4">
+        <div className="space-y-2">
+          <h2 className="display text-xl font-semibold">5 监控池信息源矩阵（可点击）</h2>
+          <p className="text-sm text-[var(--muted)] max-w-3xl leading-relaxed">
+            模型榜单 / 工具目录 / 新闻快讯 / 论文研究 / 官方发布。这些站点用于交叉验证与日报调研，
+            不直接改七维分数；自动抓取仍仅使用下方公开 RSS/Atom/Changelog。详见{" "}
+            <Link href="/radar" className="underline">
+              动态雷达日报
+            </Link>
+            、
+            <code className="text-[var(--signal)]">docs/12-ai-radar-research-system.md</code>。
+          </p>
+        </div>
+        <div className="space-y-6">
+          {POOL_ORDER.map((pool) => (
+            <div key={pool} className="space-y-2">
+              <h3 className="text-sm font-semibold text-[var(--text)]">
+                {MONITOR_POOL_LABELS[pool]}
+                <span className="ml-2 text-xs font-normal text-[var(--muted)]">
+                  {researchByPool[pool].length} 个
+                </span>
+              </h3>
+              <div className="grid md:grid-cols-2 gap-2">
+                {researchByPool[pool].map((s) => (
+                  <div key={s.id} className="surface px-4 py-3 space-y-1">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <IconChip
+                        icon={SOURCE_LEVEL_ICONS[s.level]}
+                        label={s.level}
+                        tone={s.level === "official" ? "signal" : s.level === "first_hand" ? "signal" : "amber"}
+                      />
+                      <span className="font-medium">{s.name}</span>
+                    </div>
+                    <a
+                      href={s.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs text-[var(--signal)] underline break-all inline-flex items-center gap-1"
+                    >
+                      {s.url}
+                      <ExternalLink size={12} aria-hidden />
+                    </a>
+                    <p className="text-xs text-[var(--muted)] leading-relaxed">{s.note}</p>
+                  </div>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+      </section>
+
       <section className="space-y-3">
-        <h2 className="display text-xl font-semibold">公开源清单（可点击）</h2>
+        <h2 className="display text-xl font-semibold">公开源清单（日更抓取，可点击）</h2>
         <div className="space-y-2">
           {LIVE_SOURCES.map((s) => {
             const item = byId.get(s.id);

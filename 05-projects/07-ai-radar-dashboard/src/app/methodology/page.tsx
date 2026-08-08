@@ -24,7 +24,8 @@ export default function MethodologyPage() {
             维护 <code className="text-[var(--signal)]">src/data/seed.ts</code> 中的工具事实与评分（人工底座）。
           </li>
           <li>
-            在 <code className="text-[var(--signal)]">scripts/live-sources.ts</code> 登记公开信息源。
+            在 <code className="text-[var(--signal)]">src/data/live-sources.ts</code> 登记日更公开源；
+            在 <code className="text-[var(--signal)]">src/data/research-sources.ts</code> 维护情报雷达站点链接。
           </li>
           <li>
             执行 <code className="text-[var(--signal)]">npm run data:refresh</code>
