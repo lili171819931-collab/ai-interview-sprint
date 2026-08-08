@@ -9,6 +9,8 @@
 
 ## 2. 五个监控池
 
+> 推荐网站完整对照表（链接 + 简介）：[`13-ai-radar-source-matrix.md`](./13-ai-radar-source-matrix.md)
+
 | 监控池 | 用途 | 代表站点 |
 |--------|------|----------|
 | 模型榜单 | 能力/价格/代码/偏好对比 | Artificial Analysis、LMArena、HF Open LLM、SWE-bench、Papers with Code、Epoch AI、Stanford AI Index |

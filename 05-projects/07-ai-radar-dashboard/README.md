@@ -54,6 +54,7 @@ npm run dev            # http://localhost:3010
 - [`docs/10-ai-pm-perspective.md`](docs/10-ai-pm-perspective.md)
 - [`docs/11-thinking-chain-and-risks.md`](docs/11-thinking-chain-and-risks.md)
 - [`docs/12-ai-radar-research-system.md`](docs/12-ai-radar-research-system.md)
+- [`docs/13-ai-radar-source-matrix.md`](docs/13-ai-radar-source-matrix.md)
 
 ### 5) 演示与故事化包装
 - [`docs/演示脚本.md`](docs/演示脚本.md)
