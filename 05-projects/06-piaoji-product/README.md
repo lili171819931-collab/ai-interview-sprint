@@ -44,8 +44,9 @@ git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interv
 | 6 | [`06-acceptance.md`](06-acceptance.md) | 验收、演示脚本、风险 |
 | 7 | [`interview-story.md`](interview-story.md) | 面试叙事与 AI/平台升级取舍 |
 | 8 | [`07-commercial-plan.md`](07-commercial-plan.md) | **商业价值分析**：Conditional Go + 90 天验证 |
-| 9 | [`极致Prompt-产品到上线闭环.md`](极致Prompt-产品到上线闭环.md) | 工程闭环 Prompt 入口 |
-| 10 | [`极致Prompt-票迹商业价值专用版.md`](极致Prompt-票迹商业价值专用版.md) | 商业化专用 Prompt（已预填） |
+| 9 | [`08-trio-comparison-report.md`](08-trio-comparison-report.md) | **04/05/06 三载体对比分析报告** |
+| 10 | [`极致Prompt-产品到上线闭环.md`](极致Prompt-产品到上线闭环.md) | 工程闭环 Prompt 入口 |
+| 11 | [`极致Prompt-票迹商业价值专用版.md`](极致Prompt-票迹商业价值专用版.md) | 商业化专用 Prompt（已预填） |
 
 源码侧 docs：
 

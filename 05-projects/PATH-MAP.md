@@ -19,6 +19,7 @@
 | Web 平台「票易报」 | `05-projects/05-invoice-reimburse-web/` | Next.js 可运行 MVP（审批/导出） |
 | 微信小程序「票迹」源码 | `ai-projects/products/piaoji-mini/`（子模块） | 员工侧收票/对账/HR 包 |
 | 票迹项目包装+商业 | `05-projects/06-piaoji-product/` | PRD→上线→商业价值 |
+| 三载体对比报告 | `05-projects/06-piaoji-product/08-trio-comparison-report.md` | Skill / Web / 小程序对照 |
 
 ## 规范 URL
 
