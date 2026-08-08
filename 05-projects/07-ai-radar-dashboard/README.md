@@ -45,7 +45,11 @@ npm run dev            # http://localhost:3010
 - [`docs/06-release-ops-runbook.md`](docs/06-release-ops-runbook.md)
 - [`docs/07-project-closure.md`](docs/07-project-closure.md)
 
-### 4) 演示与故事化包装
+### 4) 商业价值与 AI PM 视角
+- [`docs/09-commercial-value-and-landing.md`](docs/09-commercial-value-and-landing.md)
+- [`docs/10-ai-pm-perspective.md`](docs/10-ai-pm-perspective.md)
+
+### 5) 演示与故事化包装
 - [`docs/演示脚本.md`](docs/演示脚本.md)
 - [`docs/验收清单.md`](docs/验收清单.md)
 - [`docs/interview-story.md`](docs/interview-story.md)

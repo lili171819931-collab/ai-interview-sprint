@@ -21,6 +21,7 @@
 1. 不做空洞“Top10”，而是可审计选型
 2. 把主观判断变成结构化证据
 3. 支持 PM 与工程师的协同决策
+4. 可从个人调研工具演进为企业 AI 选型台与行业情报服务
 
 ## 4. 经验总结
 
@@ -31,6 +32,7 @@
 ## 5. AI 产品落地方法论沉淀
 
 本项目补充了 [`08-ai-product-interview-qa.md`](08-ai-product-interview-qa.md)，把 AI 功能是否值得做、幻觉如何排查、如何评测、如何上线、产品与技术冲突如何取舍整理成 5 个面试高频问题。
+同时补充了 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md) 与 [`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)，用于说明商业价值、收费路径、企业落地条件和 AI PM 的需求取舍。
 
 这些方法论在本项目中的体现：
 

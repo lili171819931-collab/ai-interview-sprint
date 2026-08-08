@@ -26,10 +26,15 @@
 ## AI 产品落地话术
 
 完整 Q&A 见 [`08-ai-product-interview-qa.md`](08-ai-product-interview-qa.md)。
+商业价值分析见 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md)，AI 产品经理视角方法论见 [`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)。
 
 面试收束可以这样讲：
 
 > 这个项目不是为了证明“AI 可以自动排名”，而是为了证明我知道 AI 功能怎么落地：先判断值不值得做，再把数据、模型、链路和评测拆开。智衡把工具事实、来源等级、评分证据、日更报告和对比结论分层展示，所以每个判断都能追溯，不靠模型随口生成。
+
+商业价值可以这样补充：
+
+> 它的商业价值不是导航流量，而是企业选型效率：把候选工具、对比维度、来源证据和风险提示沉淀成可复用流程。未来可以从个人调研工具升级为企业内部 AI 选型台，再延展到行业报告和 API 数据服务。
 
 ## 挂钩
 
