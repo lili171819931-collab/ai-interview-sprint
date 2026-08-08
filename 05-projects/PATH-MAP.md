@@ -23,10 +23,11 @@
 
 ## AI 工具雷达看板
 
-| 含义 | 本仓库路径 | 说明 |
-|------|------------|------|
-| 智衡 AI Radar（源码+文档） | `05-projects/07-ai-radar-dashboard/` | 日更看板 / 功能介绍 / 优劣势对比 |
-| 智衡项目闭环文档 | `05-projects/07-ai-radar-dashboard/docs/` | 需求/设计/PM/研发/测试/运维/复盘 |
+| 含义 | ai-projects | 本仓库 ai-interview-sprint |
+|------|-------------|----------------------------|
+| 智衡源码 | `products/ai-radar-dashboard/` | `05-projects/ai-projects/products/ai-radar-dashboard/`（子模块） |
+| 完整项目包装（源码+闭环文档） | （源码内 `docs/`） | `05-projects/07-ai-radar-dashboard/` |
+| 商业价值 / AI PM 视角 | （源码内 docs） | `05-projects/07-ai-radar-dashboard/docs/09*` · `10*` |
 
 ## 规范 URL
 
@@ -35,10 +36,11 @@
 | AI 项目集 | https://github.com/lili171819931-collab/ai-projects |
 | 微迹源码 | https://github.com/lili171819931-collab/ai-projects/tree/main/products/weiji-mini |
 | 票迹源码 | https://github.com/lili171819931-collab/ai-projects/tree/main/products/piaoji-mini |
+| 智衡源码 | https://github.com/lili171819931-collab/ai-projects/tree/main/products/ai-radar-dashboard |
 | WorkBuddy Skill（04） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/04-workbuddy-invoice-reimburse |
 | 票易报 Web（05） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/05-invoice-reimburse-web |
 | 票迹项目文档（06） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/06-piaoji-product |
-| 智衡 AI Radar（07） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard |
+| 智衡项目包装（07） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard |
 
 ## 关系图
 

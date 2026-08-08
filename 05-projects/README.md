@@ -17,10 +17,11 @@
 05-projects/
 ├── README.md
 ├── PATH-MAP.md
-├── ai-projects/                   ← Git 子模块（含微迹 + 票迹源码）
+├── ai-projects/                   ← Git 子模块（含微迹 + 票迹 + 智衡源码）
 │   └── products/
 │       ├── weiji-mini/
-│       └── piaoji-mini/
+│       ├── piaoji-mini/
+│       └── ai-radar-dashboard/
 ├── 01-weiji-product/              ← A. 微迹完整项目（PRD→上线+商业+面试）
 ├── 02-ai-weekly-insight/          ← B. AI 功能主作品
 ├── 03-rag-validation-lab/         ← C. 评测验证 Lab
@@ -34,7 +35,7 @@
 
 | 序号 | 类别 | 路径 | 面试作用 | 状态 |
 |------|------|------|----------|------|
-| **源码** | AI 项目集子模块 | [`ai-projects/`](ai-projects/) | 可运行微迹/票迹 | ✅ |
+| **源码** | AI 项目集子模块 | [`ai-projects/`](ai-projects/) | 可运行微迹/票迹/智衡 | ✅ |
 | **01** | C 端真实产品闭环 | [`01-weiji-product/`](01-weiji-product/) | 设计→上线怎么讲 | ✅ |
 | **02** | AI 功能方案 | [`02-ai-weekly-insight/`](02-ai-weekly-insight/) | 有边界的 AI 产品 | ✅ |
 | **03** | 评测验证 Lab | [`03-rag-validation-lab/`](03-rag-validation-lab/) | 评测思维 | ⏳ |
@@ -68,4 +69,6 @@ git clone https://github.com/lili171819931-collab/ai-projects.git
 # 微信开发者工具打开：
 #   ai-projects/products/weiji-mini
 #   ai-projects/products/piaoji-mini
+# Web 看板：
+#   cd ai-projects/products/ai-radar-dashboard && npm i && npm run dev
 ```
