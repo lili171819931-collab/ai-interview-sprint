@@ -45,9 +45,11 @@
 
 | 类别 | 本仓库路径 | 说明 |
 |------|------------|------|
-| AI 项目集（含微迹源码） | [`05-projects/ai-projects/`](05-projects/ai-projects/) | 子模块 → [ai-projects](https://github.com/lili171819931-collab/ai-projects) |
-| 微迹源码（经子模块） | [`05-projects/ai-projects/products/weiji-mini/`](05-projects/ai-projects/products/weiji-mini/) | **唯一源码路径**（原独立 `weiji-mini` 仓已删） |
-| 微迹面试叙事 | [`05-projects/01-weiji-product/`](05-projects/01-weiji-product/) | 只放故事文档 |
+| AI 项目集（微迹+票迹源码） | [`05-projects/ai-projects/`](05-projects/ai-projects/) | 子模块 → [ai-projects](https://github.com/lili171819931-collab/ai-projects) |
+| 微迹源码（经子模块） | [`05-projects/ai-projects/products/weiji-mini/`](05-projects/ai-projects/products/weiji-mini/) | C 端打卡唯一源码 |
+| 票迹源码（经子模块） | [`05-projects/ai-projects/products/piaoji-mini/`](05-projects/ai-projects/products/piaoji-mini/) | B 端报销唯一源码 |
+| 微迹项目包装 | [`05-projects/01-weiji-product/`](05-projects/01-weiji-product/) | PRD→上线→商业 |
+| 票迹项目包装 | [`05-projects/06-piaoji-product/`](05-projects/06-piaoji-product/) | PRD→上线→**商业价值分析** |
 | AI 功能 · 周复盘 | [`05-projects/02-ai-weekly-insight/`](05-projects/02-ai-weekly-insight/) | 本冲刺仓独有 |
 | 评测 Lab | [`05-projects/03-rag-validation-lab/`](05-projects/03-rag-validation-lab/) | 本冲刺仓独有 |
 
