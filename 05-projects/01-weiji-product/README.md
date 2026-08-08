@@ -43,7 +43,9 @@ git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interv
 | 5 | [`05-ops-local-to-online.md`](05-ops-local-to-online.md) | 本地 → 体验版 → 正式上线全手册 |
 | 6 | [`06-acceptance.md`](06-acceptance.md) | 验收清单、演示脚本、风险 |
 | 7 | [`interview-story.md`](interview-story.md) | 面试叙事与 AI 升级取舍 |
-| 8 | [`极致Prompt-产品到上线闭环.md`](极致Prompt-产品到上线闭环.md) | 可复用极致 Prompt |
+| 8 | [`极致Prompt-产品到上线闭环.md`](极致Prompt-产品到上线闭环.md) | 产品→上线工程 Prompt |
+| 9 | [`极致Prompt-微迹商业价值专用版.md`](极致Prompt-微迹商业价值专用版.md) | 商业化/增长/90天验证专用 Prompt（已预填业务上下文） |
+| 10 | [`07-commercial-plan.md`](07-commercial-plan.md) | 商业方案第一轮：Conditional Go + 90 天验证 |
 
 源码侧配套 docs（同内容可运行目录内）：
 
