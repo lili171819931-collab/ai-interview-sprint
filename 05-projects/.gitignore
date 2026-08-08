@@ -1,0 +1,4 @@
+
+# local deploy leftovers
+.vercel/
+.env
