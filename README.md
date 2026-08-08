@@ -50,6 +50,8 @@
 | 票迹源码（经子模块） | [`05-projects/ai-projects/products/piaoji-mini/`](05-projects/ai-projects/products/piaoji-mini/) | B 端报销唯一源码 |
 | 微迹项目包装 | [`05-projects/01-weiji-product/`](05-projects/01-weiji-product/) | PRD→上线→商业 |
 | 票迹项目包装 | [`05-projects/06-piaoji-product/`](05-projects/06-piaoji-product/) | PRD→上线→**商业价值分析** |
+| 票易报 Web | [`05-projects/05-invoice-reimburse-web/`](05-projects/05-invoice-reimburse-web/) | Next.js 可运行审批 MVP |
+| WorkBuddy Skill | [`05-projects/04-workbuddy-invoice-reimburse/`](05-projects/04-workbuddy-invoice-reimburse/) | 同域对话 Skill 包 |
 | AI 功能 · 周复盘 | [`05-projects/02-ai-weekly-insight/`](05-projects/02-ai-weekly-insight/) | 本冲刺仓独有 |
 | 评测 Lab | [`05-projects/03-rag-validation-lab/`](05-projects/03-rag-validation-lab/) | 本冲刺仓独有 |
 

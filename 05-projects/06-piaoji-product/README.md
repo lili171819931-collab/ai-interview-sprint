@@ -61,8 +61,8 @@ git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interv
 | 目录 | 关系 |
 |------|------|
 | [`01-weiji-product`](../01-weiji-product/) | C 端轻工具闭环样本；票迹是 **B 端费控切口** 对照样本 |
-| [`04-workbuddy-invoice-reimburse`](../04-workbuddy-invoice-reimburse/) | 技能/WorkBuddy 向探索（可并列，不替代本目录） |
-| [`05-invoice-reimburse-web`](../05-invoice-reimburse-web/) | Web 向实验；**微信小程序可运行源码以 piaoji-mini 为准** |
+| [`04-workbuddy-invoice-reimburse`](../04-workbuddy-invoice-reimburse/) | 同域 **WorkBuddy Skill** 载体（对话出包） |
+| [`05-invoice-reimburse-web`](../05-invoice-reimburse-web/) | 同域 **Web「票易报」** 可运行审批系统；小程序源码仍以 `piaoji-mini` 为准 |
 
 ---
 

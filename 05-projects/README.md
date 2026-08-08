@@ -24,9 +24,9 @@
 ├── 01-weiji-product/              ← A. 微迹完整项目（PRD→上线+商业+面试）
 ├── 02-ai-weekly-insight/          ← B. AI 功能主作品
 ├── 03-rag-validation-lab/         ← C. 评测验证 Lab
-├── 04-workbuddy-invoice-reimburse/← 发票相关探索（非唯一源码）
-├── 05-invoice-reimburse-web/      ← Web 实验（非唯一源码）
-└── 06-piaoji-product/             ← D. 票迹完整项目（PRD→上线+商业+面试）
+├── 04-workbuddy-invoice-reimburse/← 发票报销 · WorkBuddy Skill 载体
+├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
+└── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
 ```
 
 ## 类别速览
@@ -37,15 +37,18 @@
 | **01** | C 端真实产品闭环 | [`01-weiji-product/`](01-weiji-product/) | 设计→上线怎么讲 | ✅ |
 | **02** | AI 功能方案 | [`02-ai-weekly-insight/`](02-ai-weekly-insight/) | 有边界的 AI 产品 | ✅ |
 | **03** | 评测验证 Lab | [`03-rag-validation-lab/`](03-rag-validation-lab/) | 评测思维 | ⏳ |
-| **06** | B 端费控切口闭环 | [`06-piaoji-product/`](06-piaoji-product/) | 合规交付物+商业付费 | ✅ |
+| **04** | 发票 · Skill 载体 | [`04-workbuddy-invoice-reimburse/`](04-workbuddy-invoice-reimburse/) | 领域 Prompt/Skill | ✅ |
+| **05** | 发票 · Web 载体 | [`05-invoice-reimburse-web/`](05-invoice-reimburse-web/) | 可运行审批系统 | ✅ |
+| **06** | 发票 · 小程序+商业 | [`06-piaoji-product/`](06-piaoji-product/) | 合规交付物+付费叙事 | ✅ |
 
-## 推荐阅读顺序（50 分钟）
+## 推荐阅读顺序（60 分钟）
 
 1. [`01-weiji-product/README.md`](01-weiji-product/README.md) → C 端闭环  
-2. [`06-piaoji-product/README.md`](06-piaoji-product/README.md) → B 端闭环  
-3. [`06-piaoji-product/07-commercial-plan.md`](06-piaoji-product/07-commercial-plan.md) → 商业价值  
-4. [`ai-projects/products/piaoji-mini/README.md`](ai-projects/products/piaoji-mini/README.md) → 跑起来  
-5. [`02-ai-weekly-insight/prd.md`](02-ai-weekly-insight/prd.md) → AI 加在哪  
+2. [`05-invoice-reimburse-web/README.md`](05-invoice-reimburse-web/README.md) → Web 跑通审批  
+3. [`06-piaoji-product/README.md`](06-piaoji-product/README.md) → 小程序闭环  
+4. [`06-piaoji-product/07-commercial-plan.md`](06-piaoji-product/07-commercial-plan.md) → 商业价值  
+5. [`04-workbuddy-invoice-reimburse/README.md`](04-workbuddy-invoice-reimburse/README.md) → Skill 对照  
+6. [`02-ai-weekly-insight/prd.md`](02-ai-weekly-insight/prd.md) → AI 加在哪  
 
 ## 克隆含子模块
 
