@@ -72,6 +72,9 @@
 - [`09-ai-skills-and-apps-catalog.md`](./09-ai-skills-and-apps-catalog.md)  
   AI Skill 与 App 分类导航，覆盖编程 IDE Agent、Agent App Builder、RAG、Workflow、研究爬取、多模态、语音、数据分析、客服 CRM、Prompt/MCP/模板资源，并附 App 与 GitHub 链接。
 
+- [`10-ai-one-person-company-full-knowledge-base-pdf-merge.md`](./10-ai-one-person-company-full-knowledge-base-pdf-merge.md)  
+  PDF《AI一人公司全量结构化知识库（学习+落地+商业化完整版）》的结构化融合版，补充细化概念、30 天节奏、产品方向和合并位置。
+
 - [`极致Prompt-AI一人公司知识库与产品开发.md`](./极致Prompt-AI一人公司知识库与产品开发.md)  
   根据本知识库生成学习路线、开源项目清单、产品开发计划和一人公司行动方案的超级 Prompt。
 
