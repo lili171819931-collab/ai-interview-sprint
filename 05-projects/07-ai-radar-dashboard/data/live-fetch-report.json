@@ -1,0 +1,153 @@
+{
+  "fetchedAt": "2026-08-10T09:11:19.690Z",
+  "offline": false,
+  "successCount": 13,
+  "failureCount": 0,
+  "items": [
+    {
+      "sourceId": "openai-news",
+      "label": "OpenAI News RSS",
+      "toolIds": [
+        "chatgpt",
+        "openai-api"
+      ],
+      "status": "ok",
+      "title": "Responding to the next frontier of critical cyber capabilities",
+      "url": "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities",
+      "publishedAt": "2026-08-07T15:20:00.000Z"
+    },
+    {
+      "sourceId": "anthropic-news-mirror",
+      "label": "Anthropic News (Turing Institute feed mirror)",
+      "toolIds": [
+        "claude",
+        "anthropic-api",
+        "claude-code"
+      ],
+      "status": "ok",
+      "title": "Anthropic raises $124 million to build more reliable, general AI systems",
+      "url": "https://www.anthropic.com/news/anthropic-raises-124-million-to-build-more-reliable-general-ai-systems",
+      "publishedAt": "2021-05-28T07:00:00.000Z"
+    },
+    {
+      "sourceId": "google-ai-blog",
+      "label": "Google AI Blog RSS",
+      "toolIds": [
+        "gemini"
+      ],
+      "status": "ok",
+      "title": "The latest AI news we announced in July 2026",
+      "url": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-july-2026/",
+      "publishedAt": "2026-08-04T13:00:00.000Z"
+    },
+    {
+      "sourceId": "mistral-news",
+      "label": "Mistral News RSS",
+      "toolIds": [
+        "mistral"
+      ],
+      "status": "ok",
+      "title": "Introducing Shieldstral.",
+      "url": "https://mistral.ai/news/shieldstral/",
+      "publishedAt": "2026-08-04T12:00:26.000Z"
+    },
+    {
+      "sourceId": "huggingface-blog",
+      "label": "Hugging Face Blog RSS",
+      "toolIds": [
+        "huggingface"
+      ],
+      "status": "ok",
+      "title": "TutorMoments: Do AI tutors know when to help and when to hold back?",
+      "url": "https://huggingface.co/blog/allenai/tutormoments",
+      "publishedAt": "2026-08-07T17:53:32.000Z"
+    },
+    {
+      "sourceId": "langchain-blog",
+      "label": "LangChain Blog RSS",
+      "toolIds": [
+        "langchain"
+      ],
+      "status": "ok",
+      "title": "Managed Deep Agents is now in public beta",
+      "url": "https://www.langchain.com/blog/managed-deep-agents-is-now-in-public-beta",
+      "publishedAt": "2026-08-07T19:39:38.000Z"
+    },
+    {
+      "sourceId": "cursor-changelog",
+      "label": "Cursor Changelog",
+      "toolIds": [
+        "cursor"
+      ],
+      "status": "ok",
+      "title": "Google Workspace Plugins",
+      "url": "https://cursor.com/changelog"
+    },
+    {
+      "sourceId": "dify-releases",
+      "label": "Dify GitHub Releases Atom",
+      "toolIds": [
+        "dify"
+      ],
+      "status": "ok",
+      "title": "Release v1.16.1 - Bug Fixes and Security Enhancements",
+      "url": "https://github.com/langgenius/dify/releases/tag/1.16.1",
+      "publishedAt": "2026-07-28T03:46:06.000Z"
+    },
+    {
+      "sourceId": "n8n-releases",
+      "label": "n8n GitHub Releases Atom",
+      "toolIds": [
+        "n8n"
+      ],
+      "status": "ok",
+      "title": "stable",
+      "url": "https://github.com/n8n-io/n8n/releases/tag/stable",
+      "publishedAt": "2026-08-07T16:53:02.000Z"
+    },
+    {
+      "sourceId": "langchain-releases",
+      "label": "LangChain GitHub Releases Atom",
+      "toolIds": [
+        "langchain"
+      ],
+      "status": "ok",
+      "title": "langchain-openai==1.4.2",
+      "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-openai%3D%3D1.4.2",
+      "publishedAt": "2026-08-07T13:58:16.000Z"
+    },
+    {
+      "sourceId": "llamaindex-releases",
+      "label": "LlamaIndex GitHub Releases Atom",
+      "toolIds": [
+        "llamaindex"
+      ],
+      "status": "ok",
+      "title": "v0.14.23",
+      "url": "https://github.com/run-llama/llama_index/releases/tag/v0.14.23",
+      "publishedAt": "2026-06-24T19:36:43.000Z"
+    },
+    {
+      "sourceId": "comfyui-releases",
+      "label": "ComfyUI GitHub Releases Atom",
+      "toolIds": [
+        "comfyui"
+      ],
+      "status": "ok",
+      "title": "v0.31.1",
+      "url": "https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.31.1",
+      "publishedAt": "2026-08-08T05:04:30.000Z"
+    },
+    {
+      "sourceId": "firecrawl-releases",
+      "label": "Firecrawl GitHub Releases Atom",
+      "toolIds": [
+        "firecrawl"
+      ],
+      "status": "ok",
+      "title": "v2.11.193",
+      "url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.11.193",
+      "publishedAt": "2026-08-08T19:23:30.000Z"
+    }
+  ]
+}

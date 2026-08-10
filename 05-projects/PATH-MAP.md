@@ -28,9 +28,18 @@
 | AI 项目集 | https://github.com/lili171819931-collab/ai-projects |
 | 微迹源码 | https://github.com/lili171819931-collab/ai-projects/tree/main/products/weiji-mini |
 | 票迹源码 | https://github.com/lili171819931-collab/ai-projects/tree/main/products/piaoji-mini |
+| AI Radar 源码（ai-projects） | https://github.com/lili171819931-collab/ai-projects/tree/main/products/ai-radar-dashboard |
 | WorkBuddy Skill（04） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/04-workbuddy-invoice-reimburse |
 | 票易报 Web（05） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/05-invoice-reimburse-web |
 | 票迹项目文档（06） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/06-piaoji-product |
+| 智衡 AI Radar（07） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard |
+
+## AI 动态雷达（智衡）
+
+| 含义 | ai-projects | 本仓库 ai-interview-sprint |
+|------|-------------|----------------------------|
+| 可运行源码 + 完整文档 | `products/ai-radar-dashboard/` | `05-projects/07-ai-radar-dashboard/`（同步副本） |
+| 子模块路径 | — | `05-projects/ai-projects/products/ai-radar-dashboard/` |
 
 ## 关系图
 

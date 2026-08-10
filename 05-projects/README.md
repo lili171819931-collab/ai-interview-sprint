@@ -26,20 +26,22 @@
 ├── 03-rag-validation-lab/         ← C. 评测验证 Lab
 ├── 04-workbuddy-invoice-reimburse/← 发票报销 · WorkBuddy Skill 载体
 ├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
-└── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
+├── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
+└── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包）
 ```
 
 ## 类别速览
 
 | 序号 | 类别 | 路径 | 面试作用 | 状态 |
 |------|------|------|----------|------|
-| **源码** | AI 项目集子模块 | [`ai-projects/`](ai-projects/) | 可运行微迹/票迹 | ✅ |
+| **源码** | AI 项目集子模块 | [`ai-projects/`](ai-projects/) | 可运行微迹/票迹/雷达 | ✅ |
 | **01** | C 端真实产品闭环 | [`01-weiji-product/`](01-weiji-product/) | 设计→上线怎么讲 | ✅ |
 | **02** | AI 功能方案 | [`02-ai-weekly-insight/`](02-ai-weekly-insight/) | 有边界的 AI 产品 | ✅ |
 | **03** | 评测验证 Lab | [`03-rag-validation-lab/`](03-rag-validation-lab/) | 评测思维 | ⏳ |
 | **04** | 发票 · Skill 载体 | [`04-workbuddy-invoice-reimburse/`](04-workbuddy-invoice-reimburse/) | 领域 Prompt/Skill | ✅ |
 | **05** | 发票 · Web 载体 | [`05-invoice-reimburse-web/`](05-invoice-reimburse-web/) | 可运行审批系统 | ✅ |
 | **06** | 发票 · 小程序+商业 | [`06-piaoji-product/`](06-piaoji-product/) | 合规交付物+付费叙事 | ✅ |
+| **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更数据+对比+来源可追溯 | ✅ |
 
 ## 推荐阅读顺序（60 分钟）
 
@@ -49,6 +51,7 @@
 4. [`06-piaoji-product/07-commercial-plan.md`](06-piaoji-product/07-commercial-plan.md) → 商业价值  
 5. [`04-workbuddy-invoice-reimburse/README.md`](04-workbuddy-invoice-reimburse/README.md) → Skill 对照  
 6. [`02-ai-weekly-insight/prd.md`](02-ai-weekly-insight/prd.md) → AI 加在哪  
+7. [`07-ai-radar-dashboard/README.md`](07-ai-radar-dashboard/README.md) → 情报看板日更与来源报告  
 
 ## 克隆含子模块
 
