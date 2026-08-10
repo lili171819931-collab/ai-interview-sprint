@@ -57,6 +57,9 @@
 - [`07-template-library-and-thinking-chains.md`](./07-template-library-and-thinking-chains.md)  
   PRD、RAG、Agent、Eval、访谈、竞品、上线、复盘、Landing Page 模板，以及可公开思考链。
 
+- [`08-github-mature-open-source-projects.md`](./08-github-mature-open-source-projects.md)  
+  GitHub 成熟开源项目复刻清单，覆盖 AI Chat、RAG、Agent、工作流、多模型网关、Eval、向量库、多模态、OCR、SaaS 模板、MCP，并补充优秀作者/团队。
+
 - [`极致Prompt-AI一人公司知识库与产品开发.md`](./极致Prompt-AI一人公司知识库与产品开发.md)  
   根据本知识库生成学习路线、开源项目清单、产品开发计划和一人公司行动方案的超级 Prompt。
 
