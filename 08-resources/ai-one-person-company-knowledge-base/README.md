@@ -45,6 +45,18 @@
 - [`03-products-templates-thinking-chain.md`](./03-products-templates-thinking-chain.md)  
   AI 产品工具、SaaS 模板、MVP 模板、可公开思考链与决策框架。
 
+- [`04-knowledge-framework.md`](./04-knowledge-framework.md)  
+  12 个模块的知识库总框架，覆盖 AI 基础、模型选型、Prompt、RAG、Agent、开发、商业化、增长和合规。
+
+- [`05-agent-team-system.md`](./05-agent-team-system.md)  
+  一人公司 Agent 团队设计，含市场研究、竞品、访谈、PRD、UI、开发、测试、营销、销售和客服 Agent。
+
+- [`06-30-day-roadmap-and-product-ideas.md`](./06-30-day-roadmap-and-product-ideas.md)  
+  30 天学习与开发计划、产品方向选择框架、10 个适合一人公司起步的 AI 产品方向。
+
+- [`07-template-library-and-thinking-chains.md`](./07-template-library-and-thinking-chains.md)  
+  PRD、RAG、Agent、Eval、访谈、竞品、上线、复盘、Landing Page 模板，以及可公开思考链。
+
 - [`极致Prompt-AI一人公司知识库与产品开发.md`](./极致Prompt-AI一人公司知识库与产品开发.md)  
   根据本知识库生成学习路线、开源项目清单、产品开发计划和一人公司行动方案的超级 Prompt。
 
