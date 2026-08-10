@@ -3,6 +3,15 @@
 > 目标：不要从零造轮子。先跑通优秀开源项目，理解架构、数据流、调用链和商业化入口。  
 > 使用建议：每类只选 1 个主项目深挖，能本地运行、能改一处功能、能讲清架构，才算真正学会。
 
+| 项目 | 一页纸总结 |
+|---|---|
+| 文件定位 | 开源项目和 Agent 技术栈的入门复刻清单。 |
+| 适合对象 | 想从成熟代码开始学习 AI Chat、RAG、Agent、Workflow 和 SaaS 骨架的人。 |
+| 核心内容 | Vercel AI、Open WebUI、LobeChat、LlamaIndex、LangChain、Dify、Flowise、n8n、Open SaaS 等项目。 |
+| 立即行动 | 先跑通 `vercel/ai-chatbot`，再用 LlamaIndex 或 LangChain 做一个小型 RAG。 |
+| 关键产出 | 一个可演示 AI Web App、一个 RAG Demo、一个可控 Agent 流程。 |
+| 关联文件 | `08-github-mature-open-source-projects.md` 提供更完整成熟项目清单。 |
+
 ---
 
 ## 1. AI 应用开发基础栈

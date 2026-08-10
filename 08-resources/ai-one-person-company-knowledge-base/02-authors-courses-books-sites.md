@@ -3,6 +3,15 @@
 > 目标：建立高质量信息源，而不是沉迷信息流。  
 > 原则：每类先选 1-2 个主线资源，学完必须产出代码、文档或产品 Demo。
 
+| 项目 | 一页纸总结 |
+|---|---|
+| 文件定位 | AI 学习输入源清单，覆盖作者、YouTube、课程、书籍和网站。 |
+| 适合对象 | 需要快速建立 AI 产品、工程、创业和增长知识结构的人。 |
+| 核心内容 | Karpathy、Simon Willison、Chip Huyen、DeepLearning.AI、Full Stack Deep Learning、YC、Lenny、Indie Hackers 等资源。 |
+| 立即行动 | 选 1 个 AI 工程资源 + 1 个创业资源，学完输出 1 页笔记和 1 个小 Demo。 |
+| 关键产出 | 高质量信息源列表、学习优先级、每类资源的最小学习动作。 |
+| 关联文件 | `04-knowledge-framework.md` 用来把这些资源放入 12 个学习模块。 |
+
 ---
 
 ## 1. 推荐作者与研究者

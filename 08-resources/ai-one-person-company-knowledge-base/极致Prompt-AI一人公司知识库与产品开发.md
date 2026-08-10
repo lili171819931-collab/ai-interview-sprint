@@ -3,6 +3,15 @@
 > 可直接复制给 Cursor / Claude / GPT / Gemini / Perplexity / Deep Research。  
 > 目标：从“快速掌握 AI 知识”到“迅速开发产品并成立一人公司”，生成结构化知识库、学习路线、开源项目清单、Agent 方案、MVP 计划和商业化路径。
 
+| 项目 | 一页纸总结 |
+|---|---|
+| 文件定位 | 生成 AI 一人公司知识库与产品开发计划的超级 Prompt。 |
+| 适合对象 | 想让 AI 自动输出学习路线、开源项目、Agent 团队、产品方向、模板库和执行计划的人。 |
+| 核心内容 | 12 模块知识库、GitHub 开源项目、Agent 团队、作者课程书籍网站、30 天计划、产品方向、模板库、可公开思考链。 |
+| 立即行动 | 复制主 Prompt 到 AI 工具，补充个人背景、目标产品方向和时间限制后运行。 |
+| 关键产出 | 知识库目录、30 天计划、开源项目清单、Agent 团队、模板库、一人公司行动清单。 |
+| 关联文件 | `04-knowledge-framework.md`、`08-github-mature-open-source-projects.md`、`09-ai-skills-and-apps-catalog.md` 可作为 Prompt 的资料上下文。 |
+
 ---
 
 ```text
