@@ -11,6 +11,13 @@
 3. **你自己的作品仓库（本仓库）**  
    目的：一切学习服务面试表达
 
+## AI 模型分类与选型
+
+- [`ai-model-capability-taxonomy-and-selection.md`](./ai-model-capability-taxonomy-and-selection.md)  
+  AI 模型能力分类、适用场景、查询渠道、PM 选型流程和可信度口径。
+- [`极致Prompt-AI模型能力分类与选型.md`](./极致Prompt-AI模型能力分类与选型.md)  
+  可直接复制给 AI 工具的深度研究 Prompt，适合生成模型分类、选型框架和来源验证报告。
+
 ## 明确不看（两周内）
 
 - 大而全 ML 数学课
