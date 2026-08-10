@@ -1,0 +1,71 @@
+{
+  "query": "\"热点抓取\" OR \"热点监控\" OR \"爆款选题\" OR TrendRadar OR AIWriteX OR BuilderPulse",
+  "total_count": 3042,
+  "items": [
+    {
+      "rank": 1,
+      "name": "sansan0/TrendRadar",
+      "author": "sansan0",
+      "author_url": "https://github.com/sansan0",
+      "stars": 61312,
+      "created_at": "2025-04-28T11:42:16Z",
+      "updated_at": "2026-08-10T09:33:04Z",
+      "pushed_at": "2026-07-17T13:54:28Z",
+      "url": "https://github.com/sansan0/TrendRadar",
+      "homepage": "https://trendradar.sandev.cc",
+      "description": "⭐AI-driven public opinion & trend monitor with multi-platform aggregation, RSS, and smart alerts.🎯 告别信息过载，你的 AI 舆情监控助手与热点筛选工具！聚合多平台热点 +  RSS 订阅，支持关键词精准筛选。AI 智能筛选新闻 + AI 翻译 +  AI 分析简报直推手机，也支持接入 MCP 架构，赋能 AI 自然语言对话分析、情感洞察与趋势预测等。支持 Docker ，数据本地/云端自持。集成微信/飞书/钉钉/Telegram/邮件/ntfy/bark/slack 等渠道智能推送。"
+    },
+    {
+      "rank": 2,
+      "name": "imraywang/wewrite",
+      "author": "imraywang",
+      "author_url": "https://github.com/imraywang",
+      "stars": 3047,
+      "created_at": "2026-03-26T14:18:54Z",
+      "updated_at": "2026-08-10T10:00:22Z",
+      "pushed_at": "2026-08-10T03:02:23Z",
+      "url": "https://github.com/imraywang/wewrite",
+      "homepage": null,
+      "description": "公众号内容全流程 Skill，从热点抓取到微信草稿箱，一句话跑完整条内容管道"
+    },
+    {
+      "rank": 3,
+      "name": "iniwap/AIWriteX",
+      "author": "iniwap",
+      "author_url": "https://github.com/iniwap",
+      "stars": 1804,
+      "created_at": "2025-04-02T07:28:12Z",
+      "updated_at": "2026-08-10T07:50:25Z",
+      "pushed_at": "2026-08-07T10:24:50Z",
+      "url": "https://github.com/iniwap/AIWriteX",
+      "homepage": "https://aiwritex.voidai.cc",
+      "description": "AIWriteX - 微信公众号全自动AI工具：全网热搜舆情聚合+趋势分析+爆款选题+文章采集+一键生成排版发布 | AI自动配图 | 去AI味、过朱雀检测 | 支持小红书/百家号/头条等多平台 | 洗稿润色支持多账号 | 专家赛道 | 手机控制 | 小说连载 | 爆文10w+神器"
+    },
+    {
+      "rank": 4,
+      "name": "BuilderPulse/BuilderPulse",
+      "author": "BuilderPulse",
+      "author_url": "https://github.com/BuilderPulse",
+      "stars": 1534,
+      "created_at": "2026-04-14T11:48:05Z",
+      "updated_at": "2026-08-10T01:52:13Z",
+      "pushed_at": "2026-08-10T01:52:08Z",
+      "url": "https://github.com/BuilderPulse/BuilderPulse",
+      "homepage": "https://builderpulse.ai",
+      "description": "AI-powered daily intelligence for indie hackers and builders. 20 questions, 10+ sources, every morning."
+    },
+    {
+      "rank": 5,
+      "name": "liyupi/yupi-hot-monitor",
+      "author": "liyupi",
+      "author_url": "https://github.com/liyupi",
+      "stars": 687,
+      "created_at": "2026-02-27T08:15:28Z",
+      "updated_at": "2026-08-10T02:06:03Z",
+      "pushed_at": "2026-04-16T11:56:53Z",
+      "url": "https://github.com/liyupi/yupi-hot-monitor",
+      "homepage": "https://www.codefather.cn/course/2026625439052627970",
+      "description": "2026 年编程导航 AI 编程实战新项目，基于 Node.js + Express + React + OpenRouter 的 AI 热点监控工具，支持多信息源聚合抓取（Twitter / Bing / HackerNews / B 站等 7+ 平台）、AI 查询扩展、AI 真假识别与相关性分析、WebSocket 实时推送、邮件通知、多维度筛选排序，并将热点监控能力封装为 Agent Skills 技能包。覆盖 Prisma + SQLite 数据库、Socket.io 实时通信、Axios + Cheerio 网页爬虫、OpenRouter 大模型接入、Aceternity UI 炫酷前端、node-cron 定时任务、VSCode Copilot Vibe Coding + MCP"
+    }
+  ]
+}

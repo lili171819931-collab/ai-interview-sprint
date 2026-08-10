@@ -11,8 +11,9 @@
 ```bash
 cd 05-projects/07-ai-radar-dashboard
 npm install
-npm run data:refresh   # 生成 data/daily-bundle.json
-npm run dev            # http://localhost:3010
+npm run pulse:install  # 安装 BuilderPulse 本地副本（vendor/）
+npm run data:refresh   # 生成 daily-bundle + radar + pulse JSON
+npm run dev            # http://localhost:3010  → 看 /pulse
 ```
 
 ## 页面
@@ -21,6 +22,7 @@ npm run dev            # http://localhost:3010
 |------|------|
 | `/` | 总览：数据链、能力地图、品类柱状图、今日看点 |
 | `/radar` | AI 动态雷达日报：5 监控池 + 信号看板 + 风险/机会/行动 |
+| `/pulse` | BuilderPulse 风格机会简报：今日构建建议 + 机会发现题库 |
 | `/tools` | 目录：筛选 + 结果区（排序/视图/多选对比） |
 | `/tools/[id]` | 功能介绍 + 优劣势 + 来源数据链 |
 | `/compare` | 维度对比 + 决策流/树 + 柱状图 + 场景建议 |
@@ -55,6 +57,7 @@ npm run dev            # http://localhost:3010
 - [`docs/11-thinking-chain-and-risks.md`](docs/11-thinking-chain-and-risks.md)
 - [`docs/12-ai-radar-research-system.md`](docs/12-ai-radar-research-system.md)
 - [`docs/13-ai-radar-source-matrix.md`](docs/13-ai-radar-source-matrix.md)
+- [`docs/14-opportunity-brief-full-loop.md`](docs/14-opportunity-brief-full-loop.md) ← **机会简报迭代全流程**
 
 ### 5) 演示与故事化包装
 - [`docs/演示脚本.md`](docs/演示脚本.md)
@@ -70,14 +73,30 @@ npm run dev            # http://localhost:3010
 1. 编辑 `src/data/seed.ts`（事实与评分，人工底座）
 2. 维护 5 监控池：`src/data/research-sources.ts`
 3. 需要时扩展 `scripts/live-sources.ts`（RSS / GitHub Atom / 公开 Changelog）
-4. `npm run data:refresh` — 抓取公开源 + 生成 `data/radar-daily-report.json`  
+4. `npm run data:refresh` — 抓取公开源 + 生成 `data/radar-daily-report.json` + 同步 BuilderPulse  
    - 仅日报：`npm run radar:daily`  
    - 周报：`npm run radar:weekly`  
-   - 无网：`npm run data:refresh:offline`
+   - 离线：`npm run data:refresh:offline`  
+   - 仅机会简报：`npm run pulse:sync`
 5. 校验失败**不会**覆盖昨日 `data/daily-bundle.json`
-6. 看板看 `/radar`；抓取明细看 `/sources` 与 `data/live-fetch-report.json`
+6. 看板看 `/radar`；机会简报看 `/pulse`；抓取明细看 `/sources` 与 `data/live-fetch-report.json`
 
 **不会**因 RSS / 雷达日报自动改七维分数。
+
+## BuilderPulse 能力映射
+
+参考 [BuilderPulse 中文说明](https://github.com/BuilderPulse/BuilderPulse#chinese)，本项目新增：
+
+| BuilderPulse 能力 | 本项目落点 |
+|-------------------|------------|
+| 今日建议 + Why now | `/pulse` 顶部「今日构建建议」；`/radar` 摘要卡 |
+| 2 小时构建 | `buildIdea.timebox*` |
+| Top 3 信号 / 白话简报 | `/pulse` 对应区块 |
+| 发现机会题库（发布/搜索/开源缺口/抱怨/行动） | `/pulse` 机会卡片 |
+| 7 天命中记录 | `trackRecord` |
+| 本地安装日报仓 | `npm run pulse:install` → `vendor/BuilderPulse` |
+
+内容解析自公开中文日报，遵循其 **CC BY-NC 4.0**（非商业用途）；商业转载需联系原作者。
 
 ## 文档
 

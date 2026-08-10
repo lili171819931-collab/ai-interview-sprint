@@ -1,8 +1,9 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, ExternalLink, Lightbulb, Radar } from "lucide-react";
+import { AlertTriangle, ArrowRight, ExternalLink, Lightbulb, Radar, Zap } from "lucide-react";
 import { FreshnessBadge } from "@/components/FreshnessBadge";
 import { MONITOR_POOL_LABELS, type MonitorPool } from "@/data/research-sources";
 import { getBundleView } from "@/lib/data";
+import { getPulseBriefView } from "@/lib/pulse-data";
 import { getRadarReportView } from "@/lib/radar-data";
 import type { Confidence, Heat, RadarSignal } from "@/lib/radar-types";
 
@@ -35,6 +36,7 @@ function confidenceClass(c: Confidence) {
 
 export default function RadarPage() {
   const { report, fromFile } = getRadarReportView();
+  const { brief: pulse } = getPulseBriefView();
   const { freshness, lastUpdatedDate } = getBundleView();
   const byPool = (Object.keys(MONITOR_POOL_LABELS) as MonitorPool[]).map((pool) => ({
     pool,
@@ -68,17 +70,45 @@ export default function RadarPage() {
         <FreshnessBadge freshness={freshness} lastUpdatedDate={lastUpdatedDate} />
         <p className="text-sm text-[var(--muted)]">{report.methodNote}</p>
         <div className="flex flex-wrap gap-3">
+          <Link href="/pulse" className="btn btn-primary">
+            机会简报 <ArrowRight size={16} aria-hidden />
+          </Link>
           <Link href="/sources" className="btn btn-ghost">
             查看来源矩阵
           </Link>
           <Link href="/methodology" className="btn btn-ghost">
             评分口径
           </Link>
-          <Link href="/tools" className="btn btn-primary">
-            进入工具目录 <ArrowRight size={16} aria-hidden />
+          <Link href="/tools" className="btn btn-ghost">
+            进入工具目录
           </Link>
         </div>
       </div>
+
+      <section className="hero-panel px-5 py-6 space-y-3">
+        <div className="flex items-center gap-2 text-[var(--signal)]">
+          <Zap size={18} aria-hidden />
+          <h2 className="display text-xl font-semibold">BuilderPulse · 今日构建建议</h2>
+        </div>
+        <p className="display text-2xl font-semibold leading-snug">{pulse.buildIdea.title}</p>
+        <p className="text-sm text-[var(--muted)] leading-relaxed">
+          <span className="text-[var(--amber)] font-medium">为什么是现在：</span>
+          {pulse.buildIdea.whyNow}
+        </p>
+        <div className="flex flex-wrap gap-3">
+          <Link href="/pulse" className="btn btn-primary">
+            打开完整机会简报 <ArrowRight size={16} aria-hidden />
+          </Link>
+          <a
+            href="https://github.com/BuilderPulse/BuilderPulse#chinese"
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-ghost inline-flex items-center gap-1"
+          >
+            原项目说明 <ExternalLink size={14} aria-hidden />
+          </a>
+        </div>
+      </section>
 
       <section className="insight-card p-5 space-y-3">
         <h2 className="display text-xl font-semibold">执行摘要</h2>

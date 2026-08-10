@@ -1,0 +1,112 @@
+[
+  {
+    "rank": 1,
+    "name": "openclaw/openclaw",
+    "author": "openclaw",
+    "author_url": "https://github.com/openclaw",
+    "stars": 385743,
+    "forks": 81078,
+    "url": "https://github.com/openclaw/openclaw",
+    "description": "Your own personal AI assistant. Any OS. Any Platform. The lobster way. 🦞 ",
+    "language": "TypeScript"
+  },
+  {
+    "rank": 2,
+    "name": "obra/superpowers",
+    "author": "obra",
+    "author_url": "https://github.com/obra",
+    "stars": 269978,
+    "forks": 24130,
+    "url": "https://github.com/obra/superpowers",
+    "description": "An agentic skills framework & software development methodology that works.",
+    "language": "Shell"
+  },
+  {
+    "rank": 3,
+    "name": "NousResearch/hermes-agent",
+    "author": "NousResearch",
+    "author_url": "https://github.com/NousResearch",
+    "stars": 228153,
+    "forks": 44826,
+    "url": "https://github.com/NousResearch/hermes-agent",
+    "description": "The agent that grows with you",
+    "language": "Python"
+  },
+  {
+    "rank": 4,
+    "name": "n8n-io/n8n",
+    "author": "n8n-io",
+    "author_url": "https://github.com/n8n-io",
+    "stars": 200050,
+    "forks": 60046,
+    "url": "https://github.com/n8n-io/n8n",
+    "description": "Fair-code workflow automation platform with native AI capabilities. Combine visual building with custom code, self-host or cloud, 400+ integrations.",
+    "language": "TypeScript"
+  },
+  {
+    "rank": 5,
+    "name": "Significant-Gravitas/AutoGPT",
+    "author": "Significant-Gravitas",
+    "author_url": "https://github.com/Significant-Gravitas",
+    "stars": 186482,
+    "forks": 46073,
+    "url": "https://github.com/Significant-Gravitas/AutoGPT",
+    "description": "AutoGPT is the vision of accessible AI for everyone, to use and to build on. Our mission is to provide the tools, so that you can focus on what matters.",
+    "language": "Python"
+  },
+  {
+    "rank": 6,
+    "name": "f/prompts.chat",
+    "author": "f",
+    "author_url": "https://github.com/f",
+    "stars": 166946,
+    "forks": 21548,
+    "url": "https://github.com/f/prompts.chat",
+    "description": "f.k.a. Awesome ChatGPT Prompts. Share, discover, and collect prompts from the community. Free and open source — self-host for your organization with complete privacy.",
+    "language": "HTML"
+  },
+  {
+    "rank": 7,
+    "name": "firecrawl/firecrawl",
+    "author": "firecrawl",
+    "author_url": "https://github.com/firecrawl",
+    "stars": 164497,
+    "forks": 9257,
+    "url": "https://github.com/firecrawl/firecrawl",
+    "description": "The context API to search, scrape, and interact with the web at scale. 🔥",
+    "language": "TypeScript"
+  },
+  {
+    "rank": 8,
+    "name": "AUTOMATIC1111/stable-diffusion-webui",
+    "author": "AUTOMATIC1111",
+    "author_url": "https://github.com/AUTOMATIC1111",
+    "stars": 164463,
+    "forks": 30568,
+    "url": "https://github.com/AUTOMATIC1111/stable-diffusion-webui",
+    "description": "Stable Diffusion web UI",
+    "language": "Python"
+  },
+  {
+    "rank": 9,
+    "name": "Snailclimb/JavaGuide",
+    "author": "Snailclimb",
+    "author_url": "https://github.com/Snailclimb",
+    "stars": 157657,
+    "forks": 46177,
+    "url": "https://github.com/Snailclimb/JavaGuide",
+    "description": "Java 面试 & 后端通用面试指南，覆盖计算机基础、数据库、分布式、高并发、系统设计与 AI 应用开发",
+    "language": "JavaScript"
+  },
+  {
+    "rank": 10,
+    "name": "langgenius/dify",
+    "author": "langgenius",
+    "author_url": "https://github.com/langgenius",
+    "stars": 151939,
+    "forks": 23977,
+    "url": "https://github.com/langgenius/dify",
+    "description": "Build Agentic workflows, RAG pipelines, with rich AI model and tool support on one collaborative workspace. Deploy on cloud, VPC, or self-hosted, so teams move from prototype to production without rebuilding the stack.",
+    "language": "TypeScript"
+  }
+]

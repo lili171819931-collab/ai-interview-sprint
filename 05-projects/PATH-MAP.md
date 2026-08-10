@@ -40,6 +40,8 @@
 |------|-------------|----------------------------|
 | 可运行源码 + 完整文档 | `products/ai-radar-dashboard/` | `05-projects/07-ai-radar-dashboard/`（同步副本） |
 | 子模块路径 | — | `05-projects/ai-projects/products/ai-radar-dashboard/` |
+| 机会简报全流程 | — | `05-projects/07-ai-radar-dashboard/docs/14-opportunity-brief-full-loop.md` |
+| 情报研究脚本 | — | `08-resources/scrapling-examples/` |
 
 ## 关系图
 
@@ -47,5 +49,6 @@
 领域能力（类目 / 情景 / 合规 CoT）
  ├── 04 WorkBuddy Skill      ← 对话载体
  ├── 05 票易报 Web            ← 多用户审批系统（本仓源码）
- └── 06 票迹 小程序           ← 员工侧闭环（源码在 ai-projects）
+ ├── 06 票迹 小程序           ← 员工侧闭环（源码在 ai-projects）
+ └── 07 智衡 AI Radar         ← 情报看板 + 机会简报（本仓完整包）
 ```

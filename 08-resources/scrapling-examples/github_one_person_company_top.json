@@ -1,0 +1,61 @@
+{
+  "query": "\"一人公司\" OR solopreneur OR \"indie hacker\" OR \"one-person business\" OR \"独立开发者\"",
+  "total_count": 1815,
+  "items": [
+    {
+      "rank": 1,
+      "name": "1c7/chinese-independent-developer",
+      "author": "1c7",
+      "author_url": "https://github.com/1c7",
+      "stars": 60675,
+      "url": "https://github.com/1c7/chinese-independent-developer",
+      "homepage": null,
+      "description": "👩🏿‍💻👨🏾‍💻👩🏼‍💻👨🏽‍💻👩🏻‍💻中国独立开发者项目列表 -- 分享大家都在做什么",
+      "language": "Python"
+    },
+    {
+      "rank": 2,
+      "name": "easychen/one-person-businesses-methodology",
+      "author": "easychen",
+      "author_url": "https://github.com/easychen",
+      "stars": 8361,
+      "url": "https://github.com/easychen/one-person-businesses-methodology",
+      "homepage": null,
+      "description": "一人公司方法论",
+      "language": null
+    },
+    {
+      "rank": 3,
+      "name": "weijunext/indie-hacker-tools",
+      "author": "weijunext",
+      "author_url": "https://github.com/weijunext",
+      "stars": 7950,
+      "url": "https://github.com/weijunext/indie-hacker-tools",
+      "homepage": null,
+      "description": "收录独立开发者出海技术栈和工具",
+      "language": null
+    },
+    {
+      "rank": 4,
+      "name": "naxiaoduo/1000UserGuide",
+      "author": "naxiaoduo",
+      "author_url": "https://github.com/naxiaoduo",
+      "stars": 3929,
+      "url": "https://github.com/naxiaoduo/1000UserGuide",
+      "homepage": "https://1000userguide.com",
+      "description": "1000UserGuide：对独立开发者和创业者来说，找到前1000个早期用户太关键了。这里精心整理了300多个国内外渠道，适合独立开发者和创业者推广产品的渠道。",
+      "language": "HTML"
+    },
+    {
+      "rank": 5,
+      "name": "hua1995116/indiehackers-steps",
+      "author": "hua1995116",
+      "author_url": "https://github.com/hua1995116",
+      "stars": 3733,
+      "url": "https://github.com/hua1995116/indiehackers-steps",
+      "homepage": null,
+      "description": "《独立开发者的艺术》打造最全的独立开发者指南，一人公司。",
+      "language": null
+    }
+  ]
+}
