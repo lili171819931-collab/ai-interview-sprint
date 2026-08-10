@@ -13,10 +13,12 @@
 
 ## AI 模型分类与选型
 
+- [`2026-ai-model-taxonomy-platforms-selection.md`](./2026-ai-model-taxonomy-platforms-selection.md)  
+  由桌面 PDF《2026最新AI模型全分类·功能拆解·权威查询平台·选型对照表》转写的结构化原文，含五大分类、平台七维与场景对照表。
 - [`ai-model-capability-taxonomy-and-selection.md`](./ai-model-capability-taxonomy-and-selection.md)  
-  AI 模型能力分类、适用场景、查询渠道、PM 选型流程和可信度口径。
+  十类能力分层主文档；已合并 PDF 中的五大框架映射、国内渠道、选型对照表和平台使用策略。
 - [`极致Prompt-AI模型能力分类与选型.md`](./极致Prompt-AI模型能力分类与选型.md)  
-  可直接复制给 AI 工具的深度研究 Prompt，适合生成模型分类、选型框架和来源验证报告。
+  可直接复制给 AI 工具的深度研究 Prompt；已纳入双框架对照与国内权威渠道。
 
 ## 明确不看（两周内）
 

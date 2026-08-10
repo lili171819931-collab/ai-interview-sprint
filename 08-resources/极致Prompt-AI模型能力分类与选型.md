@@ -2,7 +2,8 @@
 
 > 可整段复制给 Cursor / Claude / GPT / Gemini / Perplexity / Deep Research 类工具。  
 > 目标：生成一份面向产品经理的 AI 模型分类、能力边界、查询渠道、选型框架和可信度报告。  
-> 配套研究文档：[`ai-model-capability-taxonomy-and-selection.md`](./ai-model-capability-taxonomy-and-selection.md)
+> 配套研究文档：[`ai-model-capability-taxonomy-and-selection.md`](./ai-model-capability-taxonomy-and-selection.md)  
+> PDF 转写原文：[`2026-ai-model-taxonomy-platforms-selection.md`](./2026-ai-model-taxonomy-platforms-selection.md)
 
 ---
 
@@ -17,6 +18,11 @@
 1. 模型能力分类：模型本身能做什么。
 2. AI 工具分类：产品把模型包装成什么工作流。
 3. 应用场景分类：业务里用它解决什么问题。
+
+同时请对照两套框架输出，并说明映射关系：
+A. 十类能力分层：通用 LLM、推理、代码、多模态、图像、视频、语音、Embedding/检索、Agent/工具调用、垂直领域。
+B. 五大落地框架：通用基础大模型、专项能力模型、技术底座模型、智能 Agent 模型、行业垂直专用模型。
+其中专项能力需拆到：超长上下文、代码、多模态、图像生成、音视频生成。
 
 一、请先建立 AI 模型能力分类体系
 
@@ -38,11 +44,12 @@
 - 擅长任务
 - 不适合任务
 - 典型产品场景
-- 代表模型/产品
+- 代表模型/产品（含中美主流与国产代表）
 - 主要厂商
 - 常见定价方式
 - 推荐查询网站
 - 可信度判断
+- 与五大落地框架的对应关系
 
 二、请从产品经理视角分析使用场景
 
@@ -79,7 +86,15 @@
 - 行业报告与研究机构
 
 必须包含但不限于：
-OpenAI、Anthropic、Google AI、Google DeepMind、Meta AI、Mistral、DeepSeek、阿里云百炼、腾讯混元、百度千帆、智谱 AI、Hugging Face、ModelScope、OpenRouter、Together AI、Replicate、硅基流动、Artificial Analysis、LMArena / Chatbot Arena、Stanford HELM、Papers with Code、SWE-bench、MMMU、MMLU、GPQA、VBench、Futurepedia、There’s An AI For That、Product Hunt、G2。
+OpenAI、Anthropic、Google AI、Google DeepMind、Meta AI、Mistral、DeepSeek、阿里云百炼、腾讯混元、百度千帆、智谱 AI、讯飞星火、豆包、火山方舟、Hugging Face、ModelScope、OpenCompass、OpenRouter、Together AI、Replicate、硅基流动、Artificial Analysis、LMArena / Chatbot Arena、Stanford HELM、Papers with Code、SWE-bench、MMMU、MMLU、GPQA、VBench、CLiB、BFCL、智源研究院、中国信通院、AIHOT、Futurepedia、There’s An AI For That、Product Hunt、G2、掘金 AI、aihub.cn、model.zoz.la。
+
+并请按场景给出平台使用策略：
+- 新手选型
+- API 开发落地
+- 私有化/开源
+- 学术科研
+- 企业商用决策
+- 合规项目
 
 四、请建立 AI 模型选型评分框架
 
@@ -138,12 +153,13 @@ OpenAI、Anthropic、Google AI、Google DeepMind、Meta AI、Mistral、DeepSeek�
 请尽量用产品经理能理解的语言表达，但保持专业深度。
 
 最后请输出：
-1. 一份“AI 模型能力分类地图”
+1. 一份“AI 模型能力分类地图”（十类能力 + 五大落地框架映射）
 2. 一份“AI 模型选型速查清单”
 3. 一份“不同业务场景推荐模型类型”
-4. 一份“推荐查询网站清单”
-5. 一套“产品经理选择 AI 工具的决策流程”
-6. 一份“可信度与风险说明”
+4. 一份“场景选型对照表”（最优类型 / 备选 / 使用建议 / 避坑）
+5. 一份“推荐查询网站清单”（含国内渠道）
+6. 一套“产品经理选择 AI 工具的决策流程”
+7. 一份“可信度与风险说明”
 ```
 
 ---

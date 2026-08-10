@@ -2,7 +2,9 @@
 
 > 目标读者：AI 产品经理、创业者、企业内部工具负责人。  
 > 使用方式：用于建立 AI 工具/模型认知框架、做竞品研究、搭建模型选型评分表。  
-> 时间口径：面向 2025-2026 年市场格局；具体模型版本、价格和榜单排名需以官网与榜单最新信息为准。
+> 时间口径：面向 2025-2026 年市场格局；具体模型版本、价格和榜单排名需以官网与榜单最新信息为准。  
+> PDF 原文转写：[`2026-ai-model-taxonomy-platforms-selection.md`](./2026-ai-model-taxonomy-platforms-selection.md)  
+> 更新说明：已合并 PDF 中的五大分类框架、国内权威渠道、场景选型对照表与平台使用策略。
 
 ---
 
@@ -11,6 +13,25 @@
 市面上的 AI 模型不宜只按厂商划分，更适合按“能力层”划分：通用语言、深度推理、代码、多模态、图像、视频、语音、检索、Agent 工具调用、垂直行业。  
 产品选型时，先判断业务任务属于哪一类能力，再比较成本、速度、准确性、上下文、中文能力、工具调用、数据安全和部署方式。
 
+也可并行使用 PDF 的五大落地框架：
+
+**通用打底 → 专项极致 → 底座支撑 → 智能执行 → 行业落地**
+
+选型原则：不滥用顶配、不用通用硬替专项、商用优先合规与可验证效果。
+
+---
+
+## 1.5 两大分类框架对照
+
+| PDF 五大分类 | 本仓库十类能力 | 合并后怎么用 |
+|---|---|---|
+| 通用基础大模型 | 通用 LLM + 推理模型 | 日常办公看通用；复杂分析单独评推理 |
+| 专项-超长上下文 | 通用 LLM 的长上下文能力 | 合同/财报/书籍精读单独验证窗口与细节留存 |
+| 专项-代码 / 多模态 / 图像 / 音视频 | 代码、多模态、图像、视频、语音 | PDF 把音视频合并；选型时仍建议拆开 |
+| 技术底座模型 | Embedding/检索模型 | RAG 与推荐必评，不可用生成模型替代 |
+| 智能 Agent 模型 | Agent/工具调用模型 | 看规划、工具调用、权限与人工校验 |
+| 行业垂直专用模型 | 垂直领域模型 | 法律/医疗/金融等商用优先垂直 + 审核 |
+
 ---
 
 ## 2. 模型能力分类地图
@@ -18,12 +39,13 @@
 ### 2.1 通用大语言模型 LLM
 
 - 定义：以文本理解和生成为核心的基础模型。
-- 擅长功能：写作、总结、翻译、问答、头脑风暴、知识整理、方案生成。
-- 不适合场景：高可靠计算、实时事实查询、严格合规判断、没有外部工具支持的精确数据分析。
-- 代表模型/产品：GPT、Claude、Gemini、Qwen、Llama、Mistral、DeepSeek。
-- 典型业务场景：内容生产、运营文案、客服草稿、会议纪要、知识问答、产品方案。
-- 查询网站：OpenAI、Anthropic、Google AI、Meta AI、Mistral、DeepSeek、阿里云百炼、OpenRouter、Artificial Analysis、LMArena。
+- 擅长功能：写作、总结、翻译、问答、头脑风暴、知识整理、方案生成；也可覆盖公文、润色纠错、方案策划。
+- 不适合场景：高可靠计算、实时事实查询、严格合规判断、没有外部工具支持的精确数据分析；超长文档无损精读与工业级专业分析也易遇瓶颈。
+- 代表模型/产品：GPT、Claude、Gemini、Qwen、Llama、Mistral、DeepSeek、智谱 GLM、文心一言、豆包。
+- 典型业务场景：内容生产、运营文案、客服草稿、会议纪要、知识问答、产品方案、日常办公增效。
+- 查询网站：OpenAI、Anthropic、Google AI、Meta AI、Mistral、DeepSeek、阿里云百炼、OpenRouter、Artificial Analysis、LMArena、CLiB。
 - 选型信心：高。该类别成熟度高，官方文档和第三方评测较多。
+- 补充：若任务是十万字合同/财报/书籍精读，应优先验证“超长上下文专项能力”，不要只看通用榜。
 
 ### 2.2 推理模型
 
@@ -153,19 +175,26 @@
 - Hugging Face：https://huggingface.co/
 - ModelScope：https://modelscope.cn/
 - GitHub Trending：https://github.com/trending
+- OpenCompass 司南：https://opencompass.org.cn/
 - Reddit r/LocalLLaMA：https://www.reddit.com/r/LocalLLaMA/
 
-适合查询：开源模型、权重、Demo、社区复现、部署经验。  
+适合查询：开源模型、权重、Demo、社区复现、部署经验、中文开源评测。  
 信心等级：中。社区信息快，但需要回到模型卡、论文和代码验证。
 
-### 3.4 API 聚合平台
+### 3.4 API 聚合平台与云厂商广场
 
 - OpenRouter：https://openrouter.ai/
 - Together AI：https://www.together.ai/
 - Replicate：https://replicate.com/
 - 硅基流动：https://siliconflow.cn/
+- 火山方舟：https://ark.volcengine.com/
+- 阿里百炼 / DashScope：https://dashscope.aliyun.com/
+- 百度千帆：https://cloud.baidu.com/product/wenxinworkshop
+- 讯飞星火：https://www.xfyun.cn/tech/llm
+- 腾讯云大模型：https://cloud.tencent.com/product/llm
+- 豆包开发者：https://www.doubao.com/developer
 
-适合查询：多模型 API、价格比较、调用可用性、模型接入速度。  
+适合查询：多模型 API、价格比较、调用可用性、私有化与合规部署方案。  
 信心等级：中高。价格和可用性需以平台实时页面为准。
 
 ### 3.5 AI 工具目录与用户评价
@@ -175,8 +204,11 @@
 - Product Hunt AI：https://www.producthunt.com/topics/artificial-intelligence
 - G2 AI Software：https://www.g2.com/categories/artificial-intelligence
 - Toolify：https://www.toolify.ai/
+- 掘金 AI：https://juejin.cn/ai
+- AI 工具集导航：https://www.aihub.cn/
+- Model 数据库：https://model.zoz.la/
 
-适合查询：AI 工具新品、场景分类、用户反馈、商业软件成熟度。  
+适合查询：AI 工具新品、场景分类、用户反馈、参数对比、国内入门实测。  
 信心等级：中。适合发现候选，不适合作为最终能力结论。
 
 ### 3.6 行业报告与趋势
@@ -185,9 +217,33 @@
 - Epoch AI：https://epoch.ai/
 - MIT Technology Review AI：https://www.technologyreview.com/topic/artificial-intelligence/
 - The Batch：https://www.deeplearning.ai/the-batch/
+- 智源研究院：https://www.baai.ac.cn/
+- 中国信通院：https://www.caict.ac.cn/
+- 艾瑞咨询：https://report.iresearch.cn/
+- 36氪研究院：https://research.36kr.com/
+- 亿邦动力：https://www.ebrun.com/
 
-适合查询：宏观趋势、产业变化、长期判断、行业引用。  
+适合查询：宏观趋势、产业变化、合规白皮书、投融资与商用落地案例。  
 信心等级：中高。适合做背景判断，不适合替代真实产品测试。
+
+### 3.7 国内专项评测与中文基准
+
+- CLiB 中文大模型基准：https://www.clib-bench.com/
+- BFCL Tool 调用基准：https://bfcl.berkeley.edu/
+- AIHOT 国产模型热度榜：https://aihot.virxact.com/leaderboard
+- OpenCompass：https://opencompass.org.cn/
+
+适合查询：中文能力、工具调用/Agent、国产热度与口碑。  
+信心等级：中。与海外榜单交叉验证，避免单一榜单定论。
+
+### 3.8 平台使用策略（合并自 PDF）
+
+1. 新手选型 / 日常使用：工具导航 + 国产热度/性能榜  
+2. 开发落地 / API 调用：云厂商广场 + API 集市  
+3. 私有化 / 开源二次开发：Hugging Face / ModelScope / GitHub  
+4. 学术科研 / 技术溯源：Papers with Code、arXiv、HELM、CLiB、BFCL  
+5. 企业选型 / 商用决策：Artificial Analysis + 行业报告 + 自测集  
+6. 合规项目：国内云厂商官方广场 + 信通院 / 智源等权威报告
 
 ---
 
@@ -253,28 +309,28 @@
 
 - 推荐组合：Embedding + RAG + 通用 LLM + 权限控制 + 审计日志。
 - 关注重点：数据安全、权限、召回质量、答案可追溯。
-- 避免：把企业知识直接塞给模型而不做文档治理。
+- 避免：把企业知识直接塞给模型而不做文档治理；不可用生成模型替代向量模型。
 - 信心：高。
 
 ### 个人效率工具
 
 - 推荐组合：通用 LLM + 多模态 + 语音 + 自动化工具。
 - 关注重点：使用体验、响应速度、跨应用流转。
-- 避免：复杂配置导致用户学习成本过高。
+- 避免：复杂配置导致用户学习成本过高；简单单次任务不必上 Agent。
 - 信心：中高。
 
 ### 内容营销团队
 
 - 推荐组合：LLM 文案 + 图像生成 + 视频生成 + 品牌审核流程。
 - 关注重点：批量产出、品牌一致性、版权、人工审核。
-- 避免：直接发布未经校验的生成内容。
+- 避免：直接发布未经校验的生成内容；勿用文本模型硬做视觉/视频。
 - 信心：中。
 
 ### 研发团队
 
 - 推荐组合：代码模型 + IDE Agent + 仓库上下文 + CI 测试。
 - 关注重点：代码质量、测试覆盖、上下文理解、权限边界。
-- 避免：无人审查自动提交生产代码。
+- 避免：无人审查自动提交生产代码；工程级任务不要只靠通用聊天模型。
 - 信心：中高。
 
 ### 教育或培训产品
@@ -290,6 +346,20 @@
 - 关注重点：准确率、接管率、话术一致性、合规和客户体验。
 - 避免：让模型直接承诺价格、合同、退款等敏感事项。
 - 信心：中高。
+
+### 6.1 场景选型速查表（合并自 PDF）
+
+| 核心场景 | 优先类型 | 备选方向 | 避坑 |
+|---|---|---|---|
+| 通用文案 / 日常问答 | 通用 LLM | 通义 / DeepSeek / 豆包 | 勿用专项模型做通用写作 |
+| 长文档 / 合同 / 财报精读 | 超长上下文能力 | Claude / Kimi / Gemini 长文本 | 通用模型易漏细节 |
+| 代码开发与工程重构 | 代码模型 | Copilot / 通义灵码 / Cursor | 商用项目勿只靠通用模型 |
+| 图文解析 / 截图解题 | 多模态 | 豆包多模态 / Gemini | 单一绘画别硬用多模态 |
+| 海报 / 电商视觉 | 图像生成 | 通义万相 / Midjourney | 勿用纯文本模型做视觉 |
+| 短视频 / 数字人 | 视频 + 语音 | 剪映 AI / Runway / Sora | 通用文本模型无法稳定出片 |
+| 企业知识库 / RAG | Embedding | 国产向量模型 | 生成模型不能替代向量模型 |
+| 自动化办公 / 调研 | Agent | Coze / WorkBuddy / Dify | 长周期任务要人工校验 |
+| 法律 / 医疗 / 金融专业作业 | 垂直领域模型 | 通用顶配 + 人工审核 | 通用输出不可直接商用 |
 
 ---
 
