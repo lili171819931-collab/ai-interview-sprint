@@ -20,6 +20,11 @@
 - [`极致Prompt-AI模型能力分类与选型.md`](./极致Prompt-AI模型能力分类与选型.md)  
   可直接复制给 AI 工具的深度研究 Prompt；已纳入双框架对照与国内权威渠道。
 
+## AI 一人公司知识库
+
+- [`ai-one-person-company-knowledge-base/`](./ai-one-person-company-knowledge-base/)  
+  面向“快速掌握 AI、迅速开发产品、成立一人公司”的结构化知识库，包含开源项目、Agent 框架、作者课程、书籍网站、产品工具、模板、可公开思考链和极致 Prompt。
+
 ## 明确不看（两周内）
 
 - 大而全 ML 数学课
