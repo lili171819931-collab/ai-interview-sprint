@@ -60,6 +60,9 @@
 - [`08-github-mature-open-source-projects.md`](./08-github-mature-open-source-projects.md)  
   GitHub 成熟开源项目复刻清单，覆盖 AI Chat、RAG、Agent、工作流、多模型网关、Eval、向量库、多模态、OCR、SaaS 模板、MCP，并补充优秀作者/团队。
 
+- [`09-ai-skills-and-apps-catalog.md`](./09-ai-skills-and-apps-catalog.md)  
+  AI Skill 与 App 分类导航，覆盖编程 IDE Agent、Agent App Builder、RAG、Workflow、研究爬取、多模态、语音、数据分析、客服 CRM、Prompt/MCP/模板资源，并附 App 与 GitHub 链接。
+
 - [`极致Prompt-AI一人公司知识库与产品开发.md`](./极致Prompt-AI一人公司知识库与产品开发.md)  
   根据本知识库生成学习路线、开源项目清单、产品开发计划和一人公司行动方案的超级 Prompt。
 
