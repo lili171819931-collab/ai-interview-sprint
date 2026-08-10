@@ -7,12 +7,13 @@
     "build": "next build",
     "start": "next start --port 3010",
     "lint": "next lint",
-    "data:refresh": "tsx scripts/refresh-data.ts && tsx scripts/refresh-radar-report.ts && tsx scripts/sync-builder-pulse.ts",
-    "data:refresh:offline": "RADAR_OFFLINE=1 tsx scripts/refresh-data.ts && tsx scripts/refresh-radar-report.ts && tsx scripts/sync-builder-pulse.ts",
+    "data:refresh": "tsx scripts/refresh-data.ts && tsx scripts/refresh-radar-report.ts && tsx scripts/sync-builder-pulse.ts && tsx scripts/sync-trendradar.ts",
+    "data:refresh:offline": "RADAR_OFFLINE=1 tsx scripts/refresh-data.ts && tsx scripts/refresh-radar-report.ts && tsx scripts/sync-builder-pulse.ts && tsx scripts/sync-trendradar.ts",
     "radar:daily": "tsx scripts/refresh-radar-report.ts",
     "radar:weekly": "RADAR_REPORT_KIND=weekly tsx scripts/refresh-radar-report.ts",
     "pulse:install": "bash scripts/install-builder-pulse.sh",
     "pulse:sync": "tsx scripts/sync-builder-pulse.ts",
+    "trendradar:sync": "tsx scripts/sync-trendradar.ts",
     "setup": "npm run pulse:install && npm run data:refresh"
   },
   "dependencies": {

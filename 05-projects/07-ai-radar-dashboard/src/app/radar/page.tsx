@@ -1,10 +1,19 @@
 import Link from "next/link";
-import { AlertTriangle, ArrowRight, ExternalLink, Lightbulb, Radar, Zap } from "lucide-react";
+import {
+  AlertTriangle,
+  ArrowRight,
+  ExternalLink,
+  Flame,
+  Lightbulb,
+  Radar,
+  Zap,
+} from "lucide-react";
 import { FreshnessBadge } from "@/components/FreshnessBadge";
 import { MONITOR_POOL_LABELS, type MonitorPool } from "@/data/research-sources";
 import { getBundleView } from "@/lib/data";
 import { getPulseBriefView } from "@/lib/pulse-data";
 import { getRadarReportView } from "@/lib/radar-data";
+import { getTrendRadarView } from "@/lib/trendradar-data";
 import type { Confidence, Heat, RadarSignal } from "@/lib/radar-types";
 
 const CATEGORY_LABEL: Record<RadarSignal["category"], string> = {
@@ -37,6 +46,7 @@ function confidenceClass(c: Confidence) {
 export default function RadarPage() {
   const { report, fromFile } = getRadarReportView();
   const { brief: pulse } = getPulseBriefView();
+  const { snapshot: trend, fromFile: trendFromFile } = getTrendRadarView();
   const { freshness, lastUpdatedDate } = getBundleView();
   const byPool = (Object.keys(MONITOR_POOL_LABELS) as MonitorPool[]).map((pool) => ({
     pool,
@@ -49,23 +59,27 @@ export default function RadarPage() {
     .sort((a, b) => b.heat - a.heat || b.updatedAt.localeCompare(a.updatedAt))
     .slice(0, 12);
 
+  const trendTop = [...trend.items].sort((a, b) => a.rank - b.rank).slice(0, 18);
+  const trendAi = trend.items.filter((i) => i.aiRelated).slice(0, 8);
+
   return (
     <div className="container py-10 space-y-10">
       <div className="space-y-4">
         <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(139,92,246,0.45)] bg-[var(--ai-accent-dim)] px-3 py-1 text-xs text-[#d7ccff]">
           <Radar size={14} aria-hidden />
-          AI 动态雷达 · 5 监控池日更机制
+          AI 动态雷达 · 5 监控池 + TrendRadar 热点融合
         </div>
         <h1 className="display text-3xl sm:text-4xl font-semibold">AI 动态雷达日报</h1>
         <p className="text-[var(--muted)] max-w-3xl leading-relaxed">
-          覆盖模型榜单、工具目录、新闻快讯、论文研究、官方发布。输出日报 / 排行观察 / 风险提醒 / 机会洞察；
-          不自动改七维分数。
+          覆盖模型榜单、工具目录、新闻快讯、论文研究、官方发布；并融合 TrendRadar 多平台热搜。
+          输出日报 / 排行观察 / 风险提醒 / 机会洞察；不自动改七维分数。
         </p>
         <div className="flex flex-wrap gap-2 text-xs">
           <span className="tag tag-signal">{report.reportDate}</span>
           <span className="tag">{report.kind === "weekly" ? "周报" : "日报"}</span>
           <span className="tag">{fromFile ? "已落盘 JSON" : "seed 降级"}</span>
           <span className="tag">信号 {report.signals.length}</span>
+          <span className="tag">{trendFromFile ? "TrendRadar 已同步" : "TrendRadar seed"}</span>
         </div>
         <FreshnessBadge freshness={freshness} lastUpdatedDate={lastUpdatedDate} />
         <p className="text-sm text-[var(--muted)]">{report.methodNote}</p>
@@ -73,11 +87,11 @@ export default function RadarPage() {
           <Link href="/pulse" className="btn btn-primary">
             机会简报 <ArrowRight size={16} aria-hidden />
           </Link>
+          <a href="#trendradar-hot" className="btn btn-ghost">
+            跳转热点融合
+          </a>
           <Link href="/sources" className="btn btn-ghost">
             查看来源矩阵
-          </Link>
-          <Link href="/methodology" className="btn btn-ghost">
-            评分口径
           </Link>
           <Link href="/tools" className="btn btn-ghost">
             进入工具目录
@@ -108,6 +122,126 @@ export default function RadarPage() {
             原项目说明 <ExternalLink size={14} aria-hidden />
           </a>
         </div>
+      </section>
+
+      <section id="trendradar-hot" className="space-y-4">
+        <div className="flex flex-wrap items-end justify-between gap-3">
+          <div className="space-y-2">
+            <div className="flex items-center gap-2 text-[var(--amber)]">
+              <Flame size={18} aria-hidden />
+              <h2 className="display text-xl font-semibold">TrendRadar · 多平台热点融合</h2>
+            </div>
+            <p className="text-sm text-[var(--muted)] max-w-3xl leading-relaxed">
+              学习并对齐{" "}
+              <a
+                href="https://github.com/sansan0/TrendRadar"
+                target="_blank"
+                rel="noreferrer"
+                className="text-[var(--signal)] underline"
+              >
+                sansan0/TrendRadar
+              </a>
+              ：聚合头条 / 百度 / 微博 / 抖音 / 知乎等热搜，同步进智衡雷达，辅助发现舆情与产品机会。
+            </p>
+          </div>
+          <div className="flex flex-wrap gap-2 text-xs">
+            <span className="tag tag-signal">抓取 {trend.crawlTime}</span>
+            <span className="tag">条目 {trend.totalItems}</span>
+            <span className="tag">平台 {trend.successPlatforms} 成功</span>
+            <span className="tag">{trend.source}</span>
+          </div>
+        </div>
+
+        {trend.platforms.length > 0 ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2">
+            {trend.platforms.map((p) => (
+              <div key={p.id} className="metric-card px-3 py-3 space-y-1">
+                <p className="text-xs text-[var(--muted)] truncate">{p.name}</p>
+                <p className="display text-lg font-semibold">{p.itemCount}</p>
+                <p className="text-[10px] text-[var(--muted)]">
+                  {p.status === "success" ? "成功" : p.status === "failed" ? "失败" : "未知"}
+                </p>
+              </div>
+            ))}
+          </div>
+        ) : null}
+
+        {trendAi.length > 0 ? (
+          <div className="insight-card p-4 space-y-3">
+            <h3 className="text-sm font-semibold">AI 相关热点速览</h3>
+            <ul className="space-y-2">
+              {trendAi.map((item) => (
+                <li key={item.id} className="text-sm leading-relaxed">
+                  <span className="tag tag-signal mr-2">#{item.rank}</span>
+                  <span className="text-xs text-[var(--muted)] mr-2">{item.platformName}</span>
+                  <a
+                    href={item.url}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="text-[var(--text)] hover:text-[var(--signal)] underline-offset-2 hover:underline"
+                  >
+                    {item.title}
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : null}
+
+        <div className="table-scroll surface">
+          <table className="compare-table">
+            <thead>
+              <tr>
+                <th>排名</th>
+                <th>标题</th>
+                <th>平台</th>
+                <th>标签</th>
+                <th>来源</th>
+              </tr>
+            </thead>
+            <tbody>
+              {trendTop.map((item) => (
+                <tr key={item.id}>
+                  <td className="text-[var(--signal)] font-medium">#{item.rank}</td>
+                  <td className="min-w-[16rem] font-medium">{item.title}</td>
+                  <td className="text-sm text-[var(--muted)]">{item.platformName}</td>
+                  <td>{item.aiRelated ? <span className="tag tag-signal">AI</span> : <span className="tag">一般</span>}</td>
+                  <td>
+                    <a
+                      href={item.url}
+                      target="_blank"
+                      rel="noreferrer"
+                      className="text-xs text-[var(--signal)] underline inline-flex items-center gap-1"
+                    >
+                      打开
+                      <ExternalLink size={12} aria-hidden />
+                    </a>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+
+        <div className="flex flex-wrap gap-3 text-sm">
+          <a
+            href={trend.htmlReportUrl}
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-primary inline-flex items-center gap-1"
+          >
+            打开 TrendRadar HTML 报告 <ExternalLink size={14} aria-hidden />
+          </a>
+          <a
+            href="https://github.com/sansan0/TrendRadar"
+            target="_blank"
+            rel="noreferrer"
+            className="btn btn-ghost inline-flex items-center gap-1"
+          >
+            TrendRadar 仓库 <ExternalLink size={14} aria-hidden />
+          </a>
+        </div>
+        <p className="text-xs text-[var(--muted)]">{trend.methodNote}</p>
       </section>
 
       <section className="insight-card p-5 space-y-3">
