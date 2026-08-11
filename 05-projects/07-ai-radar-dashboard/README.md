@@ -22,6 +22,7 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 |------|------|
 | `/` | 总览：数据链、能力地图、品类柱状图、今日看点 |
 | `/radar` | AI 动态雷达日报：5 监控池 + TrendRadar 热点融合 + 信号看板 |
+| `/hot` | 国内外实时热点：Agent Reach + NewsNow/RSS/OpenCLI 多源看板 |
 | `/pulse` | BuilderPulse 风格机会简报：今日构建建议 + 机会发现题库 |
 | `/tools` | 目录：筛选 + 结果区（排序/视图/多选对比） |
 | `/tools/[id]` | 功能介绍 + 优劣势 + 来源数据链 |
@@ -74,9 +75,10 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 1. 编辑 `src/data/seed.ts`（事实与评分，人工底座）
 2. 维护 5 监控池：`src/data/research-sources.ts`
 3. 需要时扩展 `scripts/live-sources.ts`（RSS / GitHub Atom / 公开 Changelog）
-4. `npm run data:refresh` — 抓取公开源 + 生成 `data/radar-daily-report.json` + 同步 BuilderPulse + TrendRadar  
+4. `npm run data:refresh` — 抓取公开源 + 生成 `data/radar-daily-report.json` + 同步 BuilderPulse + TrendRadar + 国内外实时热点  
    - 仅日报：`npm run radar:daily`  
    - 周报：`npm run radar:weekly`  
+   - 实时热点：`npm run hot:sync`（Agent Reach 能力层 + 研究仓聚合脚本）  
    - 离线：`npm run data:refresh:offline`  
    - 仅机会简报：`npm run pulse:sync`  
    - 仅热点融合：`npm run trendradar:sync`

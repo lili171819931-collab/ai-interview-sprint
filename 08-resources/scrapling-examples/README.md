@@ -10,6 +10,10 @@
 
 | 脚本 | 目标 | 输出 |
 |------|------|------|
+| `global_hot_topics_dashboard.py` | 国内外实时热点网页看板（NewsNow + RSS + Agent Reach + 可选 Exa/OpenCLI） | `global_hot_topics.json` + `.html`（自动打开） |
+| `cn_platforms_hot_topics.py` | 微博 + 小红书 + 微信视频号(短视频代理) · 十大类热点/热度/来源/趋势 | `cn_platforms_hot_topics.json` + `.md` |
+| `funding_hot_topics.py` | 国内外投融资 Top10 · 进展 / 下一步计划（财联社/华尔街见闻/格隆汇/金十 + TechCrunch） | `funding_hot_topics.json` + `.md` |
+| `selfmedia_hot_topics.py` | 网页版自媒体热点 Top10（微博/抖音/B站/知乎/头条/小红书 + TechCrunch Social/PH/HN） | `selfmedia_hot_topics.json` + `.md` |
 | `xhs_hot_notes.py` | 小红书探索页热门笔记标题（SSR） | `xhs_hot_notes.json` |
 | `github_ai_top_repos.py` | GitHub `topic:ai` Star Top10 | `github_ai_top_repos.json` |
 | `github_ai_new_repos_3m.py` | 近 3 个月新建 AI 项目 Star Top15 | `github_ai_new_repos_3m.json` |
@@ -36,6 +40,10 @@
 
 ```bash
 cd 08-resources/scrapling-examples
+python3 global_hot_topics_dashboard.py  # 国内外实时热点 → 打开 HTML 看板
+python3 cn_platforms_hot_topics.py   # 三平台十大类热点（在线失败自动降级）
+python3 funding_hot_topics.py        # 国内外投融资 Top10 + 进展/下一步
+python3 selfmedia_hot_topics.py      # 网页版自媒体国内外 Top10
 python3 github_trend_gap_profit_top.py
 python3 github_ai_new_repos_3m.py
 ```

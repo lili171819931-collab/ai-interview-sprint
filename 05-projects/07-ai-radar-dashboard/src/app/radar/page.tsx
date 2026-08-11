@@ -90,6 +90,9 @@ export default function RadarPage() {
           <a href="#trendradar-hot" className="btn btn-ghost">
             跳转热点融合
           </a>
+          <Link href="/hot" className="btn btn-ghost">
+            国内外实时热点
+          </Link>
           <Link href="/sources" className="btn btn-ghost">
             查看来源矩阵
           </Link>
