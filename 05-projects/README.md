@@ -27,7 +27,8 @@
 ├── 04-workbuddy-invoice-reimburse/← 发票报销 · WorkBuddy Skill 载体
 ├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
 ├── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
-└── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包）
+├── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包）
+└── 08-mac-screen-cam-recorder/    ← Mac 教学录屏（调研→设计开发→成片闭环）
 ```
 
 ## 类别速览
@@ -42,6 +43,7 @@
 | **05** | 发票 · Web 载体 | [`05-invoice-reimburse-web/`](05-invoice-reimburse-web/) | 可运行审批系统 | ✅ |
 | **06** | 发票 · 小程序+商业 | [`06-piaoji-product/`](06-piaoji-product/) | 合规交付物+付费叙事 | ✅ |
 | **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更数据+对比+来源可追溯+热点融合+机会简报 | ✅ |
+| **08** | Mac 教学录屏闭环 | [`08-mac-screen-cam-recorder/`](08-mac-screen-cam-recorder/) | 调研竞品→桌面成片→权限/编码硬问题 | ✅ |
 
 ## 推荐阅读顺序（60 分钟）
 
@@ -54,7 +56,9 @@
 7. [`07-ai-radar-dashboard/README.md`](07-ai-radar-dashboard/README.md) → 情报看板日更与来源报告  
 8. [`07-ai-radar-dashboard/docs/14-opportunity-brief-full-loop.md`](07-ai-radar-dashboard/docs/14-opportunity-brief-full-loop.md) → 机会简报项目制全流程  
 9. [`07-ai-radar-dashboard/docs/15-trendradar-fusion-full-loop.md`](07-ai-radar-dashboard/docs/15-trendradar-fusion-full-loop.md) → TrendRadar 热点融合全流程  
-9. [`../08-resources/scrapling-examples/README.md`](../08-resources/scrapling-examples/README.md) → 情报研究前置脚本
+10. [`08-mac-screen-cam-recorder/README.md`](08-mac-screen-cam-recorder/README.md) → Mac 教学录屏完整闭环  
+11. [`08-mac-screen-cam-recorder/docs/12-full-project-loop.md`](08-mac-screen-cam-recorder/docs/12-full-project-loop.md) → 调研到上线导航  
+12. [`../08-resources/scrapling-examples/README.md`](../08-resources/scrapling-examples/README.md) → 情报研究前置脚本
 
 ## 克隆含子模块
 

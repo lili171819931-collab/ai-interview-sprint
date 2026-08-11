@@ -82,6 +82,8 @@ type MacRecorderApi = {
   setCameraPip: (payload: {
     visible: boolean;
     deviceId?: string;
+    shape?: "circle" | "rect";
+    mirrored?: boolean;
   }) => Promise<boolean>;
   setControlBar: (payload: {
     visible: boolean;
@@ -92,6 +94,18 @@ type MacRecorderApi = {
   setShellExpanded: (expanded: boolean) => Promise<boolean>;
   copyText: (text: string) => Promise<boolean>;
   onCameraPipDismissed: (cb: () => void) => () => void;
+  onCameraPipMoved: (
+    cb: (pos: {
+      x: number;
+      y: number;
+      width: number;
+      height: number;
+      displayX: number;
+      displayY: number;
+      displayW: number;
+      displayH: number;
+    }) => void,
+  ) => () => void;
   onTrayAction: (cb: (action: string) => void) => () => void;
   onReleaseMedia: (cb: () => void) => () => void;
   onCursorPos: (cb: (pos: CursorPos) => void) => () => void;

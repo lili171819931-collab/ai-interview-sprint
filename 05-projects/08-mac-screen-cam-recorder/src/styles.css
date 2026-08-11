@@ -54,6 +54,80 @@ select {
   gap: 10px;
 }
 
+.shell-rec-bar {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin: 0 12px 8px;
+  padding: 8px 10px;
+  border-radius: 12px;
+  background: rgba(22, 24, 28, 0.95);
+  border: 1px solid var(--line);
+  flex-wrap: wrap;
+}
+
+.shell-time {
+  min-width: 48px;
+  padding: 0 6px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.shell-time.live {
+  color: #ff6b6b;
+}
+
+.shell-act {
+  border: 0;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text);
+  background: rgba(255, 255, 255, 0.06);
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.shell-act:hover:not(:disabled) {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.shell-act:disabled {
+  opacity: 0.45;
+  cursor: default;
+}
+
+.shell-act.primary {
+  background: rgba(61, 214, 140, 0.22);
+  color: #b6f5d0;
+}
+
+.shell-act.danger {
+  background: rgba(217, 74, 56, 0.35);
+  color: #ffd4ce;
+}
+
+.shell-act.rec {
+  background: rgba(217, 74, 56, 0.55);
+  color: #ffe4e0;
+}
+
+.shell-act.on {
+  background: rgba(61, 214, 140, 0.22);
+  color: #b6f5d0;
+}
+
+.shell-sep {
+  width: 1px;
+  height: 18px;
+  background: var(--line);
+  margin: 0 2px;
+}
+
 .thumb-ph {
   width: 96px;
   height: 54px;

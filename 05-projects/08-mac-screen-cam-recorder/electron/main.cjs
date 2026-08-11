@@ -185,6 +185,7 @@ function ensureCameraPip() {
       contextIsolation: true,
       nodeIntegration: false,
       sandbox: false,
+      backgroundThrottling: false,
     },
   });
   cameraPipWindow.setAlwaysOnTop(true, "floating");
@@ -196,7 +197,29 @@ function ensureCameraPip() {
     // ignore
   }
   cameraPipWindow.loadFile(path.join(__dirname, "camera-pip.html"));
+  let moveTimer = null;
+  const emitMoved = () => {
+    if (!cameraPipWindow || cameraPipWindow.isDestroyed()) return;
+    const b = cameraPipWindow.getBounds();
+    const { screen } = electron;
+    const d = screen.getDisplayNearestPoint({ x: b.x + b.width / 2, y: b.y + b.height / 2 });
+    sendToRenderer("camera-pip-moved", {
+      x: b.x,
+      y: b.y,
+      width: b.width,
+      height: b.height,
+      displayX: d.bounds.x,
+      displayY: d.bounds.y,
+      displayW: d.bounds.width,
+      displayH: d.bounds.height,
+    });
+  };
+  cameraPipWindow.on("moved", () => {
+    if (moveTimer) clearTimeout(moveTimer);
+    moveTimer = setTimeout(emitMoved, 40);
+  });
   cameraPipWindow.on("closed", () => {
+    if (moveTimer) clearTimeout(moveTimer);
     cameraPipWindow = null;
   });
   return cameraPipWindow;
@@ -209,30 +232,56 @@ function closeCameraPip() {
   cameraPipWindow = null;
 }
 
-async function setCameraPipVisible(visible, deviceId) {
+function pipWindowSize(shape) {
+  return shape === "rect" ? { w: 228, h: 172 } : { w: 176, h: 176 };
+}
+
+async function setCameraPipVisible(visible, opts = {}) {
+  const deviceId = typeof opts.deviceId === "string" ? opts.deviceId : "";
+  const shape = opts.shape === "rect" ? "rect" : "circle";
+  const mirrored = opts.mirrored !== false;
   if (!visible) {
     if (cameraPipWindow && !cameraPipWindow.isDestroyed()) {
       cameraPipWindow.webContents.send("camera-pip-command", { type: "stop" });
       cameraPipWindow.hide();
+      cameraPipWindow.__pipDeviceId = "";
     }
     return true;
   }
   const win = ensureCameraPip();
-  if (!win.isVisible()) {
-    // 默认右下角，避开 Dock
+  const { w, h } = pipWindowSize(shape);
+  const cur = win.getBounds();
+  if (cur.width !== w || cur.height !== h) {
+    // 保持中心大致不动
+    const cx = cur.x + cur.width / 2;
+    const cy = cur.y + cur.height / 2;
+    win.setBounds({
+      x: Math.round(cx - w / 2),
+      y: Math.round(cy - h / 2),
+      width: w,
+      height: h,
+    });
+  }
+  const firstShow = !win.isVisible();
+  if (firstShow) {
     const { screen } = electron;
     const display = screen.getPrimaryDisplay();
-    const { width, height } = display.workArea;
-    const { x: ox, y: oy } = display.workArea;
-    win.setPosition(ox + width - 200, oy + height - 220);
+    const { width, height, x: ox, y: oy } = display.workArea;
+    win.setPosition(ox + width - w - 24, oy + height - h - 28);
     win.showInactive();
   }
-  const sendStart = () =>
-    win.webContents.send("camera-pip-command", { type: "start", deviceId: deviceId || "" });
-  if (win.webContents.isLoading()) {
-    win.webContents.once("did-finish-load", sendStart);
+  const needRestart = firstShow || win.__pipDeviceId !== deviceId;
+  const send = (payload) => win.webContents.send("camera-pip-command", payload);
+  if (needRestart) {
+    win.__pipDeviceId = deviceId;
+    const payload = { type: "start", deviceId: deviceId || "", shape, mirrored };
+    if (win.webContents.isLoading()) {
+      win.webContents.once("did-finish-load", () => send(payload));
+    } else {
+      send(payload);
+    }
   } else {
-    sendStart();
+    send({ type: "config", shape, mirrored });
   }
   return true;
 }
@@ -613,8 +662,7 @@ app.whenReady().then(() => {
   createWindow();
   rebuildTray(false);
   registerGlobalShortcuts();
-  // 启动即常驻教学操作条
-  setControlBarVisible(true);
+  // 操作条仅在「主窗口隐藏录制中」时出现，启动不再开第二窗
 
   app.on("activate", () => {
     if (BrowserWindow.getAllWindows().length === 0) createWindow();
@@ -914,8 +962,16 @@ ipcMain.handle("copy-image-file", async (_event, filePath) => {
 
 ipcMain.handle("set-camera-pip", async (_event, payload) => {
   const visible = Boolean(payload?.visible);
-  const deviceId = typeof payload?.deviceId === "string" ? payload.deviceId : "";
-  return setCameraPipVisible(visible, deviceId);
+  return setCameraPipVisible(visible, {
+    deviceId: typeof payload?.deviceId === "string" ? payload.deviceId : "",
+    shape: payload?.shape === "rect" ? "rect" : "circle",
+    mirrored: payload?.mirrored !== false,
+  });
+});
+
+ipcMain.handle("camera-pip-action", (_event, action) => {
+  sendToRenderer("tray-action", String(action || ""));
+  return true;
 });
 
 ipcMain.handle("camera-pip-hide", () => {

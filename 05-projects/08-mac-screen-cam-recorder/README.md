@@ -1,78 +1,82 @@
-# Mac Screen Cam Recorder
+# Mac Screen Cam Recorder · 教学录屏完整项目闭环
 
-macOS-only 个人录制工具：实时录屏 + 圆形摄像头小窗 + 麦克风，本地合成导出。
+macOS 本地录屏工具：**屏幕 + 圆形/方形摄像头出镜 + 麦克风**，实时 Canvas 合成，停止即得到桌面 `Mac录屏` 下的 **H.264 MP4**。
 
-## 圆形摄像头 + 背景虚化
+本目录已补齐从**市场调研 → 竞品 → 立项需求 → 设计 → 项目管理 → 研发测试 → 发布复盘 → 面试包装**的完整项目文档。
 
-- 圆窗嵌入屏幕并合成进成片（预览=导出）
-- 可拖动（吸附四角）+ S/M/L / 滑杆调大小
-- 背景虚化：MediaPipe 人像分割；可开关 + 强度；失败降级清晰出镜
-- 右侧 Toggle：摄像头、麦克风、虚化、镜像、倒计时、最小化等
+> 仓库路径：[05-projects/08-mac-screen-cam-recorder](https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/08-mac-screen-cam-recorder)  
+> 全流程导航：[docs/12-full-project-loop.md](docs/12-full-project-loop.md)
 
-详见 `docs/decisions-blur.md` 与 `docs/极致Prompt-圆形摄像头嵌入虚化与开关.md`。
-
-## Snapzy 风格能力（本机）
-
-参考 [Snapzy](https://github.com/duongductrong/Snapzy)：
-
-- 当前画面截图（PNG）+ 可选复制到剪贴板
-- 录制中快拍截图
-- Quick Access：打开 / Finder / 复制 / 删除
-- 捕获历史：录屏+截图筛选、搜索、删除
-- 全局快捷键：`⌘⇧⌥R` 录制开关 · `⌘⇧⌥S` 截图 · `⌘⇧⌥.` 停止
-- 菜单栏托盘：截图 / 录制 / 停止
-
-## Cap 风格体验（本机版）
-
-参考 [Cap](https://github.com/CapSoftware/Cap) 的交互心智，但不做云分享/AI：
-
-- 三步开录引导 + 首次提示
-- 系统屏幕选择器
-- 录制中悬浮控制条 + 菜单栏托盘停止
-- 开始后可最小化窗口，避免录进本 App
-- 完成后成功面板（Finder / 复制路径 / 再录一条）
-- 最近录制列表（桌面 `Mac录屏`）
-- 摄像头 S/M/L 预设 + 开停提示音
-
-## 决策（Step 0 冻结）
-
-| 项 | 选择 | 理由 |
-|---|---|---|
-| 平台 | 仅 macOS | 按产品 Prompt 锁定 |
-| 技术栈 | Electron + Vite + React | 最快打通桌面采集与演示 |
-| 合成 | Canvas 实时合成 → `captureStream` → MediaRecorder | 预览=成片构图，所见即所得 |
-| 导出 | WebM (VP8/VP9 + Opus) | Chromium MediaRecorder 原生路径；后续可接 FFmpeg 转 H.264 MP4 |
-
-## 运行
+## 一分钟上手
 
 ```bash
 cd 05-projects/08-mac-screen-cam-recorder
 npm install
-# 若 Electron 不完整：手动解压缓存 zip 到 node_modules/electron/dist（见下方排障）
-npm run dev
+brew install ffmpeg          # 导出 MP4 需要
+npm run dev                  # Vite :5177 + Electron
 ```
 
-> Cursor/部分环境会注入 `ELECTRON_RUN_AS_NODE=1`，`npm run dev` 已用 `env -u ELECTRON_RUN_AS_NODE` 清掉，否则主进程拿不到 `electron.app`。
+首次请在 **系统设置 → 隐私与安全性** 授权屏幕录制 / 摄像头 / 麦克风，然后**完全退出再开** App。
 
-首次使用请在 **系统设置 → 隐私与安全性** 授权：
+## 产品能力（当前）
 
-- 屏幕录制（列表里勾选 **Electron**）
-- 摄像头
-- 麦克风
+- 所见即所得合成：预览 = 成片构图
+- 摄像头圆/方：拖动改位；**单击切形**；**双击反转**；录制中悬浮 PiP 可操作（不进成片）
+- 壳内操作条 + 录制隐藏主窗时的悬浮条（墙钟计时）
+- 背景虚化（MediaPipe，可关/可降级）、指针/捏合缩放
+- 仅电脑摄像头（排除 Continuity）；导出 MP4 + JSON sidecar
+- 截图、历史、托盘、全局快捷键 `⌘⇧⌥R/S/.`
 
-授权后若源列表为空，点界面「刷新」。然后**重启一次 App**（macOS 对屏幕录制权限常需重启进程才生效）。
+## 完整项目文档地图
 
-## 使用
+### 0) 调研 · 竞品 · 立项 · 需求
+- [docs/market-research.md](docs/market-research.md)
+- [docs/competitive-analysis.md](docs/competitive-analysis.md)
+- [docs/00-project-charter.md](docs/00-project-charter.md)
+- [docs/01-requirements-freeze.md](docs/01-requirements-freeze.md)
+- [docs/prd.md](docs/prd.md)
 
-1. 左侧选择显示器或窗口  
-2. 右侧打开圆形摄像头与麦克风  
-3. 预览中拖动圆形小窗（松手吸附四角）  
-4. 开始录制 → 停止并保存 → Finder 中打开  
+### 1) 产品设计
+- [docs/ia.md](docs/ia.md)
+- [docs/user-journey.md](docs/user-journey.md)
+- [docs/02-product-design-spec.md](docs/02-product-design-spec.md)
+- [docs/metrics.md](docs/metrics.md)
 
-快捷键：`⌘R` 开始/停止 · `⌘M` 麦克风 · `⌘⇧C` 摄像头
+### 2) 项目管理与研发
+- [docs/03-project-management-plan.md](docs/03-project-management-plan.md)
+- [docs/04-rd-implementation-plan.md](docs/04-rd-implementation-plan.md)
+- [docs/architecture.md](docs/architecture.md)
+- [docs/decisions.md](docs/decisions.md) · [docs/decisions-blur.md](docs/decisions-blur.md)
+
+### 3) 测试 · 发布 · 收口
+- [docs/05-test-and-qa-report.md](docs/05-test-and-qa-report.md)
+- [docs/验收清单.md](docs/验收清单.md)
+- [docs/06-release-ops-runbook.md](docs/06-release-ops-runbook.md)
+- [docs/07-project-closure.md](docs/07-project-closure.md)
+- [docs/12-full-project-loop.md](docs/12-full-project-loop.md)
+
+### 4) 商业 · AI PM · 面试
+- [docs/09-commercial-value-and-landing.md](docs/09-commercial-value-and-landing.md)
+- [docs/10-ai-pm-perspective.md](docs/10-ai-pm-perspective.md)
+- [docs/11-thinking-chain-and-risks.md](docs/11-thinking-chain-and-risks.md)
+- [docs/08-ai-product-interview-qa.md](docs/08-ai-product-interview-qa.md)
+- [docs/interview-story.md](docs/interview-story.md)
+- [docs/演示脚本.md](docs/演示脚本.md)
+
+### 5) 迭代 Prompt（研发过程资产）
+- [docs/极致Prompt-圆形摄像头嵌入虚化与开关.md](docs/极致Prompt-圆形摄像头嵌入虚化与开关.md)
+- [docs/极致Prompt-教学录屏持续采集与操作条.md](docs/极致Prompt-教学录屏持续采集与操作条.md)
+- [docs/极致Prompt-精简操作条双指缩放与启动小窗壳.md](docs/极致Prompt-精简操作条双指缩放与启动小窗壳.md)
+- [docs/battle-log-teaching-recorder.md](docs/battle-log-teaching-recorder.md)
+
+## 使用摘要
+
+1. 选择屏幕/窗口 → 打开摄像头/麦  
+2. 调整小窗（拖动 / 单击切形 / 双击反转）  
+3. 启动录像 → 停止 → 到桌面「Mac录屏」用 QuickTime 打开  
 
 ## 说明
 
 - 数据仅存本机，无账号、无上传。  
-- 系统声音（loopback）本 MVP 不做。  
-- 导出为 `.webm`；可用 VLC / Chrome / 较新 QuickTime 播放。若必须 MP4，下一步加 FFmpeg 转码。
+- 系统声音 loopback 本版不做。  
+- 导出依赖本机 ffmpeg；失败会明确报错，不会假装成 MP4 的 WebM。

@@ -191,10 +191,19 @@
         const state = st.recState || "idle";
 
         if (state === "recording" && st.recStartedAt) {
-          clock.baseMs = Number(st.baseElapsedMs) || 0;
-          clock.startedAt = Number(st.recStartedAt);
+          const nextBase = Number(st.baseElapsedMs) || 0;
+          const nextStart = Number(st.recStartedAt);
+          // 仅在分段起点变化时重设，避免主进程重复推送导致计时跳动
+          if (
+            !clock.recording ||
+            clock.startedAt !== nextStart ||
+            clock.baseMs !== nextBase
+          ) {
+            clock.baseMs = nextBase;
+            clock.startedAt = nextStart;
+            timeEl.textContent = fmt(currentElapsed());
+          }
           clock.recording = true;
-          timeEl.textContent = fmt(currentElapsed());
           startTick();
         } else if (state === "paused") {
           clock.recording = false;

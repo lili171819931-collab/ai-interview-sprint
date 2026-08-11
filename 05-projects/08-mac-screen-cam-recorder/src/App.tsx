@@ -2,6 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import {
   CamLayout,
   CamShape,
+  camSize,
   drawCompositeFrame,
   hitTestCamera,
   pickMimeType,
@@ -155,7 +156,6 @@ export default function App() {
   });
   const [blurStatus, setBlurStatus] = useState<string>("idle");
   const [cameraLive, setCameraLive] = useState(false);
-  const [pipDismissed, setPipDismissed] = useState(false);
   const [countdownOn, setCountdownOn] = useState(true);
   const [countdown, setCountdown] = useState<number | null>(null);
   const [layout, setLayout] = useState<CamLayout>({
@@ -390,6 +390,9 @@ export default function App() {
       if (action === "toggle-mirror") {
         setMirrored((v) => !v);
       }
+      if (action === "toggle-shape") {
+        setCamShape((s) => (s === "circle" ? "rect" : "circle"));
+      }
       if (action === "reset-zoom" || action === "toggle-zoom") {
         setMagnification(1);
         setZoomEnabled(false);
@@ -433,11 +436,12 @@ export default function App() {
 
   const pushBarState = useCallback(() => {
     const recording = recState === "recording";
+    // 录制中不把 elapsedMs 推进去，避免每 200ms 重置操作条墙钟导致时长漂移
     void window.macRecorder?.pushControlBarState?.({
       recState,
       elapsedMs: recording ? undefined : elapsedMs,
       baseElapsedMs: accumulatedRef.current,
-      recStartedAt: recording ? recStartedAtWallRef.current : undefined,
+      recStartedAt: recording ? recStartedAtWallRef.current || undefined : undefined,
       countdown: recState === "countdown" ? countdown : null,
       cameraEnabled,
       camShape,
@@ -447,23 +451,19 @@ export default function App() {
     });
   }, [
     recState,
-    elapsedMs,
     countdown,
     cameraEnabled,
     camShape,
     mirrored,
     zoomEnabled,
     magnification,
+    // idle/paused 时需要同步一次冻结的 elapsed
+    recState === "recording" ? 0 : elapsedMs,
   ]);
 
   useEffect(() => {
     pushBarState();
   }, [pushBarState]);
-
-  useEffect(() => {
-    if (!window.macRecorder?.onCameraPipDismissed) return;
-    return window.macRecorder.onCameraPipDismissed(() => setPipDismissed(true));
-  }, []);
 
   useEffect(() => {
     // sourceFilter 仅影响「尝试列出源」，不自动刷
@@ -565,10 +565,10 @@ export default function App() {
     };
   }, [releaseAllMedia]);
 
-  // 启动即显示悬浮操作条
+  // 启动只显示主录制壳，不拉起第二悬浮条（录制且主窗隐藏时再开）
   useEffect(() => {
     void window.macRecorder?.setControlBar?.({
-      visible: true,
+      visible: false,
       state: {
         recState: "idle",
         elapsedMs: 0,
@@ -1027,7 +1027,6 @@ export default function App() {
 
   useEffect(() => {
     if (cameraEnabled && cameraId) {
-      setPipDismissed(false);
       void attachCamera(cameraId);
     } else {
       stopTracks(cameraStreamRef.current);
@@ -1039,18 +1038,45 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cameraEnabled, cameraId]);
 
-  // 系统级圆形监视窗：主窗口最小化/录制时仍可看表情眼神；该窗受 contentProtection 保护不会进成片
+  // 录屏时（及摄像头开启时）显示可拖动摄像头小窗；contentProtection 保证不进成片
   useEffect(() => {
     if (!window.macRecorder?.setCameraPip) return;
-    const show = cameraEnabled && cameraLive && !pipDismissed;
+    const show = cameraEnabled && cameraLive;
     void window.macRecorder.setCameraPip({
       visible: show,
       deviceId: cameraId || undefined,
+      shape: camShape,
+      mirrored,
     });
     return () => {
-      void window.macRecorder?.setCameraPip({ visible: false });
+      void window.macRecorder?.setCameraPip?.({ visible: false });
     };
-  }, [cameraEnabled, cameraLive, cameraId, pipDismissed]);
+  }, [cameraEnabled, cameraLive, cameraId, camShape, mirrored]);
+
+  useEffect(() => {
+    if (!window.macRecorder?.onCameraPipMoved) return;
+    return window.macRecorder.onCameraPipMoved((pos) => {
+      userMovedCamRef.current = true;
+      const cw = canvasSizeRef.current.w || 1;
+      const ch = canvasSizeRef.current.h || 1;
+      const cx = pos.x + pos.width / 2;
+      const cy = pos.y + pos.height / 2;
+      const nx = (cx - pos.displayX) / Math.max(1, pos.displayW);
+      const ny = (cy - pos.displayY) / Math.max(1, pos.displayH);
+      setLayout((prev) => {
+        const { w, h } = camSize(prev);
+        return snapToCorners(
+          {
+            ...prev,
+            x: nx * cw - w / 2,
+            y: ny * ch - h / 2,
+          },
+          cw,
+          ch,
+        );
+      });
+    });
+  }, []);
 
   useEffect(() => {
     if (micEnabled && micId) {
@@ -1113,7 +1139,7 @@ export default function App() {
     setMirrored((v) => !v);
   };
 
-  /** 单击反转，双击切形状；拖动不触发 */
+  /** 单击切形状，双击反转；拖动不触发 */
   const handlePipGesture = (kind: "click" | "dblclick") => {
     if (pipClickTimerRef.current) {
       window.clearTimeout(pipClickTimerRef.current);
@@ -1121,20 +1147,20 @@ export default function App() {
     }
     if (kind === "dblclick") {
       lastPipTapRef.current = 0;
-      toggleCamShape();
+      toggleMirror();
       return;
     }
     const now = performance.now();
     if (now - lastPipTapRef.current < 320) {
       lastPipTapRef.current = 0;
-      toggleCamShape();
+      toggleMirror();
       return;
     }
     lastPipTapRef.current = now;
     pipClickTimerRef.current = window.setTimeout(() => {
       pipClickTimerRef.current = null;
       lastPipTapRef.current = 0;
-      toggleMirror();
+      toggleCamShape();
     }, 280);
   };
 
@@ -1416,28 +1442,32 @@ export default function App() {
       if (ev.data.size > 0) chunksRef.current.push(ev.data);
     };
     recorderRef.current = recorder;
-    recorder.start(250);
+    // 先打点墙钟，再 start，保证操作条与 MediaRecorder 同源
     accumulatedRef.current = 0;
     startedAtRef.current = performance.now();
     recStartedAtWallRef.current = Date.now();
     finalElapsedRef.current = 0;
     setElapsedMs(0);
+    recorder.start(250);
     setRecState("recording");
     recStateRef.current = "recording";
     playCue("start");
     await window.macRecorder?.setRecordingState(true);
+    // 仅在录制中且会隐藏主窗时显示悬浮条；平时操作都在主壳里完成（只 1 个窗）
+    const showFloatBar = Boolean(minimizeOnRecord);
     await window.macRecorder?.setControlBar?.({
-      visible: true,
+      visible: showFloatBar,
       state: {
         recState: "recording",
         elapsedMs: 0,
         baseElapsedMs: 0,
         recStartedAt: recStartedAtWallRef.current,
-        cameraEnabled,
+        cameraEnabled: cameraEnabledRef.current,
         camShape,
         mirrored,
         zoomEnabled,
         magnification,
+        error: null,
       },
     });
     if (minimizeOnRecord) {
@@ -1545,11 +1575,12 @@ export default function App() {
       recState: "paused",
       elapsedMs: accumulatedRef.current,
       baseElapsedMs: accumulatedRef.current,
-      cameraEnabled,
+      cameraEnabled: cameraEnabledRef.current,
       camShape,
       mirrored,
       zoomEnabled,
       magnification,
+      error: null,
     });
   };
 
@@ -1566,11 +1597,12 @@ export default function App() {
       recState: "recording",
       baseElapsedMs: accumulatedRef.current,
       recStartedAt: recStartedAtWallRef.current,
-      cameraEnabled,
+      cameraEnabled: cameraEnabledRef.current,
       camShape,
       mirrored,
       zoomEnabled,
       magnification,
+      error: null,
     });
   };
 
@@ -1582,13 +1614,18 @@ export default function App() {
       await window.macRecorder?.setRecordingState(false);
       return;
     }
-    // 在 stop 前锁定时长，与 MediaRecorder 会话对齐
+    // 在 stop 前锁定时长，与 MediaRecorder 会话对齐（不含倒计时）
     let sessionElapsed = accumulatedRef.current;
     if (rec.state === "recording") {
       sessionElapsed += performance.now() - startedAtRef.current;
     }
     finalElapsedRef.current = Math.max(0, Math.round(sessionElapsed));
     setElapsedMs(finalElapsedRef.current);
+    try {
+      rec.requestData();
+    } catch {
+      // ignore
+    }
 
     const done = new Promise<Blob>((resolve) => {
       rec.onstop = () => {
@@ -1602,21 +1639,22 @@ export default function App() {
     recStateRef.current = "idle";
     playCue("stop");
     await window.macRecorder?.setRecordingState(false);
-    // 操作条保持悬浮，仅刷新状态
+    // 恢复主壳并收起悬浮条 → 始终只留 1 个操作窗
+    await window.macRecorder?.setMainWindowVisible(true);
     await window.macRecorder?.setControlBar?.({
-      visible: true,
+      visible: false,
       state: {
         recState: "idle",
         elapsedMs: finalElapsedRef.current,
         baseElapsedMs: finalElapsedRef.current,
-        cameraEnabled,
+        cameraEnabled: cameraEnabledRef.current,
         camShape,
         mirrored,
         zoomEnabled,
         magnification,
+        error: null,
       },
     });
-    await window.macRecorder?.setMainWindowVisible(true);
 
     const buffer = await blob.arrayBuffer();
     const fileName = stampName();
@@ -1727,8 +1765,8 @@ export default function App() {
           <div className="brand">Mac Screen Cam</div>
           <div className="sub">
             {moreOpen
-              ? "本地录屏 · 桌面/Mac录屏 · 单击反转 · 双击切圆/方 · 双指捏合放大"
-              : "小窗录制壳 · 顶部操作条常驻"}
+              ? "本地录屏 · 桌面/Mac录屏 · 单击切圆/方 · 双击反转 · 双指捏合放大"
+              : "单一录制壳 · 预览内摄像头小窗 · 录制中才出悬浮条"}
           </div>
         </div>
         <div className="topbar-actions">
@@ -1750,10 +1788,80 @@ export default function App() {
         </div>
       </header>
 
+      <div className="shell-rec-bar">
+        <span className={`shell-time ${recState === "recording" ? "live" : ""}`}>
+          {formatDuration(elapsedMs)}
+        </span>
+        {recState === "idle" || recState === "countdown" || recState === "preparing" ? (
+          <button
+            type="button"
+            className="shell-act primary"
+            disabled={recState !== "idle" || !readyPreview}
+            onClick={() => void startWithCountdown()}
+          >
+            {recState === "countdown"
+              ? `${countdown}…`
+              : recState === "preparing"
+                ? "准备中"
+                : "启动录像"}
+          </button>
+        ) : (
+          <button
+            type="button"
+            className="shell-act rec"
+            disabled
+          >
+            {recState === "paused" ? "已暂停" : "录制中"}
+          </button>
+        )}
+        <button
+          type="button"
+          className="shell-act danger"
+          disabled={recState === "idle" || recState === "preparing"}
+          onClick={() => {
+            if (recState === "countdown") {
+              countdownCancelRef.current = true;
+              setCountdown(null);
+              setRecState("idle");
+              return;
+            }
+            void stopRecording();
+          }}
+        >
+          停止
+        </button>
+        <button
+          type="button"
+          className="shell-act"
+          disabled={recState !== "recording" && recState !== "paused"}
+          onClick={() => {
+            if (recState === "recording") pauseRecording();
+            else if (recState === "paused") resumeRecording();
+          }}
+        >
+          {recState === "paused" ? "继续" : "暂停"}
+        </button>
+        <span className="shell-sep" />
+        <button
+          type="button"
+          className={`shell-act ${cameraEnabled ? "on" : ""}`}
+          onClick={() => setCameraEnabled((v) => !v)}
+        >
+          {cameraEnabled ? "摄像头·开" : "摄像头"}
+        </button>
+        <button
+          type="button"
+          className={`shell-act ${mirrored ? "on" : ""}`}
+          onClick={() => setMirrored((v) => !v)}
+        >
+          {mirrored ? "反转·开" : "反转"}
+        </button>
+      </div>
+
       {showTip && (
         <div className="banner tip">
           <span>
-            ① 开摄像头/麦 → ② 选屏幕 → ③ 单击小窗反转、双击切圆/方，双指捏合放大 → ④ 开始录制。成片 MP4 进桌面/Mac录屏。
+            ① 开摄像头/麦 → ② 选屏幕 → ③ 小窗可拖动；单击切圆/方、双击反转 → ④ 本页「启动录像」。录制中悬浮摄像头小窗可继续操作；成片 MP4 进桌面/Mac录屏。
           </span>
           <button
             type="button"
@@ -2094,7 +2202,7 @@ export default function App() {
           {cameraEnabled && (
             <div
               className={`selfie-monitor ${mirrored ? "mirror" : ""}`}
-              title="单击：摄像头反转 · 双击：圆形/方形"
+              title="单击：圆形/方形 · 双击：摄像头反转"
               onClick={(e) => {
                 e.stopPropagation();
                 if (e.detail >= 2) handlePipGesture("dblclick");
@@ -2104,7 +2212,7 @@ export default function App() {
               <video ref={selfieVideoRef} autoPlay muted playsInline />
               <div className="selfie-label">
                 {cameraLive
-                  ? `单击反转 · 双击切${camShape === "circle" ? "方" : "圆"}`
+                  ? `单击切${camShape === "circle" ? "方" : "圆"} · 双击反转`
                   : "开启中…"}
               </div>
             </div>
@@ -2114,7 +2222,7 @@ export default function App() {
             成片画布 {canvasSize.w}×{canvasSize.h}
             {cameraEnabled
               ? cameraLive
-                ? ` · 小窗已合成（单击反转 / 双击切${camShape === "circle" ? "方" : "圆"}，可拖）`
+                ? ` · 小窗已合成（单击切${camShape === "circle" ? "方" : "圆"} / 双击反转，可拖）`
                 : " · 等待摄像头画面"
               : " · 摄像头关闭（成片无小窗）"}
             {micEnabled ? " · 麦开" : " · 麦关"}
@@ -2175,7 +2283,7 @@ export default function App() {
 
           <div className="panel-title">小窗形态与虚化</div>
           <p className="hint">
-            单击预览中的摄像头小窗可切换水平反转；双击切换圆形 / 长方形；拖动可改位置。当前：
+            单击摄像头小窗切换圆形 / 长方形；双击切换水平反转；拖动可改成片位置。当前：
             {camShape === "rect" ? "长方形" : "圆形"}
             {magnification > 1.02 ? ` · 网页放大 ${magnification.toFixed(1)}x` : ""}
           </p>

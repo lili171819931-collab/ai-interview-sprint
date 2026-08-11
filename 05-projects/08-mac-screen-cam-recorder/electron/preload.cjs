@@ -30,6 +30,11 @@ contextBridge.exposeInMainWorld("macRecorder", {
     ipcRenderer.on("camera-pip-dismissed", handler);
     return () => ipcRenderer.removeListener("camera-pip-dismissed", handler);
   },
+  onCameraPipMoved: (cb) => {
+    const handler = (_e, pos) => cb(pos);
+    ipcRenderer.on("camera-pip-moved", handler);
+    return () => ipcRenderer.removeListener("camera-pip-moved", handler);
+  },
   onTrayAction: (cb) => {
     const handler = (_e, action) => cb(action);
     ipcRenderer.on("tray-action", handler);
