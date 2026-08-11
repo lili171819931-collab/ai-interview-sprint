@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline';"
+    />
+    <title>录制操作条</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        background: transparent;
+        overflow: hidden;
+        font: 600 12px/1.2 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        color: #e8eaed;
+        user-select: none;
+        -webkit-app-region: drag;
+      }
+      .bar {
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        margin: 6px;
+        padding: 6px 8px 6px 6px;
+        border-radius: 12px;
+        background: rgba(22, 24, 28, 0.92);
+        border: 1px solid rgba(255, 255, 255, 0.12);
+        box-shadow: 0 8px 28px rgba(0, 0, 0, 0.4);
+        -webkit-app-region: drag;
+      }
+      .traffic {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 0 6px 0 4px;
+        -webkit-app-region: no-drag;
+      }
+      .traffic button {
+        width: 12px;
+        height: 12px;
+        padding: 0;
+        border-radius: 50%;
+        border: 0;
+        cursor: pointer;
+        flex-shrink: 0;
+      }
+      .traffic .close {
+        background: #ff5f57;
+      }
+      .traffic .min {
+        background: #febc2e;
+      }
+      .traffic .main {
+        background: #28c840;
+      }
+      .traffic button:hover {
+        filter: brightness(1.08);
+      }
+      .time {
+        min-width: 48px;
+        padding: 0 6px;
+        font-variant-numeric: tabular-nums;
+        color: #9aa3b2;
+        -webkit-app-region: drag;
+      }
+      .time.live {
+        color: #ff6b6b;
+      }
+      button.act {
+        -webkit-app-region: no-drag;
+        border: 0;
+        border-radius: 8px;
+        padding: 6px 9px;
+        font: inherit;
+        color: #e8eaed;
+        background: rgba(255, 255, 255, 0.06);
+        cursor: pointer;
+        white-space: nowrap;
+      }
+      button.act:hover {
+        background: rgba(255, 255, 255, 0.12);
+      }
+      button.act.on {
+        background: rgba(61, 214, 140, 0.22);
+        color: #b6f5d0;
+      }
+      button.act.danger {
+        background: rgba(217, 74, 56, 0.35);
+        color: #ffd4ce;
+      }
+      button.act.rec {
+        background: rgba(217, 74, 56, 0.55);
+      }
+      button.act:disabled {
+        opacity: 0.55;
+        cursor: default;
+      }
+      .sep {
+        width: 1px;
+        height: 18px;
+        background: rgba(255, 255, 255, 0.12);
+        margin: 0 2px;
+      }
+      .err {
+        max-width: 160px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+        color: #ffb4a8;
+        font-weight: 500;
+        font-size: 11px;
+        padding: 0 4px;
+        -webkit-app-region: drag;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="bar" id="bar">
+      <div class="traffic" title="关闭 / 收起操作条 / 显示主窗口">
+        <button type="button" class="close" data-act="close-app" title="关闭应用" aria-label="关闭"></button>
+        <button type="button" class="min" data-act="minimize-bar" title="收起操作条" aria-label="最小化"></button>
+        <button type="button" class="main" data-act="show-main" title="显示主窗口" aria-label="主窗口"></button>
+      </div>
+      <span class="time" id="time">00:00</span>
+      <button type="button" class="act" data-act="toggle-record" id="btnRec">启动录像</button>
+      <button type="button" class="act danger" data-act="stop">停止</button>
+      <button type="button" class="act" data-act="toggle-pause" id="btnPause">暂停</button>
+      <div class="sep"></div>
+      <button type="button" class="act" data-act="toggle-camera" id="btnCam">摄像头</button>
+      <button type="button" class="act" data-act="toggle-mirror" id="btnMirror" title="水平反转摄像头画面">反转</button>
+      <button type="button" class="act" data-act="reset-zoom" id="btnZoom">复位缩放</button>
+      <span class="err" id="err" hidden></span>
+    </div>
+    <script>
+      const api = window.macRecorderBar;
+      const timeEl = document.getElementById("time");
+      const btnRec = document.getElementById("btnRec");
+      const btnPause = document.getElementById("btnPause");
+      const btnCam = document.getElementById("btnCam");
+      const btnMirror = document.getElementById("btnMirror");
+      const btnZoom = document.getElementById("btnZoom");
+      const errEl = document.getElementById("err");
+
+      /** 操作条本地计时，避免主窗口隐藏后被节流导致时长偏差 */
+      const clock = {
+        recording: false,
+        baseMs: 0,
+        startedAt: 0,
+      };
+      let tickTimer = null;
+
+      document.getElementById("bar").addEventListener("click", (e) => {
+        const t = e.target.closest("button[data-act]");
+        if (!t || t.disabled) return;
+        api?.sendAction(t.getAttribute("data-act"));
+      });
+
+      function fmt(ms) {
+        const s = Math.max(0, Math.floor((ms || 0) / 1000));
+        const mm = String(Math.floor(s / 60)).padStart(2, "0");
+        const ss = String(s % 60).padStart(2, "0");
+        return mm + ":" + ss;
+      }
+
+      function currentElapsed() {
+        if (clock.recording && clock.startedAt) {
+          return clock.baseMs + (Date.now() - clock.startedAt);
+        }
+        return clock.baseMs;
+      }
+
+      function stopTick() {
+        if (tickTimer) {
+          clearInterval(tickTimer);
+          tickTimer = null;
+        }
+      }
+
+      function startTick() {
+        stopTick();
+        tickTimer = setInterval(() => {
+          if (!clock.recording) return;
+          timeEl.textContent = fmt(currentElapsed());
+        }, 200);
+      }
+
+      api?.onState((st) => {
+        if (!st) return;
+        const state = st.recState || "idle";
+
+        if (state === "recording" && st.recStartedAt) {
+          clock.baseMs = Number(st.baseElapsedMs) || 0;
+          clock.startedAt = Number(st.recStartedAt);
+          clock.recording = true;
+          timeEl.textContent = fmt(currentElapsed());
+          startTick();
+        } else if (state === "paused") {
+          clock.recording = false;
+          clock.baseMs = Number(st.elapsedMs ?? st.baseElapsedMs) || 0;
+          clock.startedAt = 0;
+          stopTick();
+          timeEl.textContent = fmt(clock.baseMs);
+        } else if (state === "countdown" || state === "preparing") {
+          clock.recording = false;
+          clock.baseMs = 0;
+          clock.startedAt = 0;
+          stopTick();
+          timeEl.textContent = "00:00";
+        } else {
+          clock.recording = false;
+          clock.baseMs = 0;
+          clock.startedAt = 0;
+          stopTick();
+          timeEl.textContent = fmt(st.elapsedMs || 0);
+        }
+
+        timeEl.classList.toggle("live", state === "recording");
+
+        if (state === "recording") {
+          btnRec.textContent = "录制中";
+          btnRec.classList.add("rec");
+          btnRec.disabled = true;
+          btnPause.textContent = "暂停";
+          btnPause.disabled = false;
+        } else if (state === "paused") {
+          btnRec.textContent = "已暂停";
+          btnRec.classList.remove("rec");
+          btnRec.disabled = true;
+          btnPause.textContent = "继续";
+          btnPause.disabled = false;
+        } else if (state === "countdown") {
+          btnRec.textContent = (st.countdown != null ? st.countdown : "…") + "…";
+          btnRec.classList.remove("rec");
+          btnRec.disabled = true;
+          btnPause.textContent = "暂停";
+          btnPause.disabled = true;
+        } else if (state === "preparing") {
+          btnRec.textContent = "准备中";
+          btnRec.classList.remove("rec");
+          btnRec.disabled = true;
+          btnPause.textContent = "暂停";
+          btnPause.disabled = true;
+        } else {
+          btnRec.textContent = "启动录像";
+          btnRec.classList.remove("rec");
+          btnRec.disabled = false;
+          btnPause.textContent = "暂停";
+          btnPause.disabled = false;
+        }
+
+        btnCam.classList.toggle("on", !!st.cameraEnabled);
+        btnCam.textContent = st.cameraEnabled ? "摄像头·开" : "摄像头";
+        btnMirror.classList.toggle("on", !!st.mirrored);
+        btnMirror.textContent = st.mirrored ? "反转·开" : "反转";
+        const mag = Number(st.magnification || 1);
+        btnZoom.classList.toggle("on", mag > 1.02);
+        btnZoom.textContent = mag > 1.02 ? "复位 " + mag.toFixed(1) + "x" : "复位缩放";
+        if (st.error) {
+          errEl.hidden = false;
+          errEl.textContent = String(st.error);
+          errEl.title = String(st.error);
+        } else if (state === "recording" || state === "countdown" || state === "preparing") {
+          errEl.hidden = true;
+          errEl.textContent = "";
+        }
+      });
+    </script>
+  </body>
+</html>

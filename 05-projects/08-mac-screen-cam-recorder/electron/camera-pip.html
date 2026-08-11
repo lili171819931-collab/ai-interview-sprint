@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; media-src 'self' blob: mediastream:;"
+    />
+    <title>摄像头监视</title>
+    <style>
+      html,
+      body {
+        margin: 0;
+        width: 100%;
+        height: 100%;
+        overflow: hidden;
+        background: transparent;
+        user-select: none;
+        -webkit-app-region: drag;
+      }
+      .wrap {
+        position: absolute;
+        inset: 8px;
+        border-radius: 50%;
+        overflow: hidden;
+        border: 3px solid rgba(255, 255, 255, 0.85);
+        box-shadow: 0 10px 28px rgba(0, 0, 0, 0.45);
+        background: #111;
+      }
+      video {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transform: scaleX(-1);
+        background: #111;
+      }
+      .label {
+        position: absolute;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        padding: 6px 8px 10px;
+        font: 600 11px/1.2 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+        color: #fff;
+        text-align: center;
+        background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+        -webkit-app-region: no-drag;
+      }
+      .close {
+        position: absolute;
+        top: 10px;
+        right: 14px;
+        width: 22px;
+        height: 22px;
+        border: 0;
+        border-radius: 50%;
+        background: rgba(0, 0, 0, 0.55);
+        color: #fff;
+        font-size: 14px;
+        line-height: 22px;
+        cursor: pointer;
+        -webkit-app-region: no-drag;
+        z-index: 2;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="wrap">
+      <button class="close" id="close" title="仅隐藏监视窗，不影响成片圆窗">×</button>
+      <video id="v" autoplay muted playsinline></video>
+      <div class="label" id="label">表情监视</div>
+    </div>
+    <script>
+      const video = document.getElementById("v");
+      const label = document.getElementById("label");
+      let stream = null;
+
+      function isPhoneCam(name) {
+        const l = String(name || "").toLowerCase();
+        return (
+          /iphone|ipad|ipod|continuity|desk\s*view/.test(l) ||
+          /连.?互通|接续|随航|手机/.test(String(name || ""))
+        );
+      }
+
+      async function start(deviceId) {
+        if (stream) {
+          stream.getTracks().forEach((t) => t.stop());
+          stream = null;
+        }
+        if (!deviceId) {
+          label.textContent = "无电脑摄像头";
+          return;
+        }
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({
+            audio: false,
+            video: {
+              deviceId: { exact: deviceId },
+              width: { ideal: 480 },
+              height: { ideal: 480 },
+            },
+          });
+          const trackLabel = stream.getVideoTracks()[0]?.label || "";
+          if (isPhoneCam(trackLabel)) {
+            stream.getTracks().forEach((t) => t.stop());
+            stream = null;
+            label.textContent = "已拒绝手机摄像头";
+            return;
+          }
+          video.srcObject = stream;
+          await video.play();
+          label.textContent = "表情监视 · 可拖动";
+        } catch (e) {
+          label.textContent = "摄像头打不开";
+        }
+      }
+
+      function stop() {
+        if (stream) {
+          stream.getTracks().forEach((t) => t.stop());
+          stream = null;
+        }
+        video.srcObject = null;
+      }
+
+      window.macRecorderPip?.onCommand((cmd) => {
+        if (cmd?.type === "start") void start(cmd.deviceId || "");
+        if (cmd?.type === "stop") stop();
+      });
+
+      document.getElementById("close").onclick = () => {
+        window.macRecorderPip?.hide();
+      };
+    </script>
+  </body>
+</html>
