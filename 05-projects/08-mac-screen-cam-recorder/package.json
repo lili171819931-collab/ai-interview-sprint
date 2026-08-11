@@ -1,0 +1,56 @@
+{
+  "name": "mac-screen-cam-recorder",
+  "version": "0.1.0",
+  "private": true,
+  "description": "macOS-only screen + circular camera PiP + mic recorder",
+  "main": "electron/main.cjs",
+  "scripts": {
+    "dev": "concurrently -k \"vite --port 5177\" \"wait-on http://127.0.0.1:5177 && env -u ELECTRON_RUN_AS_NODE ELECTRON_IS_DEV=1 electron .\"",
+    "build": "vite build",
+    "start": "env -u ELECTRON_RUN_AS_NODE ELECTRON_IS_DEV=1 electron .",
+    "package:mac": "npm run build && electron-builder --mac dir"
+  },
+  "build": {
+    "appId": "local.mac.screen.cam.recorder",
+    "productName": "Mac Screen Cam Recorder",
+    "directories": {
+      "output": "release"
+    },
+    "files": [
+      "dist/**/*",
+      "electron/**/*",
+      "package.json"
+    ],
+    "mac": {
+      "category": "public.app-category.video",
+      "target": [
+        "dir"
+      ],
+      "extendInfo": {
+        "NSCameraUsageDescription": "用于圆形出镜小窗，仅在你开启时采集，仅存本机。",
+        "NSMicrophoneUsageDescription": "用于录制讲解声音，可随时静音，仅存本机。",
+        "NSScreenCaptureDescription": "用于录制你选择的屏幕或窗口画面，仅存本机。"
+      }
+    }
+  },
+  "dependencies": {
+    "@mediapipe/tasks-vision": "^0.10.21",
+    "react": "^19.1.1",
+    "react-dom": "^19.1.1"
+  },
+  "devDependencies": {
+    "@types/react": "^19.1.10",
+    "@types/react-dom": "^19.1.7",
+    "@vitejs/plugin-react": "^5.0.0",
+    "concurrently": "^9.2.0",
+    "electron": "^37.10.3",
+    "electron-builder": "^26.0.12",
+    "typescript": "^5.9.2",
+    "vite": "^7.1.2",
+    "wait-on": "^8.0.4"
+  },
+  "allowScripts": {
+    "electron@37.10.3": true,
+    "esbuild@0.28.2": true
+  }
+}

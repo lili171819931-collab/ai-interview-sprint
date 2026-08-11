@@ -33,6 +33,7 @@
 | 票易报 Web（05） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/05-invoice-reimburse-web |
 | 票迹项目文档（06） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/06-piaoji-product |
 | 智衡 AI Radar（07） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard |
+| Mac 教学录屏（08） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/08-mac-screen-cam-recorder |
 
 ## AI 动态雷达（智衡）
 
@@ -45,6 +46,14 @@
 | TrendRadar 本地用法 | — | `08-resources/TrendRadar-USAGE.md` |
 | 情报研究脚本 | — | `08-resources/scrapling-examples/` |
 
+## Mac 教学录屏（Screen Cam）
+
+| 含义 | 本仓库路径 |
+|------|------------|
+| 可运行源码 + 全生命周期文档 | `05-projects/08-mac-screen-cam-recorder/` |
+| 全流程导航 | `05-projects/08-mac-screen-cam-recorder/docs/12-full-project-loop.md` |
+| 调研 / 竞品 | `docs/market-research.md` · `docs/competitive-analysis.md` |
+
 ## 关系图
 
 ```
@@ -52,5 +61,6 @@
  ├── 04 WorkBuddy Skill      ← 对话载体
  ├── 05 票易报 Web            ← 多用户审批系统（本仓源码）
  ├── 06 票迹 小程序           ← 员工侧闭环（源码在 ai-projects）
- └── 07 智衡 AI Radar         ← 情报看板 + 热点融合 + 机会简报（本仓完整包）
+ ├── 07 智衡 AI Radar         ← 情报看板 + 热点融合 + 机会简报（本仓完整包）
+ └── 08 Mac Screen Cam       ← 本地教学录屏（调研→成片→文档闭环）
 ```
