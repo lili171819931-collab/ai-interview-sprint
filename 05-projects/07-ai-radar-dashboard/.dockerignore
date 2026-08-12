@@ -1,0 +1,15 @@
+node_modules
+.next
+.git
+.gitignore
+*.md
+!README.md
+.tmp*
+.tmp-*/
+vendor
+tsconfig.tsbuildinfo
+.env
+.env.*
+!.env.docker.example
+mcp/smoke.ts
+**/.DS_Store

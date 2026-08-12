@@ -1,0 +1,523 @@
+{
+  "generatedAt": "2026-08-10T11:42:15.549Z",
+  "reportDate": "2026-08-10",
+  "timezone": "Asia/Shanghai",
+  "source": "trendradar-local",
+  "sourceUrl": "https://github.com/sansan0/TrendRadar",
+  "crawlTime": "19-38",
+  "totalItems": 255,
+  "successPlatforms": 11,
+  "failedPlatforms": 0,
+  "platforms": [
+    {
+      "id": "toutiao",
+      "name": "今日头条",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "baidu",
+      "name": "百度热搜",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "wallstreetcn-hot",
+      "name": "华尔街见闻",
+      "status": "success",
+      "itemCount": 10
+    },
+    {
+      "id": "thepaper",
+      "name": "澎湃新闻",
+      "status": "success",
+      "itemCount": 20
+    },
+    {
+      "id": "bilibili-hot-search",
+      "name": "bilibili 热搜",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "cls-hot",
+      "name": "财联社热门",
+      "status": "success",
+      "itemCount": 13
+    },
+    {
+      "id": "ifeng",
+      "name": "凤凰网",
+      "status": "success",
+      "itemCount": 12
+    },
+    {
+      "id": "tieba",
+      "name": "贴吧",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "weibo",
+      "name": "微博",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "douyin",
+      "name": "抖音",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "zhihu",
+      "name": "知乎",
+      "status": "success",
+      "itemCount": 20
+    }
+  ],
+  "items": [
+    {
+      "id": "tr-1",
+      "title": "无锡降雨量冲至全国第一",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 1,
+      "url": "https://www.toutiao.com/trending/7671530156514721842/",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-31",
+      "title": "白海豚突然大拐弯 走出罕见路线",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 1,
+      "url": "https://www.baidu.com/s?wd=%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF+%E8%B5%B0%E5%87%BA%E7%BD%95%E8%A7%81%E8%B7%AF%E7%BA%BF",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-61",
+      "title": "华尔街见闻早餐FM-Radio | 2026年8月10日",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 1,
+      "url": "https://wallstreetcn.com/articles/3779030",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-71",
+      "title": "丘成桐：以好奇为基础的研究才算是真正的基础研究",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 1,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33748979",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-91",
+      "title": "TEC vs DRG VCT第二赛段",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 1,
+      "url": "https://search.bilibili.com/all?keyword=TEC+DRG",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-121",
+      "title": "韩国资金抢筹中际旭创！H股上市7天净买4339万美元",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 1,
+      "url": "https://www.cls.cn/detail/2449790",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-134",
+      "title": "还剩85天，特朗普全面收缩，伊朗左冲右突",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 1,
+      "url": "https://news.ifeng.com/c/8vTlIUCd26B",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-146",
+      "title": "赛博华佗!病毒吧主无偿帮人",
+      "platformId": "tieba",
+      "platformName": "贴吧",
+      "rank": 1,
+      "url": "https://tieba.baidu.com/hottopic/browse/hottopic?amp%3Btopic_name=%E8%B5%9B%E5%8D%9A%E5%8D%8E%E4%BD%97%21%E7%97%85%E6%AF%92%E5%90%A7%E4%B8%BB%E6%97%A0%E5%81%BF%E5%B8%AE%E4%BA%BA&topic_id=28357070",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-176",
+      "title": "白海豚突然大拐弯",
+      "platformId": "weibo",
+      "platformName": "微博",
+      "rank": 1,
+      "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF%23",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-206",
+      "title": "上海暴雨",
+      "platformId": "douyin",
+      "platformName": "抖音",
+      "rank": 1,
+      "url": "https://www.douyin.com/hot/2603779",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-236",
+      "title": "武汉司门口黄鹤楼天桥市容管理人员与占道摊贩发生激烈肢体冲突，3 人被刑拘，有哪些信息值得关注？",
+      "platformId": "zhihu",
+      "platformName": "知乎",
+      "rank": 1,
+      "url": "https://www.zhihu.com/question/2070076932834550346",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-2",
+      "title": "A股“股王”大跌",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 2,
+      "url": "https://www.toutiao.com/trending/7672155767805526067/",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-32",
+      "title": "相声演员李晓龙因病去世 年仅38岁",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 2,
+      "url": "https://www.baidu.com/s?wd=%E7%9B%B8%E5%A3%B0%E6%BC%94%E5%91%98%E6%9D%8E%E6%99%93%E9%BE%99%E5%9B%A0%E7%97%85%E5%8E%BB%E4%B8%96+%E5%B9%B4%E4%BB%8538%E5%B2%81",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-62",
+      "title": "华尔街谈“中概”：从“无力”到“机会性看多”",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 2,
+      "url": "https://wallstreetcn.com/articles/3779018",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-72",
+      "title": "良田被毁、污水入河，央视曝光多地乡村排污乱象",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 2,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33750096",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-92",
+      "title": "中国可控核聚变最新进展",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 2,
+      "url": "https://search.bilibili.com/all?keyword=%E4%B8%AD%E5%9B%BD%E5%8F%AF%E6%8E%A7%E6%A0%B8%E8%81%9A%E5%8F%98%E6%9C%80%E6%96%B0%E8%BF%9B%E5%B1%95",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-122",
+      "title": "高盛：中国AI板块不存在整体泡沫 三大细分领域最具投资价值",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 2,
+      "url": "https://www.cls.cn/detail/2449732",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": true
+    },
+    {
+      "id": "tr-135",
+      "title": "伊朗最高安全官员换人，雷扎伊何许人也？",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 2,
+      "url": "https://news.ifeng.com/c/8vTiqvCqOyW",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-147",
+      "title": "Xun手抓饭疑暗喻队内矛盾",
+      "platformId": "tieba",
+      "platformName": "贴吧",
+      "rank": 2,
+      "url": "https://tieba.baidu.com/hottopic/browse/hottopic?amp%3Btopic_name=Xun%E6%89%8B%E6%8A%93%E9%A5%AD%E7%96%91%E6%9A%97%E5%96%BB%E9%98%9F%E5%86%85%E7%9F%9B%E7%9B%BE&topic_id=28357065",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-177",
+      "title": "演员秦焰去世",
+      "platformId": "weibo",
+      "platformName": "微博",
+      "rank": 2,
+      "url": "https://s.weibo.com/weibo?q=%23%E6%BC%94%E5%91%98%E7%A7%A6%E7%84%B0%E5%8E%BB%E4%B8%96%23",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-207",
+      "title": "台风白海豚实时路径",
+      "platformId": "douyin",
+      "platformName": "抖音",
+      "rank": 2,
+      "url": "https://www.douyin.com/hot/2602902",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-237",
+      "title": "同济大学取消教师长期聘任，科研教职岗位面临更大的压力，为什么行政工作相对更简单反而没有这种不稳定性？",
+      "platformId": "zhihu",
+      "platformName": "知乎",
+      "rank": 2,
+      "url": "https://www.zhihu.com/question/2067683991218607726",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-3",
+      "title": "中国6G何以加速跑",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 3,
+      "url": "https://www.toutiao.com/trending/7672080885907292211/",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-33",
+      "title": "APEC峰会倒计时100天",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 3,
+      "url": "https://www.baidu.com/s?wd=APEC%E5%B3%B0%E4%BC%9A%E5%80%92%E8%AE%A1%E6%97%B6100%E5%A4%A9",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-63",
+      "title": "今日起，豆包推荐酒店将收取佣金：综合扣费12%！",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 3,
+      "url": "https://wallstreetcn.com/articles/3779079",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-73",
+      "title": "面对面丨蔡磊：与渐冻症抗争，纵使不敌，也不屈服",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 3,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33750215",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-93",
+      "title": "食贫道讲述墨西哥后世界杯时代",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 3,
+      "url": "https://search.bilibili.com/all?keyword=%E9%A3%9F%E8%B4%AB%E9%81%93%E8%AE%B2%E8%BF%B0%E5%A2%A8%E8%A5%BF%E5%93%A5%E5%90%8E%E4%B8%96%E7%95%8C%E6%9D%AF%E6%97%B6%E4%BB%A3",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-123",
+      "title": "退市新规发威！高溢价LOF如期大跌，按下“套利党”的手",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 3,
+      "url": "https://www.cls.cn/detail/2449847",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-136",
+      "title": "伊朗高层变动，最高领袖发出新任命",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 3,
+      "url": "https://news.ifeng.com/c/8vSqCKLbBLT",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-148",
+      "title": "笔试第一劝出局,6人被处理",
+      "platformId": "tieba",
+      "platformName": "贴吧",
+      "rank": 3,
+      "url": "https://tieba.baidu.com/hottopic/browse/hottopic?amp%3Btopic_name=%E7%AC%94%E8%AF%95%E7%AC%AC%E4%B8%80%E5%8A%9D%E5%87%BA%E5%B1%80%2C6%E4%BA%BA%E8%A2%AB%E5%A4%84%E7%90%86&topic_id=28357064",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-178",
+      "title": "深圳APEC峰会倒计时100天",
+      "platformId": "weibo",
+      "platformName": "微博",
+      "rank": 3,
+      "url": "https://s.weibo.com/weibo?q=%23%E6%B7%B1%E5%9C%B3APEC%E5%B3%B0%E4%BC%9A%E5%80%92%E8%AE%A1%E6%97%B6100%E5%A4%A9%23",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-208",
+      "title": "APEC经济体来华热度持续攀升",
+      "platformId": "douyin",
+      "platformName": "抖音",
+      "rank": 3,
+      "url": "https://www.douyin.com/hot/2604571",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-238",
+      "title": "假如全球所有人同时获得三个选项：立刻变成祖国人、十分钟后变成超人、十五分钟后变成曼哈顿博士，怎么选？",
+      "platformId": "zhihu",
+      "platformName": "知乎",
+      "rank": 3,
+      "url": "https://www.zhihu.com/question/2069190461437261714",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-4",
+      "title": "独闯南太行失联女子遗体已找到",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 4,
+      "url": "https://www.toutiao.com/trending/7672068765324230699/",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-34",
+      "title": "这届大学新生快买不起电脑了",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 4,
+      "url": "https://www.baidu.com/s?wd=%E8%BF%99%E5%B1%8A%E5%A4%A7%E5%AD%A6%E6%96%B0%E7%94%9F%E5%BF%AB%E4%B9%B0%E4%B8%8D%E8%B5%B7%E7%94%B5%E8%84%91%E4%BA%86",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-64",
+      "title": "OpenAI曝光GPT-6！传10万亿参数，8月强行发布",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 4,
+      "url": "https://wallstreetcn.com/articles/3779038",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": true
+    },
+    {
+      "id": "tr-74",
+      "title": "武汉警方通报城管协管员与摊主发生冲突：3名协管员被刑拘",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 4,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33750449",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-94",
+      "title": "AG战胜JDG",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 4,
+      "url": "https://search.bilibili.com/all?keyword=AG+JDG",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-124",
+      "title": "沈腾掌勺“龙餐馆”引爆票房，两家上市公司股价涨停",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 4,
+      "url": "https://www.cls.cn/detail/2449834",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-137",
+      "title": "伊朗密集更换高层，释放何种信号？",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 4,
+      "url": "https://news.ifeng.com/c/8vTT2C4rKru",
+      "firstSeen": "19-38",
+      "lastSeen": "19-38",
+      "aiRelated": false
+    }
+  ],
+  "htmlReportUrl": "http://127.0.0.1:8080/html/latest/current.html",
+  "methodNote": "同步自本地 TrendRadar SQLite（2026-08-10.db）。 多平台热搜聚合；不改动智衡七维评分。命令：npm run trendradar:sync"
+}

@@ -1,0 +1,22 @@
+{
+  "updatedAt": "2026-08-12T00:00:00.000Z",
+  "categories": [
+    "ai",
+    "tech",
+    "agent",
+    "chip",
+    "robot",
+    "business",
+    "career"
+  ],
+  "keywords": [
+    "AI",
+    "Agent",
+    "Skill",
+    "LLM",
+    "机器人",
+    "芯片",
+    "创业"
+  ],
+  "notes": "单用户本地兴趣配置（D6=A）。Phase 5 起写入 UserRelevance。"
+}

@@ -1,0 +1,487 @@
+{
+  "kind": "daily",
+  "generatedAt": "2026-08-12T11:31:39.796Z",
+  "reportDate": "2026-08-12",
+  "timezone": "Asia/Shanghai",
+  "headline": "怎么看AI突破黎曼猜想下界（以国内平台为主，热度 43.8，状态 hot）",
+  "summary": "快照 2026-08-12T11:21:38.837Z · 事件 196 · Item 220\n状态：hot 19 · stable 128 · cooling 49\nTOP1：怎么看AI突破黎曼猜想下界",
+  "statusCounts": {
+    "emerging": 0,
+    "rising": 0,
+    "hot": 19,
+    "stable": 128,
+    "cooling": 49,
+    "fading": 0
+  },
+  "top": [
+    {
+      "id": "77bdd1e3e0be5beb",
+      "title": "怎么看AI突破黎曼猜想下界",
+      "heat_score": 43.8,
+      "velocity": 0.402,
+      "trend_status": "hot",
+      "platforms": [
+        "B站热搜",
+        "bilibili-hot-search"
+      ],
+      "one_liner": "怎么看AI突破黎曼猜想下界（以国内平台为主，热度 43.8，状态 hot）",
+      "sources": [
+        {
+          "title": "怎么看AI突破黎曼猜想下界",
+          "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+          "platform": "bilibili-hot-search"
+        },
+        {
+          "title": "怎么看AI突破黎曼猜想下界",
+          "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+          "platform": "B站热搜"
+        }
+      ]
+    },
+    {
+      "id": "14af099ac3ae38f6",
+      "title": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了",
+      "heat_score": 38.2,
+      "velocity": 0.3,
+      "trend_status": "stable",
+      "platforms": [
+        "cls-hot"
+      ],
+      "one_liner": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了（以国内平台为主，热度 38.2，状态 stable）",
+      "sources": [
+        {
+          "title": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了",
+          "url": "https://www.cls.cn/detail/2450678",
+          "platform": "cls-hot"
+        }
+      ]
+    },
+    {
+      "id": "1c0f9c649d1d0998",
+      "title": "台风白海豚实时路径",
+      "heat_score": 38.1,
+      "velocity": 0.333,
+      "trend_status": "hot",
+      "platforms": [
+        "B站热搜",
+        "douyin",
+        "抖音热榜"
+      ],
+      "one_liner": "台风白海豚实时路径（以国内平台为主，热度 38.1，状态 hot）",
+      "sources": [
+        {
+          "title": "台风白海豚实时路径",
+          "url": "https://www.douyin.com/hot/2602902",
+          "platform": "douyin"
+        },
+        {
+          "title": "台风白海豚实时路径",
+          "url": "https://search.bilibili.com/all?keyword=%E5%8F%B0%E9%A3%8E%E7%99%BD%E6%B5%B7%E8%B1%9A%E5%AE%9E%E6%97%B6%E8%B7%AF%E5%BE%84",
+          "platform": "B站热搜"
+        },
+        {
+          "title": "台风白海豚实时路径",
+          "url": "https://www.douyin.com/hot/2602902",
+          "platform": "抖音热榜"
+        }
+      ]
+    },
+    {
+      "id": "fbb9e239c9de21d7",
+      "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+      "heat_score": 36.4,
+      "velocity": 0.368,
+      "trend_status": "hot",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "H3-metal – Native MiniMax-H3 inference for Apple Silicon（以海外信源为主，热度 36.4，状态 hot）",
+      "sources": [
+        {
+          "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+          "url": "https://github.com/antirez/h3.c",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+          "url": "https://github.com/antirez/h3.c",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "93e2bd25595ed0f2",
+      "title": "俄女子被诱骗进缅甸电诈园游河逃生",
+      "heat_score": 33.7,
+      "velocity": 0.252,
+      "trend_status": "hot",
+      "platforms": [
+        "toutiao",
+        "今日头条热榜"
+      ],
+      "one_liner": "俄女子被诱骗进缅甸电诈园游河逃生（以国内平台为主，热度 33.7，状态 hot）",
+      "sources": [
+        {
+          "title": "俄女子被诱骗进缅甸电诈园游河逃生",
+          "url": "https://www.toutiao.com/trending/7672560326260539433/",
+          "platform": "toutiao"
+        },
+        {
+          "title": "俄女子被诱骗进缅甸电诈园游河逃生",
+          "url": "https://www.toutiao.com/trending/7672560326260539433/",
+          "platform": "今日头条热榜"
+        }
+      ]
+    },
+    {
+      "id": "62937b392eb8e0f5",
+      "title": "睡车里被酒店收150元住宿费事件反转",
+      "heat_score": 33.7,
+      "velocity": 0.252,
+      "trend_status": "hot",
+      "platforms": [
+        "weibo",
+        "微博热搜"
+      ],
+      "one_liner": "睡车里被酒店收150元住宿费事件反转（以国内平台为主，热度 33.7，状态 hot）",
+      "sources": [
+        {
+          "title": "睡车里被酒店收150元住宿费事件反转",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%9D%A1%E8%BD%A6%E9%87%8C%E8%A2%AB%E9%85%92%E5%BA%97%E6%94%B6150%E5%85%83%E4%BD%8F%E5%AE%BF%E8%B4%B9%E4%BA%8B%E4%BB%B6%E5%8F%8D%E8%BD%AC%23",
+          "platform": "weibo"
+        },
+        {
+          "title": "睡车里被酒店收150元住宿费事件反转",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%9D%A1%E8%BD%A6%E9%87%8C%E8%A2%AB%E9%85%92%E5%BA%97%E6%94%B6150%E5%85%83%E4%BD%8F%E5%AE%BF%E8%B4%B9%E4%BA%8B%E4%BB%B6%E5%8F%8D%E8%BD%AC%23&t=31&band_rank=1&Refer=top",
+          "platform": "微博热搜"
+        }
+      ]
+    },
+    {
+      "id": "6f599f1de4402b9f",
+      "title": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露 055 的短板吗？",
+      "heat_score": 33.7,
+      "velocity": 0.252,
+      "trend_status": "hot",
+      "platforms": [
+        "zhihu",
+        "知乎热榜"
+      ],
+      "one_liner": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露 055 的短板吗？（以国内平台为主，热度 33.7，状态 hot）",
+      "sources": [
+        {
+          "title": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露 055 的短板吗？",
+          "url": "https://www.zhihu.com/question/2069804922732860138",
+          "platform": "zhihu"
+        },
+        {
+          "title": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露 055 的短板吗？",
+          "url": "https://www.zhihu.com/question/2069804922732860138",
+          "platform": "知乎热榜"
+        }
+      ]
+    },
+    {
+      "id": "fb4ffcd9305a1f2d",
+      "title": "Chicken Scheme 6.0",
+      "heat_score": 31.4,
+      "velocity": 0.368,
+      "trend_status": "hot",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "Chicken Scheme 6.0（以海外信源为主，热度 31.4，状态 hot）",
+      "sources": [
+        {
+          "title": "Chicken Scheme 6.0",
+          "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "Chicken Scheme 6.0",
+          "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "dd696ef39791bbf1",
+      "title": "中星4B卫星发射失利",
+      "heat_score": 30.6,
+      "velocity": 0.15,
+      "trend_status": "stable",
+      "platforms": [
+        "thepaper"
+      ],
+      "one_liner": "中星4B卫星发射失利（以国内平台为主，热度 30.6，状态 stable）",
+      "sources": [
+        {
+          "title": "中星4B卫星发射失利",
+          "url": "https://www.thepaper.cn/newsDetail_forward_33755223",
+          "platform": "thepaper"
+        }
+      ]
+    },
+    {
+      "id": "ed78b7b685bae3c4",
+      "title": "美媒：特朗普上月秘密乘运输机回国",
+      "heat_score": 30.4,
+      "velocity": 0.252,
+      "trend_status": "hot",
+      "platforms": [
+        "toutiao",
+        "今日头条热榜"
+      ],
+      "one_liner": "美媒：特朗普上月秘密乘运输机回国（以国内平台为主，热度 30.4，状态 hot）",
+      "sources": [
+        {
+          "title": "美媒：特朗普上月秘密乘运输机回国",
+          "url": "https://www.toutiao.com/trending/7672053116451389486/",
+          "platform": "toutiao"
+        },
+        {
+          "title": "美媒：特朗普上月秘密乘运输机回国",
+          "url": "https://www.toutiao.com/trending/7672053116451389486/",
+          "platform": "今日头条热榜"
+        }
+      ]
+    }
+  ],
+  "rising": [
+    {
+      "id": "77bdd1e3e0be5beb",
+      "title": "怎么看AI突破黎曼猜想下界",
+      "heat_score": 43.8,
+      "velocity": 0.402,
+      "trend_status": "hot",
+      "platforms": [
+        "B站热搜",
+        "bilibili-hot-search"
+      ],
+      "one_liner": "怎么看AI突破黎曼猜想下界（以国内平台为主，热度 43.8，状态 hot）",
+      "sources": [
+        {
+          "title": "怎么看AI突破黎曼猜想下界",
+          "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+          "platform": "bilibili-hot-search"
+        },
+        {
+          "title": "怎么看AI突破黎曼猜想下界",
+          "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+          "platform": "B站热搜"
+        }
+      ]
+    },
+    {
+      "id": "fbb9e239c9de21d7",
+      "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+      "heat_score": 36.4,
+      "velocity": 0.368,
+      "trend_status": "hot",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "H3-metal – Native MiniMax-H3 inference for Apple Silicon（以海外信源为主，热度 36.4，状态 hot）",
+      "sources": [
+        {
+          "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+          "url": "https://github.com/antirez/h3.c",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+          "url": "https://github.com/antirez/h3.c",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "fb4ffcd9305a1f2d",
+      "title": "Chicken Scheme 6.0",
+      "heat_score": 31.4,
+      "velocity": 0.368,
+      "trend_status": "hot",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "Chicken Scheme 6.0（以海外信源为主，热度 31.4，状态 hot）",
+      "sources": [
+        {
+          "title": "Chicken Scheme 6.0",
+          "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "Chicken Scheme 6.0",
+          "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "884d5d52b3fedebd",
+      "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
+      "heat_score": 28.1,
+      "velocity": 0.368,
+      "trend_status": "stable",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots（以海外信源为主，热度 28.1，状态 stable）",
+      "sources": [
+        {
+          "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
+          "url": "https://cactuscompute.com/needle",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
+          "url": "https://cactuscompute.com/needle",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "9fbed35a563cd72c",
+      "title": "Show HN: Scroll through all 43252003274489856000 Rubik's Cube states",
+      "heat_score": 26.8,
+      "velocity": 0.368,
+      "trend_status": "stable",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "Show HN: Scroll through all 43252003274489856000 Rubik's Cube states（以海外信源为主，热度 26.8，状态 stable）",
+      "sources": [
+        {
+          "title": "Show HN: Scroll through all 43252003274489856000 Rubik's Cube states",
+          "url": "https://everycube.alen.is/",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "Show HN: Scroll through all 43252003274489856000 Rubik's Cube states",
+          "url": "https://everycube.alen.is/",
+          "platform": "hackernews"
+        }
+      ]
+    }
+  ],
+  "aiTop": [
+    {
+      "id": "77bdd1e3e0be5beb",
+      "title": "怎么看AI突破黎曼猜想下界",
+      "heat_score": 43.8,
+      "velocity": 0.402,
+      "trend_status": "hot",
+      "platforms": [
+        "B站热搜",
+        "bilibili-hot-search"
+      ],
+      "one_liner": "怎么看AI突破黎曼猜想下界（以国内平台为主，热度 43.8，状态 hot）",
+      "sources": [
+        {
+          "title": "怎么看AI突破黎曼猜想下界",
+          "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+          "platform": "bilibili-hot-search"
+        },
+        {
+          "title": "怎么看AI突破黎曼猜想下界",
+          "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+          "platform": "B站热搜"
+        }
+      ]
+    },
+    {
+      "id": "14af099ac3ae38f6",
+      "title": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了",
+      "heat_score": 38.2,
+      "velocity": 0.3,
+      "trend_status": "stable",
+      "platforms": [
+        "cls-hot"
+      ],
+      "one_liner": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了（以国内平台为主，热度 38.2，状态 stable）",
+      "sources": [
+        {
+          "title": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了",
+          "url": "https://www.cls.cn/detail/2450678",
+          "platform": "cls-hot"
+        }
+      ]
+    },
+    {
+      "id": "fbb9e239c9de21d7",
+      "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+      "heat_score": 36.4,
+      "velocity": 0.368,
+      "trend_status": "hot",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "H3-metal – Native MiniMax-H3 inference for Apple Silicon（以海外信源为主，热度 36.4，状态 hot）",
+      "sources": [
+        {
+          "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+          "url": "https://github.com/antirez/h3.c",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+          "url": "https://github.com/antirez/h3.c",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "fb4ffcd9305a1f2d",
+      "title": "Chicken Scheme 6.0",
+      "heat_score": 31.4,
+      "velocity": 0.368,
+      "trend_status": "hot",
+      "platforms": [
+        "Hacker News",
+        "hackernews"
+      ],
+      "one_liner": "Chicken Scheme 6.0（以海外信源为主，热度 31.4，状态 hot）",
+      "sources": [
+        {
+          "title": "Chicken Scheme 6.0",
+          "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+          "platform": "Hacker News"
+        },
+        {
+          "title": "Chicken Scheme 6.0",
+          "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
+          "platform": "hackernews"
+        }
+      ]
+    },
+    {
+      "id": "d9bcb412eff7666c",
+      "title": "美股收盘：芯片股&光通信概念重挫 三大指数收低中概逆市走强",
+      "heat_score": 29.8,
+      "velocity": 0.3,
+      "trend_status": "stable",
+      "platforms": [
+        "cls-hot"
+      ],
+      "one_liner": "美股收盘：芯片股&光通信概念重挫 三大指数收低中概逆市走强（以国内平台为主，热度 29.8，状态 stable）",
+      "sources": [
+        {
+          "title": "美股收盘：芯片股&光通信概念重挫 三大指数收低中概逆市走强",
+          "url": "https://www.cls.cn/detail/2450652",
+          "platform": "cls-hot"
+        }
+      ]
+    }
+  ],
+  "dashboardPath": "/briefs",
+  "eventCount": 196,
+  "itemCount": 220
+}

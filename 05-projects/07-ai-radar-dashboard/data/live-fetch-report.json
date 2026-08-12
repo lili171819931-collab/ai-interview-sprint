@@ -1,8 +1,8 @@
 {
-  "fetchedAt": "2026-08-10T09:11:19.690Z",
+  "fetchedAt": "2026-08-12T11:40:52.075Z",
   "offline": false,
-  "successCount": 13,
-  "failureCount": 0,
+  "successCount": 12,
+  "failureCount": 1,
   "items": [
     {
       "sourceId": "openai-news",
@@ -12,9 +12,9 @@
         "openai-api"
       ],
       "status": "ok",
-      "title": "Responding to the next frontier of critical cyber capabilities",
-      "url": "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities",
-      "publishedAt": "2026-08-07T15:20:00.000Z"
+      "title": "Testing ads in ChatGPT",
+      "url": "https://openai.com/index/testing-ads-in-chatgpt",
+      "publishedAt": "2026-08-11T10:00:00.000Z"
     },
     {
       "sourceId": "anthropic-news-mirror",
@@ -36,9 +36,9 @@
         "gemini"
       ],
       "status": "ok",
-      "title": "The latest AI news we announced in July 2026",
-      "url": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-july-2026/",
-      "publishedAt": "2026-08-04T13:00:00.000Z"
+      "title": "AMIE, our research medical AI system, demonstrates real-time clinical video consultation capabilities in a first-of-its-kind study.",
+      "url": "https://blog.google/innovation-and-ai/models-and-research/google-research/amie-video-consultations/",
+      "publishedAt": "2026-08-11T17:00:00.000Z"
     },
     {
       "sourceId": "mistral-news",
@@ -47,9 +47,9 @@
         "mistral"
       ],
       "status": "ok",
-      "title": "Introducing Shieldstral.",
-      "url": "https://mistral.ai/news/shieldstral/",
-      "publishedAt": "2026-08-04T12:00:26.000Z"
+      "title": "In-region inference, open models, and new European infrastructure for sovereign AI.",
+      "url": "https://mistral.ai/news/regional-inference-open-models-new-compute/",
+      "publishedAt": "2026-08-11T12:00:27.000Z"
     },
     {
       "sourceId": "huggingface-blog",
@@ -58,9 +58,9 @@
         "huggingface"
       ],
       "status": "ok",
-      "title": "TutorMoments: Do AI tutors know when to help and when to hold back?",
-      "url": "https://huggingface.co/blog/allenai/tutormoments",
-      "publishedAt": "2026-08-07T17:53:32.000Z"
+      "title": "Thinking of ACE? We Can Do It with Fewer Tokens",
+      "url": "https://huggingface.co/blog/ibm-research/altk-evolve-sldd",
+      "publishedAt": "2026-08-11T13:37:10.000Z"
     },
     {
       "sourceId": "langchain-blog",
@@ -69,9 +69,9 @@
         "langchain"
       ],
       "status": "ok",
-      "title": "Managed Deep Agents is now in public beta",
-      "url": "https://www.langchain.com/blog/managed-deep-agents-is-now-in-public-beta",
-      "publishedAt": "2026-08-07T19:39:38.000Z"
+      "title": "What is an AI agent?",
+      "url": "https://www.langchain.com/blog/what-is-an-agent",
+      "publishedAt": "2026-08-12T05:47:11.000Z"
     },
     {
       "sourceId": "cursor-changelog",
@@ -101,9 +101,9 @@
         "n8n"
       ],
       "status": "ok",
-      "title": "stable",
-      "url": "https://github.com/n8n-io/n8n/releases/tag/stable",
-      "publishedAt": "2026-08-07T16:53:02.000Z"
+      "title": "v1: :rocket: Release 1.123.70 (#36104)",
+      "url": "https://github.com/n8n-io/n8n/releases/tag/v1",
+      "publishedAt": "2026-08-12T07:31:56.000Z"
     },
     {
       "sourceId": "langchain-releases",
@@ -111,10 +111,8 @@
       "toolIds": [
         "langchain"
       ],
-      "status": "ok",
-      "title": "langchain-openai==1.4.2",
-      "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-openai%3D%3D1.4.2",
-      "publishedAt": "2026-08-07T13:58:16.000Z"
+      "status": "fail",
+      "error": "fetch failed"
     },
     {
       "sourceId": "llamaindex-releases",
@@ -134,9 +132,9 @@
         "comfyui"
       ],
       "status": "ok",
-      "title": "v0.31.1",
-      "url": "https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.31.1",
-      "publishedAt": "2026-08-08T05:04:30.000Z"
+      "title": "v0.32.0",
+      "url": "https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.32.0",
+      "publishedAt": "2026-08-11T21:56:20.000Z"
     },
     {
       "sourceId": "firecrawl-releases",
@@ -145,9 +143,9 @@
         "firecrawl"
       ],
       "status": "ok",
-      "title": "v2.11.193",
-      "url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.11.193",
-      "publishedAt": "2026-08-08T19:23:30.000Z"
+      "title": "v2.11.198",
+      "url": "https://github.com/firecrawl/firecrawl/releases/tag/v2.11.198",
+      "publishedAt": "2026-08-11T22:04:08.000Z"
     }
   ]
 }

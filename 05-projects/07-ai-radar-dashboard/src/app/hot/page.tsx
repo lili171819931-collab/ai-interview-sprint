@@ -1,10 +1,14 @@
 import Link from "next/link";
 import { ExternalLink, Flame, Radar } from "lucide-react";
 import { HotTopicsBoard } from "@/components/HotTopicsBoard";
+import { RefreshControls } from "@/components/RefreshControls";
 import { getGlobalHotTopicsView } from "@/lib/global-hot-data";
+import { getBundleView } from "@/lib/data";
+import { FreshnessBadge } from "@/components/FreshnessBadge";
 
 export default function HotTopicsPage() {
   const { snapshot, fromFile } = getGlobalHotTopicsView();
+  const { freshness, lastUpdatedDate } = getBundleView();
   const { stats } = snapshot;
 
   return (
@@ -41,10 +45,15 @@ export default function HotTopicsPage() {
           </span>
         </div>
         <p className="text-sm text-[var(--muted)]">{snapshot.methodNote}</p>
+        <FreshnessBadge freshness={freshness} lastUpdatedDate={lastUpdatedDate} />
+        <RefreshControls defaultMode="hot" />
         <div className="flex flex-wrap gap-3">
           <Link href="/radar" className="btn btn-ghost inline-flex items-center gap-1">
             <Radar size={16} aria-hidden />
             动态雷达
+          </Link>
+          <Link href="/history" className="btn btn-ghost">
+            历史报告
           </Link>
           <Link href="/pulse" className="btn btn-ghost">
             机会简报

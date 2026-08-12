@@ -3,8 +3,14 @@
 日更数据、功能介绍、可追溯优劣势对比的 Web 看板。  
 本目录已补齐从**需求 → 设计 → 项目管理 → 研发测试 → 上线运维 → 复盘闭环**的完整项目文档。
 
-> 源码同步位置：[ai-projects/products/ai-radar-dashboard](https://github.com/lili171819931-collab/ai-projects/tree/main/products/ai-radar-dashboard)  
-> 本仓亦可通过子模块访问：`05-projects/ai-projects/products/ai-radar-dashboard/`
+> **演进中：** 目标升级为 [Global Trend Intelligence](docs/16-global-trend-intelligence-architecture.md)。  
+> **Phase 2–12 已交付**：ingest → 聚类 → Dashboard → Agent → MCP → 简报推送 → QA → Docker Compose（可选）。  
+> 本地：`npm run intel:refresh && npm run dev` → http://localhost:3010  
+> Docker：见 [`docs/docker.md`](docs/docker.md) · `docker compose up -d --build`
+>
+> **仓库权威路径（面试仓）**：[ai-interview-sprint/…/07-ai-radar-dashboard](https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard)  
+> 融合说明：[`docs/17-repo-fusion.md`](docs/17-repo-fusion.md) · 跨仓对照：[`../PATH-MAP.md`](../PATH-MAP.md)  
+> 可选镜像：[ai-projects/products/ai-radar-dashboard](https://github.com/lili171819931-collab/ai-projects/tree/main/products/ai-radar-dashboard)（勿用子模块覆盖本目录）
 
 ## 一分钟上手
 
@@ -23,6 +29,7 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 | `/` | 总览：数据链、能力地图、品类柱状图、今日看点 |
 | `/radar` | AI 动态雷达日报：5 监控池 + TrendRadar 热点融合 + 信号看板 |
 | `/hot` | 国内外实时热点：Agent Reach + NewsNow/RSS/OpenCLI 多源看板 |
+| `/history` | 历史报告：日更归档回看（`data/archive/YYYY-MM-DD`） |
 | `/pulse` | BuilderPulse 风格机会简报：今日构建建议 + 机会发现题库 |
 | `/tools` | 目录：筛选 + 结果区（排序/视图/多选对比） |
 | `/tools/[id]` | 功能介绍 + 优劣势 + 来源数据链 |
@@ -60,6 +67,9 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 - [`docs/13-ai-radar-source-matrix.md`](docs/13-ai-radar-source-matrix.md)
 - [`docs/14-opportunity-brief-full-loop.md`](docs/14-opportunity-brief-full-loop.md) ← **机会简报迭代全流程**
 - [`docs/15-trendradar-fusion-full-loop.md`](docs/15-trendradar-fusion-full-loop.md) ← **TrendRadar 热点融合全流程**
+- [`docs/16-global-trend-intelligence-architecture.md`](docs/16-global-trend-intelligence-architecture.md) ← **全网热点情报系统架构（Phase 1）**
+- [`docs/极致Prompt-全网热点情报系统.md`](docs/极致Prompt-全网热点情报系统.md) ← **GTI 极致 Prompt 归档**
+- [`docs/极致Prompt-日更实时更新与历史留存.md`](docs/极致Prompt-日更实时更新与历史留存.md) ← **日更实时 + 历史归档 Prompt**
 
 ### 5) 演示与故事化包装
 - [`docs/演示脚本.md`](docs/演示脚本.md)
@@ -75,13 +85,22 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 1. 编辑 `src/data/seed.ts`（事实与评分，人工底座）
 2. 维护 5 监控池：`src/data/research-sources.ts`
 3. 需要时扩展 `scripts/live-sources.ts`（RSS / GitHub Atom / 公开 Changelog）
-4. `npm run data:refresh` — 抓取公开源 + 生成 `data/radar-daily-report.json` + 同步 BuilderPulse + TrendRadar + 国内外实时热点  
+4. **推荐日更（先归档再刷新，保留过往报告）**  
+   ```bash
+   npm run daily:refresh          # 全量：归档 → bundle/radar/pulse/trend/hot
+   npm run daily:refresh:quick    # 快速：雷达 + 热点
+   npm run daily:refresh:hot      # 仅热点
+   ```
+   页面也可点「立即日更」（`POST /api/refresh`）。历史回看：`/history`。  
+   - 兼容旧命令：`npm run data:refresh`（不自动归档）  
    - 仅日报：`npm run radar:daily`  
    - 周报：`npm run radar:weekly`  
-   - 实时热点：`npm run hot:sync`（Agent Reach 能力层 + 研究仓聚合脚本）  
-   - 离线：`npm run data:refresh:offline`  
+   - 实时热点：`npm run hot:sync`  
+   - 离线：`npm run daily:refresh:offline`  
    - 仅机会简报：`npm run pulse:sync`  
    - 仅热点融合：`npm run trendradar:sync`
+   - **情报 ingest（GTI Phase 2）**：`npm run intel:ingest`（统一 Item；离线 `intel:ingest:offline`）
+   - **事件聚类 + 热度（Phase 4–5）**：`npm run intel:cluster` · 一键 `npm run intel:refresh`
 5. 校验失败**不会**覆盖昨日 `data/daily-bundle.json`
 6. 看板看 `/radar`（含 `#trendradar-hot`）；机会简报看 `/pulse`；抓取明细看 `/sources` 与 `data/live-fetch-report.json`
 

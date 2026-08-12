@@ -1,0 +1,624 @@
+{
+  "generatedAt": "2026-08-11T06:33:23.792Z",
+  "timezone": "Asia/Shanghai",
+  "reportDate": "2026-08-11",
+  "kind": "daily",
+  "executiveSummary": [
+    "今日重新检索：公开源 13 路成功，热点平台 14 个已并入雷达。",
+    "最新头条：Build Low-Latency Multilingual Voice Agents: Open Weights & Full Deployment Control with NVIDIA Magpie TTS；Google Workspace Plugins；Half of Europe's towns and villages have fewer r",
+    "今日雷达覆盖 5 个监控池：模型榜单、工具目录、新闻快讯、论文研究、官方发布。",
+    "优先采信官方发布与一手评测；工具目录热度仅作发现信号。",
+    "模型对比坚持分场景，不输出无口径“最强”。"
+  ],
+  "signals": [
+    {
+      "id": "live-huggingface-blog-3",
+      "name": "Build Low-Latency Multilingual Voice Agents: Open Weights & Full Deployment Control with NVIDIA Magpie TTS",
+      "category": "news",
+      "pool": "model_leaderboard",
+      "heat": 5,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://huggingface.co/blog/nvidia/magpie-tts-multilingual-voice-agents",
+      "sourceName": "Hugging Face Blog RSS",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：Hugging Face Blog RSS",
+      "entities": [
+        "huggingface"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-cursor-changelog-5",
+      "name": "Google Workspace Plugins",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 5,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://cursor.com/changelog",
+      "sourceName": "Cursor Changelog",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：Cursor Changelog",
+      "entities": [
+        "cursor"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-google-ai-blog-1",
+      "name": "Evolve your marketing with new AI tools",
+      "category": "news",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://blog.google/products/ads-commerce/google-ads-analytics-ai-updates/",
+      "sourceName": "Google AI Blog RSS",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：Google AI Blog RSS",
+      "entities": [
+        "gemini"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-openai-news-0",
+      "name": "OpenAI’s letter to Governor Abbott on responsible AI infrastructure in Texas",
+      "category": "news",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://openai.com/index/responsible-ai-infrastructure-texas",
+      "sourceName": "OpenAI News RSS",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：OpenAI News RSS",
+      "entities": [
+        "chatgpt",
+        "openai-api"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-langchain-blog-4",
+      "name": "Managed Deep Agents is now in public beta",
+      "category": "news",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-08",
+      "sourceUrl": "https://www.langchain.com/blog/managed-deep-agents-is-now-in-public-beta",
+      "sourceName": "LangChain Blog RSS",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：LangChain Blog RSS",
+      "entities": [
+        "langchain"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-mistral-news-2",
+      "name": "Introducing Shieldstral.",
+      "category": "news",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-04",
+      "sourceUrl": "https://mistral.ai/news/shieldstral/",
+      "sourceName": "Mistral News RSS",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：Mistral News RSS",
+      "entities": [
+        "mistral"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-dify-releases-6",
+      "name": "Release v1.16.1 - Bug Fixes and Security Enhancements",
+      "category": "official",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-07-28",
+      "sourceUrl": "https://github.com/langgenius/dify/releases/tag/1.16.1",
+      "sourceName": "Dify GitHub Releases Atom",
+      "pmOpportunity": "核对是否进入候选池 / 更新对应工具 changelog",
+      "summary": "公开源实时抓取：Dify GitHub Releases Atom",
+      "entities": [
+        "dify"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "hot-Hacker News-1-Half of Europe's",
+      "name": "Half of Europe's towns and villages have fewer residents than 60 years ago",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://correctiv.org/en/europe/2026/04/21/half-of-europes-towns-and-villages-have-fewer-residents-than-60-years-ago/",
+      "sourceName": "Hacker News·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Hacker News）",
+      "entities": [
+        "Hacker News",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Hacker News-2-H3-metal – Nativ",
+      "name": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://github.com/antirez/h3.c",
+      "sourceName": "Hacker News·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Hacker News）",
+      "entities": [
+        "Hacker News",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Hacker News-3-DeepSeek: Revers",
+      "name": "DeepSeek: Reverse Engineering an AI Assistant by Interviewing Itself",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://manish.sh/writings/models/inside-deepseek-reverse-engineering-an-ai-assistant-by-interviewing-itself",
+      "sourceName": "Hacker News·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Hacker News）",
+      "entities": [
+        "Hacker News",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Exa 全球科技热点-1-OpenAI says it s",
+      "name": "OpenAI says it slowed Astra model development over security concerns | TechCrunch",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
+      "sourceName": "Exa 全球科技热点·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Exa 全球科技热点）",
+      "entities": [
+        "Exa 全球科技热点",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Exa 全球科技热点-2-Tech industry is",
+      "name": "Tech industry is buzzing after a Claude agent hacked into a gym | TechCrunch",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://techcrunch.com/2026/08/10/tech-industry-is-buzzing-after-a-claude-agent-hacked-into-a-gym/",
+      "sourceName": "Exa 全球科技热点·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Exa 全球科技热点）",
+      "entities": [
+        "Exa 全球科技热点",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Exa 全球科技热点-3-OpenAI pauses so",
+      "name": "OpenAI pauses some Astra work over a Critical cyber capability finding — AI Insiders",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://aiinsiders.net/article/openai-pauses-some-astra-work-over-a-critical-cyber",
+      "sourceName": "Exa 全球科技热点·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Exa 全球科技热点）",
+      "entities": [
+        "Exa 全球科技热点",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-TechCrunch Social-1-Social media pla",
+      "name": "Social media platforms still facing thousands of user addiction lawsuits after failed appeals",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://techcrunch.com/2026/08/10/social-media-platforms-still-facing-thousands-of-user-addiction-lawsuits-after-failed-appeals/",
+      "sourceName": "TechCrunch Social·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / TechCrunch Social）",
+      "entities": [
+        "TechCrunch Social",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-TechCrunch Social-2-YouTube now requ",
+      "name": "YouTube now requires creators to have twice as many watch hours to start earning money",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://techcrunch.com/2026/08/10/youtube-now-requires-creators-to-have-twice-as-many-watch-hours-to-start-earning-money/",
+      "sourceName": "TechCrunch Social·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / TechCrunch Social）",
+      "entities": [
+        "TechCrunch Social",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-TechCrunch Social-3-X replaces ‘misa",
+      "name": "X replaces ‘misaligned’ revenue sharing program with Original Content Rewards",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://techcrunch.com/2026/08/08/x-replaces-misaligned-revenue-sharing-program-with-original-content-rewards/",
+      "sourceName": "TechCrunch Social·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / TechCrunch Social）",
+      "entities": [
+        "TechCrunch Social",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Product Hunt-1-oqoqo",
+      "name": "oqoqo",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.producthunt.com/products/oqoqo?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "sourceName": "Product Hunt·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Product Hunt）",
+      "entities": [
+        "Product Hunt",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Product Hunt-2-Portfolio Lab",
+      "name": "Portfolio Lab",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.producthunt.com/products/portfolio-lab?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "sourceName": "Product Hunt·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Product Hunt）",
+      "entities": [
+        "Product Hunt",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "hot-Product Hunt-3-Paritok",
+      "name": "Paritok",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 5,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.producthunt.com/products/paritok?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "sourceName": "Product Hunt·实时热点",
+      "pmOpportunity": "判断是否可转成选题 / 工具机会 / 雷达候选",
+      "summary": "国内外实时热点聚合（海外 / Product Hunt）",
+      "entities": [
+        "Product Hunt",
+        "海外"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "sig-aa-llm-cost",
+      "name": "Artificial Analysis · 模型性价比观察",
+      "category": "ranking",
+      "pool": "model_leaderboard",
+      "heat": 5,
+      "rank": "按场景分榜，无唯一总冠军",
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://artificialanalysis.ai/",
+      "sourceName": "Artificial Analysis",
+      "pmOpportunity": "选型时同时看质量上限与 API 成本，避免只追 Arena 分数",
+      "summary": "综合能力、速度、价格、上下文长度可交叉对比；不同榜单口径不同。",
+      "entities": [
+        "LLM",
+        "API pricing"
+      ],
+      "factKind": "confirmed",
+      "riskNote": "Benchmark 与真实业务任务存在偏差，需结合 SWE-bench / 内测。"
+    },
+    {
+      "id": "sig-lmarena",
+      "name": "LMArena 用户偏好榜波动",
+      "category": "ranking",
+      "pool": "model_leaderboard",
+      "heat": 4,
+      "rank": "用户偏好竞技场",
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://lmarena.ai/",
+      "sourceName": "LMArena",
+      "pmOpportunity": "产品体验调研优先看偏好榜，工程落地优先看代码/成本榜",
+      "summary": "偏好排名反映真实对话体验，但不等于代码、长上下文或企业可用性。",
+      "entities": [
+        "Chatbot Arena"
+      ],
+      "factKind": "confirmed",
+      "riskNote": "样本与提示污染可能导致短期排名噪声。"
+    },
+    {
+      "id": "sig-swe-bench",
+      "name": "SWE-bench 代码能力信号",
+      "category": "model",
+      "pool": "model_leaderboard",
+      "heat": 4,
+      "rank": "软件工程任务",
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.swebench.com/",
+      "sourceName": "SWE-bench",
+      "pmOpportunity": "编程 Agent / IDE 助手选型应单独看代码榜，不混用聊天榜",
+      "summary": "追踪模型在真实软件工程任务上的表现变化。",
+      "entities": [
+        "coding agents"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "sig-taaft",
+      "name": "There's An AI For That · 新品发现",
+      "category": "tool",
+      "pool": "tool_directory",
+      "heat": 4,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://theresanaiforthat.com/",
+      "sourceName": "There's An AI For That",
+      "pmOpportunity": "每日扫描新品，进入候选池后再人工核实官网与定价",
+      "summary": "工具目录更新频繁，适合发现垂直场景新品。",
+      "factKind": "inferred",
+      "riskNote": "目录热度不等于产品质量，需二次验证。"
+    },
+    {
+      "id": "sig-producthunt",
+      "name": "Product Hunt AI 社区热度",
+      "category": "tool",
+      "pool": "tool_directory",
+      "heat": 3,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.producthunt.com/topics/artificial-intelligence",
+      "sourceName": "Product Hunt AI",
+      "pmOpportunity": "关注连续上榜与评论质量，识别可做对比的新品",
+      "summary": "适合观察新产品发布节奏与早期用户反馈。",
+      "factKind": "inferred"
+    },
+    {
+      "id": "sig-g2",
+      "name": "G2 企业 AI 软件评价",
+      "category": "tool",
+      "pool": "tool_directory",
+      "heat": 3,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.g2.com/categories/artificial-intelligence",
+      "sourceName": "G2 AI Software",
+      "pmOpportunity": "企业采购叙事可引用真实用户评分，但注意样本偏差",
+      "summary": "偏 B 端软件评价，可补充企业可用性证据。",
+      "factKind": "confirmed",
+      "riskNote": "评价可能受厂商激励影响，需交叉官方文档。"
+    },
+    {
+      "id": "sig-the-batch",
+      "name": "The Batch 周报信号",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.deeplearning.ai/the-batch/",
+      "sourceName": "The Batch",
+      "pmOpportunity": "把周报里的能力变化映射到七维证据，不直接改分",
+      "summary": "高质量 AI 周报，适合做本周趋势摘要。",
+      "factKind": "confirmed"
+    },
+    {
+      "id": "sig-tldr",
+      "name": "TLDR AI 每日技术新闻",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 3,
+      "confidence": "medium",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://tldr.tech/ai",
+      "sourceName": "TLDR AI",
+      "pmOpportunity": "快速扫描后挑 3 条进入日报 Top 动态",
+      "summary": "适合补齐每日技术新闻覆盖。",
+      "factKind": "inferred"
+    },
+    {
+      "id": "sig-arxiv",
+      "name": "arXiv cs.AI / cs.LG 新论文流",
+      "category": "paper",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://arxiv.org/list/cs.AI/recent",
+      "sourceName": "arXiv",
+      "pmOpportunity": "按 Agent/RAG/多模态/安全主题筛选，标记是否有代码",
+      "summary": "论文研究池主入口；是否可产品化需单独判断。",
+      "entities": [
+        "Agent",
+        "RAG",
+        "multimodal"
+      ],
+      "factKind": "confirmed",
+      "riskNote": "研究热点不等于可落地产品机会。"
+    },
+    {
+      "id": "sig-openai",
+      "name": "OpenAI 官方发布监控",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 5,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://openai.com/news/",
+      "sourceName": "OpenAI News",
+      "pmOpportunity": "官方发布优先进入日报，并回写相关工具 changelog",
+      "summary": "官方源优先级最高，适合确认产品与模型变更。",
+      "entities": [
+        "OpenAI"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "sig-anthropic",
+      "name": "Anthropic 官方发布监控",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 5,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://www.anthropic.com/news",
+      "sourceName": "Anthropic News",
+      "pmOpportunity": "安全/企业能力变化重点核对合规与采购条款",
+      "summary": "官方发布用于确认 Claude 生态变更。",
+      "entities": [
+        "Anthropic",
+        "Claude"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "sig-hf-blog",
+      "name": "Hugging Face 官方与开源进展",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-11",
+      "sourceUrl": "https://huggingface.co/blog",
+      "sourceName": "Hugging Face Blog",
+      "pmOpportunity": "开源模型发布可同步检查 Open LLM Leaderboard",
+      "summary": "连接官方发布与开源模型榜单。",
+      "entities": [
+        "Hugging Face"
+      ],
+      "factKind": "official"
+    }
+  ],
+  "rankingNotes": [
+    "LMArena 偏真实对话偏好；Artificial Analysis 偏能力/速度/价格；SWE-bench 偏代码任务——三者不可互相替代。",
+    "开源模型看 Hugging Face Open LLM Leaderboard + 协议/部署成本；闭源看 API 可用性与企业条款。",
+    "榜单冲突时：先对齐任务口径与时间窗口，再决定是否进入候选池。"
+  ],
+  "riskAlerts": [
+    "Benchmark 污染与提示泄漏可能导致短期排名失真。",
+    "工具目录与 Product Hunt 热度存在营销放大，需官网与定价二次验证。",
+    "部分新闻源付费墙（如 The Information）可能造成信息不全。",
+    "价格、速率限制、地区可用性变化快，日报结论需标注观察窗口。"
+  ],
+  "opportunities": [
+    "企业选型台：把榜单证据、合规与成本合成可导出决策材料。",
+    "编程 Agent 垂直雷达：单独追踪 SWE-bench 与 IDE 工具更新。",
+    "研究到产品桥：对有代码的 Agent/RAG 论文建立候选转化清单。",
+    "个人开发者：用开源模型 + 低成本 API 组合做可演示 MVP。"
+  ],
+  "actions": [
+    {
+      "title": "跑日更抓取",
+      "detail": "执行 npm run data:refresh，确认官方 RSS 成功写入 changelog。",
+      "priority": "P0"
+    },
+    {
+      "title": "生成雷达日报",
+      "detail": "执行 npm run radar:daily，产出 data/radar-daily-report.json。",
+      "priority": "P0"
+    },
+    {
+      "title": "人工交叉验证 Top 动态",
+      "detail": "用极致 Prompt 对照 5 池来源，补齐来源冲突与可信度。",
+      "priority": "P1"
+    },
+    {
+      "title": "更新候选工具",
+      "detail": "工具目录新品进入 seed 前，核对官网、定价与场景。",
+      "priority": "P1"
+    },
+    {
+      "title": "周报复盘",
+      "detail": "周末将 kind=weekly，回看哪些信号兑现、哪些是噪声。",
+      "priority": "P2"
+    }
+  ],
+  "monitorPools": [
+    {
+      "pool": "model_leaderboard",
+      "label": "模型榜单",
+      "sourceCount": 7
+    },
+    {
+      "pool": "tool_directory",
+      "label": "工具目录",
+      "sourceCount": 6
+    },
+    {
+      "pool": "news_brief",
+      "label": "新闻快讯",
+      "sourceCount": 7
+    },
+    {
+      "pool": "papers_research",
+      "label": "论文研究",
+      "sourceCount": 5
+    },
+    {
+      "pool": "official_release",
+      "label": "官方发布",
+      "sourceCount": 8
+    }
+  ],
+  "methodNote": "雷达日报 2026-08-11 重新检索生成；优先展示今日 live-fetch + global-hot-topics，过滤纯版本号噪声；再叠加 seed 监控池基线。live 13 ok。不自动改七维分数。"
+}

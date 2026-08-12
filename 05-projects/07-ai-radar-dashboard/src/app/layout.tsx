@@ -16,8 +16,8 @@ const space = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "智衡 AI Radar · AI 平台与工具看板",
-  description: "日更数据、功能介绍与可追溯优劣势对比的 AI 工具雷达看板",
+  title: "智衡 AI Radar · 全球热点情报",
+  description: "多源热点聚类、TrendScore 与 AI 解读 · 兼 AI 工具选型看板",
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
