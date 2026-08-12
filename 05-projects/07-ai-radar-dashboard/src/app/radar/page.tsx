@@ -9,6 +9,7 @@ import {
   Zap,
 } from "lucide-react";
 import { FreshnessBadge } from "@/components/FreshnessBadge";
+import { RefreshControls } from "@/components/RefreshControls";
 import { MONITOR_POOL_LABELS, type MonitorPool } from "@/data/research-sources";
 import { getBundleView } from "@/lib/data";
 import { getPulseBriefView } from "@/lib/pulse-data";
@@ -82,6 +83,7 @@ export default function RadarPage() {
           <span className="tag">{trendFromFile ? "TrendRadar 已同步" : "TrendRadar seed"}</span>
         </div>
         <FreshnessBadge freshness={freshness} lastUpdatedDate={lastUpdatedDate} />
+        <RefreshControls defaultMode="quick" />
         <p className="text-sm text-[var(--muted)]">{report.methodNote}</p>
         <div className="flex flex-wrap gap-3">
           <Link href="/pulse" className="btn btn-primary">
@@ -92,6 +94,9 @@ export default function RadarPage() {
           </a>
           <Link href="/hot" className="btn btn-ghost">
             国内外实时热点
+          </Link>
+          <Link href="/history" className="btn btn-ghost">
+            历史报告
           </Link>
           <Link href="/sources" className="btn btn-ghost">
             查看来源矩阵

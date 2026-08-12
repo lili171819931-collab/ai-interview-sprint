@@ -1,0 +1,51 @@
+# 智衡 AI Radar — optional one-shot stack (Phase 12)
+# Requires Docker Desktop / Docker Engine.
+#
+#   docker compose up -d --build          # web :3010
+#   docker compose --profile with-rsshub up -d --build
+#   docker compose --profile tools run --rm refresh
+#
+# Local without Docker remains: npm run dev
+
+services:
+  web:
+    build:
+      context: .
+      target: web
+    ports:
+      - "3010:3010"
+    volumes:
+      - ./data:/app/data
+    environment:
+      INTEL_DASHBOARD_URL: ${INTEL_DASHBOARD_URL:-http://localhost:3010}
+      INTEL_FEISHU_WEBHOOK: ${INTEL_FEISHU_WEBHOOK:-}
+      INTEL_PUSH_WEBHOOK: ${INTEL_PUSH_WEBHOOK:-}
+      INTEL_PUSH_SKIP: ${INTEL_PUSH_SKIP:-1}
+      INTEL_LLM_URL: ${INTEL_LLM_URL:-}
+      INTEL_LLM_API_KEY: ${INTEL_LLM_API_KEY:-}
+      RSSHUB_BASE: ${RSSHUB_BASE:-http://rsshub:1200}
+    restart: unless-stopped
+
+  rsshub:
+    image: diygod/rsshub:latest
+    profiles: ["with-rsshub"]
+    ports:
+      - "1200:1200"
+    environment:
+      CACHE_TYPE: memory
+      NODE_ENV: production
+    restart: unless-stopped
+
+  refresh:
+    build:
+      context: .
+      target: tools
+    profiles: ["tools"]
+    volumes:
+      - ./data:/app/data
+    environment:
+      INTEL_OFFLINE: ${INTEL_OFFLINE:-1}
+      INTEL_PUSH_SKIP: ${INTEL_PUSH_SKIP:-1}
+      RSSHUB_BASE: ${RSSHUB_BASE:-http://rsshub:1200}
+      INTEL_FEISHU_WEBHOOK: ${INTEL_FEISHU_WEBHOOK:-}
+      INTEL_PUSH_WEBHOOK: ${INTEL_PUSH_WEBHOOK:-}

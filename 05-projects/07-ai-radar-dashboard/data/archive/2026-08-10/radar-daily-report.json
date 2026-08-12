@@ -1,0 +1,495 @@
+{
+  "generatedAt": "2026-08-10T09:11:29.248Z",
+  "timezone": "Asia/Shanghai",
+  "reportDate": "2026-08-10",
+  "kind": "daily",
+  "executiveSummary": [
+    "公开源抓取 13 成功 / 0 失败，已叠加进雷达信号。",
+    "今日雷达覆盖 5 个监控池：模型榜单、工具目录、新闻快讯、论文研究、官方发布。",
+    "优先采信官方发布与一手评测；工具目录热度仅作发现信号。",
+    "模型对比坚持分场景，不输出无口径“最强”。",
+    "七维评分仍由 seed 人工维护，日报信号不自动改分。"
+  ],
+  "signals": [
+    {
+      "id": "live-comfyui-releases-11",
+      "name": "v0.31.1",
+      "category": "official",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-08",
+      "sourceUrl": "https://github.com/Comfy-Org/ComfyUI/releases/tag/v0.31.1",
+      "sourceName": "ComfyUI GitHub Releases Atom",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：ComfyUI GitHub Releases Atom",
+      "entities": [
+        "comfyui"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-llamaindex-releases-10",
+      "name": "v0.14.23",
+      "category": "official",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-06-25",
+      "sourceUrl": "https://github.com/run-llama/llama_index/releases/tag/v0.14.23",
+      "sourceName": "LlamaIndex GitHub Releases Atom",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：LlamaIndex GitHub Releases Atom",
+      "entities": [
+        "llamaindex"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-langchain-releases-9",
+      "name": "langchain-openai==1.4.2",
+      "category": "official",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-07",
+      "sourceUrl": "https://github.com/langchain-ai/langchain/releases/tag/langchain-openai%3D%3D1.4.2",
+      "sourceName": "LangChain GitHub Releases Atom",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：LangChain GitHub Releases Atom",
+      "entities": [
+        "langchain"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-n8n-releases-8",
+      "name": "stable",
+      "category": "official",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-08",
+      "sourceUrl": "https://github.com/n8n-io/n8n/releases/tag/stable",
+      "sourceName": "n8n GitHub Releases Atom",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：n8n GitHub Releases Atom",
+      "entities": [
+        "n8n"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-dify-releases-7",
+      "name": "Release v1.16.1 - Bug Fixes and Security Enhancements",
+      "category": "official",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-07-28",
+      "sourceUrl": "https://github.com/langgenius/dify/releases/tag/1.16.1",
+      "sourceName": "Dify GitHub Releases Atom",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：Dify GitHub Releases Atom",
+      "entities": [
+        "dify"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-cursor-changelog-6",
+      "name": "Google Workspace Plugins",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://cursor.com/changelog",
+      "sourceName": "Cursor Changelog",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：Cursor Changelog",
+      "entities": [
+        "cursor"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-langchain-blog-5",
+      "name": "Managed Deep Agents is now in public beta",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-08",
+      "sourceUrl": "https://www.langchain.com/blog/managed-deep-agents-is-now-in-public-beta",
+      "sourceName": "LangChain Blog RSS",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：LangChain Blog RSS",
+      "entities": [
+        "langchain"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-huggingface-blog-4",
+      "name": "TutorMoments: Do AI tutors know when to help and when to hold back?",
+      "category": "official",
+      "pool": "model_leaderboard",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-08",
+      "sourceUrl": "https://huggingface.co/blog/allenai/tutormoments",
+      "sourceName": "Hugging Face Blog RSS",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：Hugging Face Blog RSS",
+      "entities": [
+        "huggingface"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-mistral-news-3",
+      "name": "Introducing Shieldstral.",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-04",
+      "sourceUrl": "https://mistral.ai/news/shieldstral/",
+      "sourceName": "Mistral News RSS",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：Mistral News RSS",
+      "entities": [
+        "mistral"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-google-ai-blog-2",
+      "name": "The latest AI news we announced in July 2026",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-04",
+      "sourceUrl": "https://blog.google/innovation-and-ai/technology/ai/google-ai-updates-july-2026/",
+      "sourceName": "Google AI Blog RSS",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：Google AI Blog RSS",
+      "entities": [
+        "gemini"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-anthropic-news-mirror-1",
+      "name": "Anthropic raises $124 million to build more reliable, general AI systems",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2021-05-28",
+      "sourceUrl": "https://www.anthropic.com/news/anthropic-raises-124-million-to-build-more-reliable-general-ai-systems",
+      "sourceName": "Anthropic News (Turing Institute feed mirror)",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：Anthropic News (Turing Institute feed mirror)",
+      "entities": [
+        "claude",
+        "anthropic-api",
+        "claude-code"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "live-openai-news-0",
+      "name": "Responding to the next frontier of critical cyber capabilities",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-07",
+      "sourceUrl": "https://openai.com/index/responding-next-frontier-critical-cyber-capabilities",
+      "sourceName": "OpenAI News RSS",
+      "pmOpportunity": "核对是否需要更新对应工具 changelog / 候选池",
+      "summary": "公开源日更抓取成功：OpenAI News RSS",
+      "entities": [
+        "chatgpt",
+        "openai-api"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "sig-aa-llm-cost",
+      "name": "Artificial Analysis · 模型性价比观察",
+      "category": "ranking",
+      "pool": "model_leaderboard",
+      "heat": 5,
+      "rank": "按场景分榜，无唯一总冠军",
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://artificialanalysis.ai/",
+      "sourceName": "Artificial Analysis",
+      "pmOpportunity": "选型时同时看质量上限与 API 成本，避免只追 Arena 分数",
+      "summary": "综合能力、速度、价格、上下文长度可交叉对比；不同榜单口径不同。",
+      "entities": [
+        "LLM",
+        "API pricing"
+      ],
+      "factKind": "confirmed",
+      "riskNote": "Benchmark 与真实业务任务存在偏差，需结合 SWE-bench / 内测。"
+    },
+    {
+      "id": "sig-lmarena",
+      "name": "LMArena 用户偏好榜波动",
+      "category": "ranking",
+      "pool": "model_leaderboard",
+      "heat": 4,
+      "rank": "用户偏好竞技场",
+      "confidence": "medium",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://lmarena.ai/",
+      "sourceName": "LMArena",
+      "pmOpportunity": "产品体验调研优先看偏好榜，工程落地优先看代码/成本榜",
+      "summary": "偏好排名反映真实对话体验，但不等于代码、长上下文或企业可用性。",
+      "entities": [
+        "Chatbot Arena"
+      ],
+      "factKind": "confirmed",
+      "riskNote": "样本与提示污染可能导致短期排名噪声。"
+    },
+    {
+      "id": "sig-swe-bench",
+      "name": "SWE-bench 代码能力信号",
+      "category": "model",
+      "pool": "model_leaderboard",
+      "heat": 4,
+      "rank": "软件工程任务",
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://www.swebench.com/",
+      "sourceName": "SWE-bench",
+      "pmOpportunity": "编程 Agent / IDE 助手选型应单独看代码榜，不混用聊天榜",
+      "summary": "追踪模型在真实软件工程任务上的表现变化。",
+      "entities": [
+        "coding agents"
+      ],
+      "factKind": "confirmed"
+    },
+    {
+      "id": "sig-taaft",
+      "name": "There's An AI For That · 新品发现",
+      "category": "tool",
+      "pool": "tool_directory",
+      "heat": 4,
+      "confidence": "medium",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://theresanaiforthat.com/",
+      "sourceName": "There's An AI For That",
+      "pmOpportunity": "每日扫描新品，进入候选池后再人工核实官网与定价",
+      "summary": "工具目录更新频繁，适合发现垂直场景新品。",
+      "factKind": "inferred",
+      "riskNote": "目录热度不等于产品质量，需二次验证。"
+    },
+    {
+      "id": "sig-producthunt",
+      "name": "Product Hunt AI 社区热度",
+      "category": "tool",
+      "pool": "tool_directory",
+      "heat": 3,
+      "confidence": "medium",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://www.producthunt.com/topics/artificial-intelligence",
+      "sourceName": "Product Hunt AI",
+      "pmOpportunity": "关注连续上榜与评论质量，识别可做对比的新品",
+      "summary": "适合观察新产品发布节奏与早期用户反馈。",
+      "factKind": "inferred"
+    },
+    {
+      "id": "sig-g2",
+      "name": "G2 企业 AI 软件评价",
+      "category": "tool",
+      "pool": "tool_directory",
+      "heat": 3,
+      "confidence": "medium",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://www.g2.com/categories/artificial-intelligence",
+      "sourceName": "G2 AI Software",
+      "pmOpportunity": "企业采购叙事可引用真实用户评分，但注意样本偏差",
+      "summary": "偏 B 端软件评价，可补充企业可用性证据。",
+      "factKind": "confirmed",
+      "riskNote": "评价可能受厂商激励影响，需交叉官方文档。"
+    },
+    {
+      "id": "sig-the-batch",
+      "name": "The Batch 周报信号",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://www.deeplearning.ai/the-batch/",
+      "sourceName": "The Batch",
+      "pmOpportunity": "把周报里的能力变化映射到七维证据，不直接改分",
+      "summary": "高质量 AI 周报，适合做本周趋势摘要。",
+      "factKind": "confirmed"
+    },
+    {
+      "id": "sig-tldr",
+      "name": "TLDR AI 每日技术新闻",
+      "category": "news",
+      "pool": "news_brief",
+      "heat": 3,
+      "confidence": "medium",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://tldr.tech/ai",
+      "sourceName": "TLDR AI",
+      "pmOpportunity": "快速扫描后挑 3 条进入日报 Top 动态",
+      "summary": "适合补齐每日技术新闻覆盖。",
+      "factKind": "inferred"
+    },
+    {
+      "id": "sig-arxiv",
+      "name": "arXiv cs.AI / cs.LG 新论文流",
+      "category": "paper",
+      "pool": "papers_research",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://arxiv.org/list/cs.AI/recent",
+      "sourceName": "arXiv",
+      "pmOpportunity": "按 Agent/RAG/多模态/安全主题筛选，标记是否有代码",
+      "summary": "论文研究池主入口；是否可产品化需单独判断。",
+      "entities": [
+        "Agent",
+        "RAG",
+        "multimodal"
+      ],
+      "factKind": "confirmed",
+      "riskNote": "研究热点不等于可落地产品机会。"
+    },
+    {
+      "id": "sig-openai",
+      "name": "OpenAI 官方发布监控",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 5,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://openai.com/news/",
+      "sourceName": "OpenAI News",
+      "pmOpportunity": "官方发布优先进入日报，并回写相关工具 changelog",
+      "summary": "官方源优先级最高，适合确认产品与模型变更。",
+      "entities": [
+        "OpenAI"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "sig-anthropic",
+      "name": "Anthropic 官方发布监控",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 5,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://www.anthropic.com/news",
+      "sourceName": "Anthropic News",
+      "pmOpportunity": "安全/企业能力变化重点核对合规与采购条款",
+      "summary": "官方发布用于确认 Claude 生态变更。",
+      "entities": [
+        "Anthropic",
+        "Claude"
+      ],
+      "factKind": "official"
+    },
+    {
+      "id": "sig-hf-blog",
+      "name": "Hugging Face 官方与开源进展",
+      "category": "official",
+      "pool": "official_release",
+      "heat": 4,
+      "confidence": "high",
+      "updatedAt": "2026-08-10",
+      "sourceUrl": "https://huggingface.co/blog",
+      "sourceName": "Hugging Face Blog",
+      "pmOpportunity": "开源模型发布可同步检查 Open LLM Leaderboard",
+      "summary": "连接官方发布与开源模型榜单。",
+      "entities": [
+        "Hugging Face"
+      ],
+      "factKind": "official"
+    }
+  ],
+  "rankingNotes": [
+    "LMArena 偏真实对话偏好；Artificial Analysis 偏能力/速度/价格；SWE-bench 偏代码任务——三者不可互相替代。",
+    "开源模型看 Hugging Face Open LLM Leaderboard + 协议/部署成本；闭源看 API 可用性与企业条款。",
+    "榜单冲突时：先对齐任务口径与时间窗口，再决定是否进入候选池。"
+  ],
+  "riskAlerts": [
+    "Benchmark 污染与提示泄漏可能导致短期排名失真。",
+    "工具目录与 Product Hunt 热度存在营销放大，需官网与定价二次验证。",
+    "部分新闻源付费墙（如 The Information）可能造成信息不全。",
+    "价格、速率限制、地区可用性变化快，日报结论需标注观察窗口。"
+  ],
+  "opportunities": [
+    "企业选型台：把榜单证据、合规与成本合成可导出决策材料。",
+    "编程 Agent 垂直雷达：单独追踪 SWE-bench 与 IDE 工具更新。",
+    "研究到产品桥：对有代码的 Agent/RAG 论文建立候选转化清单。",
+    "个人开发者：用开源模型 + 低成本 API 组合做可演示 MVP。"
+  ],
+  "actions": [
+    {
+      "title": "跑日更抓取",
+      "detail": "执行 npm run data:refresh，确认官方 RSS 成功写入 changelog。",
+      "priority": "P0"
+    },
+    {
+      "title": "生成雷达日报",
+      "detail": "执行 npm run radar:daily，产出 data/radar-daily-report.json。",
+      "priority": "P0"
+    },
+    {
+      "title": "人工交叉验证 Top 动态",
+      "detail": "用极致 Prompt 对照 5 池来源，补齐来源冲突与可信度。",
+      "priority": "P1"
+    },
+    {
+      "title": "更新候选工具",
+      "detail": "工具目录新品进入 seed 前，核对官网、定价与场景。",
+      "priority": "P1"
+    },
+    {
+      "title": "周报复盘",
+      "detail": "周末将 kind=weekly，回看哪些信号兑现、哪些是噪声。",
+      "priority": "P2"
+    }
+  ],
+  "monitorPools": [
+    {
+      "pool": "model_leaderboard",
+      "label": "模型榜单",
+      "sourceCount": 7
+    },
+    {
+      "pool": "tool_directory",
+      "label": "工具目录",
+      "sourceCount": 6
+    },
+    {
+      "pool": "news_brief",
+      "label": "新闻快讯",
+      "sourceCount": 7
+    },
+    {
+      "pool": "papers_research",
+      "label": "论文研究",
+      "sourceCount": 5
+    },
+    {
+      "pool": "official_release",
+      "label": "官方发布",
+      "sourceCount": 8
+    }
+  ],
+  "methodNote": "雷达日报生成于 2026-08-10；叠加 live-fetch-report（13 ok）。 监控池：模型榜单 / 工具目录 / 新闻快讯 / 论文研究 / 官方发布。不自动改七维分数。"
+}

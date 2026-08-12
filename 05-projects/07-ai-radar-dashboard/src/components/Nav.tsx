@@ -1,13 +1,17 @@
 import Link from "next/link";
 
 const links = [
-  { href: "/", label: "总览" },
+  { href: "/", label: "今日热点" },
+  { href: "/trends", label: "趋势雷达" },
+  { href: "/briefs", label: "每日简报" },
+  { href: "/ask", label: "问问 Agent" },
   { href: "/radar", label: "动态雷达" },
-  { href: "/hot", label: "实时热点" },
+  { href: "/hot", label: "平台榜" },
+  { href: "/history", label: "历史" },
   { href: "/pulse", label: "机会简报" },
-  { href: "/tools", label: "目录" },
+  { href: "/tools", label: "工具目录" },
   { href: "/compare", label: "对比" },
-  { href: "/sources", label: "来源报告" },
+  { href: "/sources", label: "来源" },
   { href: "/methodology", label: "口径" },
 ];
 

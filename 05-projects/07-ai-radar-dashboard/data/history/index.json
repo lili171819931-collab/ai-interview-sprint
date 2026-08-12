@@ -1,0 +1,62 @@
+{
+  "updatedAt": "2026-08-12T11:41:30.493Z",
+  "timezone": "Asia/Shanghai",
+  "days": [
+    {
+      "date": "2026-08-12",
+      "archivedAt": "2026-08-12T11:41:30.486Z\nreason=post-full-refresh\nfiles=daily-bundle.json,radar-daily-report.json,builder-pulse-daily.json,trendradar-hot.json,global-hot-topics.json",
+      "files": [
+        "builder-pulse-daily.json",
+        "daily-bundle.json",
+        "global-hot-topics.json",
+        "radar-daily-report.json",
+        "trendradar-hot.json"
+      ],
+      "summary": {
+        "radarReportDate": "2026-08-12",
+        "radarSignals": 32,
+        "pulseReportDate": "2026-08-12",
+        "hotGeneratedAt": "2026-08-12T19:41:27+08:00",
+        "bundleGeneratedAt": "2026-08-12T11:40:52.074Z",
+        "sourcesOk": 14,
+        "sourcesTotal": 16
+      }
+    },
+    {
+      "date": "2026-08-11",
+      "archivedAt": "2026-08-12T11:40:51.221Z\nreason=pre-full-refresh\nfiles=daily-bundle.json,radar-daily-report.json,builder-pulse-daily.json,trendradar-hot.json,global-hot-topics.json",
+      "files": [
+        "builder-pulse-daily.json",
+        "daily-bundle.json",
+        "global-hot-topics.json",
+        "radar-daily-report.json",
+        "trendradar-hot.json"
+      ],
+      "summary": {
+        "radarReportDate": "2026-08-11",
+        "radarSignals": 31,
+        "pulseReportDate": "2026-08-11",
+        "hotGeneratedAt": "2026-08-11T14:33:31+08:00",
+        "bundleGeneratedAt": "2026-08-11T06:33:10.375Z",
+        "sourcesOk": 14,
+        "sourcesTotal": 16
+      }
+    },
+    {
+      "date": "2026-08-10",
+      "archivedAt": "2026-08-11T05:46:36.587Z\nreason=pre-full-refresh\nfiles=daily-bundle.json,builder-pulse-daily.json,trendradar-hot.json",
+      "files": [
+        "builder-pulse-daily.json",
+        "daily-bundle.json",
+        "radar-daily-report.json",
+        "trendradar-hot.json"
+      ],
+      "summary": {
+        "radarReportDate": "2026-08-10",
+        "radarSignals": 24,
+        "pulseReportDate": "2026-08-10",
+        "bundleGeneratedAt": "2026-08-10T09:11:19.688Z"
+      }
+    }
+  ]
+}

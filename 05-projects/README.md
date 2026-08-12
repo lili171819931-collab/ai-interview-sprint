@@ -27,7 +27,7 @@
 ├── 04-workbuddy-invoice-reimburse/← 发票报销 · WorkBuddy Skill 载体
 ├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
 ├── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
-└── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包）
+└── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包 · GTI）
 ```
 
 ## 类别速览
@@ -41,7 +41,7 @@
 | **04** | 发票 · Skill 载体 | [`04-workbuddy-invoice-reimburse/`](04-workbuddy-invoice-reimburse/) | 领域 Prompt/Skill | ✅ |
 | **05** | 发票 · Web 载体 | [`05-invoice-reimburse-web/`](05-invoice-reimburse-web/) | 可运行审批系统 | ✅ |
 | **06** | 发票 · 小程序+商业 | [`06-piaoji-product/`](06-piaoji-product/) | 合规交付物+付费叙事 | ✅ |
-| **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更数据+对比+来源可追溯+热点融合+机会简报 | ✅ |
+| **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更+GTI 事件聚类+Agent/MCP+简报推送 | ✅ |
 
 ## 推荐阅读顺序（60 分钟）
 
@@ -51,10 +51,12 @@
 4. [`06-piaoji-product/07-commercial-plan.md`](06-piaoji-product/07-commercial-plan.md) → 商业价值  
 5. [`04-workbuddy-invoice-reimburse/README.md`](04-workbuddy-invoice-reimburse/README.md) → Skill 对照  
 6. [`02-ai-weekly-insight/prd.md`](02-ai-weekly-insight/prd.md) → AI 加在哪  
-7. [`07-ai-radar-dashboard/README.md`](07-ai-radar-dashboard/README.md) → 情报看板日更与来源报告  
+7. [`07-ai-radar-dashboard/README.md`](07-ai-radar-dashboard/README.md) → 情报看板日更与 GTI  
+7b. [`07-ai-radar-dashboard/docs/16-global-trend-intelligence-architecture.md`](07-ai-radar-dashboard/docs/16-global-trend-intelligence-architecture.md) → 全网热点情报架构  
+7c. [`07-ai-radar-dashboard/docs/17-repo-fusion.md`](07-ai-radar-dashboard/docs/17-repo-fusion.md) → 与 GitHub / ai-projects 融合说明  
 8. [`07-ai-radar-dashboard/docs/14-opportunity-brief-full-loop.md`](07-ai-radar-dashboard/docs/14-opportunity-brief-full-loop.md) → 机会简报项目制全流程  
 9. [`07-ai-radar-dashboard/docs/15-trendradar-fusion-full-loop.md`](07-ai-radar-dashboard/docs/15-trendradar-fusion-full-loop.md) → TrendRadar 热点融合全流程  
-9. [`../08-resources/scrapling-examples/README.md`](../08-resources/scrapling-examples/README.md) → 情报研究前置脚本
+10. [`../08-resources/scrapling-examples/README.md`](../08-resources/scrapling-examples/README.md) → 情报研究前置脚本
 
 ## 克隆含子模块
 

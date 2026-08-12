@@ -67,3 +67,45 @@
 | fresh | bundle 日期 = 上海时区今天 |
 | stale | 有 bundle 但非今天 |
 | missing | 无合法 bundle，降级 seed |
+
+## 日更归档与历史留存
+
+```
+npm run daily:refresh
+  → 归档当前 data/*.json 到 data/archive/{报告日期}/
+  → 刷新 bundle / radar / pulse / trendradar / hot
+  → 再归档「今天」最新快照
+  → 重写 data/history/index.json
+```
+
+| 产物 | 路径 |
+|------|------|
+| 当日最新 | `data/*.json`（页面默认读取） |
+| 历史快照 | `data/archive/YYYY-MM-DD/*.json` |
+| 历史索引 | `data/history/index.json` |
+| 浏览页 | `/history` · `/history/[date]` |
+| API | `POST /api/refresh?mode=quick\|hot\|full` |
+
+规则：
+- 归档日期取各文件 `reportDate` 或 `generatedAt`（Asia/Shanghai）
+- 同日重复日更覆盖该日归档，不删除其他日期
+- 刷新失败时保留上一次最新 `data/*.json`
+- 极致 Prompt：`docs/极致Prompt-日更实时更新与历史留存.md`
+
+## Global Trend Intelligence（Phase 2+）
+
+| 产物 | 路径 |
+|------|------|
+| Item schema | `src/lib/intel/schema.ts` |
+| Adapters | `scripts/adapters/*` |
+| Ingest | `npm run intel:ingest` → `data/items/latest.json` |
+| Cluster + TrendScore | `npm run intel:cluster` → `data/events/latest.json` |
+| 一键 | `npm run intel:refresh`（含 briefs + 可选 push） |
+| 兴趣配置 | `data/user-interests.json`（影响 `user_relevance`） |
+| 每日简报 | `data/briefs/latest.json` · `/briefs` · `GET /api/briefs/daily` |
+| 推送 | `INTEL_FEISHU_WEBHOOK` / `INTEL_PUSH_WEBHOOK`（可选） |
+| QA | `npm run intel:qa` |
+| MCP | `npm run mcp:intel` |
+
+架构全文：[`docs/16-global-trend-intelligence-architecture.md`](./16-global-trend-intelligence-architecture.md)。  
+原则不变：合法公开源、分析引用必须来自真实 URL、校验失败不覆盖昨日快照。

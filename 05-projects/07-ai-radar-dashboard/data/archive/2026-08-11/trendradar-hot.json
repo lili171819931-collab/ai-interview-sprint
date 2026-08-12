@@ -1,0 +1,523 @@
+{
+  "generatedAt": "2026-08-11T06:33:19.425Z",
+  "reportDate": "2026-08-11",
+  "timezone": "Asia/Shanghai",
+  "source": "trendradar-local",
+  "sourceUrl": "https://github.com/sansan0/TrendRadar",
+  "crawlTime": "14-32",
+  "totalItems": 255,
+  "successPlatforms": 11,
+  "failedPlatforms": 0,
+  "platforms": [
+    {
+      "id": "toutiao",
+      "name": "今日头条",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "baidu",
+      "name": "百度热搜",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "wallstreetcn-hot",
+      "name": "华尔街见闻",
+      "status": "success",
+      "itemCount": 10
+    },
+    {
+      "id": "thepaper",
+      "name": "澎湃新闻",
+      "status": "success",
+      "itemCount": 20
+    },
+    {
+      "id": "bilibili-hot-search",
+      "name": "bilibili 热搜",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "cls-hot",
+      "name": "财联社热门",
+      "status": "success",
+      "itemCount": 13
+    },
+    {
+      "id": "ifeng",
+      "name": "凤凰网",
+      "status": "success",
+      "itemCount": 12
+    },
+    {
+      "id": "tieba",
+      "name": "贴吧",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "weibo",
+      "name": "微博",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "douyin",
+      "name": "抖音",
+      "status": "success",
+      "itemCount": 30
+    },
+    {
+      "id": "zhihu",
+      "name": "知乎",
+      "status": "success",
+      "itemCount": 20
+    }
+  ],
+  "items": [
+    {
+      "id": "tr-1",
+      "title": "俄女子被诱骗进缅甸电诈园游河逃生",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 1,
+      "url": "https://www.toutiao.com/trending/7672560326260539433/",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-31",
+      "title": "帕拉梅拉价格跌破百万",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 1,
+      "url": "https://www.baidu.com/s?wd=%E5%B8%95%E6%8B%89%E6%A2%85%E6%8B%89%E4%BB%B7%E6%A0%BC%E8%B7%8C%E7%A0%B4%E7%99%BE%E4%B8%87",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-61",
+      "title": "美伊协议“希望渺茫”，油价大涨，英伟达循环融资担忧拖累美股，光通信股重挫",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 1,
+      "url": "https://wallstreetcn.com/articles/3779052",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-71",
+      "title": "中星4B卫星发射失利",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 1,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33755223",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-91",
+      "title": "怎么看AI突破黎曼猜想下界",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 1,
+      "url": "https://search.bilibili.com/all?keyword=%E6%80%8E%E4%B9%88%E7%9C%8BAI%E7%AA%81%E7%A0%B4%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8B%E7%95%8C",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": true
+    },
+    {
+      "id": "tr-121",
+      "title": "【早报】美股芯片股大跌；中概股逆势走强；原油飙升、黄金收涨；A股又一波回购潮来了",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 1,
+      "url": "https://www.cls.cn/detail/2450678",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": true
+    },
+    {
+      "id": "tr-134",
+      "title": "结束会晤后，伊朗总统透露最高领袖身体状况",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 1,
+      "url": "https://news.ifeng.com/c/8vUxlx302vt",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-146",
+      "title": "Bin哥露面,暴瘦引心疼",
+      "platformId": "tieba",
+      "platformName": "贴吧",
+      "rank": 1,
+      "url": "https://tieba.baidu.com/hottopic/browse/hottopic?amp%3Btopic_name=Bin%E5%93%A5%E9%9C%B2%E9%9D%A2%2C%E6%9A%B4%E7%98%A6%E5%BC%95%E5%BF%83%E7%96%BC&topic_id=28357102",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-176",
+      "title": "睡车里被酒店收150元住宿费事件反转",
+      "platformId": "weibo",
+      "platformName": "微博",
+      "rank": 1,
+      "url": "https://s.weibo.com/weibo?q=%23%E7%9D%A1%E8%BD%A6%E9%87%8C%E8%A2%AB%E9%85%92%E5%BA%97%E6%94%B6150%E5%85%83%E4%BD%8F%E5%AE%BF%E8%B4%B9%E4%BA%8B%E4%BB%B6%E5%8F%8D%E8%BD%AC%23",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-206",
+      "title": "台风白海豚实时路径",
+      "platformId": "douyin",
+      "platformName": "抖音",
+      "rank": 1,
+      "url": "https://www.douyin.com/hot/2602902",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-236",
+      "title": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露 055 的短板吗？",
+      "platformId": "zhihu",
+      "platformName": "知乎",
+      "rank": 1,
+      "url": "https://www.zhihu.com/question/2069804922732860138",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-2",
+      "title": "美媒：特朗普上月秘密乘运输机回国",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 2,
+      "url": "https://www.toutiao.com/trending/7672053116451389486/",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-32",
+      "title": "今年“984.5高校”火了",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 2,
+      "url": "https://www.baidu.com/s?wd=%E4%BB%8A%E5%B9%B4%E2%80%9C984.5%E9%AB%98%E6%A0%A1%E2%80%9D%E7%81%AB%E4%BA%86",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-62",
+      "title": "华尔街见闻早餐FM-Radio | 2026年8月11日",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 2,
+      "url": "https://wallstreetcn.com/articles/3779117",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-72",
+      "title": "公安部深化扫黑除恶专项斗争第一轮集中收网，抓获犯罪嫌疑人8200余名",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 2,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33754726",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-92",
+      "title": "首届新三国only展",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 2,
+      "url": "https://search.bilibili.com/all?keyword=%E9%A6%96%E5%B1%8A%E6%96%B0%E4%B8%89%E5%9B%BDonly%E5%B1%95",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-122",
+      "title": "A股又现“超级大肉签”，中一签最高赚超22万元",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 2,
+      "url": "https://www.cls.cn/detail/2450866",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-135",
+      "title": "伊朗最高领袖调整6名军方高层，美媒：德黑兰发出了信号",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 2,
+      "url": "https://news.ifeng.com/c/8vUtL7Lqyat",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-147",
+      "title": "长征7号甲火箭发射失败爆炸",
+      "platformId": "tieba",
+      "platformName": "贴吧",
+      "rank": 2,
+      "url": "https://tieba.baidu.com/hottopic/browse/hottopic?amp%3Btopic_name=%E9%95%BF%E5%BE%817%E5%8F%B7%E7%94%B2%E7%81%AB%E7%AE%AD%E5%8F%91%E5%B0%84%E5%A4%B1%E8%B4%A5%E7%88%86%E7%82%B8&topic_id=28357110",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-177",
+      "title": "陈俊生150万年薪让罗子君买8万的鞋",
+      "platformId": "weibo",
+      "platformName": "微博",
+      "rank": 2,
+      "url": "https://s.weibo.com/weibo?q=%23%E9%99%88%E4%BF%8A%E7%94%9F150%E4%B8%87%E5%B9%B4%E8%96%AA%E8%AE%A9%E7%BD%97%E5%AD%90%E5%90%9B%E4%B9%B08%E4%B8%87%E7%9A%84%E9%9E%8B%23",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-207",
+      "title": "白海豚强度逐渐减弱",
+      "platformId": "douyin",
+      "platformName": "抖音",
+      "rank": 2,
+      "url": "https://www.douyin.com/hot/2605454",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-237",
+      "title": "山东菏泽古沉船一件元青花杯被曝下落不明，举报者称其曾出现在央视画面中，却未移交给博物馆，具体情况如何？",
+      "platformId": "zhihu",
+      "platformName": "知乎",
+      "rank": 2,
+      "url": "https://www.zhihu.com/question/2069191321374418713",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-3",
+      "title": "推动高质量充分就业取得新进展",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 3,
+      "url": "https://www.toutiao.com/trending/7672336501028470811/",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-33",
+      "title": "从一笔账单看60万亿消费KPI的底气",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 3,
+      "url": "https://www.baidu.com/s?wd=%E4%BB%8E%E4%B8%80%E7%AC%94%E8%B4%A6%E5%8D%95%E7%9C%8B60%E4%B8%87%E4%BA%BF%E6%B6%88%E8%B4%B9KPI%E7%9A%84%E5%BA%95%E6%B0%94",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-63",
+      "title": "今日起，豆包推荐酒店将收取佣金：综合扣费12%！",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 3,
+      "url": "https://wallstreetcn.com/articles/3779079",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-73",
+      "title": "外交部：百余名菲律宾公民因非法就业、非法居留被依法处理",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 3,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33754109",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-93",
+      "title": "2026特摄入坑指南",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 3,
+      "url": "https://search.bilibili.com/all?keyword=2026%E7%89%B9%E6%91%84%E5%85%A5%E5%9D%91%E6%8C%87%E5%8D%97",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-123",
+      "title": "美联储鹰派释放强硬信号：一次升息不够 或需多次加息",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 3,
+      "url": "https://www.cls.cn/detail/2450633",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-136",
+      "title": "“特朗普关联”石油公司擅运钻探设备上岛，格陵兰强烈警告",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 3,
+      "url": "https://news.ifeng.com/c/8vUAxbsrTSq",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-148",
+      "title": "闺蜜诱骗撕票,女网红不幸遇害",
+      "platformId": "tieba",
+      "platformName": "贴吧",
+      "rank": 3,
+      "url": "https://tieba.baidu.com/hottopic/browse/hottopic?amp%3Btopic_name=%E9%97%BA%E8%9C%9C%E8%AF%B1%E9%AA%97%E6%92%95%E7%A5%A8%2C%E5%A5%B3%E7%BD%91%E7%BA%A2%E4%B8%8D%E5%B9%B8%E9%81%87%E5%AE%B3&topic_id=28357114",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-178",
+      "title": "两部门紧急预拨1.8亿元救灾资金",
+      "platformId": "weibo",
+      "platformName": "微博",
+      "rank": 3,
+      "url": "https://s.weibo.com/weibo?q=%23%E4%B8%A4%E9%83%A8%E9%97%A8%E7%B4%A7%E6%80%A5%E9%A2%84%E6%8B%A81.8%E4%BA%BF%E5%85%83%E6%95%91%E7%81%BE%E8%B5%84%E9%87%91%23",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-208",
+      "title": "一组数据看7月经济活力",
+      "platformId": "douyin",
+      "platformName": "抖音",
+      "rank": 3,
+      "url": "https://www.douyin.com/hot/2605301",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-238",
+      "title": "因儿子说「大不了送外卖」，爸爸三伏天带他送外卖，竟意外修复父子关系，这一实践式教育怎么样？值得效仿吗？",
+      "platformId": "zhihu",
+      "platformName": "知乎",
+      "rank": 3,
+      "url": "https://www.zhihu.com/question/2070152087481083737",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-4",
+      "title": "解放军特种兵部署台海一线",
+      "platformId": "toutiao",
+      "platformName": "今日头条",
+      "rank": 4,
+      "url": "https://www.toutiao.com/trending/7672255052979093545/",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-34",
+      "title": "蔡磊留给儿子最酷的告白",
+      "platformId": "baidu",
+      "platformName": "百度热搜",
+      "rank": 4,
+      "url": "https://www.baidu.com/s?wd=%E8%94%A1%E7%A3%8A%E7%95%99%E7%BB%99%E5%84%BF%E5%AD%90%E6%9C%80%E9%85%B7%E7%9A%84%E5%91%8A%E7%99%BD",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-64",
+      "title": "MLCC供应告急引发抢货潮！国巨：越来越多AI客户抢签长协锁定产能",
+      "platformId": "wallstreetcn-hot",
+      "platformName": "华尔街见闻",
+      "rank": 4,
+      "url": "https://wallstreetcn.com/articles/3779065",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": true
+    },
+    {
+      "id": "tr-74",
+      "title": "“白海豚”将影响京津冀地区，专家：本次台风系统较先前更复杂",
+      "platformId": "thepaper",
+      "platformName": "澎湃新闻",
+      "rank": 4,
+      "url": "https://www.thepaper.cn/newsDetail_forward_33754228",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-94",
+      "title": "大理百元豪车租赁乱象调查",
+      "platformId": "bilibili-hot-search",
+      "platformName": "bilibili 热搜",
+      "rank": 4,
+      "url": "https://search.bilibili.com/all?keyword=%E5%A4%A7%E7%90%86%E7%99%BE%E5%85%83%E8%B1%AA%E8%BD%A6%E7%A7%9F%E8%B5%81%E4%B9%B1%E8%B1%A1%E8%B0%83%E6%9F%A5",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    },
+    {
+      "id": "tr-124",
+      "title": "美股收盘：芯片股&光通信概念重挫 三大指数收低中概逆市走强",
+      "platformId": "cls-hot",
+      "platformName": "财联社热门",
+      "rank": 4,
+      "url": "https://www.cls.cn/detail/2450652",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": true
+    },
+    {
+      "id": "tr-137",
+      "title": "外媒曝出重大消息：特朗普放弃对伊朗的头号要求",
+      "platformId": "ifeng",
+      "platformName": "凤凰网",
+      "rank": 4,
+      "url": "https://news.ifeng.com/c/8vUFosuJumv",
+      "firstSeen": "14-32",
+      "lastSeen": "14-32",
+      "aiRelated": false
+    }
+  ],
+  "htmlReportUrl": "http://127.0.0.1:8080/html/latest/current.html",
+  "methodNote": "同步自本地 TrendRadar SQLite（2026-08-11.db）。 多平台热搜聚合；不改动智衡七维评分。命令：npm run trendradar:sync"
+}
