@@ -4,6 +4,7 @@
  */
 import { analyze } from './analyzer.mjs';
 import { buildOutput } from './goal.mjs';
+import { buildOutputEn } from './goal-en.mjs';
 import { buildChain } from './chain.mjs';
 
 let seq = 0;
@@ -20,6 +21,7 @@ export function compile(rawInput, options = {}) {
   }
   const { analysis, chain } = buildChain(raw);
   const output = buildOutput(analysis);
+  const en = buildOutputEn(analysis);
   const id = `GC-${Date.now().toString(36)}-${(++seq).toString(36)}`;
   return {
     id,
@@ -29,9 +31,12 @@ export function compile(rawInput, options = {}) {
     analysis,
     chain,
     summary: output.summary,
+    summaryEn: en.summary,
     suggestions: output.suggestions,
     goalPrompt: output.goalPrompt,
+    goalPromptEn: en.goalPrompt,
     machineGoal: output.machineGoal,
+    machineGoalEn: en.machineGoal,
     keywordTop: output.keywordTop,
     editable: true,
     qualityLevel: 3,

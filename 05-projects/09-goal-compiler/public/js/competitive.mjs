@@ -57,7 +57,7 @@ export function threatScore(it) {
   return Math.min(1, s + 0.2);
 }
 
-export function scoreCompetitors(items) {
+export function scoreCompetitors(items, query = '') {
   return items.map((it) => {
     const prod = productizationScore(it);
     const depth = depthScore(it);
@@ -71,6 +71,7 @@ export function scoreCompetitors(items) {
         depth: +(depth * 5).toFixed(1),
         adoption: +(adopt * 5).toFixed(1),
         threat: +(threat * 5).toFixed(1),
+        relevance: relevanceScore(it, query),
       },
       positioning: { x: +(prod * 100).toFixed(1), y: +(depth * 100).toFixed(1) },
     };
@@ -79,7 +80,7 @@ export function scoreCompetitors(items) {
 
 /** 产品总监视角分析报告 */
 export function buildReport(items, query) {
-  const scored = scoreCompetitors(items);
+  const scored = scoreCompetitors(items, query);
   const byCategory = {};
   for (const it of scored) {
     byCategory[it.categoryLabel] = (byCategory[it.categoryLabel] || 0) + 1;
@@ -152,6 +153,8 @@ export function buildReport(items, query) {
     ? `综合来看，威胁度最高的是「${topThreat[0].name}」（威胁 ${topThreat[0].scores.threat}/5，${topThreat[0].categoryLabel}）。其优势在${topThreat[0].strengths ? topThreat[0].strengths[0] : '产品化'}；建议以「可视化思维链 + 可编辑目标资产 + 竞品情报台」三件套切入，避开与其正面文本能力竞争，主打 Agent 用户的学习与沉淀场景。`
     : '暂无足够数据，建议增加检索词广度后重试。';
 
+  const featureGaps = FEATURE_GAPS;
+  const designForms = DESIGN_FORMS;
   return {
     query,
     total: scored.length,
@@ -164,6 +167,8 @@ export function buildReport(items, query) {
     swot,
     opportunities,
     recommendation,
+    featureGaps,
+    designForms,
     scored,
   };
 }
@@ -184,11 +189,19 @@ export function reportToMarkdown(report) {
   L.push('');
   L.push('## 一、竞品清单与评分');
   L.push('');
-  L.push('| 名称 | 类别 | 来源 | 热度 | 产品化 | 拆解深度 | 威胁 |');
-  L.push('| --- | --- | --- | --- | --- | --- | --- |');
+  L.push('| 名称 | 类别 | 来源 | 相关度 | 热度 | 产品化 | 拆解深度 | 威胁 |');
+  L.push('| --- | --- | --- | --- | --- | --- | --- | --- |');
   for (const it of report.scored) {
-    L.push(`| [${it.name}](${it.url}) | ${it.categoryLabel} | ${it.source} | ${it.scores.adoption} | ${it.scores.productization} | ${it.scores.depth} | ${it.scores.threat} |`);
+    L.push(`| [${it.name}](${it.url}) | ${it.categoryLabel} | ${it.source} | ${it.scores.relevance} | ${it.scores.adoption} | ${it.scores.productization} | ${it.scores.depth} | ${it.scores.threat} |`);
   }
+  L.push('');
+  L.push('## 六、功能缺口与设计形式借鉴（竞品启示）');
+  L.push('');
+  L.push('### 功能缺口');
+  for (const f of report.featureGaps) L.push(`- [${f.status === 'implemented' ? 'x' : ' '}] **[${f.priority}] ${f.feature}**（来源：${f.source}）— ${f.why}`);
+  L.push('');
+  L.push('### 网页设计形式借鉴');
+  for (const d of report.designForms) L.push(`- ${d.adopted ? '✅' : '◻'} ${d.form}（借鉴：${d.from}）— ${d.note}`);
   L.push('');
   L.push('## 二、市场格局');
   L.push('');
@@ -217,4 +230,45 @@ export function reportToMarkdown(report) {
   L.push(report.recommendation);
   L.push('');
   return L.join('\n');
+}
+
+/* ================= 竞品启示：功能缺口 + 网页设计形式借鉴 ================= */
+
+/** 竞品对比后补充的「功能缺口」清单（含来源证据与落地状态） */
+export const FEATURE_GAPS = [
+  { feature: '就绪度评估（Ready Banner）', source: 'Compiler(madara88645)', category: '功能', why: '告诉用户编译结果是否可直接执行及原因', status: 'implemented', priority: 'P0' },
+  { feature: '中英文双语 / 一键翻译', source: 'Notion AI / Taskade', category: '功能', why: 'Agent 与出海场景刚需，扩大受众', status: 'implemented', priority: 'P0' },
+  { feature: '多模态输入（语音/图片/文件）', source: 'Notion AI Voice / ChatGPT', category: '交互', why: '降低表达成本，适配移动与口述场景', status: 'implemented', priority: 'P0' },
+  { feature: '案例库自动收录 + 相似检索', source: 'Notion / ClickUp 模板库', category: '功能', why: '需求即资产，沉淀可复用分析', status: 'implemented', priority: 'P0' },
+  { feature: '键盘快捷键（Cmd/Ctrl+Enter 编译）', source: 'Taskade / ClickUp', category: '交互', why: '专业用户效率刚需', status: 'implemented', priority: 'P1' },
+  { feature: '多数据源竞品扫描（8 源）', source: '情报类产品', category: '功能', why: '情报广度决定决策质量', status: 'implemented', priority: 'P0' },
+  { feature: '定位矩阵 / SWOT / 差异化建议', source: 'Stoa / 咨询方法', category: '分析', why: '产品总监级决策支持', status: 'implemented', priority: 'P0' },
+  { feature: '模板市场 / 预设诉求库', source: 'Taskade / Compiler', category: '功能', why: '降低空白页焦虑，加速上手', status: 'planned', priority: 'P1' },
+  { feature: '一键导出可安装 SKILL.md', source: 'khazix / superpowers 生态', category: '生态', why: '与 Agent 生态打通，形成分发', status: 'planned', priority: 'P1' },
+  { feature: '团队空间 / 分享链接', source: 'ClickUp / Notion', category: '协作', why: '团队流程标准化与传播', status: 'planned', priority: 'P2' },
+  { feature: 'LLM 深度生成（自备 Key）', source: 'ChatGPT / Claude', category: 'AI', why: '长尾复杂诉求的深度理解', status: 'planned', priority: 'P2' },
+  { feature: '埋点与用量分析', source: 'SaaS 标配', category: '数据', why: '验证产品假设、驱动迭代', status: 'planned', priority: 'P2' },
+];
+
+/** 竞品网页设计形式借鉴清单 */
+export const DESIGN_FORMS = [
+  { form: '深色科技风 + 渐变点缀', from: 'Linear / Vercel', adopted: true, note: '深空蓝黑底 + 电光蓝/青渐变，商务科技感' },
+  { form: '卡片网格 + 顶部渐变描边', from: 'Linear / Raycast', adopted: true, note: '信息层级清晰，暗色下保持呼吸感' },
+  { form: '分步向导（Stepper）', from: 'Stripe / Compiler', adopted: true, note: '思维链 14 步逐步展开，即「可学习的向导」' },
+  { form: '定位矩阵可视化（四象限散点）', from: '咨询报告 / Stoa', adopted: true, note: '把抽象竞争格局变成一眼可读的图' },
+  { form: '空状态 + 引导文案', from: 'Notion / Linear', adopted: true, note: '编译/思维链/竞品均有空状态引导' },
+  { form: '骨架屏 / Skeleton', from: 'Notion / Linear', adopted: false, note: '检索加载更自然（P2 规划）' },
+  { form: 'AI 对话式输入框', from: 'ChatGPT / v0', adopted: false, note: '多轮澄清式输入（P2 规划）' },
+  { form: '侧边栏主导航', from: 'Notion / ClickUp', adopted: false, note: '复杂功能扩展时再引入（当前 5 Tab 足够）' },
+  { form: '模板画廊（Gallery）', from: 'Taskade / v0', adopted: false, note: '案例库升级为画廊形态（P1 规划）' },
+];
+
+/** 计算每条竞品与检索词的相关度（0-5） */
+export function relevanceScore(it, query) {
+  const q = (query || '').toLowerCase().split(/\s+/).filter(Boolean);
+  if (!q.length) return 3;
+  const hay = `${it.name} ${it.description} ${(it.tags || []).join(' ')} ${it.title || ''}`.toLowerCase();
+  let s = 0;
+  for (const t of q) if (hay.includes(t)) s += 1;
+  return Math.min(5, s);
 }

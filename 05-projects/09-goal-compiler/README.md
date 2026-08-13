@@ -11,7 +11,16 @@
 1. **诉求拆解**：输入一句话/一段描述 → ①-⑧ 结构化分析 + ⑨ 20 段 Machine-Executable Goal；
 2. **完整思维链**：14 个推理节点结构化输出（输入/推理/结论/证据/决策），**可学习、可导出**；
 3. **可人工编辑**：最终 Goal Prompt 支持编辑、复制、下载、存草稿、历史恢复；
-4. **竞品分析**：爬取 GitHub / Hacker News / 精选库，**产品总监视角**输出定位矩阵、SWOT、差异化建议。
+4. **竞品分析**：**8 大数据源**（GitHub / Hacker News / npm / StackOverflow / HuggingFace / Gitee / Reddit / 精选库），**产品总监视角**输出定位矩阵、SWOT、功能缺口与设计形式借鉴。
+
+## 本次升级（v3）
+
+- 🌐 **中英文双语**：一键把编译结果（Goal Prompt + ①-⑧ 分析）翻译为英文
+- 📚 **案例库自动收录**：每次编译按领域/意图自动归类，相似需求可搜索参考分析
+- 🎤🖼📎 **多模态输入**：语音（中/英）、图片附件、文本文件（.txt/.md/.csv/.json…）
+- 🔍 **数据源扩展至 8 个**：npm / StackOverflow / HuggingFace / Gitee / Reddit 新增
+- 💡 **竞品启示**：功能缺口清单 + 网页设计形式借鉴（补未考虑项）
+- ✅ **就绪度评估**、⌘↵ 快捷编译、🔗 复制分享、设计自核验（人性化视觉审计）
 
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
@@ -28,11 +37,11 @@ node server/server.mjs 8910
 ## 测试
 
 ```bash
-node --test tests/compile.test.mjs tests/api.test.mjs   # 单元 + API（9/9）
-node tests/e2e-cdp.mjs                                   # 浏览器端到端（10/10，需本机 Chrome）
+node --test tests/compile.test.mjs tests/caselib.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单元 + 案例库 + API（16/16）
+node tests/e2e-cdp.mjs                                                                             # 浏览器端到端（17/17，需本机 Chrome）
 ```
 
-## 3 个测试用例
+## 3 个内置测试用例
 
 | 用例 | 类型 | 演示重点 |
 |------|------|----------|

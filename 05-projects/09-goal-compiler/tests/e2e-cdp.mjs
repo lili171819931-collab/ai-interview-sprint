@@ -107,8 +107,7 @@ try {
 
   // 切换到竞品分析 tab 并检索（仅精选库，离线）
   await evalJS(`(() => {
-    document.getElementById('srcGithub').checked = false;
-    document.getElementById('srcHN').checked = false;
+    ['srcGithub','srcHN','srcNpm','srcSO','srcHF','srcGitee','srcReddit'].forEach(id => { document.getElementById(id).checked = false; });
     document.getElementById('srcCurated').checked = true;
     document.getElementById('compQuery').value = 'goal compiler';
     document.getElementById('compSearchBtn').click();
@@ -121,6 +120,30 @@ try {
   checks.push([`竞品表格行数（${compRows}）`, compRows >= 5]);
   const recLen = await evalJS(`document.getElementById('compRec').textContent.length`);
   checks.push([`产品总监建议非空（${recLen} 字）`, recLen > 20]);
+  const gapCount = await evalJS(`document.querySelectorAll('#compGaps .gap-item').length`);
+  checks.push([`功能缺口清单（${gapCount} 项）`, gapCount >= 5]);
+  const designCount = await evalJS(`document.querySelectorAll('#compDesign .gap-item').length`);
+  checks.push([`设计形式借鉴（${designCount} 项）`, designCount >= 4]);
+  const relCol = await evalJS(`[...document.querySelectorAll('#compTable thead th')].some(th => th.textContent.includes('相关度'))`);
+  checks.push(['竞品表含相关度列', relCol]);
+
+  // v3：就绪度评估 + 案例库自动收录 + 英文切换
+  const readyVisible = await evalJS(`!document.getElementById('readyBanner').classList.contains('hidden')`);
+  checks.push(['就绪度评估横幅显示', readyVisible]);
+  await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(600);
+  const userCaseCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
+  checks.push([`案例库自动收录（${userCaseCount} 条用户案例）`, userCaseCount >= 1]);
+  const caseSearchHit = await evalJS(`(() => {
+    const el = document.getElementById('caseSearch');
+    const setter = Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set;
+    setter.call(el, '面试'); el.dispatchEvent(new Event('input', { bubbles: true }));
+    return document.querySelectorAll('#userCaseGrid .case-card').length >= 1;
+  })()`);
+  checks.push(['相似需求搜索命中', caseSearchHit]);
+  await evalJS(`document.querySelector('.lang-btn[data-lang="en"]').click()`); await sleep(500);
+  const enGoal = await evalJS(`document.getElementById('goalPrompt').value.includes('# MISSION')`);
+  checks.push(['一键切换英文（Goal 含 # MISSION）', enGoal]);
+  await evalJS(`document.querySelector('.lang-btn[data-lang="zh"]').click()`); await sleep(300);
 
   // 截图：各关键视图
   await shot('/tmp/gc-shot-result.png');

@@ -69,6 +69,96 @@ export async function hnSearch(query, hits = 8) {
   }));
 }
 
+export async function npmSearch(query, hits = 8) {
+  const q = encodeURIComponent(query);
+  const url = `https://registry.npmjs.org/-/v1/search?text=${q}&size=${hits}`;
+  const data = await fetchJSON(url);
+  return (data.objects || []).map((o) => ({
+    name: o.package.name,
+    title: o.package.name,
+    url: o.package.links?.repository || o.package.links?.npm || `https://www.npmjs.com/package/${o.package.name}`,
+    source: 'npm',
+    description: (o.package.description || '').slice(0, 220),
+    stars: o.score?.detail?.popularity ? Math.round(o.score.detail.popularity * 1000) : 0,
+    language: 'npm',
+    updatedAt: (o.package.date || '').slice(0, 10),
+    topics: (o.package.keywords || []).slice(0, 6),
+    kind: 'package',
+  }));
+}
+
+export async function stackoverflowSearch(query, hits = 8) {
+  const q = encodeURIComponent(query);
+  const url = `https://api.stackexchange.com/2.3/search/advanced?order=desc&sort=relevance&q=${q}&site=stackoverflow&pagesize=${hits}&filter=default`;
+  const data = await fetchJSON(url);
+  return (data.items || []).map((it) => ({
+    name: `SO: ${it.title.slice(0, 90)}`,
+    title: it.title,
+    url: it.link,
+    source: 'Stack Overflow',
+    description: `Score ${it.score} · Answers ${it.answer_count} · Views ${it.view_count}`,
+    stars: it.score || 0,
+    language: '',
+    updatedAt: new Date(it.creation_date * 1000).toISOString().slice(0, 10),
+    topics: (it.tags || []).slice(0, 6),
+    kind: 'qa',
+  }));
+}
+
+export async function huggingfaceSearch(query, hits = 8) {
+  const q = encodeURIComponent(query);
+  const url = `https://huggingface.co/api/models?search=${q}&limit=${hits}&sort=downloads&direction=-1`;
+  const data = await fetchJSON(url);
+  return (Array.isArray(data) ? data : []).map((it) => ({
+    name: `HF: ${it.id || it.modelId || ''}`,
+    title: it.id || it.modelId || 'model',
+    url: `https://huggingface.co/${it.id || it.modelId || ''}`,
+    source: 'Hugging Face',
+    description: (it.pipeline_tag || it.cardData?.language || 'model').slice(0, 120),
+    stars: it.downloads || 0,
+    language: 'ml',
+    updatedAt: (it.lastModified || '').slice(0, 10),
+    topics: (it.tags || []).slice(0, 6),
+    kind: 'model',
+  }));
+}
+
+export async function giteeSearch(query, perPage = 8) {
+  const q = encodeURIComponent(query);
+  const url = `https://gitee.com/api/v5/search/repositories?q=${q}&sort=stars_count&order=desc&per_page=${perPage}`;
+  const data = await fetchJSON(url);
+  return (Array.isArray(data) ? data : []).map((it) => ({
+    name: it.full_name,
+    title: it.name || it.full_name,
+    url: it.html_url,
+    source: 'Gitee',
+    description: (it.description || '').slice(0, 220),
+    stars: it.stargazers_count || 0,
+    language: it.language || '',
+    updatedAt: (it.updated_at || '').slice(0, 10),
+    topics: (it.topics || []).slice(0, 6),
+    kind: 'repo/skill',
+  }));
+}
+
+export async function redditSearch(query, hits = 8) {
+  const q = encodeURIComponent(query);
+  const url = `https://www.reddit.com/search.json?q=${q}&limit=${hits}&sort=relevance&t=year`;
+  const data = await fetchJSON(url);
+  return (data.data?.children || []).map(({ data: it }) => ({
+    name: `Reddit: ${(it.title || '').slice(0, 90)}`,
+    title: it.title || '',
+    url: `https://www.reddit.com${it.permalink || ''}`,
+    source: 'Reddit',
+    description: `r/${it.subreddit} · Score ${it.score} · Comments ${it.num_comments}`,
+    stars: it.score || 0,
+    language: '',
+    updatedAt: new Date(it.created_utc * 1000).toISOString().slice(0, 10),
+    topics: ['discussion'],
+    kind: 'discussion',
+  }));
+}
+
 function curatedFilter(db, query) {
   const q = (query || '').toLowerCase();
   if (!q) return db.slice(0, 10);
@@ -92,11 +182,19 @@ export function curatedSearch(query) {
 /**
  * 综合检索：并行调用各数据源，返回合并去重列表
  */
+const SOURCE_FNS = {
+  github: githubSearch, hackernews: hnSearch, curated: (q) => Promise.resolve(curatedSearch(q)),
+  npm: npmSearch, stackoverflow: stackoverflowSearch, huggingface: huggingfaceSearch,
+  gitee: giteeSearch, reddit: redditSearch,
+};
+export const SOURCES = Object.keys(SOURCE_FNS);
+
 export async function competitiveSearch({ q = 'goal compiler', sources = ['github', 'hackernews', 'curated'] } = {}) {
   const tasks = [];
-  if (sources.includes('github')) tasks.push(githubSearch(q).catch((e) => ({ error: `github: ${e.message}` })));
-  if (sources.includes('hackernews')) tasks.push(hnSearch(q).catch((e) => ({ error: `hackernews: ${e.message}` })));
-  if (sources.includes('curated')) tasks.push(Promise.resolve(curatedSearch(q)));
+  for (const src of sources) {
+    const fn = SOURCE_FNS[src];
+    if (fn) tasks.push(fn(q).catch((e) => ({ error: `${src}: ${e.message}` })));
+  }
 
   const results = await Promise.all(tasks);
   const errors = [];

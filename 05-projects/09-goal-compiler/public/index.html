@@ -3,8 +3,8 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Goal Compiler · 诉求拆解平台（商务科技深色版）</title>
 <meta name="theme-color" content="#070b14" />
+<title>Goal Compiler · 诉求拆解平台</title>
 <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><defs><linearGradient id='g' x1='0' y1='0' x2='1' y2='1'><stop offset='0' stop-color='%233b82f6'/><stop offset='1' stop-color='%2322d3ee'/></linearGradient></defs><rect width='32' height='32' rx='7' fill='%230b1220'/><rect x='1.5' y='1.5' width='29' height='29' rx='6' fill='none' stroke='url(%23g)' stroke-width='1.5'/><path d='M9 16h14M15 10l-4 6 4 6M18 10l4 6-4 6' stroke='url(%23g)' stroke-width='2.2' fill='none' stroke-linecap='round' stroke-linejoin='round'/></svg>" />
 <link rel="stylesheet" href="/styles.css" />
 </head>
@@ -15,16 +15,20 @@
       <span class="brand-mark">GC</span>
       <span class="brand-text">
         <strong>Goal Compiler</strong>
-        <small>诉求拆解平台 · 把模糊想法编译成可执行目标任务书</small>
+        <small data-i18n="brandSub">诉求拆解平台 · 把模糊想法编译成可执行目标任务书</small>
       </span>
     </a>
     <nav class="tabs" id="tabs">
-      <button class="tab active" data-tab="compile">诉求拆解</button>
-      <button class="tab" data-tab="chain">思维链</button>
-      <button class="tab" data-tab="competitive">竞品分析</button>
-      <button class="tab" data-tab="cases">案例库</button>
-      <button class="tab" data-tab="about">关于</button>
+      <button class="tab active" data-tab="compile" data-i18n="tabCompile">诉求拆解</button>
+      <button class="tab" data-tab="chain" data-i18n="tabChain">思维链</button>
+      <button class="tab" data-tab="competitive" data-i18n="tabComp">竞品分析</button>
+      <button class="tab" data-tab="cases" data-i18n="tabCases">案例库</button>
+      <button class="tab" data-tab="about" data-i18n="tabAbout">关于</button>
     </nav>
+    <div class="lang-switch" id="langSwitch">
+      <button class="lang-btn active" data-lang="zh">中文</button>
+      <button class="lang-btn" data-lang="en">EN</button>
+    </div>
     <div class="topbar-status">
       <span class="dot"></span><span id="serverStatus">本地运行</span>
     </div>
@@ -36,114 +40,98 @@
   <!-- ============ Tab: 诉求拆解 ============ -->
   <section id="tab-compile" class="tab-panel active">
     <div class="workspace">
-      <!-- 左：输入 -->
       <aside class="panel input-panel">
         <div class="panel-head">
-          <h2>① 输入原始诉求</h2>
-          <span class="hint">支持中英文，一句话或一段描述均可</span>
+          <h2 data-i18n="inTitle">① 输入原始诉求</h2>
+          <span class="hint" data-i18n="inHint">支持中英文，一句话或一段描述均可</span>
         </div>
-        <textarea id="rawInput" rows="7" placeholder="例：我想做一个帮程序员准备面试的 AI 面试官工具，可以模拟面试并打分反馈，按岗位定制问题…"></textarea>
+        <textarea id="rawInput" rows="7" data-i18n-ph="inPlaceholder" placeholder="例：我想做一个帮程序员准备面试的 AI 面试官工具，可以模拟面试并打分反馈，按岗位定制问题…"></textarea>
         <div class="input-meta">
           <span id="inputStats">0 字 · 0 句</span>
-          <span class="link" id="clearInput">清空</span>
+          <span class="link" id="clearInput" data-i18n="clear">清空</span>
         </div>
+        <div class="attach-row">
+          <button class="btn-ghost" id="voiceBtn" type="button">🎤 <span data-i18n="voice">语音</span></button>
+          <button class="btn-ghost" id="imgBtn" type="button">🖼 <span data-i18n="image">图片</span></button>
+          <button class="btn-ghost" id="fileBtn" type="button">📎 <span data-i18n="file">文件</span></button>
+          <input type="file" id="fileInput" accept=".txt,.md,.csv,.tsv,.json,.log,image/*" multiple hidden />
+          <span class="hint" id="voiceStatus"></span>
+        </div>
+        <div id="attachList" class="attach-list"></div>
         <div class="field-row">
-          <label>编译模式</label>
+          <label data-i18n="mode">编译模式</label>
           <select id="modeSelect">
-            <option value="standard">标准模式（快）</option>
-            <option value="deep">深度模式（更全假设）</option>
+            <option value="standard" data-i18n="modeStd">标准模式（快）</option>
+            <option value="deep" data-i18n="modeDeep">深度模式（更全假设）</option>
           </select>
         </div>
         <details class="opt-details">
-          <summary>可选补充信息（提高编译精度）</summary>
-          <div class="field-row"><label>目标用户/受益方</label><input id="optUser" placeholder="如：程序员 / 产品经理 / 自己" /></div>
-          <div class="field-row"><label>时间盒</label><input id="optTime" placeholder="如：2 周内完成 P0" /></div>
-          <div class="field-row"><label>关键约束</label><input id="optConst" placeholder="如：免费、开源、单机可用" /></div>
+          <summary data-i18n="optSummary">可选补充信息（提高编译精度）</summary>
+          <div class="field-row"><label data-i18n="optUser">目标用户/受益方</label><input id="optUser" placeholder="如：程序员 / 产品经理 / 自己" /></div>
+          <div class="field-row"><label data-i18n="optTime">时间盒</label><input id="optTime" placeholder="如：2 周内完成 P0" /></div>
+          <div class="field-row"><label data-i18n="optConst">关键约束</label><input id="optConst" placeholder="如：免费、开源、单机可用" /></div>
         </details>
-        <button class="btn-primary" id="compileBtn">⚡ 开始编译</button>
+        <button class="btn-primary" id="compileBtn" data-i18n="compileBtn">⚡ 开始编译 <kbd>⌘↵</kbd></button>
         <div class="quick-cases">
-          <span class="hint">快速体验：</span>
+          <span class="hint" data-i18n="quick">快速体验：</span>
           <button class="chip" data-quick="0">AI 面试官工具</button>
           <button class="chip" data-quick="1">报销发票小程序</button>
           <button class="chip" data-quick="2">英语口语提升</button>
         </div>
       </aside>
 
-      <!-- 右：输出 -->
       <div class="panel output-panel">
         <div class="panel-head">
-          <h2>② 编译结果</h2>
+          <h2 data-i18n="outTitle">② 编译结果</h2>
           <div class="toolbar">
-            <button class="btn-ghost" id="copyGoalBtn">复制 Goal</button>
-            <button class="btn-ghost" id="downloadBtn">导出 MD</button>
-            <button class="btn-ghost" id="saveDraftBtn">存草稿</button>
-            <button class="btn-ghost" id="historyBtn">历史</button>
+            <button class="btn-ghost" id="translateBtn" data-i18n="translate">🌐 翻译为英文</button>
+            <button class="btn-ghost" id="copyGoalBtn" data-i18n="copy">复制 Goal</button>
+            <button class="btn-ghost" id="downloadBtn" data-i18n="download">导出 MD</button>
+            <button class="btn-ghost" id="saveDraftBtn" data-i18n="saveDraft">存草稿</button>
+            <button class="btn-ghost" id="historyBtn" data-i18n="history">历史</button>
           </div>
         </div>
 
         <div id="emptyState" class="empty-state">
           <div class="empty-icon">◈</div>
-          <p>输入一段「模糊想法」并点击<strong>开始编译</strong>，<br/>平台将展示完整思维链并生成可编辑的 <strong>Machine-Executable Goal</strong>。</p>
-          <p class="hint">想快速体验？点击左侧「快速体验」案例，或进入「案例库」加载 3 个测试用例。</p>
+          <p data-i18n="empty1">输入一段「模糊想法」并点击<strong>开始编译</strong>，<br/>平台将展示完整思维链并生成可编辑的 <strong>Machine-Executable Goal</strong>。</p>
+          <p class="hint" data-i18n="empty2">支持中文 / English、语音 / 图片 / 文件输入；编译结果自动收录进案例库。</p>
         </div>
 
         <div id="result" class="hidden">
+          <div id="readyBanner" class="ready-banner hidden"></div>
           <div class="result-meta">
             <span class="badge badge-blue" id="rIntent">—</span>
             <span class="badge" id="rDomain">—</span>
             <span class="badge badge-green" id="rQuality">质量 L3</span>
+            <span class="badge badge-gray" id="rLang">中文</span>
             <span class="badge badge-gray" id="rHash">#—</span>
             <span class="badge badge-gray" id="rTime">—</span>
+            <span class="badge badge-cyan" id="rAttach">—</span>
           </div>
 
-          <section class="card">
-            <h3>① 原始需求理解</h3>
-            <p id="rUnderstanding" class="lead"></p>
-          </section>
-          <section class="card">
-            <h3>② 深层目标</h3>
-            <p id="rDeepGoal"></p>
-          </section>
-          <section class="card">
-            <h3>③ 关键假设 <span class="hint">FACT / ASSUMPTION / DECISION 三态标注</span></h3>
-            <ul id="rAssumptions" class="assume-list"></ul>
-          </section>
-          <section class="card">
-            <h3>④ 目标树</h3>
-            <div id="rGoalTree" class="tree"></div>
-          </section>
-          <section class="card">
-            <h3>⑤ 任务边界</h3>
-            <div id="rScope" class="scope-grid"></div>
-          </section>
-          <section class="card">
-            <h3>⑥ 成功标准 <span class="hint">Acceptance Criteria</span></h3>
-            <ul id="rCriteria" class="check-list"></ul>
-          </section>
-          <section class="card">
-            <h3>⑦ 执行路线</h3>
-            <div id="rRoadmap" class="roadmap"></div>
-          </section>
-          <section class="card">
-            <h3>⑧ 风险与应对</h3>
-            <table class="tbl" id="rRisks"><thead><tr><th>风险</th><th>等级</th><th>默认应对</th></tr></thead><tbody></tbody></table>
-          </section>
-          <section class="card">
-            <h3>＋ 你没考虑到的方向 <span class="hint">基于领域默认补全</span></h3>
-            <div id="rSuggestions" class="chip-row"></div>
-          </section>
+          <section class="card"><h3 data-i18n="s1">① 原始需求理解</h3><p id="rUnderstanding" class="lead"></p></section>
+          <section class="card"><h3 data-i18n="s2">② 深层目标</h3><p id="rDeepGoal"></p></section>
+          <section class="card"><h3>③ <span data-i18n="s3">关键假设</span> <span class="hint" data-i18n="s3h">FACT / ASSUMPTION / DECISION 三态标注</span></h3><ul id="rAssumptions" class="assume-list"></ul></section>
+          <section class="card"><h3 data-i18n="s4">④ 目标树</h3><div id="rGoalTree" class="tree"></div></section>
+          <section class="card"><h3 data-i18n="s5">⑤ 任务边界</h3><div id="rScope" class="scope-grid"></div></section>
+          <section class="card"><h3>⑥ <span data-i18n="s6">成功标准</span> <span class="hint">Acceptance Criteria</span></h3><ul id="rCriteria" class="check-list"></ul></section>
+          <section class="card"><h3 data-i18n="s7">⑦ 执行路线</h3><div id="rRoadmap" class="roadmap"></div></section>
+          <section class="card"><h3 data-i18n="s8">⑧ 风险与应对</h3><table class="tbl" id="rRisks"><thead><tr><th data-i18n="riskCol">风险</th><th data-i18n="lvlCol">等级</th><th data-i18n="mitCol">默认应对</th></tr></thead><tbody></tbody></table></section>
+          <section class="card"><h3>＋ <span data-i18n="sug">你没考虑到的方向</span> <span class="hint" data-i18n="sugH">基于领域默认补全</span></h3><div id="rSuggestions" class="chip-row"></div></section>
           <section class="card goal-card">
-            <h3>⑨ 最终 Goal Prompt <span class="hint">可编辑 · 脱离上下文可独立执行</span></h3>
+            <h3>⑨ <span data-i18n="s9">最终 Goal Prompt</span> <span class="hint" data-i18n="s9h">可编辑 · 脱离上下文可独立执行</span></h3>
             <div class="goal-toolbar">
-              <button class="btn-ghost" id="copyGoalBtn2">复制</button>
-              <button class="btn-ghost" id="resetGoalBtn">恢复原文</button>
+              <button class="btn-ghost" id="copyGoalBtn2" data-i18n="copy">复制</button>
+              <button class="btn-ghost" id="resetGoalBtn" data-i18n="reset">恢复原文</button>
+              <button class="btn-ghost" id="shareBtn" data-i18n="share">🔗 复制分享文本</button>
               <span class="hint" id="goalCount"></span>
             </div>
             <textarea id="goalPrompt" class="goal-editor" rows="18" spellcheck="false"></textarea>
           </section>
           <section class="card">
             <details>
-              <summary class="h3-summary">Machine-Executable Goal（紧凑版 WHO/WHY/WHAT…）</summary>
+              <summary class="h3-summary" data-i18n="machine">Machine-Executable Goal（紧凑版 WHO/WHY/WHAT…）</summary>
               <pre id="rMachineGoal" class="pre-block"></pre>
             </details>
           </section>
@@ -156,15 +144,15 @@
   <section id="tab-chain" class="tab-panel">
     <div class="panel">
       <div class="panel-head">
-        <h2>完整思维链 <span class="hint">Goal Compiler 的推理全过程 · 结构化可导出</span></h2>
+        <h2 data-i18n="chainTitle">完整思维链 <span class="hint" data-i18n="chainHint">Goal Compiler 的推理全过程 · 结构化可导出</span></h2>
         <div class="toolbar">
-          <button class="btn-ghost" id="playChainBtn">▶ 逐步演示</button>
-          <button class="btn-ghost" id="exportChainMd">导出 MD</button>
-          <button class="btn-ghost" id="exportChainJson">导出 JSON</button>
+          <button class="btn-ghost" id="playChainBtn" data-i18n="play">▶ 逐步演示</button>
+          <button class="btn-ghost" id="exportChainMd" data-i18n="exportMd">导出 MD</button>
+          <button class="btn-ghost" id="exportChainJson" data-i18n="exportJson">导出 JSON</button>
         </div>
       </div>
       <div id="chainEmpty" class="empty-state">
-        <p>先在上方「诉求拆解」中完成一次编译，<br/>这里将以 14 个推理节点展示完整思维链。</p>
+        <p data-i18n="chainEmpty">先在上方「诉求拆解」中完成一次编译，<br/>这里将以 14 个推理节点展示完整思维链。</p>
       </div>
       <div id="chainList" class="chain-list hidden"></div>
     </div>
@@ -174,49 +162,50 @@
   <section id="tab-competitive" class="tab-panel">
     <div class="panel">
       <div class="panel-head">
-        <h2>竞品分析 <span class="hint">爬取 GitHub / Hacker News / 精选库 · 产品总监视角</span></h2>
+        <h2 data-i18n="compTitle">竞品分析 <span class="hint" data-i18n="compHint">8 大数据源 · 产品总监视角</span></h2>
       </div>
       <div class="comp-search">
         <input id="compQuery" value="goal compiler prompt agent skill" />
         <label class="ck"><input type="checkbox" id="srcGithub" checked /> GitHub</label>
-        <label class="ck"><input type="checkbox" id="srcHN" checked /> Hacker News</label>
+        <label class="ck"><input type="checkbox" id="srcHN" checked /> HN</label>
         <label class="ck"><input type="checkbox" id="srcCurated" checked /> 精选库</label>
-        <button class="btn-primary" id="compSearchBtn">🔍 检索并分析</button>
+        <label class="ck"><input type="checkbox" id="srcNpm" checked /> npm</label>
+        <label class="ck"><input type="checkbox" id="srcSO" checked /> StackOverflow</label>
+        <label class="ck"><input type="checkbox" id="srcHF" checked /> HuggingFace</label>
+        <label class="ck"><input type="checkbox" id="srcGitee" /> Gitee</label>
+        <label class="ck"><input type="checkbox" id="srcReddit" /> Reddit</label>
+        <button class="btn-primary" id="compSearchBtn">🔍 <span data-i18n="compSearch">检索并分析</span></button>
       </div>
-      <div id="compLoading" class="hidden loading">检索中…（GitHub 未认证限流 10 次/分钟，稍候）</div>
+      <div id="compLoading" class="hidden loading" data-i18n="compLoading">检索中…（GitHub 未认证限流 10 次/分钟，稍候）</div>
       <div id="compError" class="hidden error-box"></div>
 
       <div id="compResult" class="hidden">
         <div class="result-meta" id="compMetrics"></div>
         <div class="comp-grid">
           <section class="card">
-            <h3>竞品清单与评分 <span class="hint">点击表头排序</span></h3>
+            <h3 data-i18n="compTable">竞品清单与评分 <span class="hint" data-i18n="compTableHint">点击表头排序</span></h3>
             <table class="tbl" id="compTable"><thead></thead><tbody></tbody></table>
           </section>
           <section class="card">
-            <h3>定位矩阵 <span class="hint">X=产品化程度 · Y=目标拆解深度</span></h3>
+            <h3 data-i18n="compMatrix">定位矩阵 <span class="hint">X=产品化 · Y=拆解深度</span></h3>
             <div id="positioning" class="positioning"></div>
-            <div class="legend"><span class="lg lg-leader">领先者</span><span class="lg lg-specialist">深度专精</span><span class="lg lg-product">产品化</span><span class="lg lg-niche">细分/早期</span></div>
+            <div class="legend"><span class="lg lg-leader" data-i18n="lgLeader">领先者</span><span class="lg lg-specialist" data-i18n="lgSpec">深度专精</span><span class="lg lg-product" data-i18n="lgProd">产品化</span><span class="lg lg-niche" data-i18n="lgNiche">细分/早期</span></div>
           </section>
         </div>
+        <section class="card"><h3 data-i18n="compCat">市场格局</h3><div id="compCategory" class="category-bars"></div></section>
         <section class="card">
-          <h3>市场格局</h3>
-          <div id="compCategory" class="category-bars"></div>
+          <h3 data-i18n="compGapTitle">竞品启示 · 功能缺口（补充未考虑的功能）</h3>
+          <div id="compGaps" class="gap-list"></div>
         </section>
         <section class="card">
-          <h3>SWOT（产品总监视角）</h3>
-          <div id="compSwot" class="swot-grid"></div>
+          <h3 data-i18n="compDesignTitle">竞品启示 · 网页设计形式借鉴</h3>
+          <div id="compDesign" class="design-list"></div>
         </section>
-        <section class="card">
-          <h3>差异化机会</h3>
-          <ul id="compOpps" class="check-list"></ul>
-        </section>
-        <section class="card">
-          <h3>产品总监建议</h3>
-          <p id="compRec" class="lead"></p>
-        </section>
+        <section class="card"><h3>SWOT（产品总监视角）</h3><div id="compSwot" class="swot-grid"></div></section>
+        <section class="card"><h3 data-i18n="compOpps">差异化机会</h3><ul id="compOpps" class="check-list"></ul></section>
+        <section class="card"><h3 data-i18n="compRec">产品总监建议</h3><p id="compRec" class="lead"></p></section>
         <div class="toolbar right">
-          <button class="btn-ghost" id="compExport">导出分析报告 MD</button>
+          <button class="btn-ghost" id="compExport" data-i18n="compExport">导出分析报告 MD</button>
         </div>
       </div>
     </div>
@@ -225,7 +214,14 @@
   <!-- ============ Tab: 案例库 ============ -->
   <section id="tab-cases" class="tab-panel">
     <div class="panel">
-      <div class="panel-head"><h2>测试用例库 <span class="hint">3 个演示用例 · 覆盖产品/效率/学习三类诉求</span></h2></div>
+      <div class="panel-head"><h2 data-i18n="caseTitle">案例库 <span class="hint" data-i18n="caseHint">每次编译自动收录 · 搜索相似需求可参考分析</span></h2></div>
+      <div class="case-tools">
+        <input id="caseSearch" data-i18n-ph="caseSearchPh" placeholder="🔍 搜索相似需求（关键词 / 领域 / 意图）…" />
+        <select id="caseCatFilter"><option value="">全部分类</option></select>
+      </div>
+      <div class="case-subhead"><h3>📚 <span data-i18n="userCases">已收录案例（自动）</span></h3><span class="hint" id="userCaseCount"></span></div>
+      <div id="userCaseGrid" class="case-grid"></div>
+      <div class="case-subhead"><h3>⭐ <span data-i18n="demoCases">内置演示用例</span></h3></div>
       <div id="caseGrid" class="case-grid"></div>
     </div>
   </section>
@@ -233,19 +229,30 @@
   <!-- ============ Tab: 关于 ============ -->
   <section id="tab-about" class="tab-panel">
     <div class="panel">
-      <div class="panel-head"><h2>关于本项目</h2></div>
+      <div class="panel-head"><h2 data-i18n="aboutTitle">关于本项目</h2></div>
       <div class="card">
         <h3>Goal Compiler · 诉求拆解平台</h3>
-        <p class="lead">把一段模糊想法，编译成一份「机器可直接执行、人类可直接验收、AI 可连续自主工作数小时」的专家级 Goal Task Specification。</p>
+        <p class="lead" data-i18n="aboutLead">把一段模糊想法，编译成一份「机器可直接执行、人类可直接验收、AI 可连续自主工作数小时」的专家级 Goal Task Specification。</p>
+        <h3 data-i18n="pillars">产品三件套定位</h3>
         <ul class="check-list">
-          <li><strong>完整思维链结构化输出</strong>：14 个推理节点，可学习、可导出。</li>
-          <li><strong>最终 Goal 可人工编辑</strong>：支持复制、下载、存草稿、历史恢复。</li>
-          <li><strong>内置竞品分析</strong>：爬取 GitHub / Hacker News + 精选库，产品总监视角输出定位矩阵、SWOT、差异化建议。</li>
-          <li><strong>商务高效简约设计</strong>：零框架、本地运行、数据不出本地。</li>
+          <li><strong data-i18n="p1">🧠 可视化思维链</strong><span data-i18n="p1d">：14 个推理节点结构化输出，可学习、可导出。</span></li>
+          <li><strong data-i18n="p2">🗂 可编辑目标资产</strong><span data-i18n="p2d">：Goal 可编辑/版本历史/自动收录案例库，越用越值钱。</span></li>
+          <li><strong data-i18n="p3">📡 竞品情报台</strong><span data-i18n="p3d">：8 大数据源扫描 + 产品总监视角（定位矩阵/SWOT/功能缺口）。</span></li>
         </ul>
-        <h3>技术栈</h3>
-        <p>Node.js（零第三方依赖）服务端 + 原生 JS/CSS 前端。编译引擎为规则模板 + 领域知识库，可离线运行。</p>
-        <h3>文档</h3>
+        <h3 data-i18n="features">能力清单（本次升级）</h3>
+        <ul class="check-list">
+          <li data-i18n="f1">🌐 中英文双语：一键把编译结果翻译为英文（Goal Prompt + 分析）</li>
+          <li data-i18n="f2">📚 案例库自动收录：每次编译按领域/意图自动归类，相似需求可搜索参考</li>
+          <li data-i18n="f3">🎤🖼📎 多模态输入：语音（中/英）、图片附件、文本文件</li>
+          <li data-i18n="f4">🔍 竞品数据源扩展至 8 个：GitHub / HN / npm / SO / HF / Gitee / Reddit / 精选库</li>
+          <li data-i18n="f5">💡 竞品启示：功能缺口 + 网页设计形式借鉴（补未考虑项）</li>
+          <li data-i18n="f6">✅ 就绪度评估、⌘↵ 快捷编译、🔗 分享、设计自核验</li>
+        </ul>
+        <h3 data-i18n="techStack">技术栈</h3>
+        <p data-i18n="techDesc">Node.js（零第三方依赖）服务端 + 原生 JS/CSS 前端。编译引擎为规则模板 + 领域知识库 + 中英双语生成，可离线运行。</p>
+        <h3>设计自核验（人性化视觉审计）</h3>
+        <div id="designAudit" class="audit-grid"></div>
+        <h3 data-i18n="docs">文档</h3>
         <ul class="check-list">
           <li><code>docs/01-product-analysis.md</code> — 产品分析（PRD）</li>
           <li><code>docs/02-prompt-optimization.md</code> — 优化后的 Goal Compiler Prompt 全案</li>
@@ -262,7 +269,7 @@
 <!-- 历史记录弹层 -->
 <div id="historyModal" class="modal hidden">
   <div class="modal-box">
-    <div class="modal-head"><h3>草稿历史</h3><button class="btn-ghost" id="historyClose">✕</button></div>
+    <div class="modal-head"><h3 data-i18n="histTitle">草稿历史</h3><button class="btn-ghost" id="historyClose">✕</button></div>
     <div id="historyList" class="history-list"></div>
   </div>
 </div>

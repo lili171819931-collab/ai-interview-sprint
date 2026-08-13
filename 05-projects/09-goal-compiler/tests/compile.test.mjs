@@ -76,3 +76,13 @@ test('目标树结构五层齐全', () => {
 });
 
 console.log(`\n  ✔ 编译引擎测试：${cases.length} 个用例 × 结构断言全部通过\n`);
+
+test('英文输出：Goal Prompt + 分析（i18n）', () => {
+  const r = compile(cases[0].rawInput);
+  assert.ok(r.goalPromptEn.includes('# ROLE'), 'EN Goal 应有 ROLE');
+  assert.ok(r.goalPromptEn.includes('# STOP CONDITIONS'), 'EN Goal 应有 STOP CONDITIONS');
+  assert.ok(r.summaryEn.understanding.includes('What you really want'), 'EN 理解应为英文');
+  assert.ok(r.summaryEn.scope.inScope.length >= 2, 'EN scope 应有内容');
+  assert.ok(r.machineGoalEn.includes('WHO') && r.machineGoalEn.includes('DONE'), 'EN 紧凑版应有 WHO/DONE');
+  assert.ok(r.goalPromptEn !== r.goalPrompt, '中英文 Goal 应不同');
+});
