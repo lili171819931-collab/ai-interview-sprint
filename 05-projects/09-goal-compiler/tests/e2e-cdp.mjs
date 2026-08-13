@@ -232,6 +232,7 @@ try {
   })()`);
   checks.push(['输入自动关联推荐模板', recTpl]);
   const dialogQ = await evalJS(`(() => {
+    document.getElementById('dialogueToggle').click();
     document.getElementById('chatInput').focus();
     return document.querySelectorAll('#chatArea .chat-bubble.ask').length === 1;
   })()`);
@@ -294,6 +295,26 @@ try {
   checks.push([`定位矩阵象限规则（${quadCount} 个）`, quadCount === 4]);
   const sectionCount = await evalJS(`document.querySelectorAll('#compSections .comp-section').length`);
   checks.push([`按分类区域分组（${sectionCount} 区）`, sectionCount >= 2]);
+  // v8：GitHub Token / 数据源 / 模板横条 / AI 折叠
+  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(400);
+  const ghField = await evalJS(`!!document.getElementById('ghToken') && document.getElementById('ghTokenStatus').textContent.length > 0`);
+  checks.push(['GitHub Token 配置行', ghField]);
+  const selfSrcBadges = await evalJS(`document.querySelectorAll('#selfSources .badge').length`);
+  checks.push([`本产品关联数据源（${selfSrcBadges} 源）`, selfSrcBadges >= 9]);
+  const selfScanBtn = await evalJS(`!!document.getElementById('selfScanBtn')`);
+  checks.push(['本产品同口径扫描按钮', selfScanBtn]);
+  await evalJS(`document.querySelector('.tab[data-tab="compile"]').click()`); await sleep(300);
+  const tplStrip = await evalJS(`document.querySelectorAll('.tpl-scroll .chip').length`);
+  checks.push([`模板库横向横条（${tplStrip} 个）`, tplStrip >= 8]);
+  const dlgCollapsed = await evalJS(`(() => {
+    const box = document.getElementById('dialogueBox');
+    const btn = document.getElementById('dialogueToggle');
+    if (!box.classList.contains('hidden')) btn.click();
+    const collapsed = box.classList.contains('hidden');
+    btn.click();
+    return collapsed;
+  })()`);
+  checks.push(['AI 澄清可收起/展开（不拥挤）', dlgCollapsed]);
   await evalJS(`document.querySelector('.tab[data-tab="about"]').click()`); await sleep(400);
   const statCount = await evalJS(`document.querySelectorAll('#usageStats .usage-stat').length`);
   checks.push([`本地用量统计（${statCount} 项）`, statCount === 4]);

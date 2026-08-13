@@ -87,10 +87,12 @@ function parseRss(xml, sourceName) {
   return items;
 }
 
-export async function githubSearch(query, perPage = 8) {
+const GH_TOKEN = process.env.GITHUB_TOKEN || '';
+export async function githubSearch(query, perPage = 8, token = GH_TOKEN) {
   const q = encodeURIComponent(query);
   const url = `https://api.github.com/search/repositories?q=${q}&sort=stars&order=desc&per_page=${perPage}`;
-  const data = await fetchJSON(url);
+  const headers = token ? { Authorization: `Bearer ${token}` } : {};
+  const data = await fetchJSON(url, headers);
   return (data.items || []).map((it) => ({
     name: it.full_name,
     title: it.full_name.split('/')[1],
@@ -262,8 +264,11 @@ const SOURCE_FNS = {
 };
 export const SOURCES = Object.keys(SOURCE_FNS);
 
-export async function competitiveSearch({ q = 'goal compiler', sources = ['github', 'hackernews', 'curated'] } = {}) {
-  const jobs = sources.filter((src) => SOURCE_FNS[src]).map((src) => ({ src, fn: () => cachedFn(src, q, () => SOURCE_FNS[src](q)) }));
+export async function competitiveSearch({ q = 'goal compiler', sources = ['github', 'hackernews', 'curated'], token = '' } = {}) {
+  const jobs = sources.filter((src) => SOURCE_FNS[src]).map((src) => ({
+    src,
+    fn: () => cachedFn(src, q, () => (src === 'github' ? githubSearch(q, 8, token || GH_TOKEN) : SOURCE_FNS[src](q))),
+  }));
   // 并发上限 4，避免触发各源限流
   const results = [];
   let idx = 0;

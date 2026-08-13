@@ -82,25 +82,26 @@
           <button class="chip" data-quick="1">报销发票小程序</button>
           <button class="chip" data-quick="2">英语口语提升</button>
         </div>
-        <div class="promo-grid">
-          <div class="promo-card" id="templatePanel">
-            <div class="promo-head">📋 <span data-i18n="tplLib">模板库 · 预设诉求</span></div>
-            <div id="templateList" class="chip-row"></div>
-            <div class="rec-templates" id="recTemplates"></div>
+        <div class="tpl-strip" id="templatePanel">
+          <span class="tpl-strip-label">📋 <span data-i18n="tplLib">模板库</span></span>
+          <div id="templateList" class="tpl-scroll"></div>
+        </div>
+        <div class="rec-templates" id="recTemplates"></div>
+        <div class="dialogue-card" id="dialoguePanel">
+          <div class="dialogue-card-head">
+            <span>💬 <span data-i18n="dialogue">AI 多轮澄清式输入</span></span>
+            <button class="btn-ghost" id="dialogueToggle" data-i18n="dialogueToggle">展开</button>
           </div>
-          <div class="promo-card" id="dialoguePanel">
-            <div class="promo-head">💬 <span data-i18n="dialogue">AI 多轮澄清式输入</span></div>
-            <div id="dialogueBox" class="dialogue-box">
-              <div class="chat-area" id="chatArea"></div>
-              <div class="chat-input-row">
-                <input id="chatInput" data-i18n-ph="chatPh" placeholder="回答 AI 的澄清问题…" />
-                <button class="btn-ghost" id="chatSend">↵</button>
-                <button class="btn-ghost" id="chatCompile" data-i18n="chatCompile">✅ 编译</button>
-              </div>
-              <div class="chat-actions">
-                <button class="btn-ghost" id="chatSkip" data-i18n="chatSkip">跳过，直接编译</button>
-                <span class="hint" id="chatStatus"></span>
-              </div>
+          <div id="dialogueBox" class="dialogue-box hidden">
+            <div class="chat-area" id="chatArea"></div>
+            <div class="chat-input-row">
+              <input id="chatInput" data-i18n-ph="chatPh" placeholder="回答 AI 的澄清问题…" />
+              <button class="btn-ghost" id="chatSend">↵</button>
+              <button class="btn-ghost" id="chatCompile" data-i18n="chatCompile">✅ 编译</button>
+            </div>
+            <div class="chat-actions">
+              <button class="btn-ghost" id="chatSkip" data-i18n="chatSkip">跳过，直接编译</button>
+              <span class="hint" id="chatStatus"></span>
             </div>
           </div>
         </div>
@@ -221,6 +222,18 @@
           <div id="scoringRules" class="scoring-grid"></div>
           <div id="quadrantRules" class="quadrant-row"></div>
         </details>
+        <div class="comp-grid-2">
+          <section class="card">
+            <h3 data-i18n="selfSourcesTitle">🔗 关联数据源（与需求分析同口径）</h3>
+            <div id="selfSources" class="source-badges"></div>
+            <div class="toolbar" style="margin-top:10px"><button class="btn-ghost" id="selfScanBtn" data-i18n="selfScan">🔄 扫描本产品相关竞品（9 源）</button></div>
+            <div id="selfScanMetrics" class="result-meta" style="margin-top:10px"></div>
+          </section>
+          <section class="card">
+            <h3 data-i18n="selfScanTitle">📡 同口径分析结果（本产品 vs 竞品）</h3>
+            <div id="selfScanBody"></div>
+          </section>
+        </div>
         <div id="selfCompBody" class="self-report-body"></div>
       </div>
 
@@ -249,6 +262,11 @@
           <label class="ck"><input type="checkbox" id="srcReddit" /> Reddit</label>
           <label class="ck"><input type="checkbox" id="srcDevto" checked /> Dev.to</label>
           <button class="btn-primary" id="compSearchBtn">🔍 <span data-i18n="compSearch">检索并分析</span></button>
+        </div>
+        <div class="gh-token-row">
+          <span class="hint">🐙</span>
+          <input id="ghToken" type="password" placeholder="GitHub Token（可选：未认证限流 10 次/分 → 认证后 5000 次/时）" autocomplete="off" />
+          <span class="hint" id="ghTokenStatus">未认证（10 次/分）</span>
         </div>
         <div id="compLoading" class="hidden loading" data-i18n="compLoading">检索中…（含并发限制与缓存，稍候）</div>
         <div id="compError" class="hidden error-box"></div>

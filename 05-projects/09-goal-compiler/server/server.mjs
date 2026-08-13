@@ -79,7 +79,9 @@ const server = createServer(async (req, res) => {
     if (pathname === '/api/competitive') {
       const q = (url.searchParams.get('q') || 'goal compiler prompt').trim();
       const sources = (url.searchParams.get('sources') || 'github,hackernews,curated').split(',').filter(Boolean);
-      const data = await competitiveSearch({ q, sources });
+      const token = (url.searchParams.get('token') || '').trim();
+      const data = await competitiveSearch({ q, sources, token });
+      data.ghAuth = token ? 'token' : 'anonymous';
       return sendJSON(res, 200, data);
     }
     if (pathname.startsWith('/api/')) {

@@ -109,6 +109,10 @@ const I18N = {
   relOnly: { zh: '仅显示高相关（相关度 ≥ 1）', en: 'high-relevance only (≥1)' },
   insightMode: { zh: '需求结构', en: 'Request structure' },
   expertTitle: { zh: '专家版诉求思维模式拆解 · 全方位细节分析', en: 'Expert request-thinking breakdown · full detail analysis' },
+  selfSourcesTitle: { zh: '🔗 关联数据源（与需求分析同口径）', en: '🔗 Linked data sources (same as request analysis)' },
+  selfScan: { zh: '🔄 扫描本产品相关竞品（9 源）', en: '🔄 Scan self-competitors (9 sources)' },
+  selfScanTitle: { zh: '📡 同口径分析结果（本产品 vs 竞品）', en: '📡 Same-pipeline results (self vs competitors)' },
+  dialogueToggle: { zh: '展开', en: 'Open' },
   selfReportExport: { zh: '导出 MD', en: 'Export MD' },
 };
 
@@ -809,23 +813,37 @@ function checkedSources() {
   for (const [id, src] of Object.entries(map)) if ($('#' + id).checked) s.push(src);
   return s;
 }
+function ghToken() { return localStorage.getItem('gc-gh-token') || ''; }
+function updateGhStatus() {
+  const st = $('#ghTokenStatus'); if (!st) return;
+  const t = ghToken();
+  st.textContent = t ? '✅ Token 已启用（5000 次/时）' : '未认证（10 次/分）';
+  st.style.color = t ? 'var(--green)' : 'var(--amber)';
+}
+$('#ghToken').addEventListener('input', (e) => { localStorage.setItem('gc-gh-token', e.target.value.trim()); updateGhStatus(); });
+
 async function runCompetitive() {
   const q = $('#compQuery').value.trim() || 'goal compiler prompt';
   const sources = checkedSources();
+  const token = ghToken();
   $('#compLoading').classList.remove('hidden');
   $('#compError').classList.add('hidden');
   $('#compResult').classList.add('hidden');
   try {
-    const res = await fetch(`/api/competitive?q=${encodeURIComponent(q)}&sources=${sources.join(',')}`);
+    const res = await fetch(`/api/competitive?q=${encodeURIComponent(q)}&sources=${sources.join(',')}&token=${encodeURIComponent(token)}`);
     const data = await res.json();
     if (!res.ok) throw new Error(data.error || 'failed');
     if (!data.items.length) throw new Error(lang === 'en' ? 'No results — try other keywords/sources' : '未检索到结果，请更换关键词或开启更多数据源');
     currentReport = buildReport(data.items, q);
     currentReport.sourceErrors = data.errors || [];
+    currentReport.ghAuth = data.ghAuth || 'anonymous';
     renderReport(currentReport);
   } catch (err) {
     $('#compLoading').classList.add('hidden');
-    $('#compError').textContent = `${lang === 'en' ? 'Scan failed' : '检索失败'}：${err.message}`;
+    const ghHint = /github/i.test(err.message) && !ghToken()
+      ? ` ${lang === 'en' ? '— add a GitHub Token to raise the limit to 5000/hr.' : '—— 添加 GitHub Token 可提升至 5000 次/时。'}`
+      : '';
+    $('#compError').textContent = `${lang === 'en' ? 'Scan failed' : '检索失败'}：${err.message}${ghHint}`;
     $('#compError').classList.remove('hidden');
   }
 }
@@ -1127,6 +1145,13 @@ $('#chatCompile').addEventListener('click', () => {
   compileNow();
 });
 $('#chatSkip').addEventListener('click', () => { dialogueTranscript = []; dialogueQ = null; renderChat(); compileNow(); });
+$('#dialogueToggle').addEventListener('click', () => {
+  const box = $('#dialogueBox');
+  const open = box.classList.toggle('hidden');
+  $('#dialogueToggle').textContent = open ? (lang === 'en' ? 'Open' : '展开') : (lang === 'en' ? 'Close' : '收起');
+  if (!open && !dialogueQ && !dialogueTranscript.length) startDialogue();
+  if (!open) $('#chatInput').focus();
+});
 $('#chatInput').addEventListener('focus', () => { if (!dialogueQ && !dialogueTranscript.length) startDialogue(); });
 
 /* ================= 输入自动关联模板推荐 ================= */
@@ -1263,6 +1288,39 @@ function renderSelfComp() {
   $('#selfRadar').innerHTML = svgRadar(radarData);
 }
 $('#selfReportExport2').addEventListener('click', () => { download(`self-competitive-report.md`, selfReportToMarkdown()); toast('已导出'); });
+
+const SELF_SOURCES = ['github', 'hackernews', 'npm', 'stackoverflow', 'huggingface', 'gitee', 'reddit', 'devto', 'curated'];
+const SOURCE_LABEL = { github: 'GitHub', hackernews: 'HN', npm: 'npm', stackoverflow: 'StackOverflow', huggingface: 'HuggingFace', gitee: 'Gitee', reddit: 'Reddit', devto: 'Dev.to', curated: '精选库' };
+function renderSelfSources() {
+  const box = $('#selfSources'); if (!box) return;
+  box.innerHTML = SELF_SOURCES.map((src) => `<span class="badge badge-cyan">${SOURCE_LABEL[src]}</span>`).join('');
+}
+async function runSelfScan() {
+  const token = ghToken();
+  const btn = $('#selfScanBtn');
+  if (btn) { btn.disabled = true; btn.textContent = lang === 'en' ? 'Scanning…' : '扫描中…'; }
+  try {
+    const res = await fetch(`/api/competitive?q=goal compiler prompt task spec agent skill&sources=${SELF_SOURCES.join(',')}&token=${encodeURIComponent(token)}`);
+    const data = await res.json();
+    const report = buildReport(data.items, 'goal compiler · 本产品赛道');
+    report.ghAuth = data.ghAuth || 'anonymous';
+    const bySrc = Object.entries(report.bySource).map(([k, v]) => `<span class="badge">${k} ${v}</span>`).join('');
+    $('#selfScanMetrics').innerHTML = [
+      `<span class="badge badge-blue">共 ${report.total} 个相关竞品</span>`,
+      bySrc,
+      report.ghAuth === 'token' ? `<span class="badge badge-green">GitHub Token ✅</span>` : `<span class="badge badge-amber">GitHub 未认证（10/分）</span>`,
+      ...(data.errors || []).slice(0, 2).map((e) => `<span class="badge badge-amber">⚠ ${escapeHtml(e)}</span>`),
+    ].join('');
+    const top = [...report.scored].sort((a, b) => b.scores.threat - a.scores.threat).slice(0, 3);
+    $('#selfScanBody').innerHTML = `
+      <p class="hint" style="margin-top:0">威胁度 Top 3（与需求分析同评分口径）：</p>
+      ${top.map((it) => `<div class="closest-item"><a href="${escapeHtml(it.url)}" target="_blank" rel="noopener"><strong>${escapeHtml(it.name)}</strong></a><span class="hint">${it.categoryLabel} · 威胁 ${it.scores.threat.toFixed(1)} · ${escapeHtml((it.description || '').slice(0, 80))}</span></div>`).join('')}`;
+  } catch (e) {
+    $('#selfScanMetrics').innerHTML = `<span class="badge badge-amber">⚠ ${escapeHtml(e.message)}</span>`;
+  }
+  if (btn) { btn.disabled = false; btn.textContent = lang === 'en' ? '🔄 Scan self-competitors (9 sources)' : '🔄 扫描本产品相关竞品（9 源）'; }
+}
+$('#selfScanBtn').addEventListener('click', runSelfScan);
 $('#insightDiagramBtn').addEventListener('click', () => {
   if (!currentReport) { runCompetitive(); setTimeout(() => document.getElementById('insightDiagram').scrollIntoView({ behavior: 'smooth' }), 2500); return; }
   document.getElementById('insightDiagram').scrollIntoView({ behavior: 'smooth' });
@@ -1424,6 +1482,9 @@ async function init() {
   renderDesignAudit();
   renderScoringRules();
   renderUsageStats();
+  renderSelfSources();
+  updateGhStatus();
+  $('#ghToken').value = ghToken();
   await loadCases();
   await loadTemplates();
   fetch('/api/health').then((r) => r.json()).then((d) => { $('#serverStatus').textContent = d.ok ? (lang === 'en' ? 'online' : '服务正常') : 'local'; })

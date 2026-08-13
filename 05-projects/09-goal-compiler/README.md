@@ -59,6 +59,13 @@
 - 🐙 **修复 Reddit 429**：按源 TTL 缓存 + 并发上限 4 + 多主机回退（www/old/np），限流时静默降级（不再显示「源暂不可用」）
 - 🖼 **输入面板优化**：AI 多轮澄清 + 模板库提升为常驻显眼区块
 
+## 本次升级（v8）
+
+- 🔗 **本产品竞品分析与需求竞品分析流程对齐**：本产品视图新增「关联数据源（9 源）徽标」+「同口径扫描」按钮与结果（威胁 Top3、按源计数、GitHub 认证状态）
+- 🐙 **解决 GitHub 未认证限流**：支持配置 **GitHub Token（可选，未认证 10 次/分 → 认证 5000 次/时）**，本地保存、随请求透传；状态徽标实时显示；限流错误给出友好提示
+- 📋 **模板库/AI 澄清重设计（突出且不拥挤）**：模板库改为**单行横向滚动条**；AI 多轮澄清改为**可折叠卡片**默认收起，展开后空间充足；推荐模板轻量内联
+- 🎨 **UI 专家级优化**：详见 [docs/07-ui-expert-prompt.md](docs/07-ui-expert-prompt.md)（自生成极致设计 Prompt + 执行清单：4px 间距基准、焦点辉光、卡片/按钮/标签一致性、响应式精修）
+
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
 ## 快速开始
@@ -75,7 +82,7 @@ node server/server.mjs 8910
 
 ```bash
 node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+API（21/21）
-node tests/e2e-cdp.mjs                                                                                                                                  # 浏览器端到端（53/53，需本机 Chrome）
+node tests/e2e-cdp.mjs                                                                                                                                  # 浏览器端到端（58/58，需本机 Chrome）
 ```
 
 ## 3 个内置测试用例
