@@ -32,6 +32,19 @@ const VARIANT_MAP = {
   '通用/未分类': ['免费版 / 专业版 / 企业版', '多语言与多地区版本', '开放平台/开发者版'],
 };
 
+const EDGE_CASE_MAP = {
+  '软件/产品': ['极端输入/空状态：无数据、超长文本、异常格式时的兜底与提示', '并发与性能边界：多用户同时操作时的锁/队列/限流', '权限越权：未授权访问、水平越权防护', '数据迁移与升级：版本兼容与回滚', '跨浏览器/设备兼容性'],
+  '数据/AI': ['数据缺失/脏数据：空值、重复、异常值的清洗策略', '模型幻觉与错误输出：置信度提示 + 人工兜底', '样本偏差：训练集与真实分布不一致', '隐私泄露：脱敏、最小化收集', '实时性：延迟 vs 成本的平衡'],
+  '内容/创作': ['版权与引用合规', '敏感/违规内容过滤', '批量生产的质量一致性', '多平台格式与尺寸适配', '作者署名与授权'],
+  '学习/成长': ['动力消退：中断后的再启动机制', '进度失真：自评偏差与客观测评', '资源过时：知识时效性管理', '时间冲突：计划与现实的弹性'],
+  '商业/创业': ['需求伪验证：付费意愿与口头意愿不符', '成本失控：获客成本高于 LTV', '合规与资质：行业牌照/数据合规', '被抄袭：护城河与先发优势'],
+  '运营/增长': ['刷量与风控：虚假流量与羊毛党', '活动爆发流量：峰值容量预案', '渠道依赖：单一渠道风险', '指标误导：虚荣指标 vs 北极星'],
+  '效率/自动化': ['任务失败重试：幂等与断点', '权限边界：最小权限与越权执行', '误操作回滚：撤销与快照', '审计缺失：操作日志与可追溯'],
+  '硬件/IoT': ['设备离线与断网恢复', '固件升级失败回滚', '电池/功耗边界', '安全漏洞远程利用'],
+  '设计/体验': ['可访问性：色盲/键盘/屏幕阅读器', '极端字号与缩放', '弱网下的降级体验', '新用户引导缺失'],
+  '通用/未分类': ['安全与隐私：默认最小权限', '依赖故障：第三方服务不可用', '合规：行业法规变化', '成本：边际成本失控'],
+};
+
 const PITFALLS = [
   '范围蔓延：只做与核心目标强相关的扩展，其余进 P2/P3',
   '过度设计：先用最简形态验证，再逐项加功能',
@@ -70,9 +83,18 @@ export function buildDivergence(analysis) {
     detail: s,
   }));
 
-  const summary = `针对「${subject}」的发散式分析：${domainName}场景下推荐补充 ${features.length} 项功能、可扩展 ${scenarios.length} 类场景、覆盖 ${variants.length} 类用户变体，并给出 ${pitfalls.length} 条边界提醒。建议：P0 聚焦核心闭环，从「${features[0] ? features[0].title : '核心功能'}」开始逐步扩展。`;
+  const edgeCases = (EDGE_CASE_MAP[domainName] || EDGE_CASE_MAP['通用/未分类']).map((s) => ({
+    tag: '特例分析',
+    title: s.split('：')[0],
+    detail: `「${subject}」在 ${domainName} 场景下的特例/异常分析：${s}。建议将高优先级特例纳入 P1 验收用例，编写对应测试与兜底逻辑。`,
+  }));
 
-  return { subject, domain: domainName, intent: intent.label, features, scenarios, variants, pitfalls, summary };
+  // 场景细节描述：为每个扩展场景补充「应用场景细节 + 落地建议」
+  const scenarioDetail = (title) => `应用场景：${title}。落地细节：面向「${subject}」的目标用户（${entities.targetUser || '诉求发起者'}），先以最小验证（1-2 个试点）确认需求强度，再纳入路线图；注意与 P0 核心闭环解耦，避免阻塞主流程。`;
+
+  const summary = `针对「${subject}」的发散式分析：${domainName}场景下推荐补充 ${features.length} 项功能、可扩展 ${scenarios.length} 类应用场景、覆盖 ${variants.length} 类用户变体、给出 ${edgeCases.length} 条特例分析与 ${pitfalls.length} 条边界提醒。建议：P0 聚焦核心闭环，从「${features[0] ? features[0].title : '核心功能'}」开始，特例优先补「${edgeCases[0] ? edgeCases[0].title : '关键异常'}」。`;
+
+  return { subject, domain: domainName, intent: intent.label, features, scenarios, variants, pitfalls, edgeCases, scenarioDetail, summary };
 }
 
 export default { buildDivergence };

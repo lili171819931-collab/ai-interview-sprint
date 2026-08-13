@@ -40,6 +40,15 @@ test('searchCases 按关键词命中相似需求', () => {
   assert.equal(searchCases(list, '不存在的词xyz').length, 0);
 });
 
+test('saveCase 完整记录：同类型不同输入不覆盖（每次新增保留）', () => {
+  const a = compile('做一个自动记账机器人，自动同步银行卡账单');
+  const b = compile('做一个自动记账机器人，支持语音记账'); // 同 领域·意图，不同输入
+  let list = saveCase([], toCaseMeta(a));
+  list = saveCase(list, toCaseMeta(b));
+  assert.equal(list.length, 2, '完整记录应保留两条（不覆盖）');
+  assert.equal(categoriesOf(list).length, 1, '但两者属于同一类目');
+});
+
 test('removeCase / categoriesOf / compileCase', () => {
   const r = compile('做一个自动记账机器人');
   let list = saveCase([], toCaseMeta(r));

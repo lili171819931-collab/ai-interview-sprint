@@ -71,6 +71,11 @@
 - 🧭 **思维链场景化 + 发散式分析**：思维链升级为「针对本需求的逻辑链」——专家总览新增**需求画像**（对象/领域/意图/缺口/发散规模）；新增**需求发散式分析**（4 组 × 19 条：推荐添加的功能 / 可扩展场景 / 潜在用户变体 / 边界提醒），全部随需求领域动态生成、点击弹窗详情
 - 🗺 **思维框图新增「发散分析」泳道**：14 个主逻辑 + 发散节点同图展示（5 泳道 20 节点），发散节点点击可看详细说明
 
+## 本次升级（v10）
+
+- 📚 **案例库完整记录不覆盖**：每次新增需求都保留（按输入去重，不再覆盖历史条目）；**需求类目显示数量状态**（总条数/类别数/每类数量摘要 chips + 分类下拉带计数）
+- 🧩 **发散式分析增强**：新增「🔬 特例分析（异常/边界）」组（按领域生成：极端输入/权限越权/数据缺失/模型幻觉/版权/刷量/任务失败等）；「应用场景」组升级为**细节描述**（应用场景 + 落地细节：试点验证/与 P0 解耦）；专家画像与点评融入特例统计
+
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
 ## 快速开始
@@ -86,8 +91,8 @@ node server/server.mjs 8910
 ## 测试
 
 ```bash
-node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/divergence.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+发散+API（23/23）
-node tests/e2e-cdp.mjs                                                                                                                                                                # 浏览器端到端（63/63，需本机 Chrome）
+node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/divergence.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+发散+API（25/25）
+node tests/e2e-cdp.mjs                                                                                                                                                                # 浏览器端到端（66/66，需本机 Chrome）
 ```
 
 ## 3 个内置测试用例

@@ -509,3 +509,7 @@ textarea, input[type="text"], select { caret-color: var(--cyan); }
 .divergence-lane { border-color: rgba(34,211,238,.35); background: linear-gradient(180deg, rgba(16,40,60,.5), rgba(10,17,32,.5)); }
 @media (max-width: 1080px) { .divergence-groups { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 720px) { .divergence-groups { grid-template-columns: 1fr; } }
+
+/* ---- v10：案例分类数量状态 ---- */
+.case-cat-summary { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
+.case-cat-summary .chip b { color: var(--cyan); }

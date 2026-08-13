@@ -118,7 +118,21 @@ try {
   const reqProfileBadges = await evalJS(`document.querySelectorAll('#reqProfile .badge').length`);
   checks.push([`需求画像徽标（${reqProfileBadges} 项）`, reqProfileBadges >= 5]);
   const dvgGroups = await evalJS(`document.querySelectorAll('#divergenceGroups .divergence-group').length`);
-  checks.push([`发散分析分组（${dvgGroups} 组）`, dvgGroups === 4]);
+  checks.push([`发散分析分组（${dvgGroups} 组）`, dvgGroups === 5]);
+  const edgeGroup = await evalJS(`[...document.querySelectorAll('#divergenceGroups .divergence-group-head')].some(h => h.textContent.includes('特例分析'))`);
+  checks.push(['发散含特例分析组', edgeGroup]);
+  const scenarioDetail = await evalJS(`(() => {
+    const groups = [...document.querySelectorAll('#divergenceGroups .divergence-group')];
+    const g = groups.find(x => x.querySelector('.divergence-group-head').textContent.includes('应用场景'));
+    if (!g) return false;
+    const chip = g.querySelector('[data-dvg]');
+    if (!chip) return false;
+    chip.click();
+    const ok = !document.getElementById('insightModal').classList.contains('hidden') && document.getElementById('insightModalBody').textContent.includes('落地细节');
+    document.getElementById('insightModalClose').click();
+    return ok;
+  })()`);
+  checks.push(['应用场景含细节描述（弹窗）', scenarioDetail]);
   const dvgChips = await evalJS(`document.querySelectorAll('#divergenceGroups [data-dvg]').length`);
   checks.push([`发散建议条目（${dvgChips} 条）`, dvgChips >= 10]);
   const dvgLaneNodes = await evalJS(`document.querySelectorAll('#chainDiagram .divergence-lane .cd-node').length`);
@@ -227,6 +241,12 @@ try {
   await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(500);
   const typeCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
   checks.push([`不同类型收录（${typeCount} 条）`, typeCount === 2]);
+  const catSummary = await evalJS(`(() => {
+    const chips = document.querySelectorAll('#caseCatSummary .chip').length;
+    const countTxt = document.getElementById('userCaseCount').textContent;
+    return chips >= 1 && countTxt.includes('类');
+  })()`);
+  checks.push(['案例类目显示数量状态', catSummary]);
   // 模板库
   await evalJS(`document.querySelector('.tab[data-tab="compile"]').click()`); await sleep(400);
   const tplCount = await evalJS(`document.querySelectorAll('#templateList .chip').length`);

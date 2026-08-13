@@ -323,8 +323,8 @@ function compileNow() {
   const input = readInput();
   if (!input) return;
   currentResult = compile(input.augmented, { mode: input.opts.mode });
-  // 案例库：只收集「不同类型」的需求（按 领域·意图 去重）
-  userCases = saveCaseByType(userCases, toCaseMeta(currentResult));
+  // 案例库：完整记录每次新增（按输入去重，不覆盖历史条目）
+  userCases = saveCase(userCases, toCaseMeta(currentResult), 200);
   persistCases();
   trackStats(currentResult);
   renderResult(currentResult);
@@ -685,9 +685,9 @@ function renderChainExpert(r) {
       <span class="badge">领域：${escapeHtml(a.domains.primary)}</span>
       <span class="badge badge-cyan">意图：${escapeHtml(a.intent.label)}</span>
       <span class="badge">缺口：${a.gaps.length}</span>
-      <span class="badge badge-green">发散：${d.features.length} 功能 · ${d.scenarios.length} 场景 · ${d.variants.length} 变体</span>
+      <span class="badge badge-green">发散：${d.features.length} 功能 · ${d.scenarios.length} 场景 · ${d.variants.length} 变体 · ${d.edgeCases.length} 特例</span>
     </div>`;
-  $('#expertNote').textContent = `专家点评：本次编译覆盖 ${r.chain.length} 个推理节点、${new Set(r.chain.map((n) => n.phase)).size} 个阶段，方法链完整（输入规范 → 六问模型 → 目标树 → 三态假设 → 阶段门禁 → 防作弊验收），并针对「${a.entities.object || '该需求'}」给出 ${d.features.length + d.scenarios.length + d.variants.length} 条发散式扩展建议。${a.gaps.length ? `输入存在 ${a.gaps.length} 处信息缺口，已用「最合理默认方案」兜底并在假设区标注。` : '输入信息较完整，可直接进入执行。'}`;
+  $('#expertNote').textContent = `专家点评：本次编译覆盖 ${r.chain.length} 个推理节点、${new Set(r.chain.map((n) => n.phase)).size} 个阶段，方法链完整（输入规范 → 六问模型 → 目标树 → 三态假设 → 阶段门禁 → 防作弊验收），并针对「${a.entities.object || '该需求'}」给出 ${d.features.length + d.scenarios.length + d.variants.length + d.edgeCases.length} 条发散式扩展建议（含 ${d.edgeCases.length} 条特例分析）。${a.gaps.length ? `输入存在 ${a.gaps.length} 处信息缺口，已用「最合理默认方案」兜底并在假设区标注。` : '输入信息较完整，可直接进入执行。'}`;
   renderDivergence(r);
 }
 
@@ -698,10 +698,12 @@ function renderDivergence(r) {
   sec.classList.remove('hidden');
   const d = r.divergence;
   $('#divergenceSummary').textContent = d.summary;
+  const scenarioItems = d.scenarios.map((it) => ({ ...it, detail: `${it.detail}\n\n${d.scenarioDetail(it.title)}` }));
   const groups = [
     { name: '💡 推荐添加的功能', items: d.features },
-    { name: '🧩 可扩展场景', items: d.scenarios },
+    { name: '🧩 应用场景（细节描述）', items: scenarioItems },
     { name: '👥 潜在用户变体', items: d.variants },
+    { name: '🔬 特例分析（异常/边界）', items: d.edgeCases },
     { name: '⚠️ 边界提醒', items: d.pitfalls },
   ];
   $('#divergenceGroups').innerHTML = groups.map((g) => `
@@ -760,9 +762,9 @@ function renderChainDiagram() {
     <div class="cd-lane divergence-lane">
       <div class="cd-lane-head">🧭 发散分析 <span class="hint">×${[...currentResult.divergence.features, ...currentResult.divergence.scenarios].length}</span></div>
       <div class="cd-lane-body">
-        ${[...currentResult.divergence.features, ...currentResult.divergence.scenarios].slice(0, 6).map((it) => `
+        ${[...currentResult.divergence.features, ...currentResult.divergence.scenarios, ...currentResult.divergence.edgeCases].slice(0, 8).map((it) => `
           <div class="cd-node" data-dvg-node="${escapeHtml(it.tag)}|${escapeHtml(it.title)}">
-            <span class="cd-node-step ok">↗</span>
+            <span class="cd-node-step ok">${it.tag === '特例分析' ? '⚠' : '↗'}</span>
             <div class="cd-node-title">${escapeHtml(it.tag)}：${escapeHtml(it.title.slice(0, 22))}</div>
             <div class="cd-node-method">${escapeHtml(it.detail.slice(0, 30))}…</div>
           </div>`).join('')}
@@ -1088,11 +1090,20 @@ function galleryCard({ title, domain, intent, raw, sub, actionHtml, onClick }) {
 
 function renderCaseLibrary() {
   window._caseRendered = true;
+  const catCounts = categoriesOf(userCases);
   // 分类过滤下拉
   const cats = new Set([...categoriesOf(userCases).map(([k]) => k), ..._cases.map((c) => c.domain)]);
   const sel = $('#caseCatFilter');
+  let catSummaryEl = $('#caseCatSummary');
+  if (!catSummaryEl && sel && sel.parentElement) {
+    const div = document.createElement('div');
+    div.id = 'caseCatSummary'; div.className = 'case-cat-summary';
+    sel.parentElement.insertBefore(div, sel.nextSibling);
+    catSummaryEl = div;
+  }
   const prev = sel.value;
-  sel.innerHTML = `<option value="">${lang === 'en' ? 'All categories' : '全部分类'}</option>` + [...cats].map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)}</option>`).join('');
+  const catCountMap = new Map(catCounts);
+  sel.innerHTML = `<option value="">${lang === 'en' ? 'All categories' : '全部分类'} (${userCases.length})</option>` + [...cats].map((c) => `<option value="${escapeHtml(c)}">${escapeHtml(c)} (${catCountMap.get(c) || 0})</option>`).join('');
   if (prev) sel.value = prev;
 
   const catFilter = sel.value;
@@ -1103,7 +1114,9 @@ function renderCaseLibrary() {
     return (!q || hay.includes(q.toLowerCase())) && (!catFilter || c.domain === catFilter || `${c.domain} · ${c.intent || ''}`.trim() === catFilter);
   });
 
-  $('#userCaseCount').textContent = `${lang === 'en' ? 'Total' : '共'} ${userCases.length} ${lang === 'en' ? 'cases' : '条'} · ${lang === 'en' ? 'matched' : '命中'} ${filteredUser.length}`;
+  $('#userCaseCount').textContent = `${lang === 'en' ? 'Total' : '共'} ${userCases.length} ${lang === 'en' ? 'cases' : '条'} · ${catCounts.length} ${lang === 'en' ? 'types' : '类'} · ${lang === 'en' ? 'matched' : '命中'} ${filteredUser.length}`;
+  const catSummary = $('#caseCatSummary');
+  if (catSummary) catSummary.innerHTML = catCounts.map(([k, v]) => `<span class="chip">${escapeHtml(k)} <b>(${v})</b></span>`).join('') || '';
 
   $('#userCaseGrid').innerHTML = filteredUser.length
     ? filteredUser.map((c) => galleryCard({
