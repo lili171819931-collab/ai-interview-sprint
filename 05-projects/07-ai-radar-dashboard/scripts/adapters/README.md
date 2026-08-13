@@ -4,6 +4,7 @@
 
 | Adapter | 输入 | 命令依赖 |
 |---------|------|----------|
+| `aihot` | `data/aihot/items.json` | `npm run aihot:sync`（AIHOT 公开 v1，个人非商业） |
 | `trendradar` | `data/trendradar-hot.json` | `npm run trendradar:sync` |
 | `global-hot` | `data/global-hot-topics.json` | `npm run hot:sync` |
 | `rsshub` | `RSSHUB_BASE`（默认 `http://127.0.0.1:1200`） | 本机 RSSHub 运行中 |

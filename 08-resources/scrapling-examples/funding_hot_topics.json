@@ -1,0 +1,215 @@
+{
+  "generatedAt": "2026-08-10T20:11:31+08:00",
+  "tool": "scrapling",
+  "methodNote": "Scrapling 抓取公开 NewsNow 财经源 + TechCrunch 投融资 RSS；按投融资关键词过滤并综合榜位热度取 Top10；进展/下一步为启发式标注，非投资建议。",
+  "sources": {
+    "cls": {
+      "label": "财联社",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:cls",
+      "hits": 6
+    },
+    "wallstreetcn-hot": {
+      "label": "华尔街见闻热榜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:wallstreetcn-hot",
+      "hits": 0
+    },
+    "gelonghui": {
+      "label": "格隆汇",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:gelonghui",
+      "hits": 3
+    },
+    "jin10": {
+      "label": "金十数据",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:jin10",
+      "hits": 9
+    },
+    "techcrunch-funding": {
+      "label": "TechCrunch Funding",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:rss:techcrunch-funding",
+      "hits": 20
+    },
+    "techcrunch-venture": {
+      "label": "TechCrunch Venture",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:rss:techcrunch-venture",
+      "hits": 18
+    }
+  },
+  "topics": [
+    {
+      "title": "AI chip maker SambaNova raises $1B at $11B valuation, 5 months after last mega round",
+      "url": "https://techcrunch.com/2026/07/08/sambanova-draws-1b-at-11b-valuation-in-series-f-first-close/",
+      "source": "TechCrunch Funding",
+      "source_id": "techcrunch-funding",
+      "region": "海外",
+      "rank_in_source": 1,
+      "stage": "融资交割/到账",
+      "progress": "阶段：融资交割/到账；金额线索：$1B；赛道：AI/硬科技相关；海外创投叙事：轮次/估值信息通常随新闻稿同步披露",
+      "next_plan": "跟踪资金用途（研发/扩张/并购）、下一轮时间窗口，以及竞品是否跟进融资。",
+      "heat": 42,
+      "rank": 1
+    },
+    {
+      "title": "Airbnb-backed WeRoad raises $58M to take its group travel platform to the US",
+      "url": "https://techcrunch.com/2026/05/27/airbnb-backed-weroad-raises-58m-to-take-its-group-travel-platform-to-the-us/",
+      "source": "TechCrunch Funding",
+      "source_id": "techcrunch-funding",
+      "region": "海外",
+      "rank_in_source": 2,
+      "stage": "融资交割/到账",
+      "progress": "阶段：融资交割/到账；金额线索：$58M；海外创投叙事：轮次/估值信息通常随新闻稿同步披露",
+      "next_plan": "跟踪资金用途（研发/扩张/并购）、下一轮时间窗口，以及竞品是否跟进融资。",
+      "heat": 41,
+      "rank": 2
+    },
+    {
+      "title": "Moove raises $250M to become the backbone of the robotaxi industry",
+      "url": "https://techcrunch.com/2026/08/05/moove-raises-250m-to-become-the-backbone-of-the-robotaxi-industry/",
+      "source": "TechCrunch Venture",
+      "source_id": "techcrunch-venture",
+      "region": "海外",
+      "rank_in_source": 2,
+      "stage": "融资交割/到账",
+      "progress": "阶段：融资交割/到账；金额线索：$250M；赛道：AI/硬科技相关；海外创投叙事：轮次/估值信息通常随新闻稿同步披露",
+      "next_plan": "跟踪资金用途（研发/扩张/并购）、下一轮时间窗口，以及竞品是否跟进融资。",
+      "heat": 41,
+      "rank": 3
+    },
+    {
+      "title": "Convective Capital raises an $85 million fund to build disaster resilience",
+      "url": "https://techcrunch.com/2026/05/21/convective-capital-raises-an-85-million-fund-to-build-disaster-resilience/",
+      "source": "TechCrunch Funding",
+      "source_id": "techcrunch-funding",
+      "region": "海外",
+      "rank_in_source": 3,
+      "stage": "融资交割/到账",
+      "progress": "阶段：融资交割/到账；金额线索：$85 million；海外创投叙事：轮次/估值信息通常随新闻稿同步披露",
+      "next_plan": "跟踪资金用途（研发/扩张/并购）、下一轮时间窗口，以及竞品是否跟进融资。",
+      "heat": 40,
+      "rank": 4
+    },
+    {
+      "title": "兆驰股份(002429.SZ)：拟3亿元-5亿元回购股份",
+      "url": "https://www.gelonghui.com/news/5283007",
+      "source": "格隆汇",
+      "source_id": "gelonghui",
+      "region": "国内",
+      "rank_in_source": 1,
+      "stage": "上市/二级市场进展",
+      "progress": "阶段：上市/二级市场进展；金额线索：3亿元；国内资本市场：关注公告落地与认购进度",
+      "next_plan": "跟踪发行价/认购倍率/首日表现；对一人公司选题可做「二级市场情绪 vs 基本面」对照。",
+      "heat": 39,
+      "rank": 5
+    },
+    {
+      "title": "昆仑万维：筹划发行H股并在港交所上市",
+      "url": "https://flash.jin10.com/detail/20260810200558761800",
+      "source": "金十数据",
+      "source_id": "jin10",
+      "region": "国内",
+      "rank_in_source": 2,
+      "stage": "上市/二级市场进展",
+      "progress": "阶段：上市/二级市场进展；国内资本市场：关注公告落地与认购进度",
+      "next_plan": "跟踪发行价/认购倍率/首日表现；对一人公司选题可做「二级市场情绪 vs 基本面」对照。",
+      "heat": 38,
+      "rank": 6
+    },
+    {
+      "title": "Why Lightspeed is going all-in on creator-led venture capital",
+      "url": "https://techcrunch.com/podcast/why-lightspeed-is-going-all-in-on-creator-led-venture-capital/",
+      "source": "TechCrunch Venture",
+      "source_id": "techcrunch-venture",
+      "region": "海外",
+      "rank_in_source": 5,
+      "stage": "事件跟踪中",
+      "progress": "阶段：事件跟踪中",
+      "next_plan": "同步中文摘要与国内对标公司，判断是否存在信息差选题。",
+      "heat": 38,
+      "rank": 7
+    },
+    {
+      "title": "Meridian raises $17 million to remake the agentic spreadsheet",
+      "url": "https://techcrunch.com/2026/02/11/meridian-ai-raises-17-million-to-remake-the-agentic-spreadsheet/",
+      "source": "TechCrunch Funding",
+      "source_id": "techcrunch-funding",
+      "region": "海外",
+      "rank_in_source": 6,
+      "stage": "融资交割/到账",
+      "progress": "阶段：融资交割/到账；金额线索：$17 million；赛道：AI/硬科技相关；海外创投叙事：轮次/估值信息通常随新闻稿同步披露",
+      "next_plan": "跟踪资金用途（研发/扩张/并购）、下一轮时间窗口，以及竞品是否跟进融资。",
+      "heat": 37,
+      "rank": 8
+    },
+    {
+      "title": "Zipline charts drone delivery expansion with $600M in new funding",
+      "url": "https://techcrunch.com/2026/01/21/zipline-charts-drone-delivery-expansion-with-600m-in-new-funding/",
+      "source": "TechCrunch Funding",
+      "source_id": "techcrunch-funding",
+      "region": "海外",
+      "rank_in_source": 7,
+      "stage": "事件跟踪中",
+      "progress": "阶段：事件跟踪中；金额线索：$600M；赛道：AI/硬科技相关；海外创投叙事：轮次/估值信息通常随新闻稿同步披露",
+      "next_plan": "优先核对是否可映射到智衡雷达的 AI 机会卡片（融资→产品化→分发）。",
+      "heat": 36,
+      "rank": 9
+    },
+    {
+      "title": "财联社8月10日电，投资研究机构ARGUS RESEARCH将闪迪评级上调至“买入”。",
+      "url": "https://www.cls.cn/detail/2450361",
+      "source": "财联社",
+      "source_id": "cls",
+      "region": "国内",
+      "rank_in_source": 5,
+      "stage": "机构配置/调研",
+      "progress": "阶段：机构配置/调研",
+      "next_plan": "把机构动向映射到产业链上下游标的，形成「谁在加仓 / 谁被调研」简报条目。",
+      "heat": 35,
+      "rank": 10
+    }
+  ],
+  "nextSteps": [
+    {
+      "signal": "国内外投融资节奏",
+      "what": "Top10 中 国内 3 / 海外 7；主导阶段：融资交割/到账×5, 上市/二级市场进展×2, 事件跟踪中×2",
+      "next": "日报固定输出「国内公告型 + 海外轮次型」双栏，避免只追单一市场噪声。",
+      "evidence": "有效源 6/6"
+    },
+    {
+      "signal": "AI/硬科技资金密度",
+      "what": "AI chip maker SambaNova raises $1B at $11B valuation, 5 months after last mega round；Moove raises $250M to become the backbone of the robotaxi industry；Meridian raises $17 million to remake the agentic spreadsheet",
+      "next": "把命中项写入智衡雷达机会卡：融资事件 → 产品能力 → 可做内容/分发动作。",
+      "evidence": "AI相关命中 4"
+    },
+    {
+      "signal": "进展核验优先级",
+      "what": "优先核验「募资进行中 / 上市进展」，其次「已交割融资」与「并购重组」。",
+      "next": "每条热点补：金额、轮次/工具、投资方、是否有官方公告链接。",
+      "evidence": "融资交割/到账×5, 上市/二级市场进展×2, 事件跟踪中×2"
+    },
+    {
+      "signal": "产品下一步",
+      "what": "投融资热点可成为机会简报的资金面信号层。",
+      "next": "接入 /radar：展示 Top10 + stage + next_plan；失败时降级展示上次 JSON 快照。",
+      "evidence": "本脚本输出 funding_hot_topics.json"
+    }
+  ],
+  "stats": {
+    "candidates": 56,
+    "topN": 10,
+    "by_region": {
+      "国内": 3,
+      "海外": 7
+    }
+  }
+}

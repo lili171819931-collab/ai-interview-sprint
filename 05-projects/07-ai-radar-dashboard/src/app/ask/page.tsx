@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useState, useTransition } from "react";
-import { ExternalLink, MessageSquareText, Sparkles } from "lucide-react";
+import { ExternalLink, Sparkles } from "lucide-react";
 
 type AskResponse = {
   ok: boolean;
@@ -18,12 +18,12 @@ type AskResponse = {
 };
 
 const SUGGESTIONS = [
+  "过去 24 小时 AI 圈最重要的 5 件事是什么？",
+  "现在 AI 圈最热的事件是什么？",
+  "最近一周的 AI 论文",
   "今天全球AI发生了什么？",
-  "今天有哪些值得关注的AI创业机会？",
   "对比中国和美国AI热点",
   "找出过去24小时增长最快的10个AI话题",
-  "台风白海豚",
-  "今天全球热点简报",
 ];
 
 export default function AskPage() {
@@ -59,17 +59,11 @@ export default function AskPage() {
   }
 
   return (
-    <div className="container py-10 space-y-8 max-w-3xl">
+    <div className="page-main space-y-8 max-w-3xl">
       <div className="space-y-3">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(139,92,246,0.45)] bg-[var(--ai-accent-dim)] px-3 py-1 text-xs text-[#d7ccff]">
-          <MessageSquareText size={14} aria-hidden />
-          Trend Intelligence Agent
-        </div>
-        <h1 className="display text-3xl font-semibold">问问今日趋势</h1>
-        <p className="text-sm text-[var(--muted)] leading-relaxed">
-          Agent 会调用本地工具（search / trending / compare / report），答案绑定真实来源链接，不编造
-          URL。可选配置 <code className="text-[var(--text)]">INTEL_LLM_URL</code> 润色表述。
-        </p>
+        <p className="kicker">AGENT</p>
+        <h1 className="page-title">问问 Agent</h1>
+        <p className="page-sub">用中文提问。答案只绑定已抓取的真实来源。</p>
       </div>
 
       <form
@@ -83,20 +77,12 @@ export default function AskPage() {
           value={question}
           onChange={(e) => setQuestion(e.target.value)}
           rows={3}
-          placeholder="例如：今天全球 AI 发生了什么？"
+          placeholder="例如：现在 AI 圈最热的事件是什么？"
           className="w-full rounded-lg border border-[var(--line)] bg-[var(--panel)] px-3 py-3 text-sm outline-none focus:border-[var(--signal)]"
         />
-        <div className="flex flex-wrap gap-2">
-          <button type="submit" className="btn btn-primary" disabled={pending}>
-            {pending ? "分析中…" : "提问"}
-          </button>
-          <Link href="/" className="btn btn-ghost">
-            今日热点
-          </Link>
-          <Link href="/trends" className="btn btn-ghost">
-            趋势雷达
-          </Link>
-        </div>
+        <button type="submit" className="btn btn-primary" disabled={pending}>
+          {pending ? "分析中…" : "提问"}
+        </button>
       </form>
 
       <div className="flex flex-wrap gap-2">

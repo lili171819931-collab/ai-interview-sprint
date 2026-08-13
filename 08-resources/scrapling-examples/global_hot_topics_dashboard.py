@@ -56,12 +56,24 @@ def now_iso() -> str:
     return datetime.now(timezone.utc).astimezone().isoformat(timespec="seconds")
 
 
+def _ssl_context():
+    try:
+        import certifi  # type: ignore
+        import ssl
+
+        return ssl.create_default_context(cafile=certifi.where())
+    except Exception:  # noqa: BLE001
+        import ssl
+
+        return ssl.create_default_context()
+
+
 def http_get(url: str, timeout: int = 25, headers: dict[str, str] | None = None) -> str:
     req = urllib.request.Request(
         url,
         headers={"User-Agent": UA, "Accept": "application/json,text/html,*/*", **(headers or {})},
     )
-    with urllib.request.urlopen(req, timeout=timeout) as resp:
+    with urllib.request.urlopen(req, timeout=timeout, context=_ssl_context()) as resp:
         return resp.read().decode("utf-8", errors="replace")
 
 
@@ -432,68 +444,172 @@ def fetch_opencli_yaml(platform: str, args: list[str], label: str, region: str, 
         return [], source_fail(label, region, e)
 
 
-# ---------- Optional Twitter via twitter-cli ----------
+def _opencli_json(platform: str, args: list[str], timeout: int = 90) -> list:
+    if not shutil.which("opencli"):
+        raise RuntimeError("opencli not found")
+    proc = subprocess.run(
+        ["opencli", platform, *args, "-f", "json", "--window", "background"],
+        capture_output=True,
+        text=True,
+        timeout=timeout,
+    )
+    if proc.returncode != 0:
+        raise RuntimeError((proc.stderr or proc.stdout or f"{platform} failed").strip())
+    raw = (proc.stdout or "").strip()
+    if not raw:
+        raise RuntimeError("no items parsed")
+    data = json.loads(raw)
+    if isinstance(data, dict):
+        data = data.get("items") or data.get("data") or data.get("posts") or []
+    if not isinstance(data, list) or not data:
+        raise RuntimeError("no items parsed")
+    return data
+
+
+def fetch_reddit_hot(limit: int = 8) -> tuple[list[dict], dict]:
+    """Reddit 热门：opencli `hot` 常返回空数组，改走 popular / frontpage。"""
+    fetched_at = now_iso()
+    label, region = "Reddit 热门", "海外"
+    errors: list[str] = []
+    for args in (["popular"], ["frontpage"], ["subreddit", "technology"]):
+        try:
+            rows = _opencli_json("reddit", args)
+            items: list[dict] = []
+            for row in rows:
+                if not isinstance(row, dict):
+                    continue
+                title = _clean(str(row.get("title") or row.get("text") or ""))
+                if not title:
+                    continue
+                url = str(row.get("url") or row.get("permalink") or row.get("link") or "")
+                if url.startswith("/"):
+                    url = "https://www.reddit.com" + url
+                heat = row.get("score") or row.get("upvotes") or row.get("ups")
+                items.append(
+                    item(
+                        platform=label,
+                        region=region,
+                        rank=len(items) + 1,
+                        title=title[:140],
+                        url=url if url.startswith("http") else "",
+                        heat=heat if isinstance(heat, int) else None,
+                        fetched_at=fetched_at,
+                        extra={"source_id": "opencli-reddit", "via": " ".join(args)},
+                    )
+                )
+                if len(items) >= limit:
+                    break
+            if items:
+                return items, source_ok(label, region, f"live:opencli-reddit:{args[0]}", len(items))
+            errors.append(f"{' '.join(args)}: empty")
+        except Exception as e:  # noqa: BLE001
+            errors.append(f"{' '.join(args)}: {e}")
+    return [], source_fail(label, region, RuntimeError("; ".join(errors) or "no items parsed"))
+
+
+def fetch_twitter_trends24(limit: int = 8) -> list[dict]:
+    """公开 Worldwide 趋势页（不依赖已失效的 twitter-cli ClientTransaction）。"""
+    fetched_at = now_iso()
+    html = http_get("https://trends24.in/", timeout=30)
+    block = re.search(r"class=trend-card__list>(.*?)</ol>", html, re.S)
+    if not block:
+        raise RuntimeError("trends24 list not found")
+    names = re.findall(r"class=trend-link>([^<]+)", block.group(1))
+    hrefs = re.findall(r'href="(https?://[^"]+)"', block.group(1))
+    items: list[dict] = []
+    seen: set[str] = set()
+    for i, name in enumerate(names):
+        title = _clean(unescape(name))
+        if not title or title.lower() in seen:
+            continue
+        seen.add(title.lower())
+        url = hrefs[i] if i < len(hrefs) else f"https://x.com/search?q={quote(title)}"
+        items.append(
+            item(
+                platform="Twitter/X 趋势",
+                region="海外",
+                rank=len(items) + 1,
+                title=title[:140],
+                url=url,
+                heat=None,
+                fetched_at=fetched_at,
+                extra={"source_id": "trends24"},
+            )
+        )
+        if len(items) >= limit:
+            break
+    if not items:
+        raise RuntimeError("no trends parsed")
+    return items
+
+
+# ---------- Optional Twitter via twitter-cli, fallback trends24 ----------
 def fetch_twitter_trends(limit: int = 8) -> tuple[list[dict], dict]:
     fetched_at = now_iso()
     label, region = "Twitter/X 趋势", "海外"
-    twitter = shutil.which("twitter") or str(Path.home() / ".local/bin/twitter")
-    if not shutil.which("twitter") and not Path(twitter).exists():
-        return [], source_fail(label, region, RuntimeError("twitter CLI not found"))
-    bin_path = twitter if Path(twitter).exists() else "twitter"
     try:
-        # Load cookies from agent-reach config into env if present (without printing)
-        env = {**os.environ, "PATH": f"{Path.home() / '.local/bin'}:{Path.home() / '.agent-reach-venv/bin'}:{os.environ.get('PATH', '')}"}
-        cfg_path = Path.home() / ".agent-reach" / "config.yaml"
-        if cfg_path.exists():
-            text = cfg_path.read_text(encoding="utf-8")
-            # minimal parse for known keys
-            for key, env_key in (
-                ("twitter_auth_token", "TWITTER_AUTH_TOKEN"),
-                ("twitter_ct0", "TWITTER_CT0"),
-                ("auth_token", "TWITTER_AUTH_TOKEN"),
-                ("ct0", "TWITTER_CT0"),
-            ):
-                m = re.search(rf"^{key}:\s*[\"']?([^\s\"']+)", text, re.M)
-                if m and not env.get(env_key):
-                    env[env_key] = m.group(1)
-        proc = subprocess.run(
-            [bin_path, "search", "AI OR tech OR startup", "-n", str(limit)],
-            capture_output=True,
-            text=True,
-            timeout=90,
-            env=env,
-        )
-        if proc.returncode != 0:
-            raise RuntimeError(proc.stderr.strip() or proc.stdout.strip() or "twitter search failed")
-        out = proc.stdout
-        titles = re.findall(r"^\s*(?:text|full_text|title):\s*(.+)$", out, re.M)
-        urls = re.findall(r"^\s*(?:url|link):\s*(https?://\S+)", out, re.M)
-        items: list[dict] = []
-        for i, title in enumerate(titles[:limit], 1):
-            title = _clean(title.strip("'\""))
-            if not title:
-                continue
-            if len(title) > 140:
-                title = title[:137] + "..."
-            items.append(
-                item(
-                    platform=label,
-                    region=region,
-                    rank=len(items) + 1,
-                    title=title,
-                    url=urls[len(items)] if len(items) < len(urls) else "",
-                    heat=None,
-                    fetched_at=fetched_at,
-                    extra={"source_id": "twitter-cli"},
-                )
+        items = fetch_twitter_trends24(limit)
+        return items, source_ok(label, region, "live:trends24", len(items))
+    except Exception as primary:  # noqa: BLE001
+        twitter = shutil.which("twitter") or str(Path.home() / ".local/bin/twitter")
+        if not shutil.which("twitter") and not Path(twitter).exists():
+            return [], source_fail(label, region, primary)
+        bin_path = twitter if Path(twitter).exists() else "twitter"
+        try:
+            env = {
+                **os.environ,
+                "PATH": f"{Path.home() / '.local/bin'}:{Path.home() / '.agent-reach-venv/bin'}:{os.environ.get('PATH', '')}",
+            }
+            cfg_path = Path.home() / ".agent-reach" / "config.yaml"
+            if cfg_path.exists():
+                text = cfg_path.read_text(encoding="utf-8")
+                for key, env_key in (
+                    ("twitter_auth_token", "TWITTER_AUTH_TOKEN"),
+                    ("twitter_ct0", "TWITTER_CT0"),
+                    ("auth_token", "TWITTER_AUTH_TOKEN"),
+                    ("ct0", "TWITTER_CT0"),
+                ):
+                    m = re.search(rf"^{key}:\s*[\"']?([^\s\"']+)", text, re.M)
+                    if m and not env.get(env_key):
+                        env[env_key] = m.group(1)
+            proc = subprocess.run(
+                [bin_path, "search", "AI OR tech OR startup", "-n", str(limit)],
+                capture_output=True,
+                text=True,
+                timeout=90,
+                env=env,
             )
-            if len(items) >= limit:
-                break
-        if not items:
-            raise RuntimeError("no tweets parsed")
-        return items, source_ok(label, region, "live:twitter-cli", len(items))
-    except Exception as e:  # noqa: BLE001
-        return [], source_fail(label, region, e)
+            if proc.returncode != 0:
+                raise RuntimeError(proc.stderr.strip() or proc.stdout.strip() or "twitter search failed")
+            out = proc.stdout
+            titles = re.findall(r"^\s*(?:text|full_text|title):\s*(.+)$", out, re.M)
+            urls = re.findall(r"^\s*(?:url|link):\s*(https?://\S+)", out, re.M)
+            items: list[dict] = []
+            for i, title in enumerate(titles[:limit], 1):
+                title = _clean(title.strip("'\""))
+                if not title:
+                    continue
+                if len(title) > 140:
+                    title = title[:137] + "..."
+                items.append(
+                    item(
+                        platform=label,
+                        region=region,
+                        rank=len(items) + 1,
+                        title=title,
+                        url=urls[len(items)] if len(items) < len(urls) else "",
+                        heat=None,
+                        fetched_at=fetched_at,
+                        extra={"source_id": "twitter-cli"},
+                    )
+                )
+                if len(items) >= limit:
+                    break
+            if not items:
+                raise RuntimeError("no tweets parsed")
+            return items, source_ok(label, region, "live:twitter-cli", len(items))
+        except Exception:  # noqa: BLE001
+            return [], source_fail(label, region, primary)
 
 
 # ---------- Optional Exa ----------
@@ -594,8 +710,7 @@ def collect_all() -> dict[str, Any]:
         jobs.append(ex.submit(run, "xueqiu", fetch_xueqiu, 10))
         jobs.append(ex.submit(run, "exa", fetch_exa, 8))
         # optional social — fail soft
-        jobs.append(ex.submit(run, "reddit", fetch_opencli_yaml, "reddit", ["hot"], "Reddit 热门", "海外", 8))
-        # twitter-cli may be better than opencli for trends when cookies exist
+        jobs.append(ex.submit(run, "reddit", fetch_reddit_hot, 8))
         jobs.append(ex.submit(run, "twitter", fetch_twitter_trends, 8))
         jobs.append(
             ex.submit(
@@ -620,7 +735,7 @@ def collect_all() -> dict[str, Any]:
         "tool": "global_hot_topics_dashboard",
         "methodNote": (
             "NewsNow 公开聚合（微博/抖音/B站热搜/知乎/头条/PH）+ RSS（HN/TechCrunch）"
-            " + Agent Reach（V2EX/B站热门/雪球）+ 可选 Exa/OpenCLI；失败源页内标注。"
+            " + Agent Reach（V2EX/B站热门/雪球）+ OpenCLI Reddit popular + Trends24 X 趋势；失败源页内标注。"
         ),
         "sources": sources,
         "platforms": platforms,

@@ -1,109 +1,112 @@
 import Link from "next/link";
-import { ExternalLink, Flame, Radar } from "lucide-react";
 import { HotTopicsBoard } from "@/components/HotTopicsBoard";
-import { RefreshControls } from "@/components/RefreshControls";
+import { PageLiveRefresh } from "@/components/PageLiveRefresh";
 import { getGlobalHotTopicsView } from "@/lib/global-hot-data";
-import { getBundleView } from "@/lib/data";
-import { FreshnessBadge } from "@/components/FreshnessBadge";
+import { analyzeFailedSources, mergeRegionalHotTopics } from "@/lib/global-hot-merge";
+import { formatUpdatedAt } from "@/lib/intel/time";
+
+export const dynamic = "force-dynamic";
 
 export default function HotTopicsPage() {
   const { snapshot, fromFile } = getGlobalHotTopicsView();
-  const { freshness, lastUpdatedDate } = getBundleView();
   const { stats } = snapshot;
+  const byRegion = {
+    国内: mergeRegionalHotTopics(snapshot.platforms, "国内"),
+    海外: mergeRegionalHotTopics(snapshot.platforms, "海外"),
+  };
+  const failed = analyzeFailedSources(snapshot.sources);
+  const focusApps = failed.filter((f) => /Reddit|Twitter|X 趋势/i.test(f.label));
 
   return (
-    <div className="container py-10 space-y-10">
-      <div className="space-y-4">
-        <div className="inline-flex items-center gap-2 rounded-full border border-[rgba(230,179,90,0.45)] bg-[color-mix(in_srgb,var(--amber)_16%,transparent)] px-3 py-1 text-xs text-[#f0d7a8]">
-          <Flame size={14} aria-hidden />
-          Agent Reach 能力层 · 国内外实时热点
-        </div>
-        <h1 className="display text-3xl sm:text-4xl font-semibold">实时热点看板</h1>
-        <p className="text-[var(--muted)] max-w-3xl leading-relaxed">
-          对齐{" "}
-          <a
-            href={snapshot.agentReachUrl}
-            target="_blank"
-            rel="noreferrer"
-            className="text-[var(--signal)] hover:underline inline-flex items-center gap-1"
-          >
-            Agent Reach <ExternalLink size={13} aria-hidden />
-          </a>
-          ：公开聚合（微博/抖音/B站/知乎/头条/小红书）+ RSS（HN/TechCrunch/PH）+
-          Agent Reach CLI（V2EX/B站热门/雪球）+ 可选 Exa/OpenCLI。失败源见页脚，不假装全绿。
+    <div className="page-main space-y-8">
+      <header className="space-y-3">
+        <p className="kicker">REGION RADAR</p>
+        <h1 className="page-title">热点分析</h1>
+        <p className="page-sub max-w-2xl">
+          国内 / 海外分版：同话题跨平台合并后按热度值排序；标题可跳转原文（无原文则搜索）。信息条每小时自动同步。
         </p>
-        <div className="flex flex-wrap gap-2 text-xs">
-          <span className="tag tag-signal">{snapshot.generatedAt}</span>
-          <span className="tag">{fromFile ? "已同步 JSON" : "seed 降级"}</span>
-          <span className="tag">{snapshot.source}</span>
-          <span className="tag">
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--muted)]">
+          <span>更新于 {formatUpdatedAt(snapshot.generatedAt)}</span>
+          <span>{fromFile ? "已同步" : "seed 降级"}</span>
+          <span>
             源 {stats.sourcesOk}/{stats.sourcesTotal}
           </span>
-          <span className="tag">条目 {stats.items}</span>
-          <span className="tag">
-            国内 {stats.byRegion.国内} · 海外 {stats.byRegion.海外}
+          <span>
+            合并 · 国内 {byRegion.国内.length} · 海外 {byRegion.海外.length}
           </span>
-        </div>
-        <p className="text-sm text-[var(--muted)]">{snapshot.methodNote}</p>
-        <FreshnessBadge freshness={freshness} lastUpdatedDate={lastUpdatedDate} />
-        <RefreshControls defaultMode="hot" />
-        <div className="flex flex-wrap gap-3">
-          <Link href="/radar" className="btn btn-ghost inline-flex items-center gap-1">
-            <Radar size={16} aria-hidden />
-            动态雷达
-          </Link>
-          <Link href="/history" className="btn btn-ghost">
-            历史报告
-          </Link>
-          <Link href="/pulse" className="btn btn-ghost">
-            机会简报
-          </Link>
-          <Link href="/sources" className="btn btn-primary">
-            来源报告
+          <PageLiveRefresh
+            intervalMs={60 * 60 * 1000}
+            syncMode="hot"
+            syncEveryCycles={1}
+            fetchedAt={snapshot.generatedAt}
+            label="热点分析"
+          />
+          <Link href="/opportunities" className="text-[var(--signal)] hover:underline">
+            查看 AI 机会报告 →
           </Link>
         </div>
-      </div>
+      </header>
 
-      <HotTopicsBoard platforms={snapshot.platforms} />
+      {focusApps.length ? (
+        <section className="surface rounded-xl border border-[var(--line)] p-4 space-y-3">
+          <div className="flex flex-wrap items-baseline justify-between gap-2">
+            <h2 className="display text-lg font-semibold">海外应用源站分析</h2>
+            <p className="text-xs text-[var(--muted)]">本轮失败 · 不计入合并榜</p>
+          </div>
+          <ul className="space-y-3">
+            {focusApps.map((f) => (
+              <li key={f.label} className="text-sm leading-relaxed">
+                <div className="flex flex-wrap items-center gap-2">
+                  <span className="font-medium">{f.label}</span>
+                  <span className="text-[11px] text-[var(--muted)]">{f.region}</span>
+                  <span className="text-[11px] text-[var(--amber)]">failed</span>
+                </div>
+                <p className="mt-1 text-[var(--muted)]">{f.diagnosis}</p>
+                {f.error ? (
+                  <p className="mt-1 text-[11px] text-[var(--amber)] break-all font-mono">{f.error}</p>
+                ) : null}
+              </li>
+            ))}
+          </ul>
+          <p className="text-[11px] text-[var(--muted)] leading-relaxed">
+            海外合并榜当前主要依赖 Hacker News、TechCrunch、Product Hunt、Exa 等可用源；Reddit / Twitter/X
+            恢复后会自动参与同话题合并与来源标注。
+          </p>
+        </section>
+      ) : null}
+
+      <HotTopicsBoard byRegion={byRegion} />
 
       <section className="space-y-3">
-        <h2 className="display text-xl font-semibold">数据源状态</h2>
-        <div className="overflow-x-auto surface">
-          <table className="compare-table w-full text-sm">
+        <h2 className="display text-lg font-semibold">数据源状态</h2>
+        <div className="table-scroll surface rounded-xl overflow-hidden">
+          <table className="lb-table text-sm">
             <thead>
               <tr>
                 <th>来源</th>
                 <th>区域</th>
                 <th>模式</th>
                 <th>条目</th>
-                <th>错误</th>
+                <th>状态</th>
               </tr>
             </thead>
             <tbody>
               {snapshot.sources.map((s) => (
                 <tr key={s.id}>
-                  <td>
-                    <span
-                      className={`inline-block w-2 h-2 rounded-full mr-2 ${
-                        s.ok ? "bg-[var(--signal)]" : "bg-[var(--danger,#e26d6d)]"
-                      }`}
-                      aria-hidden
-                    />
-                    {s.label}
-                  </td>
-                  <td>{s.region}</td>
+                  <td>{s.label}</td>
+                  <td className="text-[var(--muted)]">{s.region}</td>
                   <td className="text-[var(--muted)]">{s.mode}</td>
                   <td>{s.hits}</td>
-                  <td className="text-[var(--amber)] max-w-xs break-words">{s.error || "—"}</td>
+                  <td className={s.ok ? "text-[var(--signal)]" : "text-[var(--amber)]"}>
+                    {s.ok ? "正常" : s.error || "失败"}
+                  </td>
                 </tr>
               ))}
             </tbody>
           </table>
         </div>
-        <p className="text-xs text-[var(--muted)] leading-relaxed">
-          刷新：在项目根执行 <code className="text-[var(--text)]">npm run hot:sync</code>
-          （会调用研究仓脚本并写入 <code className="text-[var(--text)]">data/global-hot-topics.json</code>）。
-          也可并入 <code className="text-[var(--text)]">npm run data:refresh</code>。
+        <p className="text-[11px] text-[var(--muted)] leading-relaxed">
+          刷新：<code className="text-[var(--text)]">npm run hot:sync</code> · 方法：{snapshot.methodNote}
         </p>
       </section>
     </div>

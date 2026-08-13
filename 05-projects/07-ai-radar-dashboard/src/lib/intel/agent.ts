@@ -50,7 +50,7 @@ export function detectIntent(q: string): { intent: Intent; query: string } {
   }
   if (/平台/.test(s) && /对比|比较|分布/.test(s)) return { intent: "compare_platforms", query: s };
   if (/7\s*天|一周|过去一周|环比|同比|变化/.test(s)) return { intent: "period", query: s };
-  if (/增长最快|涨得最快|velocity|爆发/.test(s)) return { intent: "rising", query: s };
+  if (/最热|热点榜|在爆/.test(s)) return { intent: "trending_ai", query: s };
   if (/简报|日报|发生了什么/.test(s) && /AI|人工智能|大模型|Agent/.test(s)) {
     return { intent: "report_ai", query: s };
   }

@@ -1,15 +1,8 @@
 {
-  "generatedAt": "2026-08-11T13:40:06+08:00",
+  "generatedAt": "2026-08-13T19:42:05+08:00",
   "tool": "global_hot_topics_dashboard",
-  "methodNote": "NewsNow 公开聚合（微博/抖音/B站热搜/知乎/头条/PH）+ RSS（HN/TechCrunch） + Agent Reach（V2EX/B站热门/雪球）+ 可选 Exa/OpenCLI；失败源页内标注。",
+  "methodNote": "NewsNow 公开聚合（微博/抖音/B站热搜/知乎/头条/PH）+ RSS（HN/TechCrunch） + Agent Reach（V2EX/B站热门/雪球）+ OpenCLI Reddit popular + Trends24 X 趋势；失败源页内标注。",
   "sources": {
-    "xiaohongshu": {
-      "label": "小红书探索页",
-      "region": "国内",
-      "ok": true,
-      "mode": "live:xhs-explore:http",
-      "hits": 10
-    },
     "techcrunch-social": {
       "label": "TechCrunch Social",
       "region": "海外",
@@ -17,11 +10,18 @@
       "mode": "live:rss:techcrunch-social",
       "hits": 12
     },
-    "toutiao": {
-      "label": "今日头条热榜",
+    "xiaohongshu": {
+      "label": "小红书探索页",
       "region": "国内",
       "ok": true,
-      "mode": "live:newsnow:toutiao",
+      "mode": "live:xhs-explore:http",
+      "hits": 10
+    },
+    "producthunt": {
+      "label": "Product Hunt",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:newsnow:producthunt",
       "hits": 12
     },
     "douyin": {
@@ -31,11 +31,11 @@
       "mode": "live:newsnow:douyin",
       "hits": 12
     },
-    "weibo": {
-      "label": "微博热搜",
+    "toutiao": {
+      "label": "今日头条热榜",
       "region": "国内",
       "ok": true,
-      "mode": "live:newsnow:weibo",
+      "mode": "live:newsnow:toutiao",
       "hits": 12
     },
     "bilibili-hot-search": {
@@ -45,6 +45,13 @@
       "mode": "live:newsnow:bilibili-hot-search",
       "hits": 12
     },
+    "weibo": {
+      "label": "微博热搜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:weibo",
+      "hits": 12
+    },
     "zhihu": {
       "label": "知乎热榜",
       "region": "国内",
@@ -52,26 +59,19 @@
       "mode": "live:newsnow:zhihu",
       "hits": 12
     },
+    "twitter": {
+      "label": "Twitter/X 趋势",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:trends24",
+      "hits": 8
+    },
     "hacker-news": {
       "label": "Hacker News",
       "region": "海外",
       "ok": true,
       "mode": "live:rss:hacker-news",
       "hits": 12
-    },
-    "producthunt": {
-      "label": "Product Hunt",
-      "region": "海外",
-      "ok": true,
-      "mode": "live:newsnow:producthunt",
-      "hits": 12
-    },
-    "v2ex": {
-      "label": "V2EX 热门",
-      "region": "国内",
-      "ok": true,
-      "mode": "live:v2ex-api",
-      "hits": 9
     },
     "bili-hot": {
       "label": "B站热门视频",
@@ -87,6 +87,13 @@
       "mode": "live:exa-mcporter",
       "hits": 8
     },
+    "v2ex": {
+      "label": "V2EX 热门",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:v2ex-api",
+      "hits": 9
+    },
     "xhs-opencli": {
       "label": "小红书(OpenCLI)",
       "region": "国内",
@@ -94,995 +101,254 @@
       "mode": "live:opencli-xiaohongshu",
       "hits": 8
     },
-    "twitter": {
-      "label": "Twitter/X 趋势",
-      "region": "海外",
-      "ok": false,
-      "mode": "failed",
-      "hits": 0,
-      "error": "RuntimeError: WARNING twitter_cli.client: Failed to init ClientTransaction: 'NoneType' object has no attribute 'group'"
-    },
     "reddit": {
       "label": "Reddit 热门",
       "region": "海外",
-      "ok": false,
-      "mode": "failed",
-      "hits": 0,
-      "error": "RuntimeError: no items parsed"
+      "ok": true,
+      "mode": "live:opencli-reddit:popular",
+      "hits": 8
     },
     "xueqiu": {
       "label": "雪球热帖",
       "region": "国内",
       "ok": true,
       "mode": "live:opencli-xueqiu",
-      "hits": 6
+      "hits": 7
     }
   },
   "platforms": {
-    "小红书探索页": [
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 1,
-        "title": "夏天千万不要这样用花露水！会致命！",
-        "heat": "1.7万",
-        "url": "https://www.xiaohongshu.com/explore/6a36baa50000000015026068",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "老杨和戴戴"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 2,
-        "title": "陈冠希 | 最新造型自拍",
-        "heat": "2473",
-        "url": "https://www.xiaohongshu.com/explore/6a5d2c5f000000001101c68e",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "牛油果Avocado"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 3,
-        "title": "求广大网友赐名",
-        "heat": "1442",
-        "url": "https://www.xiaohongshu.com/explore/6a3d2b21000000001003d155",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "心悦书屋"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 4,
-        "title": "减脂期包子怎么吃！",
-        "heat": "2679",
-        "url": "https://www.xiaohongshu.com/explore/6a38b630000000000f029bae",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "碳烤笨菠萝🍍"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 5,
-        "title": "才发现被直播拍到 恭喜西班牙夺冠🏆🇪🇸！！",
-        "heat": "1.5万",
-        "url": "https://www.xiaohongshu.com/explore/6a5d50bb000000000e0343d9",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "Carauii"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 6,
-        "title": "女大美甲开智史",
-        "heat": "1.5万",
-        "url": "https://www.xiaohongshu.com/explore/6a4aa52d00000000060335fa",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "车干轩"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 7,
-        "title": "你见过么下雨天旅游 大雨一直下 大雨还在下 听着流水声 雨雾缭绕人间仙境 飞流直",
-        "heat": "3997",
-        "url": "https://www.xiaohongshu.com/explore/6a446c1c000000001702bb1a",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "张壁小张"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 8,
-        "title": "真的什么都没做",
-        "heat": "1.6万",
-        "url": "https://www.xiaohongshu.com/explore/6a5969d40000000011016af7",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "灰灵狐学英语"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 9,
-        "title": "原来她真的在用手机看手机！",
-        "heat": "2.4万",
-        "url": "https://www.xiaohongshu.com/explore/6a47394c0000000007022fda",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "阜阳刘亦菲"
-      },
-      {
-        "platform": "小红书探索页",
-        "region": "国内",
-        "rank": 10,
-        "title": "宝安上川地铁站谁家狗狗走丢了！",
-        "heat": "4707",
-        "url": "https://www.xiaohongshu.com/explore/6a388c9d000000001603e916",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "xiaohongshu",
-        "author": "Sinchou"
-      }
-    ],
     "TechCrunch Social": [
       {
         "platform": "TechCrunch Social",
         "region": "海外",
         "rank": 1,
+        "title": "Amazon will train on Twitch streamers’ content by default, unless they opt out",
+        "heat": 40,
+        "url": "https://techcrunch.com/2026/08/12/amazon-will-train-on-twitch-streamers-content-by-default-unless-they-opt-out/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "techcrunch-social"
+      },
+      {
+        "platform": "TechCrunch Social",
+        "region": "海外",
+        "rank": 2,
+        "title": "Bluesky’s active user base is shrinking as its focus expands beyond the app",
+        "heat": 39,
+        "url": "https://techcrunch.com/2026/08/11/blueskys-active-user-base-is-shrinking-as-its-focus-expands-beyond-the-app/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "techcrunch-social"
+      },
+      {
+        "platform": "TechCrunch Social",
+        "region": "海外",
+        "rank": 3,
         "title": "Social media platforms still facing thousands of user addiction lawsuits after failed appeals",
-        "heat": 40,
+        "heat": 38,
         "url": "https://techcrunch.com/2026/08/10/social-media-platforms-still-facing-thousands-of-user-addiction-lawsuits-after-failed-appeals/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 2,
+        "rank": 4,
         "title": "YouTube now requires creators to have twice as many watch hours to start earning money",
-        "heat": 39,
+        "heat": 37,
         "url": "https://techcrunch.com/2026/08/10/youtube-now-requires-creators-to-have-twice-as-many-watch-hours-to-start-earning-money/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 3,
+        "rank": 5,
         "title": "X replaces ‘misaligned’ revenue sharing program with Original Content Rewards",
-        "heat": 38,
+        "heat": 36,
         "url": "https://techcrunch.com/2026/08/08/x-replaces-misaligned-revenue-sharing-program-with-original-content-rewards/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 4,
+        "rank": 6,
         "title": "Bumble teases a swipe-free future as it doubles down on IRL meetups",
-        "heat": 37,
+        "heat": 35,
         "url": "https://techcrunch.com/2026/08/06/bumble-teases-a-swipe-free-future-as-it-doubles-down-on-irl-meetups/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 5,
+        "rank": 7,
         "title": "TikTok lays off 250 employees, shutters its Nashville office",
-        "heat": 36,
+        "heat": 34,
         "url": "https://techcrunch.com/2026/08/06/tiktok-lays-off-250-employees-shutters-its-nashville-office/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 6,
+        "rank": 8,
         "title": "Gen Z dating apps like Ditto ditch swiping in favor of AI matchmaking",
-        "heat": 35,
+        "heat": 33,
         "url": "https://techcrunch.com/2026/08/06/gen-z-dating-apps-like-ditto-ditch-swiping-in-favor-of-ai-matchmaking/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 7,
+        "rank": 9,
         "title": "Lightspeed is building its edge on followers, not just funds",
-        "heat": 34,
+        "heat": 32,
         "url": "https://techcrunch.com/video/why-lightspeed-is-going-all-in-on-creator-led-venture-capital/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 8,
+        "rank": 10,
         "title": "Reddit aims to make ‘karma’ less important for first-time posters with shift to AI moderation tools",
-        "heat": 33,
+        "heat": 31,
         "url": "https://techcrunch.com/2026/08/05/reddit-aims-to-make-karma-less-important-for-first-time-posters-with-shift-to-ai-moderation-tools/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 9,
+        "rank": 11,
         "title": "As Gen Z reconsiders dating apps, Tinder’s IRL events expand to dozens more cities",
-        "heat": 32,
+        "heat": 30,
         "url": "https://techcrunch.com/2026/08/05/as-gen-z-reconsiders-dating-apps-tinders-irl-events-expand-to-dozens-more-cities/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       },
       {
         "platform": "TechCrunch Social",
         "region": "海外",
-        "rank": 10,
+        "rank": 12,
         "title": "Why Lightspeed is going all-in on creator-led venture capital",
-        "heat": 31,
+        "heat": 29,
         "url": "https://techcrunch.com/podcast/why-lightspeed-is-going-all-in-on-creator-led-venture-capital/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "techcrunch-social"
-      },
-      {
-        "platform": "TechCrunch Social",
-        "region": "海外",
-        "rank": 11,
-        "title": "Snap CEO sidesteps Specs preorder questions on Q2 earnings call",
-        "heat": 30,
-        "url": "https://techcrunch.com/2026/08/03/snap-ceo-sidesteps-specs-pre-order-questions-on-q2-earnings-call/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "techcrunch-social"
-      },
-      {
-        "platform": "TechCrunch Social",
-        "region": "海外",
-        "rank": 12,
-        "title": "Influencers draw backlash for attending OpenAI’s first luxury trip",
-        "heat": 29,
-        "url": "https://techcrunch.com/2026/08/03/influencers-draw-backlash-for-attending-openais-first-luxury-trip/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "techcrunch-social"
       }
     ],
-    "今日头条热榜": [
+    "小红书探索页": [
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 1,
-        "title": "俄女子被诱骗进缅甸电诈园游河逃生",
-        "heat": 49,
-        "url": "https://www.toutiao.com/trending/7672560326260539433/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "献给我们所有最好的伴",
+        "heat": "8641",
+        "url": "https://www.xiaohongshu.com/explore/6a45ef2f000000001503de97",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "宝石Gem"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 2,
-        "title": "伊朗警告乌克兰不赔偿就动手",
-        "heat": 48,
-        "url": "https://www.toutiao.com/trending/7671598956682723379/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "怎么调理。。从未想过的赋分",
+        "heat": "2034",
+        "url": "https://www.xiaohongshu.com/explore/6a3acddc0000000015025804",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "落拓"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 3,
-        "title": "推动高质量充分就业取得新进展",
-        "heat": 47,
-        "url": "https://www.toutiao.com/trending/7672336501028470811/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "老外的过敏",
+        "heat": "2302",
+        "url": "https://www.xiaohongshu.com/explore/6a5da24c0000000005039158",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "栗子"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 4,
-        "title": "连线亲历哥伦比亚地震华人",
-        "heat": 46,
-        "url": "https://www.toutiao.com/trending/7672407095861379099/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "新中式缎面✨💐东方美学的高级感满满的",
+        "heat": "1528",
+        "url": "https://www.xiaohongshu.com/explore/6a4a98b40000000011018a1c",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "Rose is a Rose法式浪漫"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 5,
-        "title": "解放军特种兵部署台海一线",
-        "heat": 45,
-        "url": "https://www.toutiao.com/trending/7672255052979093545/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "破了好几年的路 成为网红路后开始修路",
+        "heat": "1.1万",
+        "url": "https://www.xiaohongshu.com/explore/6a49b87c00000000110122fb",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "yes～"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 6,
-        "title": "警方介入调查独闯南太行女子死因",
-        "heat": 44,
-        "url": "https://www.toutiao.com/trending/7672386776553406527/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "陈哲远想给张婧仪盛饭结果被高瀚宇抢先一步",
+        "heat": "3.6万",
+        "url": "https://www.xiaohongshu.com/explore/6a3a083c000000001503f13d",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "搜狐娱乐"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 7,
-        "title": "委内瑞拉强震死亡人数上升至6301人",
-        "heat": 43,
-        "url": "https://www.toutiao.com/trending/7672078220703449130/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "尽量别收二手毛绒",
+        "heat": "1.5万",
+        "url": "https://www.xiaohongshu.com/explore/6a4346ee0000000021023059",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "cosin"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 8,
-        "title": "美媒：特朗普上月秘密乘运输机回国",
-        "heat": 42,
-        "url": "https://www.toutiao.com/trending/7672053116451389486/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "给公婆买了套房",
+        "heat": "319",
+        "url": "https://www.xiaohongshu.com/explore/6a3e029d0000000016025ce2",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "付姐姐"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 9,
-        "title": "雪佛兰为何会败走中国",
-        "heat": 41,
-        "url": "https://www.toutiao.com/trending/7672598307423669811/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
+        "title": "北纬23.5，立杆不见影",
+        "heat": "10万+",
+        "url": "https://www.xiaohongshu.com/explore/6a376df2000000001603e2bc",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "峥峥2"
       },
       {
-        "platform": "今日头条热榜",
+        "platform": "小红书探索页",
         "region": "国内",
         "rank": 10,
-        "title": "上海暴雨中男子俯身在水里徒手排涝",
-        "heat": 40,
-        "url": "https://www.toutiao.com/trending/7671890433961623615/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
-      },
-      {
-        "platform": "今日头条热榜",
-        "region": "国内",
-        "rank": 11,
-        "title": "暑期安全这些误区要避开",
-        "heat": 39,
-        "url": "https://www.toutiao.com/trending/7672612772812816403/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
-      },
-      {
-        "platform": "今日头条热榜",
-        "region": "国内",
-        "rank": 12,
-        "title": "黄晓明再回应靠长鑫科技赚百亿传闻",
-        "heat": 38,
-        "url": "https://www.toutiao.com/trending/7672605240819089454/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "toutiao"
-      }
-    ],
-    "抖音热榜": [
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 1,
-        "title": "台风白海豚实时路径",
-        "heat": 49,
-        "url": "https://www.douyin.com/hot/2602902",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 2,
-        "title": "哥伦比亚地震已致上百人遇难",
-        "heat": 48,
-        "url": "https://www.douyin.com/hot/2605135",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 3,
-        "title": "一组数据看7月经济活力",
-        "heat": 47,
-        "url": "https://www.douyin.com/hot/2605301",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 4,
-        "title": "河南暴雨",
-        "heat": 46,
-        "url": "https://www.douyin.com/hot/2605175",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 5,
-        "title": "白海豚强度逐渐减弱",
-        "heat": 45,
-        "url": "https://www.douyin.com/hot/2605454",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 6,
-        "title": "开封夜市好吃到停不下来",
-        "heat": 44,
-        "url": "https://www.douyin.com/hot/2604585",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 7,
-        "title": "贵州抓猪大赛可太有意思了",
-        "heat": 43,
-        "url": "https://www.douyin.com/hot/2605419",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 8,
-        "title": "原来爸爸也曾是少年",
-        "heat": 42,
-        "url": "https://www.douyin.com/hot/2604895",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 9,
-        "title": "给AI时代一点手搓实拍的小震撼",
-        "heat": 41,
-        "url": "https://www.douyin.com/hot/2605459",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 10,
-        "title": "一口气看懂万达现状",
-        "heat": 40,
-        "url": "https://www.douyin.com/hot/2605041",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 11,
-        "title": "用AI重返那年相遇的青涩夏天",
-        "heat": 39,
-        "url": "https://www.douyin.com/hot/2605104",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      },
-      {
-        "platform": "抖音热榜",
-        "region": "国内",
-        "rank": 12,
-        "title": "穿搭天才依旧稳定发挥",
-        "heat": 38,
-        "url": "https://www.douyin.com/hot/2604130",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "douyin"
-      }
-    ],
-    "微博热搜": [
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 1,
-        "title": "睡车里被酒店收150元住宿费事件反转",
-        "heat": 49,
-        "url": "https://s.weibo.com/weibo?q=%23%E7%9D%A1%E8%BD%A6%E9%87%8C%E8%A2%AB%E9%85%92%E5%BA%97%E6%94%B6150%E5%85%83%E4%BD%8F%E5%AE%BF%E8%B4%B9%E4%BA%8B%E4%BB%B6%E5%8F%8D%E8%BD%AC%23&t=31&band_rank=1&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 2,
-        "title": "胖东来公布2起侵犯员工人格尊严案例",
-        "heat": 48,
-        "url": "https://s.weibo.com/weibo?q=%23%E8%83%96%E4%B8%9C%E6%9D%A5%E5%85%AC%E5%B8%832%E8%B5%B7%E4%BE%B5%E7%8A%AF%E5%91%98%E5%B7%A5%E4%BA%BA%E6%A0%BC%E5%B0%8A%E4%B8%A5%E6%A1%88%E4%BE%8B%23&t=31&band_rank=2&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 3,
-        "title": "两部门紧急预拨1.8亿元救灾资金",
-        "heat": 47,
-        "url": "https://s.weibo.com/weibo?q=%23%E4%B8%A4%E9%83%A8%E9%97%A8%E7%B4%A7%E6%80%A5%E9%A2%84%E6%8B%A81.8%E4%BA%BF%E5%85%83%E6%95%91%E7%81%BE%E8%B5%84%E9%87%91%23&t=31&band_rank=3&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 4,
-        "title": "建议大家装修不要太大众",
-        "heat": 46,
-        "url": "https://s.weibo.com/weibo?q=%E5%BB%BA%E8%AE%AE%E5%A4%A7%E5%AE%B6%E8%A3%85%E4%BF%AE%E4%B8%8D%E8%A6%81%E5%A4%AA%E5%A4%A7%E4%BC%97&t=31&band_rank=4&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 5,
-        "title": "真正的顶级友谊这种分寸感",
-        "heat": 45,
-        "url": "https://s.weibo.com/weibo?q=%E7%9C%9F%E6%AD%A3%E7%9A%84%E9%A1%B6%E7%BA%A7%E5%8F%8B%E8%B0%8A%E8%BF%99%E7%A7%8D%E5%88%86%E5%AF%B8%E6%84%9F&t=31&band_rank=5&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 6,
-        "title": "阿维塔 华为",
-        "heat": 44,
-        "url": "https://s.weibo.com/weibo?q=%E9%98%BF%E7%BB%B4%E5%A1%94%20%E5%8D%8E%E4%B8%BA&t=31&band_rank=6&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 7,
-        "title": "李嘉诚又要套现了",
-        "heat": 43,
-        "url": "https://s.weibo.com/weibo?q=%23%E6%9D%8E%E5%98%89%E8%AF%9A%E5%8F%88%E8%A6%81%E5%A5%97%E7%8E%B0%E4%BA%86%23&t=31&band_rank=7&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 8,
-        "title": "C罗年薪19亿足坛断档第一",
-        "heat": 42,
-        "url": "https://s.weibo.com/weibo?q=%23C%E7%BD%97%E5%B9%B4%E8%96%AA19%E4%BA%BF%E8%B6%B3%E5%9D%9B%E6%96%AD%E6%A1%A3%E7%AC%AC%E4%B8%80%23&t=31&band_rank=8&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 9,
-        "title": "陈俊生150万年薪让罗子君买8万的鞋",
-        "heat": 41,
-        "url": "https://s.weibo.com/weibo?q=%23%E9%99%88%E4%BF%8A%E7%94%9F150%E4%B8%87%E5%B9%B4%E8%96%AA%E8%AE%A9%E7%BD%97%E5%AD%90%E5%90%9B%E4%B9%B08%E4%B8%87%E7%9A%84%E9%9E%8B%23&t=31&band_rank=9&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 10,
-        "title": "龙餐馆灯塔预测票房35亿",
-        "heat": 40,
-        "url": "https://s.weibo.com/weibo?q=%E9%BE%99%E9%A4%90%E9%A6%86%E7%81%AF%E5%A1%94%E9%A2%84%E6%B5%8B%E7%A5%A8%E6%88%BF35%E4%BA%BF&t=31&band_rank=10&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 11,
-        "title": "女子被拐关地下室被虐8年",
-        "heat": 39,
-        "url": "https://s.weibo.com/weibo?q=%23%E5%A5%B3%E5%AD%90%E8%A2%AB%E6%8B%90%E5%85%B3%E5%9C%B0%E4%B8%8B%E5%AE%A4%E8%A2%AB%E8%99%908%E5%B9%B4%23&t=31&band_rank=11&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      },
-      {
-        "platform": "微博热搜",
-        "region": "国内",
-        "rank": 12,
-        "title": "Jennie堵鼻子",
-        "heat": 38,
-        "url": "https://s.weibo.com/weibo?q=Jennie%E5%A0%B5%E9%BC%BB%E5%AD%90&t=31&band_rank=12&Refer=top",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "weibo"
-      }
-    ],
-    "B站热搜": [
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 1,
-        "title": "欢迎来龙餐馆原型回应",
-        "heat": 49,
-        "url": "https://search.bilibili.com/all?keyword=%E6%AC%A2%E8%BF%8E%E6%9D%A5%E9%BE%99%E9%A4%90%E9%A6%86%E5%8E%9F%E5%9E%8B%E5%9B%9E%E5%BA%94",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 2,
-        "title": "台风白海豚实时路径",
-        "heat": 48,
-        "url": "https://search.bilibili.com/all?keyword=%E5%8F%B0%E9%A3%8E%E7%99%BD%E6%B5%B7%E8%B1%9A%E5%AE%9E%E6%97%B6%E8%B7%AF%E5%BE%84",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 3,
-        "title": "韩股或将步入反弹",
-        "heat": 47,
-        "url": "https://search.bilibili.com/all?keyword=%E9%9F%A9%E8%82%A1%E6%88%96%E5%B0%86%E6%AD%A5%E5%85%A5%E5%8F%8D%E5%BC%B9",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 4,
-        "title": "大理百元豪车租赁乱象调查",
-        "heat": 46,
-        "url": "https://search.bilibili.com/all?keyword=%E5%A4%A7%E7%90%86%E7%99%BE%E5%85%83%E8%B1%AA%E8%BD%A6%E7%A7%9F%E8%B5%81%E4%B9%B1%E8%B1%A1%E8%B0%83%E6%9F%A5",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 5,
-        "title": "TaiLung被永久禁赛有何内幕",
-        "heat": 45,
-        "url": "https://search.bilibili.com/all?keyword=TaiLung%E8%A2%AB%E6%B0%B8%E4%B9%85%E7%A6%81%E8%B5%9B%E6%9C%89%E4%BD%95%E5%86%85%E5%B9%95",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 6,
-        "title": "赵露思澳门演唱会全记录",
-        "heat": 44,
-        "url": "https://search.bilibili.com/all?keyword=%E8%B5%B5%E9%9C%B2%E6%80%9D%E6%BE%B3%E9%97%A8%E6%BC%94%E5%94%B1%E4%BC%9A%E5%85%A8%E8%AE%B0%E5%BD%95",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 7,
-        "title": "百日成王出外勤变英雄救美",
-        "heat": 43,
-        "url": "https://search.bilibili.com/all?keyword=%E7%99%BE%E6%97%A5%E6%88%90%E7%8E%8B",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 8,
-        "title": "歌手大结局Reaction",
-        "heat": 42,
-        "url": "https://search.bilibili.com/all?keyword=%E6%AD%8C%E6%89%8B%E5%A4%A7%E7%BB%93%E5%B1%80Reaction",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 9,
-        "title": "花小龙带张伟丽自律的一天",
-        "heat": 41,
-        "url": "https://search.bilibili.com/all?keyword=%E8%8A%B1%E5%B0%8F%E9%BE%99%E5%B8%A6%E5%BC%A0%E4%BC%9F%E4%B8%BD%E8%87%AA%E5%BE%8B%E7%9A%84%E4%B8%80%E5%A4%A9",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 10,
-        "title": "欢迎来龙餐馆观后感",
-        "heat": 40,
-        "url": "https://search.bilibili.com/all?keyword=%E6%AC%A2%E8%BF%8E%E6%9D%A5%E9%BE%99%E9%A4%90%E9%A6%86%E8%A7%82%E5%90%8E%E6%84%9F",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 11,
-        "title": "Topson正式加入LGD",
-        "heat": 39,
-        "url": "https://search.bilibili.com/all?keyword=Topson%E6%AD%A3%E5%BC%8F%E5%8A%A0%E5%85%A5LGD",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      },
-      {
-        "platform": "B站热搜",
-        "region": "国内",
-        "rank": 12,
-        "title": "AI在黎曼猜想上做出了什么突破",
-        "heat": 38,
-        "url": "https://search.bilibili.com/all?keyword=AI%E5%9C%A8%E9%BB%8E%E6%9B%BC%E7%8C%9C%E6%83%B3%E4%B8%8A%E5%81%9A%E5%87%BA%E4%BA%86%E4%BB%80%E4%B9%88%E7%AA%81%E7%A0%B4",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "bilibili-hot-search"
-      }
-    ],
-    "知乎热榜": [
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 1,
-        "title": "央视首次曝光 055 遵义舰演习遭潜艇伏击「击沉」，这一操作的意图是什么？算暴露 055 的短板吗？",
-        "heat": 49,
-        "url": "https://www.zhihu.com/question/2069804922732860138",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 2,
-        "title": "山东菏泽古沉船一件元青花杯被曝下落不明，举报者称其曾出现在央视画面中，却未移交给博物馆，具体情况如何？",
-        "heat": 48,
-        "url": "https://www.zhihu.com/question/2069191321374418713",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 3,
-        "title": "因儿子说「大不了送外卖」，爸爸三伏天带他送外卖，竟意外修复父子关系，这一实践式教育怎么样？值得效仿吗？",
-        "heat": 47,
-        "url": "https://www.zhihu.com/question/2070152087481083737",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 4,
-        "title": "前有沈腾后有王宝强，都在百花奖挂 0 票，喜剧演员真的不容易拿主流奖项吗？",
-        "heat": 46,
-        "url": "https://www.zhihu.com/question/2070267169883906410",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 5,
-        "title": "为什么电视里假扮夫妻的卧底往往会成了真夫妻？",
-        "heat": 45,
-        "url": "https://www.zhihu.com/question/653625916",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 6,
-        "title": "中国网红「雅典娜」确认遇害，被闺蜜骗去菲律宾后被绑架，哪些细节值得关注？",
-        "heat": 44,
-        "url": "https://www.zhihu.com/question/2070285462472582864",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 7,
-        "title": "如何评价《欢迎来龙餐馆》这部电影？",
-        "heat": 43,
-        "url": "https://www.zhihu.com/question/2070182701299152586",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 8,
-        "title": "职场聊天句句以「哈」结尾，有人觉得礼貌，有人觉得敷衍，你怎么看待？为啥会有这种表达习惯？",
-        "heat": 42,
-        "url": "https://www.zhihu.com/question/2068715332844393812",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 9,
-        "title": "费大厨撤下「全国小炒肉大王」 宣传，上菜口号更换为 「精选黑猪肉、专业大厨炒」，此举带来的影响有多大？",
-        "heat": 41,
-        "url": "https://www.zhihu.com/question/2070112824437876354",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 10,
-        "title": "曾经的钢琴为雅，现在怎么感觉没什么人愿意练钢琴了?",
-        "heat": 40,
-        "url": "https://www.zhihu.com/question/1998873387645305487",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 11,
-        "title": "因为给我买车买房没提前跟我弟说，我弟把我全家都拉黑了快 7 年了，父子都不愿低头，怎么破冰？",
-        "heat": 39,
-        "url": "https://www.zhihu.com/question/2068757535138566295",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      },
-      {
-        "platform": "知乎热榜",
-        "region": "国内",
-        "rank": 12,
-        "title": "豆包否认推荐酒店抽取 12% 佣金，称仅在订单成交后收取渠道服务费，字节在打哪些商业算盘？",
-        "heat": 38,
-        "url": "https://www.zhihu.com/question/2070274629227083477",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "zhihu"
-      }
-    ],
-    "Hacker News": [
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 1,
-        "title": "H3-metal – Native MiniMax-H3 inference for Apple Silicon",
-        "heat": 40,
-        "url": "https://github.com/antirez/h3.c",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 2,
-        "title": "Chicken Scheme 6.0",
-        "heat": 39,
-        "url": "https://code.call-cc.org/releases/6.0.0/NEWS",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 3,
-        "title": "Show HN: Scroll through all 43252003274489856000 Rubik's Cube states",
-        "heat": 38,
-        "url": "https://everycube.alen.is/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 4,
-        "title": "Recycle – Floppydisks",
-        "heat": 37,
-        "url": "https://www.floppydisk.com/recycle",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 5,
-        "title": "The “mechanical miracle” that ruined Mark Twain’s life",
-        "heat": 36,
-        "url": "https://resobscura.substack.com/p/the-mechanical-miracle-that-ruined",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 6,
-        "title": "Show HN: Needle2: 14MB agentic LLM for phones, wearables, smart home and robots",
-        "heat": 35,
-        "url": "https://cactuscompute.com/needle",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 7,
-        "title": "Show HN: Mcptoon – MCP CLI client that cuts tool discovery tokens by 97%",
-        "heat": 34,
-        "url": "https://github.com/activeing123/mcptoon",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 8,
-        "title": "LFM2.5 2.6B model competitive with 4x larger models",
-        "heat": 33,
-        "url": "https://huggingface.co/LiquidAI/LFM2.5-2.6B",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 9,
-        "title": "Mark Zuckerberg attacks 'closed' AI rivals as Meta returns to open models",
-        "heat": 32,
-        "url": "https://www.ft.com/content/4e3957f8-ea7c-4c46-a3de-cdce8e526878",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 10,
-        "title": "Hyperspace",
-        "heat": 31,
-        "url": "https://hypercritical.co/hyperspace/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 11,
-        "title": "Stowaway – Take the window seat on any plane or satellite overhead",
-        "heat": 30,
-        "url": "https://stowaway.live/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
-      },
-      {
-        "platform": "Hacker News",
-        "region": "海外",
-        "rank": 12,
-        "title": "Rust SIMD on the GPU",
-        "heat": 29,
-        "url": "https://www.vectorware.com/blog/simd-on-gpu/",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "hacker-news"
+        "title": "姐妹们，我该咋办..",
+        "heat": "7908",
+        "url": "https://www.xiaohongshu.com/explore/6a5980c90000000011014ece",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "xiaohongshu",
+        "author": "高冷汉堡包"
       }
     ],
     "Product Hunt": [
@@ -1090,213 +356,935 @@
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 1,
-        "title": "oqoqo",
+        "title": "Kane CLI",
         "heat": 49,
-        "url": "https://www.producthunt.com/products/oqoqo?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/lambdatest?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 2,
-        "title": "Portfolio Lab",
+        "title": "Nuphos",
         "heat": 48,
-        "url": "https://www.producthunt.com/products/portfolio-lab?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/nuphos?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 3,
-        "title": "Paritok",
+        "title": "Ito",
         "heat": 47,
-        "url": "https://www.producthunt.com/products/paritok?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/ito-ai-code-review-that-runs-code?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 4,
-        "title": "SecondBrain Note by GenSpark",
+        "title": "Scrimba Explain",
         "heat": 46,
-        "url": "https://www.producthunt.com/products/genspark?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/scrimba?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 5,
-        "title": "AI Group Call",
+        "title": "Human Behavior",
         "heat": 45,
-        "url": "https://www.producthunt.com/products/ai-group-call?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/human-behavior?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 6,
-        "title": "Prime Agent",
+        "title": "Oasis",
         "heat": 44,
-        "url": "https://www.producthunt.com/products/prime-intellect?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/oasis-6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 7,
-        "title": "Gutta",
+        "title": "Skilldocs",
         "heat": 43,
-        "url": "https://www.producthunt.com/products/gutta?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/skilldocs?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 8,
-        "title": "Remix",
+        "title": "Kitbitz",
         "heat": 42,
-        "url": "https://www.producthunt.com/products/remix-8?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/kitbitz?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 9,
-        "title": "Vidaya",
+        "title": "Caveman",
         "heat": 41,
-        "url": "https://www.producthunt.com/products/vidaya?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/caveman?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 10,
-        "title": "Salesman AI",
+        "title": "Qencode MCP",
         "heat": 40,
-        "url": "https://www.producthunt.com/products/salesman-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/qencode?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 11,
-        "title": "Heym",
+        "title": "Google Pixel 11",
         "heat": 39,
-        "url": "https://www.producthunt.com/products/heym?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/google?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       },
       {
         "platform": "Product Hunt",
         "region": "海外",
         "rank": 12,
-        "title": "PostSnag",
+        "title": "Mem Agent",
         "heat": 38,
-        "url": "https://www.producthunt.com/products/postsnag?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
+        "url": "https://www.producthunt.com/products/mem-2-0?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
         "source_id": "producthunt"
       }
     ],
-    "V2EX 热门": [
+    "抖音热榜": [
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 1,
-        "title": "有人把「词元」一词塞进了 opencode",
-        "heat": 214,
-        "url": "https://www.v2ex.com/t/1233284",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "朱镕基同志逝世",
+        "heat": 49,
+        "url": "https://www.douyin.com/hot/2607321",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 2,
-        "title": "不知道大家对“词元”这个翻译，为什么反应这么大",
-        "heat": 159,
-        "url": "https://www.v2ex.com/t/1233318",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "威少宣布退役",
+        "heat": 48,
+        "url": "https://www.douyin.com/hot/2607683",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 3,
-        "title": "你们的车还能卖多少钱？",
-        "heat": 135,
-        "url": "https://www.v2ex.com/t/1233286",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "我国碳排放权成交量突破9亿吨",
+        "heat": 47,
+        "url": "https://www.douyin.com/hot/2607850",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 4,
-        "title": "在“减肥”这个话题下刷“能量守恒”的人，可能要刷新一下认知了",
-        "heat": 128,
-        "url": "https://www.v2ex.com/t/1233438",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "白海豚残涡回马枪杀到江苏",
+        "heat": 46,
+        "url": "https://www.douyin.com/hot/2607930",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 5,
-        "title": "有没有人觉得 Codex 现在变成这种随机重置的模式，让人很不舒服",
-        "heat": 123,
-        "url": "https://www.v2ex.com/t/1233409",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "新闻联播",
+        "heat": 45,
+        "url": "https://www.douyin.com/hot/2608613",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 6,
-        "title": "重新掌握信息选择权， AI 原生 RSS 阅读器分享，送永久会员",
-        "heat": 110,
-        "url": "https://www.v2ex.com/t/1233346",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "互联护苗：安全防护课",
+        "heat": 44,
+        "url": "https://www.douyin.com/hot/2608594",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 7,
-        "title": "中登有多少在健身的...",
-        "heat": 101,
-        "url": "https://www.v2ex.com/t/1233414",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "美新闻机构起诉特朗普",
+        "heat": 43,
+        "url": "https://www.douyin.com/hot/2607917",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 8,
-        "title": "“万一免五”股票 ETF 大笑脸低佣开户，抽键盘迈从 Ace 68 V2；鼠标迈从 A7 V3 PRO+。 [8.11 日~8.17 日]",
-        "heat": 78,
-        "url": "https://www.v2ex.com/t/1233404",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "看看我拍到的英仙座流星雨吧",
+        "heat": 42,
+        "url": "https://www.douyin.com/hot/2607661",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
       },
       {
-        "platform": "V2EX 热门",
+        "platform": "抖音热榜",
         "region": "国内",
         "rank": 9,
-        "title": "你会选择哪个颜色代表夏天？",
-        "heat": 58,
-        "url": "https://www.v2ex.com/t/1233418",
-        "fetched_at": "2026-08-11T13:39:56+08:00",
-        "source_id": "v2ex"
+        "title": "我选择海岛作为我生活的解药",
+        "heat": 41,
+        "url": "https://www.douyin.com/hot/2606496",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
+      },
+      {
+        "platform": "抖音热榜",
+        "region": "国内",
+        "rank": 10,
+        "title": "白海豚对河南的影响有多大",
+        "heat": 40,
+        "url": "https://www.douyin.com/hot/2607781",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
+      },
+      {
+        "platform": "抖音热榜",
+        "region": "国内",
+        "rank": 11,
+        "title": "“两弹一星”元勋王希季逝世",
+        "heat": 39,
+        "url": "https://www.douyin.com/hot/2608027",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
+      },
+      {
+        "platform": "抖音热榜",
+        "region": "国内",
+        "rank": 12,
+        "title": "许昌襄阳出现最强单日降雨",
+        "heat": 38,
+        "url": "https://www.douyin.com/hot/2607748",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "douyin"
+      }
+    ],
+    "今日头条热榜": [
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 1,
+        "title": "朱镕基同志逝世",
+        "heat": 49,
+        "url": "https://www.toutiao.com/trending/7672219414749793835/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 2,
+        "title": "胖东来许昌老店关闭周边商户发声",
+        "heat": 48,
+        "url": "https://www.toutiao.com/trending/7672215993464963123/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 3,
+        "title": "防汛防台一线筑牢安全堤坝",
+        "heat": 47,
+        "url": "https://www.toutiao.com/trending/7672852322434911798/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 4,
+        "title": "福建船厂爆炸已致12伤 10人为消防员",
+        "heat": 46,
+        "url": "https://www.toutiao.com/trending/7673455468009754118/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 5,
+        "title": "《新闻联播》正在直播",
+        "heat": 45,
+        "url": "https://www.toutiao.com/trending/7673028170140549163/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 6,
+        "title": "砸30万补课考700分最后选了职校",
+        "heat": 44,
+        "url": "https://www.toutiao.com/trending/7673338651845263379/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 7,
+        "title": "王思聪5年前配的电脑现在值129万",
+        "heat": 43,
+        "url": "https://www.toutiao.com/trending/7673308861134028827/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 8,
+        "title": "30岁新疆和田女干部遇山洪牺牲",
+        "heat": 42,
+        "url": "https://www.toutiao.com/trending/7672985041039015990/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 9,
+        "title": "郭一鸣：A股尾盘为何突然跳水杀跌",
+        "heat": 41,
+        "url": "https://www.toutiao.com/trending/7673428562422009386/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 10,
+        "title": "手机价格全线暴涨",
+        "heat": 40,
+        "url": "https://www.toutiao.com/trending/7673341653165162550/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 11,
+        "title": "女子爱生闷气乳腺癌去世 丈夫痛哭",
+        "heat": 39,
+        "url": "https://www.toutiao.com/trending/7673134486418178084/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      },
+      {
+        "platform": "今日头条热榜",
+        "region": "国内",
+        "rank": 12,
+        "title": "免费领鸡蛋还能抽奖？警惕涉老诈骗",
+        "heat": 38,
+        "url": "https://www.toutiao.com/trending/7672008059765719082/",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "toutiao"
+      }
+    ],
+    "B站热搜": [
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 1,
+        "title": "朱镕基同志逝世",
+        "heat": 49,
+        "url": "https://search.bilibili.com/all?keyword=%E6%9C%B1%E9%95%95%E5%9F%BA%E5%90%8C%E5%BF%97%E9%80%9D%E4%B8%96",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 2,
+        "title": "平陆运河通航前最后一次大考",
+        "heat": 48,
+        "url": "https://search.bilibili.com/all?keyword=%E5%B9%B3%E9%99%86%E8%BF%90%E6%B2%B3%E9%80%9A%E8%88%AA%E5%89%8D%E6%9C%80%E5%90%8E%E4%B8%80%E6%AC%A1%E5%A4%A7%E8%80%83",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 3,
+        "title": "歼-16女飞行员采访时遇紧急出勤",
+        "heat": 47,
+        "url": "https://search.bilibili.com/all?keyword=%E6%AD%BC-16%E5%A5%B3%E9%A3%9E%E8%A1%8C%E5%91%98%E9%87%87%E8%AE%BF%E6%97%B6%E9%81%87%E7%B4%A7%E6%80%A5%E5%87%BA%E5%8B%A4",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 4,
+        "title": "长沙TES.A战胜成都AG超玩会 KPL",
+        "heat": 46,
+        "url": "https://search.bilibili.com/all?keyword=%E6%88%90%E9%83%BDAG%E8%B6%85%E7%8E%A9%E4%BC%9A%20%E9%95%BF%E6%B2%99TES.A",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 5,
+        "title": "TES vs LGD LPL第三赛段",
+        "heat": 45,
+        "url": "https://search.bilibili.com/all?keyword=TES%20LGD",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 6,
+        "title": "云南交警翻唱坏苹果",
+        "heat": 44,
+        "url": "https://search.bilibili.com/all?keyword=%E4%BA%91%E5%8D%97%E4%BA%A4%E8%AD%A6%E7%BF%BB%E5%94%B1%E5%9D%8F%E8%8B%B9%E6%9E%9C",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 7,
+        "title": "邱文平聊欢迎来龙餐馆",
+        "heat": 43,
+        "url": "https://search.bilibili.com/all?keyword=%E9%82%B1%E6%96%87%E5%B9%B3%E8%81%8A%E6%AC%A2%E8%BF%8E%E6%9D%A5%E9%BE%99%E9%A4%90%E9%A6%86",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 8,
+        "title": "UP主自制植物大战僵尸恐怖版",
+        "heat": 42,
+        "url": "https://search.bilibili.com/all?keyword=UP%E4%B8%BB%E8%87%AA%E5%88%B6%E6%A4%8D%E7%89%A9%E5%A4%A7%E6%88%98%E5%83%B5%E5%B0%B8%E6%81%90%E6%80%96%E7%89%88",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 9,
+        "title": "臣妾要线上告发熹贵妃",
+        "heat": 41,
+        "url": "https://search.bilibili.com/all?keyword=%E8%87%A3%E5%A6%BE%E8%A6%81%E7%BA%BF%E4%B8%8A%E5%91%8A%E5%8F%91%E7%86%B9%E8%B4%B5%E5%A6%83",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 10,
+        "title": "快把真正的DeepSeek V4 Pro还给我",
+        "heat": 40,
+        "url": "https://search.bilibili.com/all?keyword=%E5%BF%AB%E6%8A%8A%E7%9C%9F%E6%AD%A3%E7%9A%84DeepSeek%E6%96%B0%E6%A8%A1%E5%9E%8B%E8%BF%98%E7%BB%99%E6%88%91",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 11,
+        "title": "UP主用一张纸折出奥黛塔",
+        "heat": 39,
+        "url": "https://search.bilibili.com/all?keyword=UP%E4%B8%BB%E7%94%A8%E4%B8%80%E5%BC%A0%E7%BA%B8%E6%8A%98%E5%87%BA%E5%A5%A5%E9%BB%9B%E5%A1%94",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      },
+      {
+        "platform": "B站热搜",
+        "region": "国内",
+        "rank": 12,
+        "title": "NIP战胜WBG LPL第三赛段",
+        "heat": 38,
+        "url": "https://search.bilibili.com/all?keyword=WBG%20NIP",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "bilibili-hot-search"
+      }
+    ],
+    "微博热搜": [
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 1,
+        "title": "朱镕基同志逝世",
+        "heat": 49,
+        "url": "https://s.weibo.com/weibo?q=%23%E6%9C%B1%E9%95%95%E5%9F%BA%E5%90%8C%E5%BF%97%E9%80%9D%E4%B8%96%23&t=31&band_rank=1&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 2,
+        "title": "地下试管婴儿",
+        "heat": 48,
+        "url": "https://s.weibo.com/weibo?q=%E5%9C%B0%E4%B8%8B%E8%AF%95%E7%AE%A1%E5%A9%B4%E5%84%BF&t=31&band_rank=2&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 3,
+        "title": "今年以来我国生态环境质量持续向好",
+        "heat": 47,
+        "url": "https://s.weibo.com/weibo?q=%23%E4%BB%8A%E5%B9%B4%E4%BB%A5%E6%9D%A5%E6%88%91%E5%9B%BD%E7%94%9F%E6%80%81%E7%8E%AF%E5%A2%83%E8%B4%A8%E9%87%8F%E6%8C%81%E7%BB%AD%E5%90%91%E5%A5%BD%23&t=31&band_rank=3&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 4,
+        "title": "茉莉奶白伦敦门店被砸",
+        "heat": 46,
+        "url": "https://s.weibo.com/weibo?q=%23%E8%8C%89%E8%8E%89%E5%A5%B6%E7%99%BD%E4%BC%A6%E6%95%A6%E9%97%A8%E5%BA%97%E8%A2%AB%E7%A0%B8%23&t=31&band_rank=4&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 5,
+        "title": "长鑫科技 中国市值最大上市公司",
+        "heat": 45,
+        "url": "https://s.weibo.com/weibo?q=%E9%95%BF%E9%91%AB%E7%A7%91%E6%8A%80%20%E4%B8%AD%E5%9B%BD%E5%B8%82%E5%80%BC%E6%9C%80%E5%A4%A7%E4%B8%8A%E5%B8%82%E5%85%AC%E5%8F%B8&t=31&band_rank=5&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 6,
+        "title": "生理性喜欢是很可怕的一件事",
+        "heat": 44,
+        "url": "https://s.weibo.com/weibo?q=%E7%94%9F%E7%90%86%E6%80%A7%E5%96%9C%E6%AC%A2%E6%98%AF%E5%BE%88%E5%8F%AF%E6%80%95%E7%9A%84%E4%B8%80%E4%BB%B6%E4%BA%8B&t=31&band_rank=6&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 7,
+        "title": "金鹰奖女主提名",
+        "heat": 43,
+        "url": "https://s.weibo.com/weibo?q=%23%E9%87%91%E9%B9%B0%E5%A5%96%E5%A5%B3%E4%B8%BB%E6%8F%90%E5%90%8D%23&t=31&band_rank=7&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 8,
+        "title": "AG 射辅",
+        "heat": 42,
+        "url": "https://s.weibo.com/weibo?q=AG%20%E5%B0%84%E8%BE%85&t=31&band_rank=8&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 9,
+        "title": "罗氏虾自助吃12只回本太爽了",
+        "heat": 41,
+        "url": "https://s.weibo.com/weibo?q=%E7%BD%97%E6%B0%8F%E8%99%BE%E8%87%AA%E5%8A%A9%E5%90%8312%E5%8F%AA%E5%9B%9E%E6%9C%AC%E5%A4%AA%E7%88%BD%E4%BA%86&t=31&band_rank=9&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 10,
+        "title": "曝stew加入EDG",
+        "heat": 40,
+        "url": "https://s.weibo.com/weibo?q=%23%E6%9B%9Dstew%E5%8A%A0%E5%85%A5EDG%23&t=31&band_rank=10&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 11,
+        "title": "网传王水牛艾滋",
+        "heat": 39,
+        "url": "https://s.weibo.com/weibo?q=%E7%BD%91%E4%BC%A0%E7%8E%8B%E6%B0%B4%E7%89%9B%E8%89%BE%E6%BB%8B&t=31&band_rank=11&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      },
+      {
+        "platform": "微博热搜",
+        "region": "国内",
+        "rank": 12,
+        "title": "郭麒麟瘦到认不出",
+        "heat": 38,
+        "url": "https://s.weibo.com/weibo?q=%23%E9%83%AD%E9%BA%92%E9%BA%9F%E7%98%A6%E5%88%B0%E8%AE%A4%E4%B8%8D%E5%87%BA%23&t=31&band_rank=12&Refer=top",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "weibo"
+      }
+    ],
+    "知乎热榜": [
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 1,
+        "title": "中共中央 全国人大常委会 国务院 全国政协讣告 朱镕基同志逝世",
+        "heat": 49,
+        "url": "https://zhuanlan.zhihu.com/p/2070933430993414087",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 2,
+        "title": "货拉拉司机中途加价被拒，带货跑 600 公里外，平台介入后仍拒不归还，怎么回事？暴露出平台哪些问题？",
+        "heat": 48,
+        "url": "https://www.zhihu.com/question/2070902073780953324",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 3,
+        "title": "为什么过去都说鱼翅和鲍鱼是顶级菜肴，而现在却很少人提了？",
+        "heat": 47,
+        "url": "https://www.zhihu.com/question/2069876191474012892",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 4,
+        "title": "当年为加入 WTO 做出的让步，今天看来到底有多值？",
+        "heat": 46,
+        "url": "https://www.zhihu.com/question/2070975451988587299",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 5,
+        "title": "中国成功用竹子造出无人机，这对航空材料和制造技术意味着什么？",
+        "heat": 45,
+        "url": "https://www.zhihu.com/question/2070132623079379116",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 6,
+        "title": "苹果被曝正测试长鑫存储芯片，将用于在中国市场销售的设备，双方最终达成合作的可能性有多大？",
+        "heat": 44,
+        "url": "https://www.zhihu.com/question/2070073820929419121",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 7,
+        "title": "山西一医院实习护士晒患者隐私照，院方称将严肃处理，具体怎么回事？为什么这类事时有发生，问题出在哪？",
+        "heat": 43,
+        "url": "https://www.zhihu.com/question/2070271590869070734",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 8,
+        "title": "因长期在中东服役，多名水兵试图从美国海军「林肯」号跳海，为什么会这样？美国中东长期部署带来哪些问题？",
+        "heat": 42,
+        "url": "https://www.zhihu.com/question/2071169289697092854",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 9,
+        "title": "网传《欢迎来龙餐馆》男主角原定为徐峥，消息靠谱吗？如果是徐峥来演的话你认为效果会比沈腾好吗？",
+        "heat": 41,
+        "url": "https://www.zhihu.com/question/2070925244152246749",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 10,
+        "title": "为什么蚊子没有进化成像猫猫那样特别可爱的样子，让人不忍心拍死？",
+        "heat": 40,
+        "url": "https://www.zhihu.com/question/2059374956157329909",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 11,
+        "title": "如何看待 2026 年 8 月 13 日 A 股市场行情？跳空高开尾盘却突发跳水，发生了什么？",
+        "heat": 39,
+        "url": "https://www.zhihu.com/question/2067634093093818544",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      },
+      {
+        "platform": "知乎热榜",
+        "region": "国内",
+        "rank": 12,
+        "title": "唐朝女人头上插那么多金钗步摇，走路不累吗，她们到底图什么？",
+        "heat": 38,
+        "url": "https://www.zhihu.com/question/2070260620662924741",
+        "fetched_at": "2026-08-13T19:41:50+08:00",
+        "source_id": "zhihu"
+      }
+    ],
+    "Twitter/X 趋势": [
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 1,
+        "title": "#エビライ同時視聴",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%23%E3%82%A8%E3%83%93%E3%83%A9%E3%82%A4%E5%90%8C%E6%99%82%E8%A6%96%E8%81%B4",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 2,
+        "title": "#YouManiacSeries",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%23YouManiacSeries",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 3,
+        "title": "線状降水帯",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%E7%B7%9A%E7%8A%B6%E9%99%8D%E6%B0%B4%E5%B8%AF",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 4,
+        "title": "YOU MANIAC TRAILER",
+        "heat": null,
+        "url": "https://twitter.com/search?q=YOU%20MANIAC%20TRAILER",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 5,
+        "title": "#撃ち抜けかなた",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%23%E6%92%83%E3%81%A1%E6%8A%9C%E3%81%91%E3%81%8B%E3%81%AA%E3%81%9F",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 6,
+        "title": "#エゴが熱く滾った瞬間",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%23%E3%82%A8%E3%82%B4%E3%81%8C%E7%86%B1%E3%81%8F%E6%BB%BE%E3%81%A3%E3%81%9F%E7%9E%AC%E9%96%93",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 7,
+        "title": "#ブルーロックモンスト",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%23%E3%83%96%E3%83%AB%E3%83%BC%E3%83%AD%E3%83%83%E3%82%AF%E3%83%A2%E3%83%B3%E3%82%B9%E3%83%88",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      },
+      {
+        "platform": "Twitter/X 趋势",
+        "region": "海外",
+        "rank": 8,
+        "title": "避難指示",
+        "heat": null,
+        "url": "https://twitter.com/search?q=%E9%81%BF%E9%9B%A3%E6%8C%87%E7%A4%BA",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "trends24"
+      }
+    ],
+    "Hacker News": [
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 1,
+        "title": "ChatGPT Desktop (Codex Desktop) for Linux",
+        "heat": 40,
+        "url": "https://openai.com/codex/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 2,
+        "title": "The lattice of sets of natural numbers is rich",
+        "heat": 39,
+        "url": "https://jdh.hamkins.org/the-lattice-of-sets-of-natural-numbers-is-rich/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 3,
+        "title": "DeepSeek V4 Pro 0813",
+        "heat": 38,
+        "url": "https://openrouter.ai/deepseek/deepseek-v4-pro-0813",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 4,
+        "title": "Tracking down the 16-year-old WAL-reset SQLite bug",
+        "heat": 37,
+        "url": "https://tailscale.com/blog/sqlite-wal-reset-bug",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 5,
+        "title": "Qwen3.8-2.4T",
+        "heat": 36,
+        "url": "https://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 6,
+        "title": "Delta",
+        "heat": 35,
+        "url": "https://zed.dev/blog/introducing-delta",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 7,
+        "title": "Principia Mathematica is modern and insightful",
+        "heat": 34,
+        "url": "https://okmij.org/ftp/Computation/Impressions/PrincipiaMathematica.html",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 8,
+        "title": "Picking berries is my meditation",
+        "heat": 33,
+        "url": "https://www.tsoon.com/posts/picking-berries-meditation/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 9,
+        "title": "Antiqua–Fraktur dispute",
+        "heat": 32,
+        "url": "https://en.wikipedia.org/wiki/Antiqua%E2%80%93Fraktur_dispute",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 10,
+        "title": "uBlock Origin Is Giving Up the Fight to Keep Ads Off Facebook",
+        "heat": 31,
+        "url": "https://digitalescapetools.com/2026/08/ublock-origin-stops-chasing-facebook-ads.html",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 11,
+        "title": "2026 Eclipse Webcams",
+        "heat": 30,
+        "url": "https://jonty.github.io/2026_eclipse_webcams/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
+      },
+      {
+        "platform": "Hacker News",
+        "region": "海外",
+        "rank": 12,
+        "title": "The punched card tabulator",
+        "heat": 29,
+        "url": "https://www.ibm.com/history/punched-card-tabulator",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "hacker-news"
       }
     ],
     "B站热门视频": [
@@ -1304,120 +1292,120 @@
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 1,
-        "title": "感谢朋友们的硬币之力，为我买了1600的药！又续了一个月的命，有这么多药吃老幸福！",
-        "heat": 795488,
-        "url": "https://www.bilibili.com/video/BV12BuG6MEtM",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "⚡泥 肘⚡",
+        "heat": 4384238,
+        "url": "https://www.bilibili.com/video/BV1TiuZ6TEQw",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 2,
-        "title": "秋天了，该看帅哥了",
-        "heat": 364958,
-        "url": "https://www.bilibili.com/video/BV1mnuS65EHP",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "感谢朋友们的硬币之力，为我买了1600的药！又续了一个月的命，有这么多药吃老幸福！",
+        "heat": 1410888,
+        "url": "https://www.bilibili.com/video/BV12BuG6MEtM",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 3,
-        "title": "“只因为在这黄沙漫天的地方”——『反乌托邦&拼接遗憾』",
-        "heat": 102005,
-        "url": "https://www.bilibili.com/video/BV1eCum6DEbb",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "深切缅怀！朱总理一路走好！",
+        "heat": 946316,
+        "url": "https://www.bilibili.com/video/BV1Peg56kEbt",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 4,
-        "title": "这家店的蟑螂怎么这么大啊！！！",
-        "heat": 2353035,
-        "url": "https://www.bilibili.com/video/BV1iCuL6hEzS",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "热烈欢迎方芳老师👏 来看驰骋台湾大陆影视综近60年的芳姐平时都会吃什么玩什么买什么呢？（这期听到好多前辈的名字哦",
+        "heat": 340696,
+        "url": "https://www.bilibili.com/video/BV1UMgL6EEwC",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 5,
-        "title": "暑期档最佳？恭喜沈腾可以称影帝了!《欢迎来龙餐馆》诚实观后感",
-        "heat": 599487,
-        "url": "https://www.bilibili.com/video/BV1ZTu96zEwg",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "这视频等了五年！",
+        "heat": 2306262,
+        "url": "https://www.bilibili.com/video/BV17WgV6hEdX",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 6,
-        "title": "什么！我成蜘蛛侠了？!",
-        "heat": 129819,
-        "url": "https://www.bilibili.com/video/BV1RJud6uEjk",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "普通人健身100天，变化有多大？",
+        "heat": 1721507,
+        "url": "https://www.bilibili.com/video/BV1vxuq6pEsd",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 7,
-        "title": "发烧梗",
-        "heat": 4510983,
-        "url": "https://www.bilibili.com/video/BV1Unub69EpX",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "船新版本新宝岛！这个联动怎么说？",
+        "heat": 4575356,
+        "url": "https://www.bilibili.com/video/BV1mJuB6jEDj",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 8,
-        "title": "不看后悔！海绵宝宝主题汉堡店 这装修下血本了",
-        "heat": 760761,
-        "url": "https://www.bilibili.com/video/BV11vu96nEHL",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "坏结果！！",
+        "heat": 694456,
+        "url": "https://www.bilibili.com/video/BV1Xfg56sEGm",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 9,
-        "title": "男同学是只土猫【B萌应援】",
-        "heat": 278542,
-        "url": "https://www.bilibili.com/video/BV1PauQ61EpE",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "预制奖，名利场，大众电影百花奖，大众不发音。",
+        "heat": 2027337,
+        "url": "https://www.bilibili.com/video/BV1Zuuy67Ef1",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 10,
-        "title": "王健林现在怎么样了? 万达什么情况?",
-        "heat": 1105677,
-        "url": "https://www.bilibili.com/video/BV1XPuo6uES8",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "四菜一汤，送到堑壕！",
+        "heat": 1552138,
+        "url": "https://www.bilibili.com/video/BV1xUuz6LE5z",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 11,
-        "title": "在洛杉矶喝200%糖蜜雪冰城，吃全球最古早麦当劳，有不胖的风险吗",
-        "heat": 5291071,
-        "url": "https://www.bilibili.com/video/BV1rRut6rEGS",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "“十二鬼月？！只有上弦！来自上弦们的绝对压迫感！”【B萌应援】",
+        "heat": 394737,
+        "url": "https://www.bilibili.com/video/BV1Tbuk6dEPs",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       },
       {
         "platform": "B站热门视频",
         "region": "国内",
         "rank": 12,
-        "title": "外网爆火的恐怖神作！《Endacopia》全结局收集",
-        "heat": 243928,
-        "url": "https://www.bilibili.com/video/BV1Xwuo66EzP",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "卢本伟结婚了？这事儿远比你想的要深",
+        "heat": 286695,
+        "url": "https://www.bilibili.com/video/BV15Gg56oEay",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "bili-hot"
       }
     ],
@@ -1426,81 +1414,173 @@
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 1,
-        "title": "Tech industry is buzzing after a Claude agent hacked into a gym | TechCrunch",
+        "title": "Race to regain AI model supremacy: Why Google shifted power in its top ranks - The Business Times",
         "heat": null,
-        "url": "https://techcrunch.com/2026/08/10/tech-industry-is-buzzing-after-a-claude-agent-hacked-into-a-gym/",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://www.businesstimes.com.sg/international/global/race-regain-ai-model-supremacy-why-google-shifted-power-its-top-ranks",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 2,
-        "title": "OpenAI says it slowed Astra model development over security concerns | TechCrunch",
+        "title": "SpaceXAI releases flagship Grok 4.6 model with advanced reasoning capabilities - SiliconANGLE",
         "heat": null,
-        "url": "https://techcrunch.com/2026/08/07/openai-says-it-slowed-astra-model-development-over-security-concerns/",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://siliconangle.com/2026/08/12/spacexai-releases-flagship-grok-4-6-model-advanced-reasoning-capabilities/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 3,
-        "title": "Meta Muse Glimmer release: Mark Zuckerberg writes 6500 word essay on the future",
+        "title": "Google’s Gemini app surges to one billion users | TechCrunch",
         "heat": null,
-        "url": "https://www.smh.com.au/technology/meta-releases-new-ai-model-as-zuckerberg-writes-6500-word-essay-on-the-future-20260811-p60n4e.html",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://techcrunch.com/2026/08/11/googles-gemini-app-surges-to-one-billion-users/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 4,
-        "title": "First OpenAI, now Meta - why do AI hacks keep happening? - BBC News",
+        "title": "Musk counterattack: Grok 4.6 ahead of GPT in coding and terminal performance",
         "heat": null,
-        "url": "https://www.bbc.co.uk/news/articles/cp30989ee1wo",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://www.digitaltoday.co.kr/en/view/92635/musk-counterattack-grok-4-6-ahead-of-gpt-in-coding-terminal-performance",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 5,
-        "title": "One of China’s Most Powerful AI Models Has Also Escaped Containment | WIRED",
+        "title": "OpenAI-backed Thrive Holdings raises $2B to bring AI to the enterprise | TechCrunch",
         "heat": null,
-        "url": "https://www.wired.com/story/moonshot-kimi-k3-ai-model-escape-sandbox/",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://techcrunch.com/2026/08/12/openai-backed-thrive-holdings-raises-2b-to-bring-ai-to-the-enterprise/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 6,
-        "title": "AI just created a virus not found in nature, and scientists are worried | Scientific American",
+        "title": "The World's Leading AI Companies Struggle to Contain Latest Models - Business Insider",
         "heat": null,
-        "url": "https://www.scientificamerican.com/article/ai-just-created-a-virus-not-found-in-nature-and-scientists-are-worried/",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://www.businessinsider.com/ai-cybersecurity-incidents-openai-astra-anthropic-kimi-meta-2026-8",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 7,
-        "title": "Anthropic and OpenAI AI agents showed signs of deception during safety tests | Scientific American",
+        "title": "The AI takeover of mathematics has begun | The Verge",
         "heat": null,
-        "url": "https://www.scientificamerican.com/article/anthropic-and-openai-ai-agents-showed-signs-of-deception-during-safety-tests/",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://www.theverge.com/ai-artificial-intelligence/977273/the-ai-takeover-of-mathematics-has-begun",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
       },
       {
         "platform": "Exa 全球科技热点",
         "region": "海外",
         "rank": 8,
-        "title": "OpenAI Didn’t Notice Its AI Agents Using a Message Board to Plan Their Hacking Spree | WIRED",
+        "title": "General Catalyst leads $1.1B round into 2-month-old River AI | TechCrunch",
         "heat": null,
-        "url": "https://www.wired.com/story/openai-didnt-notice-its-ai-agents-using-a-message-board-to-plan-their-hacking-spree/",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "url": "https://techcrunch.com/2026/08/11/general-catalyst-leads-1-1b-round-into-2-month-old-river-ai/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "exa"
+      }
+    ],
+    "V2EX 热门": [
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 1,
+        "title": "local.ai",
+        "heat": 302,
+        "url": "https://www.v2ex.com/t/1234095",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 2,
+        "title": "秋招工作是真难找啊，试了很多路子，想听点建议。",
+        "heat": 129,
+        "url": "https://www.v2ex.com/t/1234077",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 3,
+        "title": "八年之隔，这可能是地球上最漂亮丝滑的 Markdown 应用！",
+        "heat": 122,
+        "url": "https://www.v2ex.com/t/1233953",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 4,
+        "title": "不建议年轻人刻意抑制消费去完成所谓的原始积累",
+        "heat": 117,
+        "url": "https://www.v2ex.com/t/1233943",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 5,
+        "title": "看到 AI 让 Linux 变得真正可用了帖子，想问下现在最推荐的是 Linux 发行版是哪个呢",
+        "heat": 93,
+        "url": "https://www.v2ex.com/t/1233928",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 6,
+        "title": "今天 30 岁生日，替大家许个愿望",
+        "heat": 78,
+        "url": "https://www.v2ex.com/t/1234005",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 7,
+        "title": "不到一个小时后重置，快蹬",
+        "heat": 74,
+        "url": "https://www.v2ex.com/t/1234001",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 8,
+        "title": "不要轻易借钱给别人",
+        "heat": 72,
+        "url": "https://www.v2ex.com/t/1233952",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
+      },
+      {
+        "platform": "V2EX 热门",
+        "region": "国内",
+        "rank": 9,
+        "title": "感觉自己被这个社会判了死刑。",
+        "heat": 69,
+        "url": "https://www.v2ex.com/t/1234133",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "v2ex"
       }
     ],
     "小红书(OpenCLI)": [
@@ -1508,81 +1588,171 @@
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 1,
-        "title": "终于‼️把自媒体起号skill搭建成功了🏆",
+        "title": "8月11日热点TOP10｜年轻人都在看的每日速览",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 2,
-        "title": "8月9日热点TOP10｜年轻人都在看的每日速览",
+        "title": "8月13日社会热点信息差",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 3,
-        "title": "🔥全新热点上线｜官方亿级流量限时放送",
+        "title": "热点播报",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 4,
-        "title": "8月11日社会热点信息差",
+        "title": "别蹲了，你们要的小白AI热点抓取工具教程来",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 5,
-        "title": "热点资讯",
+        "title": "10分钟搭建一个WorkBuddy爆款选题工作台",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 6,
-        "title": "小红书热点怎么找？4个方法",
+        "title": "热点播报",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 7,
-        "title": "热点信息差：奇葩女子做完美甲不付款想跑",
+        "title": "热度榜，可以避免信息茧房",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
       },
       {
         "platform": "小红书(OpenCLI)",
         "region": "国内",
         "rank": 8,
-        "title": "8月11日早间全球热点速报",
+        "title": "面试热点：义乌发展经验，因地制宜走特色路",
         "heat": null,
         "url": "",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "opencli-xiaohongshu"
+      }
+    ],
+    "Reddit 热门": [
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 1,
+        "title": "Who thinks moon landing was fake ?",
+        "heat": 13524,
+        "url": "https://www.reddit.com/r/memes/comments/1vn3vp0/who_thinks_moon_landing_was_fake/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 2,
+        "title": "My kitten has grown up.",
+        "heat": 7804,
+        "url": "https://www.reddit.com/r/aww/comments/1vn4yo2/my_kitten_has_grown_up/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 3,
+        "title": "American tourists asking about U.S. currency in Rome",
+        "heat": 16804,
+        "url": "https://www.reddit.com/r/TikTokCringe/comments/1vmkonr/american_tourists_asking_about_us_currency_in_rome/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 4,
+        "title": "Raindrops falling on bioluminescent water in Puerto Rico",
+        "heat": 18136,
+        "url": "https://www.reddit.com/r/Damnthatsinteresting/comments/1vn1zol/raindrops_falling_on_bioluminescent_water_in/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 5,
+        "title": "Wife’s Nespresso Machine… someone is getting rich off us.",
+        "heat": 22509,
+        "url": "https://www.reddit.com/r/mildlyinfuriating/comments/1vmis8p/wifes_nespresso_machine_someone_is_getting_rich/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 6,
+        "title": "what’s in this bag",
+        "heat": 15065,
+        "url": "https://www.reddit.com/r/whatisit/comments/1vmf2e6/whats_in_this_bag/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 7,
+        "title": "A caring man",
+        "heat": 12211,
+        "url": "https://www.reddit.com/r/Unexpected/comments/1vn3abi/a_caring_man/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
+      },
+      {
+        "platform": "Reddit 热门",
+        "region": "海外",
+        "rank": 8,
+        "title": "He told me “no wonder why no one dated you in high school”",
+        "heat": 17243,
+        "url": "https://www.reddit.com/r/GirlDinnerDiaries/comments/1vmi3xw/he_told_me_no_wonder_why_no_one_dated_you_in_high/",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "opencli-reddit",
+        "via": "popular"
       }
     ],
     "雪球热帖": [
@@ -1590,72 +1760,82 @@
         "platform": "雪球热帖",
         "region": "国内",
         "rank": 1,
-        "title": "昨晚美股AI再迎寒意，英伟达在抛出一份震撼的5000亿美元融资方案后，股价不涨反跌近3%，甚至其CDS价格创下两周最大单日升幅。英特尔150亿美元定增方案公布后下跌超4%。而此前强势的光通信承压，Lumentum、Coherent分别...",
-        "heat": 42,
-        "url": "https://xueqiu.com/5332385101/404491061",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "最近光通信板块重新走强，大光们已经被市场反复验证，资金对“业绩兑现”的认知非常清晰小光们也争相反弹，利好不断；相比之下，罗博特科的市场定价仍然夹杂着“传统光伏自动化设备公司”“亏损公司”等旧标签。近期市场也确实在重新强化光通信主线，但...",
+        "heat": 63,
+        "url": "https://xueqiu.com/6952483175/404915296",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "xueqiu"
       },
       {
         "platform": "雪球热帖",
         "region": "国内",
         "rank": 2,
-        "title": "之前写过一个判断：市场整体弱势震荡，AI硬件交易的是“未来现金流”，医药交易的是“定价权错杀”，有色金属交易的是“全球流动性”，消费交易的是“居民资产负债表修复”，这段时间的盘面反馈基本印证了这个判断。AI硬件正在经历从板块beta转...",
-        "heat": 8,
-        "url": "https://xueqiu.com/1438190065/404494345",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "昨晚美CPI数据公布，7月核心CPI环比上涨0.2%，同比上涨2.5%，创21年3月以来最慢涨速。温和通胀数据令市场对9月加息预期大幅收缩（货币市场定价概率已低于50%）。受此影响，美股科技迎来强劲反弹。新一代AI云服务商Nebius...",
+        "heat": 57,
+        "url": "https://xueqiu.com/5332385101/404811658",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "xueqiu"
       },
       {
         "platform": "雪球热帖",
         "region": "国内",
         "rank": 3,
-        "title": "回复@阳光6w4: 幸福的家庭都是一样的：男的帅气、健壮、多金……女的漂亮、温柔、体贴……这个时候，缺点都会互相欣赏，所谓臭味相投狼狈为奸。不幸的家庭也是一样的：男的不再帅气、健壮、多金……女的不再漂亮、温柔、体贴……这个时候，互相嫌...",
-        "heat": 24,
-        "url": "https://xueqiu.com/1760673340/404538356",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "昨晚，备受市场关注的美国7月CPI数据公布：整体CPI同比上涨3.4%，与市场预期一致；核心CPI同比上涨2.5%，同样符合预期。给人的感觉不单是“符合预期”，简直就像是以市场预期为靶心精确“定制”。于是各类资产的表现也很符合预期：市...",
+        "heat": 5,
+        "url": "https://xueqiu.com/1438190065/404813828",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "xueqiu"
       },
       {
         "platform": "雪球热帖",
         "region": "国内",
         "rank": 4,
-        "title": "股价从低估修复到正常估值，然后股价跟着业绩同比例涨，这是对价格绕着价值转的诠释。这里不考虑市场情绪因素，只有冷冰冰的计算。业绩正常应该用自由现金流，但对一线白酒来说，用净利润代替也是可以的。PE30这是市场给消费行业估值，不是我拍脑门...",
-        "heat": 27,
-        "url": "https://xueqiu.com/7913104177/404487802",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "2026年二季度，在人祸（贸易政策+中东战乱）与天灾（高温气候+厄尔尼诺）的共同催化下，集运行业迎来了一轮量价齐升的非传统旺季，重演了24年的盛况。在这轮上行期中，马士基与萝卜的集运业务双双扭亏为盈，且在同一天公布了财报。作为同联盟的...",
+        "heat": 61,
+        "url": "https://xueqiu.com/6254064333/404902709",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "xueqiu"
       },
       {
         "platform": "雪球热帖",
         "region": "国内",
         "rank": 5,
-        "title": "回复@Mounttt: 这个你可以去养老院看看，正在实现中。照顾老人最核心的是一张具备皮肤、排泄物自动清洁功能的床。然后会再加上生理指标监测，有的还加上了按摩功能。让一个铁家伙帮你擦身，扶你上厕所，那就象你对“洗衣机”的想像，是让一个...",
-        "heat": 12,
-        "url": "https://xueqiu.com/1955602780/404530319",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "$腾讯控股(00700)$ 在四三几、四四几挂了买单，大概率今天能成交，后期继续下跌则继续加仓，若反弹或反转，也会逐渐减持，不管是市场逻辑也好、还是市场情绪也好，个人改变不了，只能应对，在里面寻找机会。对于腾讯，作为现金奶牛，仍然在不...",
+        "heat": 61,
+        "url": "https://xueqiu.com/2681290304/404812542",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "xueqiu"
       },
       {
         "platform": "雪球热帖",
         "region": "国内",
         "rank": 6,
-        "title": "我在雪球上关注公公有段时间了，却始终没对他的投资体系做过系统学习，平时刷到的都是零散的发言片段，对他的认知始终停留在碎片化的印象里。前阵子刷闲鱼，碰巧看到有人整理了他的全部文章合集，顺手就买了。从头到尾读完，说实话，挺惊艳的。抛开技术...",
-        "heat": 75,
-        "url": "https://xueqiu.com/7368170779/404511563",
-        "fetched_at": "2026-08-11T13:39:57+08:00",
+        "title": "COHR电话会几个要点。1.CPO需求强劲，没有延期。每一个大型战略客户，都有CPO 或 NPO 项目，有些客户同时拥有 CPO 和 NPO 项目，过去3-6个月相关合作需求提升明显。（管理层没有对两者进行分别说明，整场会议基本都是将...",
+        "heat": 27,
+        "url": "https://xueqiu.com/2799488232/404810973",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
+        "source_id": "xueqiu"
+      },
+      {
+        "platform": "雪球热帖",
+        "region": "国内",
+        "rank": 7,
+        "title": "2026年上半年，中国创新药出海完成86笔交易，首付款合计57亿美元、同比增长78%，交易总金额达976亿美元、同比增长40%，已超2024年全年近一倍、达到2025年全年的72%。当海外授权从“偶发性事件”演变为“常态化经营行为”，...",
+        "heat": 1,
+        "url": "https://xueqiu.com/2480339123/404886693",
+        "fetched_at": "2026-08-13T19:41:51+08:00",
         "source_id": "xueqiu"
       }
     ]
   },
   "stats": {
-    "platforms": 14,
-    "items": 149,
-    "sources_ok": 14,
+    "platforms": 16,
+    "items": 166,
+    "sources_ok": 16,
     "sources_total": 16,
     "by_region": {
-      "国内": 105,
-      "海外": 44
+      "国内": 106,
+      "海外": 60
     }
   }
 }

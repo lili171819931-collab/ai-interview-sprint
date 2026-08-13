@@ -1,0 +1,1178 @@
+{
+  "generatedAt": "2026-08-10T20:07:19+08:00",
+  "tool": "scrapling",
+  "platforms": {
+    "weibo": {
+      "label": "微博热搜",
+      "mode": "live:weibo-ajax",
+      "errors": [],
+      "items": [
+        {
+          "rank": 1,
+          "title": "百花奖闭幕式",
+          "heat": 4433909,
+          "heat_label": "4433909",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%E9%97%AD%E5%B9%95%E5%BC%8F%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 2,
+          "title": "白海豚突然大拐弯",
+          "heat": 2496204,
+          "heat_label": "2496204",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 3,
+          "title": "深圳APEC峰会倒计时100天",
+          "heat": 1140418,
+          "heat_label": "1140418",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%B7%B1%E5%9C%B3APEC%E5%B3%B0%E4%BC%9A%E5%80%92%E8%AE%A1%E6%97%B6100%E5%A4%A9%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 4,
+          "title": "世界小姐雅典娜确认遇害细节公开",
+          "heat": 1109137,
+          "heat_label": "1109137",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E4%B8%96%E7%95%8C%E5%B0%8F%E5%A7%90%E9%9B%85%E5%85%B8%E5%A8%9C%E7%A1%AE%E8%AE%A4%E9%81%87%E5%AE%B3%E7%BB%86%E8%8A%82%E5%85%AC%E5%BC%80%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 5,
+          "title": "演员秦焰去世",
+          "heat": 1071607,
+          "heat_label": "1071607",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%BC%94%E5%91%98%E7%A7%A6%E7%84%B0%E5%8E%BB%E4%B8%96%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 6,
+          "title": "百花奖内场座位图",
+          "heat": 1007833,
+          "heat_label": "1007833",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%E5%86%85%E5%9C%BA%E5%BA%A7%E4%BD%8D%E5%9B%BE%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 7,
+          "title": "别再用这个姿势玩手机了",
+          "heat": 984000,
+          "heat_label": "984000",
+          "category": "科技数码",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%88%AB%E5%86%8D%E7%94%A8%E8%BF%99%E4%B8%AA%E5%A7%BF%E5%8A%BF%E7%8E%A9%E6%89%8B%E6%9C%BA%E4%BA%86%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 7,
+          "title": "河南大暴雨特大暴雨",
+          "heat": 974731,
+          "heat_label": "974731",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%B2%B3%E5%8D%97%E5%A4%A7%E6%9A%B4%E9%9B%A8%E7%89%B9%E5%A4%A7%E6%9A%B4%E9%9B%A8%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 8,
+          "title": "女孩南太行失联14天后遗体被找到",
+          "heat": 766705,
+          "heat_label": "766705",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%A5%B3%E5%AD%A9%E5%8D%97%E5%A4%AA%E8%A1%8C%E5%A4%B1%E8%81%9414%E5%A4%A9%E5%90%8E%E9%81%97%E4%BD%93%E8%A2%AB%E6%89%BE%E5%88%B0%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 9,
+          "title": "女演员炒股亏70万靠年迈母亲接济",
+          "heat": 765779,
+          "heat_label": "765779",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%A5%B3%E6%BC%94%E5%91%98%E7%82%92%E8%82%A1%E4%BA%8F70%E4%B8%87%E9%9D%A0%E5%B9%B4%E8%BF%88%E6%AF%8D%E4%BA%B2%E6%8E%A5%E6%B5%8E%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 10,
+          "title": "多位大疆员工离职后创业成功",
+          "heat": 764120,
+          "heat_label": "764120",
+          "category": "科技数码",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%A4%9A%E4%BD%8D%E5%A4%A7%E7%96%86%E5%91%98%E5%B7%A5%E7%A6%BB%E8%81%8C%E5%90%8E%E5%88%9B%E4%B8%9A%E6%88%90%E5%8A%9F%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 11,
+          "title": "刘耀文大C位",
+          "heat": 763402,
+          "heat_label": "763402",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%88%98%E8%80%80%E6%96%87%E5%A4%A7C%E4%BD%8D%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 12,
+          "title": "杨幂现场换发型了",
+          "heat": 761207,
+          "heat_label": "761207",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%9D%A8%E5%B9%82%E7%8E%B0%E5%9C%BA%E6%8D%A2%E5%8F%91%E5%9E%8B%E4%BA%86%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 13,
+          "title": "泰国被接机女生疑遭带走",
+          "heat": 758753,
+          "heat_label": "758753",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%B3%B0%E5%9B%BD%E8%A2%AB%E6%8E%A5%E6%9C%BA%E5%A5%B3%E7%94%9F%E7%96%91%E9%81%AD%E5%B8%A6%E8%B5%B0%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 14,
+          "title": "易烊千玺用床单当桌布",
+          "heat": 758452,
+          "heat_label": "758452",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%98%93%E7%83%8A%E5%8D%83%E7%8E%BA%E7%94%A8%E5%BA%8A%E5%8D%95%E5%BD%93%E6%A1%8C%E5%B8%83%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 15,
+          "title": "白海豚 洗衣凝珠视角",
+          "heat": 757049,
+          "heat_label": "757049",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E6%B5%B7%E8%B1%9A%20%E6%B4%97%E8%A1%A3%E5%87%9D%E7%8F%A0%E8%A7%86%E8%A7%92%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 16,
+          "title": "张凌赫紫色头发",
+          "heat": 642064,
+          "heat_label": "642064",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%BC%A0%E5%87%8C%E8%B5%AB%E7%B4%AB%E8%89%B2%E5%A4%B4%E5%8F%91%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 17,
+          "title": "果然金饰样式还是复古的好",
+          "heat": 588675,
+          "heat_label": "588675",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%9E%9C%E7%84%B6%E9%87%91%E9%A5%B0%E6%A0%B7%E5%BC%8F%E8%BF%98%E6%98%AF%E5%A4%8D%E5%8F%A4%E7%9A%84%E5%A5%BD%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 18,
+          "title": "百花奖",
+          "heat": 587896,
+          "heat_label": "587896",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 19,
+          "title": "无畏向吴老狗请教驯兽秘籍",
+          "heat": 587458,
+          "heat_label": "587458",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%97%A0%E7%95%8F%E5%90%91%E5%90%B4%E8%80%81%E7%8B%97%E8%AF%B7%E6%95%99%E9%A9%AF%E5%85%BD%E7%A7%98%E7%B1%8D%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 20,
+          "title": "ai漫剧顶流已经出了8季了",
+          "heat": 579098,
+          "heat_label": "579098",
+          "category": "科技数码",
+          "url": "https://s.weibo.com/weibo?q=%23ai%E6%BC%AB%E5%89%A7%E9%A1%B6%E6%B5%81%E5%B7%B2%E7%BB%8F%E5%87%BA%E4%BA%868%E5%AD%A3%E4%BA%86%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 21,
+          "title": "国乒13人集结冲冠",
+          "heat": 577255,
+          "heat_label": "577255",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%9B%BD%E4%B9%9213%E4%BA%BA%E9%9B%86%E7%BB%93%E5%86%B2%E5%86%A0%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 22,
+          "title": "黄晓明苏有朋王祖蓝主持百花奖",
+          "heat": 570560,
+          "heat_label": "570560",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E9%BB%84%E6%99%93%E6%98%8E%E8%8B%8F%E6%9C%89%E6%9C%8B%E7%8E%8B%E7%A5%96%E8%93%9D%E4%B8%BB%E6%8C%81%E7%99%BE%E8%8A%B1%E5%A5%96%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 23,
+          "title": "寿司郎误将已付款顾客当逃单报警",
+          "heat": 566670,
+          "heat_label": "566670",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%AF%BF%E5%8F%B8%E9%83%8E%E8%AF%AF%E5%B0%86%E5%B7%B2%E4%BB%98%E6%AC%BE%E9%A1%BE%E5%AE%A2%E5%BD%93%E9%80%83%E5%8D%95%E6%8A%A5%E8%AD%A6%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 24,
+          "title": "杨幂 生图即神图",
+          "heat": 515908,
+          "heat_label": "515908",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%9D%A8%E5%B9%82%20%E7%94%9F%E5%9B%BE%E5%8D%B3%E7%A5%9E%E5%9B%BE%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 25,
+          "title": "原来90后这么小众",
+          "heat": 439186,
+          "heat_label": "439186",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%8E%9F%E6%9D%A590%E5%90%8E%E8%BF%99%E4%B9%88%E5%B0%8F%E4%BC%97%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 26,
+          "title": "易烊千玺一直在抠脑壳",
+          "heat": 432272,
+          "heat_label": "432272",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E6%98%93%E7%83%8A%E5%8D%83%E7%8E%BA%E4%B8%80%E7%9B%B4%E5%9C%A8%E6%8A%A0%E8%84%91%E5%A3%B3%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 27,
+          "title": "百花奖闭幕式节目单",
+          "heat": 388921,
+          "heat_label": "388921",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%E9%97%AD%E5%B9%95%E5%BC%8F%E8%8A%82%E7%9B%AE%E5%8D%95%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 28,
+          "title": "炸鸡店爆单 店员呼吸性碱中毒",
+          "heat": 386575,
+          "heat_label": "386575",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%82%B8%E9%B8%A1%E5%BA%97%E7%88%86%E5%8D%95%20%E5%BA%97%E5%91%98%E5%91%BC%E5%90%B8%E6%80%A7%E7%A2%B1%E4%B8%AD%E6%AF%92%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 29,
+          "title": "韩国女性怒斥AA制结婚",
+          "heat": 385484,
+          "heat_label": "385484",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E9%9F%A9%E5%9B%BD%E5%A5%B3%E6%80%A7%E6%80%92%E6%96%A5AA%E5%88%B6%E7%BB%93%E5%A9%9A%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        }
+      ],
+      "note": null
+    },
+    "xiaohongshu": {
+      "label": "小红书探索热门",
+      "mode": "live:xhs-explore",
+      "errors": [],
+      "items": [
+        {
+          "rank": 1,
+          "title": "🇨🇦加拿大球员Ismaël Koné到医院手术了🥺",
+          "heat": "9430",
+          "heat_label": "点赞 9430",
+          "category": "健康教育",
+          "url": "https://www.xiaohongshu.com/explore/6a34b95b00000000220196e7",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "温哥华吃喝玩乐小地图"
+        },
+        {
+          "rank": 2,
+          "title": "听说空调不建议来回关，给大家试了一下，一会关一会开，还不如一直开着，按26档省电",
+          "heat": "2179",
+          "heat_label": "点赞 2179",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a582ffc000000000f004b39",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "允琛日记"
+        },
+        {
+          "rank": 3,
+          "title": "哎，真烦",
+          "heat": "1470",
+          "heat_label": "点赞 1470",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a545707000000002103d9da",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "靠谱小张"
+        },
+        {
+          "rank": 4,
+          "title": "咋一个客人都没有 别倒了啊",
+          "heat": "7217",
+          "heat_label": "点赞 7217",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a32ef9e000000000d00bc01",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "向思思"
+        },
+        {
+          "rank": 5,
+          "title": "在相册里躺了好久的视频终于有勇气发出来了",
+          "heat": "7276",
+          "heat_label": "点赞 7276",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a487f18000000000f006083",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "蓬松面包🍞"
+        },
+        {
+          "rank": 6,
+          "title": "世界杯",
+          "heat": "1541",
+          "heat_label": "点赞 1541",
+          "category": "体育赛事",
+          "url": "https://www.xiaohongshu.com/explore/6a5c0698000000001d00cc57",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "Cc🌈"
+        },
+        {
+          "rank": 7,
+          "title": "范志毅这段解说笑死我",
+          "heat": "1.3万",
+          "heat_label": "点赞 1.3万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a39e8190000000007012ea9",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "🌊"
+        },
+        {
+          "rank": 8,
+          "title": "刚买的猪肝为什么上面一个个的红色圆圈？",
+          "heat": "1707",
+          "heat_label": "点赞 1707",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a58264b000000000f00772e",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "咩咩"
+        },
+        {
+          "rank": 9,
+          "title": "是谁还没做这个油醋辣椒啊，太好吃了！",
+          "heat": "1.3万",
+          "heat_label": "点赞 1.3万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a45d50b00000000160248e6",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "艾艾🍳艾享福"
+        },
+        {
+          "rank": 10,
+          "title": "球迷吐槽：如果梅西再拿一座金球奖",
+          "heat": "3959",
+          "heat_label": "点赞 3959",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a59b555000000001c00e1e2",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "缓慢进球"
+        },
+        {
+          "rank": 11,
+          "title": "给三胞胎心安宁整得解暑冬瓜，应该能用一两个月吧，完了还能吃，哈哈哈哈。三胞胎 幼",
+          "heat": "1900",
+          "heat_label": "点赞 1900",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a31fe47000000000702faaf",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "三胞胎心安宁"
+        },
+        {
+          "rank": 12,
+          "title": "终场哨声响起后！贝林厄姆拥抱哈兰德，送别",
+          "heat": "1.3万",
+          "heat_label": "点赞 1.3万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a52d83f0000000008033a86",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "任意球战术"
+        },
+        {
+          "rank": 13,
+          "title": "可以是3000也可以是3600，但它偏偏是3608.3",
+          "heat": "1.8万",
+          "heat_label": "点赞 1.8万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a5da9cf000000000e03515c",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "小汁"
+        },
+        {
+          "rank": 14,
+          "title": "C罗12分钟主罚任意球，这🦶给的好狠",
+          "heat": "1.3万",
+          "heat_label": "点赞 1.3万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a46f420000000000f005bec",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "TT"
+        },
+        {
+          "rank": 15,
+          "title": "祖玛珑英伦限定封神！用香气随时随地返野",
+          "heat": "1847",
+          "heat_label": "点赞 1847",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a43848f000000000f02bee4",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "motorl"
+        },
+        {
+          "rank": 16,
+          "title": "全场沸腾！佛得角打进世界杯历史首粒进球！",
+          "heat": "2万",
+          "heat_label": "点赞 2万",
+          "category": "体育赛事",
+          "url": "https://www.xiaohongshu.com/explore/6a38681b0000000006035747",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "毛飞爱体育"
+        },
+        {
+          "rank": 17,
+          "title": "感觉现在很少听到“度蜜月”这个词了",
+          "heat": "2419",
+          "heat_label": "点赞 2419",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a4c60d9000000002003a02e",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "向前出发"
+        },
+        {
+          "rank": 18,
+          "title": "LV要不你也把香菇一起告了吧",
+          "heat": "2.9万",
+          "heat_label": "点赞 2.9万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a472e840000000011006664",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "时迁."
+        },
+        {
+          "rank": 19,
+          "title": "昆凌切西瓜，全程被她手上的鸽子蛋闪到💎",
+          "heat": "1862",
+          "heat_label": "点赞 1862",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a3f20140000000007026929",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "明星同款小雷达"
+        },
+        {
+          "rank": 20,
+          "title": "热巴os：大家说我能崩住吗",
+          "heat": "3.4万",
+          "heat_label": "点赞 3.4万",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a51c14e0000000006021d35",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "满杯银河不加糖"
+        }
+      ],
+      "note": "网页热榜常需登录；本脚本用探索页 SSR 公开笔记作热点近似。"
+    },
+    "weixin_channels": {
+      "label": "微信视频号（公开短视频代理）",
+      "mode": "live:douyin-proxy-for-channels",
+      "errors": [],
+      "items": [
+        {
+          "rank": 1,
+          "title": "上海暴雨",
+          "heat": null,
+          "heat_label": "短视频榜位#1",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2603779",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 2,
+          "title": "台风白海豚实时路径",
+          "heat": null,
+          "heat_label": "短视频榜位#2",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2602902",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 3,
+          "title": "APEC经济体来华热度持续攀升",
+          "heat": null,
+          "heat_label": "短视频榜位#3",
+          "category": "国际时政",
+          "url": "https://www.douyin.com/hot/2604571",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 4,
+          "title": "南太行失联22岁女孩遗体被发现",
+          "heat": null,
+          "heat_label": "短视频榜位#4",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604364",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 5,
+          "title": "开封夜市好吃到停不下来",
+          "heat": null,
+          "heat_label": "短视频榜位#5",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604585",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 6,
+          "title": "演员秦焰去世",
+          "heat": null,
+          "heat_label": "短视频榜位#6",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604306",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 7,
+          "title": "穿搭天才依旧稳定发挥",
+          "heat": null,
+          "heat_label": "短视频榜位#7",
+          "category": "生活消费",
+          "url": "https://www.douyin.com/hot/2604130",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 8,
+          "title": "经销商：雪佛兰暂停在华新车销售",
+          "heat": null,
+          "heat_label": "短视频榜位#8",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604550",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 9,
+          "title": "媒体评雪佛兰退出中国市场",
+          "heat": null,
+          "heat_label": "短视频榜位#9",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604587",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 10,
+          "title": "最权威版公瑾爆蛋",
+          "heat": null,
+          "heat_label": "短视频榜位#10",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604328",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 11,
+          "title": "遗忘之海章鱼哥太难听了",
+          "heat": null,
+          "heat_label": "短视频榜位#11",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2603650",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 12,
+          "title": "宇树科技今日申购",
+          "heat": null,
+          "heat_label": "短视频榜位#12",
+          "category": "科技数码",
+          "url": "https://www.douyin.com/hot/2603801",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 13,
+          "title": "以色列士兵把枪口对准中国记者",
+          "heat": null,
+          "heat_label": "短视频榜位#13",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604471",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 14,
+          "title": "第38届百花奖闭幕式",
+          "heat": null,
+          "heat_label": "短视频榜位#14",
+          "category": "娱乐明星",
+          "url": "https://www.douyin.com/hot/2604628",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 15,
+          "title": "百花奖闭幕式红毯",
+          "heat": null,
+          "heat_label": "短视频榜位#15",
+          "category": "娱乐明星",
+          "url": "https://www.douyin.com/hot/2604626",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 16,
+          "title": "电视剧重器开播",
+          "heat": null,
+          "heat_label": "短视频榜位#16",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604101",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 17,
+          "title": "中国用竹子造无人机",
+          "heat": null,
+          "heat_label": "短视频榜位#17",
+          "category": "科技数码",
+          "url": "https://www.douyin.com/hot/2604128",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 18,
+          "title": "台军“汉光演习”再出意外",
+          "heat": null,
+          "heat_label": "短视频榜位#18",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2604155",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 19,
+          "title": "苹果被曝探索无屏Apple Watch",
+          "heat": null,
+          "heat_label": "短视频榜位#19",
+          "category": "科技数码",
+          "url": "https://www.douyin.com/hot/2604193",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 20,
+          "title": "北京市发布暴雨橙色预警",
+          "heat": null,
+          "heat_label": "短视频榜位#20",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2603930",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        }
+      ],
+      "note": "微信视频号无稳定公开官方热榜 API；本脚本用抖音热搜作短视频侧公开代理，并叠加「视频号」关键词弱相关话题（若有）。不可当作视频号官方榜。"
+    }
+  },
+  "heatStats": {
+    "total_topics": 70,
+    "by_platform": {
+      "weibo": 30,
+      "xiaohongshu": 20,
+      "weixin_channels": 20
+    },
+    "by_category": {
+      "社会民生": 47,
+      "娱乐明星": 12,
+      "科技数码": 6,
+      "财经商业": 0,
+      "体育赛事": 2,
+      "国际时政": 1,
+      "生活消费": 1,
+      "影视综艺": 0,
+      "游戏电竞": 0,
+      "健康教育": 1
+    },
+    "top10_overall": [
+      {
+        "rank": 1,
+        "title": "百花奖闭幕式",
+        "heat": 4433909,
+        "heat_label": "4433909",
+        "category": "娱乐明星",
+        "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%E9%97%AD%E5%B9%95%E5%BC%8F%23&Refer=top",
+        "source": "weibo.com/ajax/side/hotSearch",
+        "platform": "weibo",
+        "flag": "盛典"
+      },
+      {
+        "rank": 1,
+        "title": "🇨🇦加拿大球员Ismaël Koné到医院手术了🥺",
+        "heat": "9430",
+        "heat_label": "点赞 9430",
+        "category": "健康教育",
+        "url": "https://www.xiaohongshu.com/explore/6a34b95b00000000220196e7",
+        "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+        "platform": "xiaohongshu",
+        "flag": "温哥华吃喝玩乐小地图"
+      },
+      {
+        "rank": 1,
+        "title": "上海暴雨",
+        "heat": null,
+        "heat_label": "短视频榜位#1",
+        "category": "社会民生",
+        "url": "https://www.douyin.com/hot/2603779",
+        "source": "newsnow?id=douyin (微信视频号公开代理)",
+        "platform": "weixin-channels-proxy-douyin",
+        "flag": "proxy"
+      },
+      {
+        "rank": 2,
+        "title": "白海豚突然大拐弯",
+        "heat": 2496204,
+        "heat_label": "2496204",
+        "category": "社会民生",
+        "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF%23&Refer=top",
+        "source": "weibo.com/ajax/side/hotSearch",
+        "platform": "weibo",
+        "flag": null
+      },
+      {
+        "rank": 2,
+        "title": "听说空调不建议来回关，给大家试了一下，一会关一会开，还不如一直开着，按26档省电",
+        "heat": "2179",
+        "heat_label": "点赞 2179",
+        "category": "社会民生",
+        "url": "https://www.xiaohongshu.com/explore/6a582ffc000000000f004b39",
+        "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+        "platform": "xiaohongshu",
+        "flag": "允琛日记"
+      },
+      {
+        "rank": 2,
+        "title": "台风白海豚实时路径",
+        "heat": null,
+        "heat_label": "短视频榜位#2",
+        "category": "社会民生",
+        "url": "https://www.douyin.com/hot/2602902",
+        "source": "newsnow?id=douyin (微信视频号公开代理)",
+        "platform": "weixin-channels-proxy-douyin",
+        "flag": "proxy"
+      },
+      {
+        "rank": 3,
+        "title": "深圳APEC峰会倒计时100天",
+        "heat": 1140418,
+        "heat_label": "1140418",
+        "category": "社会民生",
+        "url": "https://s.weibo.com/weibo?q=%23%E6%B7%B1%E5%9C%B3APEC%E5%B3%B0%E4%BC%9A%E5%80%92%E8%AE%A1%E6%97%B6100%E5%A4%A9%23&Refer=top",
+        "source": "weibo.com/ajax/side/hotSearch",
+        "platform": "weibo",
+        "flag": null
+      },
+      {
+        "rank": 3,
+        "title": "哎，真烦",
+        "heat": "1470",
+        "heat_label": "点赞 1470",
+        "category": "社会民生",
+        "url": "https://www.xiaohongshu.com/explore/6a545707000000002103d9da",
+        "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+        "platform": "xiaohongshu",
+        "flag": "靠谱小张"
+      },
+      {
+        "rank": 3,
+        "title": "APEC经济体来华热度持续攀升",
+        "heat": null,
+        "heat_label": "短视频榜位#3",
+        "category": "国际时政",
+        "url": "https://www.douyin.com/hot/2604571",
+        "source": "newsnow?id=douyin (微信视频号公开代理)",
+        "platform": "weixin-channels-proxy-douyin",
+        "flag": "proxy"
+      },
+      {
+        "rank": 4,
+        "title": "世界小姐雅典娜确认遇害细节公开",
+        "heat": 1109137,
+        "heat_label": "1109137",
+        "category": "社会民生",
+        "url": "https://s.weibo.com/weibo?q=%23%E4%B8%96%E7%95%8C%E5%B0%8F%E5%A7%90%E9%9B%85%E5%85%B8%E5%A8%9C%E7%A1%AE%E8%AE%A4%E9%81%87%E5%AE%B3%E7%BB%86%E8%8A%82%E5%85%AC%E5%BC%80%23&Refer=top",
+        "source": "weibo.com/ajax/side/hotSearch",
+        "platform": "weibo",
+        "flag": null
+      }
+    ]
+  },
+  "categoryTop": [
+    {
+      "category": "社会民生",
+      "count": 47,
+      "topics": [
+        {
+          "rank": 1,
+          "title": "上海暴雨",
+          "heat": null,
+          "heat_label": "短视频榜位#1",
+          "category": "社会民生",
+          "url": "https://www.douyin.com/hot/2603779",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        },
+        {
+          "rank": 2,
+          "title": "白海豚突然大拐弯",
+          "heat": 2496204,
+          "heat_label": "2496204",
+          "category": "社会民生",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 2,
+          "title": "听说空调不建议来回关，给大家试了一下，一会关一会开，还不如一直开着，按26档省电",
+          "heat": "2179",
+          "heat_label": "点赞 2179",
+          "category": "社会民生",
+          "url": "https://www.xiaohongshu.com/explore/6a582ffc000000000f004b39",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "允琛日记"
+        }
+      ]
+    },
+    {
+      "category": "娱乐明星",
+      "count": 12,
+      "topics": [
+        {
+          "rank": 1,
+          "title": "百花奖闭幕式",
+          "heat": 4433909,
+          "heat_label": "4433909",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%E9%97%AD%E5%B9%95%E5%BC%8F%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 6,
+          "title": "百花奖内场座位图",
+          "heat": 1007833,
+          "heat_label": "1007833",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E7%99%BE%E8%8A%B1%E5%A5%96%E5%86%85%E5%9C%BA%E5%BA%A7%E4%BD%8D%E5%9B%BE%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": "盛典"
+        },
+        {
+          "rank": 9,
+          "title": "女演员炒股亏70万靠年迈母亲接济",
+          "heat": 765779,
+          "heat_label": "765779",
+          "category": "娱乐明星",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%A5%B3%E6%BC%94%E5%91%98%E7%82%92%E8%82%A1%E4%BA%8F70%E4%B8%87%E9%9D%A0%E5%B9%B4%E8%BF%88%E6%AF%8D%E4%BA%B2%E6%8E%A5%E6%B5%8E%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        }
+      ]
+    },
+    {
+      "category": "科技数码",
+      "count": 6,
+      "topics": [
+        {
+          "rank": 7,
+          "title": "别再用这个姿势玩手机了",
+          "heat": 984000,
+          "heat_label": "984000",
+          "category": "科技数码",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%88%AB%E5%86%8D%E7%94%A8%E8%BF%99%E4%B8%AA%E5%A7%BF%E5%8A%BF%E7%8E%A9%E6%89%8B%E6%9C%BA%E4%BA%86%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 10,
+          "title": "多位大疆员工离职后创业成功",
+          "heat": 764120,
+          "heat_label": "764120",
+          "category": "科技数码",
+          "url": "https://s.weibo.com/weibo?q=%23%E5%A4%9A%E4%BD%8D%E5%A4%A7%E7%96%86%E5%91%98%E5%B7%A5%E7%A6%BB%E8%81%8C%E5%90%8E%E5%88%9B%E4%B8%9A%E6%88%90%E5%8A%9F%23&Refer=top",
+          "source": "weibo.com/ajax/side/hotSearch",
+          "platform": "weibo",
+          "flag": null
+        },
+        {
+          "rank": 12,
+          "title": "宇树科技今日申购",
+          "heat": null,
+          "heat_label": "短视频榜位#12",
+          "category": "科技数码",
+          "url": "https://www.douyin.com/hot/2603801",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        }
+      ]
+    },
+    {
+      "category": "财经商业",
+      "count": 0,
+      "topics": []
+    },
+    {
+      "category": "体育赛事",
+      "count": 2,
+      "topics": [
+        {
+          "rank": 6,
+          "title": "世界杯",
+          "heat": "1541",
+          "heat_label": "点赞 1541",
+          "category": "体育赛事",
+          "url": "https://www.xiaohongshu.com/explore/6a5c0698000000001d00cc57",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "Cc🌈"
+        },
+        {
+          "rank": 16,
+          "title": "全场沸腾！佛得角打进世界杯历史首粒进球！",
+          "heat": "2万",
+          "heat_label": "点赞 2万",
+          "category": "体育赛事",
+          "url": "https://www.xiaohongshu.com/explore/6a38681b0000000006035747",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "毛飞爱体育"
+        }
+      ]
+    },
+    {
+      "category": "国际时政",
+      "count": 1,
+      "topics": [
+        {
+          "rank": 3,
+          "title": "APEC经济体来华热度持续攀升",
+          "heat": null,
+          "heat_label": "短视频榜位#3",
+          "category": "国际时政",
+          "url": "https://www.douyin.com/hot/2604571",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        }
+      ]
+    },
+    {
+      "category": "生活消费",
+      "count": 1,
+      "topics": [
+        {
+          "rank": 7,
+          "title": "穿搭天才依旧稳定发挥",
+          "heat": null,
+          "heat_label": "短视频榜位#7",
+          "category": "生活消费",
+          "url": "https://www.douyin.com/hot/2604130",
+          "source": "newsnow?id=douyin (微信视频号公开代理)",
+          "platform": "weixin-channels-proxy-douyin",
+          "flag": "proxy"
+        }
+      ]
+    },
+    {
+      "category": "影视综艺",
+      "count": 0,
+      "topics": []
+    },
+    {
+      "category": "游戏电竞",
+      "count": 0,
+      "topics": []
+    },
+    {
+      "category": "健康教育",
+      "count": 1,
+      "topics": [
+        {
+          "rank": 1,
+          "title": "🇨🇦加拿大球员Ismaël Koné到医院手术了🥺",
+          "heat": "9430",
+          "heat_label": "点赞 9430",
+          "category": "健康教育",
+          "url": "https://www.xiaohongshu.com/explore/6a34b95b00000000220196e7",
+          "source": "xiaohongshu.com/explore SSR __INITIAL_STATE__",
+          "platform": "xiaohongshu",
+          "flag": "温哥华吃喝玩乐小地图"
+        }
+      ]
+    }
+  ],
+  "trends": [
+    {
+      "signal": "类目升温",
+      "what": "社会民生、娱乐明星、科技数码",
+      "next": "内容侧优先做情绪/现场/解释型短内容；产品侧观察是否可沉淀为选题模板。",
+      "evidence": "类目计数 Top: {'社会民生': 31, '娱乐明星': 7, '科技数码': 3, '健康教育': 1, '体育赛事': 1}"
+    },
+    {
+      "signal": "跨平台共振",
+      "what": "演员秦焰去世",
+      "next": "优先做二次解读与事实核对，避免纯搬运；可进入机会简报候选池。",
+      "evidence": "同一标题在 ≥2 个数据源出现"
+    },
+    {
+      "signal": "平台分工",
+      "what": "微博偏突发/娱乐热搜；小红书偏种草与生活方式笔记",
+      "next": "同一话题做「微博追热 → 小红书种草拆解 → 视频号口播解释」三段式分发。",
+      "evidence": "样本 weibo=30 xhs=20"
+    },
+    {
+      "signal": "视频号能力边界",
+      "what": "官方热榜不可稳定公开抓取",
+      "next": "下阶段：账号矩阵手工采样 / 合作数据商 / 或用公开短视频榜作对照，不伪造视频号官方排名。",
+      "evidence": "本报告短视频侧使用抖音公开代理"
+    },
+    {
+      "signal": "类目缺口",
+      "what": "财经商业、影视综艺、游戏电竞",
+      "next": "扩大关键词映射或补充垂直源（体育/教育垂类榜）。",
+      "evidence": "本轮十大类中无命中话题"
+    }
+  ],
+  "methodNote": "Scrapling 在线优先；失败降级 TrendRadar SQLite / 本地 JSON。微信视频号无官方公开热榜，短视频侧用抖音公开榜代理并标注。"
+}

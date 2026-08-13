@@ -12,6 +12,13 @@ function readSnapshot(root: string): TrendRadarSnapshot | null {
   return JSON.parse(readFileSync(p, "utf8")) as TrendRadarSnapshot;
 }
 
+function asIsoClock(raw: string | null | undefined, fallback: string): string {
+  const s = (raw || "").trim();
+  if (!s || /^\d{1,2}-\d{2}$/.test(s) || /^\d{1,2}:\d{2}$/.test(s)) return fallback;
+  const t = Date.parse(s);
+  return Number.isNaN(t) ? fallback : new Date(t).toISOString();
+}
+
 export const trendradarAdapter: SourceAdapter = {
   meta: {
     id: "trendradar",
@@ -44,8 +51,8 @@ export const trendradarAdapter: SourceAdapter = {
         title: row.title.trim(),
         url,
         author: "",
-        published_at: row.firstSeen || fetchedAt,
-        fetched_at: row.lastSeen || fetchedAt,
+        published_at: asIsoClock(row.firstSeen, fetchedAt),
+        fetched_at: asIsoClock(row.lastSeen, fetchedAt),
         category: row.aiRelated ? "ai" : "general",
         keywords: row.aiRelated ? ["AI"] : [],
         summary: "",

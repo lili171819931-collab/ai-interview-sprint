@@ -1,0 +1,222 @@
+{
+  "generatedAt": "2026-08-10T20:19:10+08:00",
+  "tool": "scrapling",
+  "methodNote": "Scrapling 抓取国内自媒体平台公开热榜（微博/抖音/B站/知乎/头条/小红书网页）与海外 TechCrunch Social、Product Hunt、Hacker News（创作者向过滤）；综合热度并平衡国内/海外各至少 3 条，得到 Top10。",
+  "sources": {
+    "weibo": {
+      "label": "微博热搜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:weibo",
+      "hits": 12
+    },
+    "douyin": {
+      "label": "抖音热榜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:douyin",
+      "hits": 12
+    },
+    "bilibili-hot-search": {
+      "label": "B站热搜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:bilibili-hot-search",
+      "hits": 12
+    },
+    "zhihu": {
+      "label": "知乎热榜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:zhihu",
+      "hits": 12
+    },
+    "toutiao": {
+      "label": "今日头条热榜",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:newsnow:toutiao",
+      "hits": 12
+    },
+    "xiaohongshu": {
+      "label": "小红书探索页",
+      "region": "国内",
+      "ok": true,
+      "mode": "live:xhs-explore",
+      "hits": 10
+    },
+    "producthunt": {
+      "label": "Product Hunt",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:newsnow:producthunt",
+      "hits": 15
+    },
+    "techcrunch-social": {
+      "label": "TechCrunch Social",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:rss:techcrunch-social",
+      "hits": 20
+    },
+    "hacker-news": {
+      "label": "Hacker News",
+      "region": "海外",
+      "ok": true,
+      "mode": "live:rss:hacker-news",
+      "hits": 0
+    }
+  },
+  "topics": [
+    {
+      "title": "X replaces ‘misaligned’ revenue sharing program with Original Content Rewards",
+      "url": "https://techcrunch.com/2026/08/08/x-replaces-misaligned-revenue-sharing-program-with-original-content-rewards/",
+      "source": "TechCrunch Social",
+      "source_id": "techcrunch-social",
+      "region": "海外",
+      "rank_in_source": 1,
+      "type": "自媒体行业动态",
+      "next": "拆平台规则变化（分成/算法/裁员）→ 更新账号矩阵与变现路径。",
+      "heat": 54,
+      "rank": 1
+    },
+    {
+      "title": "TikTok lays off 250 employees, shutters its Nashville office",
+      "url": "https://techcrunch.com/2026/08/06/tiktok-lays-off-250-employees-shutters-its-nashville-office/",
+      "source": "TechCrunch Social",
+      "source_id": "techcrunch-social",
+      "region": "海外",
+      "rank_in_source": 3,
+      "type": "自媒体行业动态",
+      "next": "拆平台规则变化（分成/算法/裁员）→ 更新账号矩阵与变现路径。",
+      "heat": 52,
+      "rank": 2
+    },
+    {
+      "title": "百花奖闭幕式",
+      "url": "https://s.weibo.com/weibo?q=%E7%99%BE%E8%8A%B1%E5%A5%96%E9%97%AD%E5%B9%95%E5%BC%8F&t=31&band_rank=1&Refer=top",
+      "source": "微博热搜",
+      "source_id": "weibo",
+      "region": "国内",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 49,
+      "rank": 3
+    },
+    {
+      "title": "上海暴雨",
+      "url": "https://www.douyin.com/hot/2603779",
+      "source": "抖音热榜",
+      "source_id": "douyin",
+      "region": "国内",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 49,
+      "rank": 4
+    },
+    {
+      "title": "古巴如何应对能源短缺",
+      "url": "https://search.bilibili.com/all?keyword=%E5%8F%A4%E5%B7%B4%E5%A6%82%E4%BD%95%E5%BA%94%E5%AF%B9%E8%83%BD%E6%BA%90%E7%9F%AD%E7%BC%BA",
+      "source": "B站热搜",
+      "source_id": "bilibili-hot-search",
+      "region": "国内",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 49,
+      "rank": 5
+    },
+    {
+      "title": "oqoqo",
+      "url": "https://www.producthunt.com/products/oqoqo?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "source": "Product Hunt",
+      "source_id": "producthunt",
+      "region": "海外",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "next": "同步中文摘要，判断能否做成国内创作者选题或工具类内容。",
+      "heat": 49,
+      "rank": 6
+    },
+    {
+      "title": "武汉司门口黄鹤楼天桥市容管理人员与占道摊贩发生激烈肢体冲突，3 人被刑拘，有哪些信息值得关注？",
+      "url": "https://www.zhihu.com/question/2070076932834550346",
+      "source": "知乎热榜",
+      "source_id": "zhihu",
+      "region": "国内",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 49,
+      "rank": 7
+    },
+    {
+      "title": "百余名菲律宾公民在中国被依法处理",
+      "url": "https://www.toutiao.com/trending/7672364038260526601/",
+      "source": "今日头条热榜",
+      "source_id": "toutiao",
+      "region": "国内",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 49,
+      "rank": 8
+    },
+    {
+      "title": "13套夏日平价✨韩系休闲感穿搭大汇总🧚‍♀️",
+      "url": "https://www.xiaohongshu.com/explore/6a41d7cb0000000007024315",
+      "source": "小红书探索页",
+      "source_id": "xiaohongshu",
+      "region": "国内",
+      "rank_in_source": 1,
+      "type": "平台热点（自媒体选题源）",
+      "author": "独角兽的粉粉",
+      "liked": "7366",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 49,
+      "rank": 9
+    },
+    {
+      "title": "白海豚突然大拐弯",
+      "url": "https://s.weibo.com/weibo?q=%23%E7%99%BD%E6%B5%B7%E8%B1%9A%E7%AA%81%E7%84%B6%E5%A4%A7%E6%8B%90%E5%BC%AF%23&t=31&band_rank=2&Refer=top",
+      "source": "微博热搜",
+      "source_id": "weibo",
+      "region": "国内",
+      "rank_in_source": 2,
+      "type": "平台热点（自媒体选题源）",
+      "next": "可做：微博追热口播 / 小红书图文拆解 / 视频号解释向二创；先核事实再追流量。",
+      "heat": 48,
+      "rank": 10
+    }
+  ],
+  "nextSteps": [
+    {
+      "signal": "国内外选题池",
+      "what": "Top10 中 国内 7 / 海外 3",
+      "next": "国内平台热点做当日追更；海外行业动态做规则解读与工具向内容。",
+      "evidence": "有效源 9/9"
+    },
+    {
+      "signal": "行业规则变化",
+      "what": "X replaces ‘misaligned’ revenue sharing program with Original Content Rewards；TikTok lays off 250 employees, shutters its Nashville office",
+      "next": "重点跟踪分成/算法/裁员类新闻，更新账号变现 checklist。",
+      "evidence": "行业动态命中 2"
+    },
+    {
+      "signal": "分发动作",
+      "what": "同一热点按平台改写，避免原样搬运。",
+      "next": "微博短讯 → 小红书清单图 → 视频号 60s 口播；海外新闻补中文信息差角度。",
+      "evidence": "脚本标注了每条 next 动作"
+    }
+  ],
+  "stats": {
+    "candidates": 105,
+    "topN": 10,
+    "by_region": {
+      "国内": 7,
+      "海外": 3
+    }
+  }
+}

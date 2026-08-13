@@ -16,6 +16,7 @@ export const SNAPSHOT_FILES = [
   "daily-bundle.json",
   "radar-daily-report.json",
   "builder-pulse-daily.json",
+  "opportunity-report-daily.json",
   "trendradar-hot.json",
   "global-hot-topics.json",
   "live-fetch-report.json",

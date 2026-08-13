@@ -1,8 +1,8 @@
 {
-  "fetchedAt": "2026-08-12T11:40:52.075Z",
+  "fetchedAt": "2026-08-13T10:59:38.791Z",
   "offline": false,
-  "successCount": 12,
-  "failureCount": 1,
+  "successCount": 13,
+  "failureCount": 0,
   "items": [
     {
       "sourceId": "openai-news",
@@ -12,9 +12,9 @@
         "openai-api"
       ],
       "status": "ok",
-      "title": "Testing ads in ChatGPT",
-      "url": "https://openai.com/index/testing-ads-in-chatgpt",
-      "publishedAt": "2026-08-11T10:00:00.000Z"
+      "title": "From assistance to execution: How enterprises put AI to work",
+      "url": "https://openai.com/index/how-enterprises-put-ai-to-work",
+      "publishedAt": "2026-08-12T06:00:00.000Z"
     },
     {
       "sourceId": "anthropic-news-mirror",
@@ -58,9 +58,9 @@
         "huggingface"
       ],
       "status": "ok",
-      "title": "Thinking of ACE? We Can Do It with Fewer Tokens",
-      "url": "https://huggingface.co/blog/ibm-research/altk-evolve-sldd",
-      "publishedAt": "2026-08-11T13:37:10.000Z"
+      "title": "Introducing OlmoEarth embeddings: Custom embedding exports from OlmoEarth Studio for downstream analysis",
+      "url": "https://huggingface.co/blog/allenai/olmoearth-embeddings",
+      "publishedAt": "2026-08-12T16:14:36.000Z"
     },
     {
       "sourceId": "langchain-blog",
@@ -69,9 +69,9 @@
         "langchain"
       ],
       "status": "ok",
-      "title": "What is an AI agent?",
-      "url": "https://www.langchain.com/blog/what-is-an-agent",
-      "publishedAt": "2026-08-12T05:47:11.000Z"
+      "title": "Why managed agents are the next big thing in agent building",
+      "url": "https://www.langchain.com/blog/why-managed-agents-are-the-next-big-thing-in-agent-building",
+      "publishedAt": "2026-08-13T06:16:37.000Z"
     },
     {
       "sourceId": "cursor-changelog",
@@ -101,9 +101,9 @@
         "n8n"
       ],
       "status": "ok",
-      "title": "v1: :rocket: Release 1.123.70 (#36104)",
+      "title": "v1: :rocket: Release 1.123.71 (#36182)",
       "url": "https://github.com/n8n-io/n8n/releases/tag/v1",
-      "publishedAt": "2026-08-12T07:31:56.000Z"
+      "publishedAt": "2026-08-13T07:28:45.000Z"
     },
     {
       "sourceId": "langchain-releases",
@@ -111,8 +111,10 @@
       "toolIds": [
         "langchain"
       ],
-      "status": "fail",
-      "error": "fetch failed"
+      "status": "ok",
+      "title": "langchain-anthropic==1.5.6",
+      "url": "https://github.com/langchain-ai/langchain/releases/tag/langchain-anthropic%3D%3D1.5.6",
+      "publishedAt": "2026-08-13T02:31:05.000Z"
     },
     {
       "sourceId": "llamaindex-releases",

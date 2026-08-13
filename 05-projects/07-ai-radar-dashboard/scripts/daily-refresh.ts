@@ -11,6 +11,20 @@ import { archiveCurrentSnapshots, shanghaiDay } from "./lib/archive";
 
 const root = path.join(__dirname, "..");
 
+function runOptional(label: string, args: string[], env: NodeJS.ProcessEnv = process.env) {
+  console.log(`\n▶ ${label} (optional)`);
+  const result = spawnSync("npx", ["tsx", ...args], {
+    cwd: root,
+    env,
+    encoding: "utf8",
+    stdio: "inherit",
+    shell: process.platform === "win32",
+  });
+  if (result.status !== 0) {
+    console.warn(`[daily] ${label} skipped/failed (exit ${result.status})`);
+  }
+}
+
 function run(label: string, args: string[], env: NodeJS.ProcessEnv = process.env) {
   console.log(`\n▶ ${label}`);
   const result = spawnSync("npx", ["tsx", ...args], {
@@ -34,11 +48,28 @@ function main() {
   console.log(`智衡日更 · ${today} · mode=${mode}${offline ? " · offline" : ""}`);
   console.log("══════════════════════════════════════");
 
+  if (mode === "hourly") {
+    // 全部动态分钟级：热点 + TrendRadar + 入库合并 + AIHOT 精选
+    if (!offline) {
+      runOptional("hot:sync", ["scripts/sync-global-hot-topics.ts"]);
+      runOptional("trendradar:sync", ["scripts/sync-trendradar.ts"]);
+      runOptional("aihot:sync", ["scripts/sync-aihot.ts"]);
+    }
+    runOptional("intel:ingest", ["scripts/pipeline/ingest.ts"], {
+      ...process.env,
+      INTEL_ADAPTERS: "aihot,trendradar,global-hot",
+      INTEL_OFFLINE: offline ? "1" : process.env.INTEL_OFFLINE || "",
+    });
+    console.log("\n✅ 整点/分钟更新完成（未归档）");
+    return;
+  }
+
   const index = archiveCurrentSnapshots(root, `pre-${mode}-refresh`);
   console.log(`[archive] history days: ${index.days.length}`);
 
   if (mode === "quick") {
     run("hot:sync", ["scripts/sync-global-hot-topics.ts"]);
+    if (!offline) runOptional("aihot:sync", ["scripts/sync-aihot.ts"]);
     run("radar:daily", ["scripts/refresh-radar-report.ts"]);
   } else if (mode === "hot") {
     run("hot:sync", ["scripts/sync-global-hot-topics.ts"]);
@@ -56,8 +87,10 @@ function main() {
       run("hot:sync", ["scripts/sync-global-hot-topics.ts"], env);
     }
     run("trendradar:sync", ["scripts/sync-trendradar.ts"], env);
+    if (!offline) runOptional("aihot:sync", ["scripts/sync-aihot.ts"], env);
     run("radar:daily", ["scripts/refresh-radar-report.ts"], env);
     run("pulse:sync", ["scripts/sync-builder-pulse.ts"], env);
+    run("opp:sync", ["scripts/generate-opportunity-report.ts"], { ...env, OPP_SKIP_PULSE: "1" });
   }
 
   // 把今天最新结果也归档一份，保证 /history 当天可回看
@@ -65,7 +98,7 @@ function main() {
 
   console.log("\n✅ 日更完成");
   console.log(`   今日：${today}`);
-  console.log("   查看：http://localhost:3010/  ·  /hot  ·  /radar  ·  /history");
+  console.log("   查看：http://localhost:3010/  ·  /hot  ·  /opportunities  ·  /history");
 }
 
 try {

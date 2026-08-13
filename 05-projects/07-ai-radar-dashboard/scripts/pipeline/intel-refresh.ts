@@ -8,15 +8,24 @@ import path from "path";
 
 const root = path.join(__dirname, "..", "..");
 
-function run(script: string) {
+function run(script: string, optional = false) {
   const r = spawnSync("npx", ["tsx", script], {
     cwd: root,
     stdio: "inherit",
     env: process.env,
   });
-  if (r.status !== 0) process.exit(r.status || 1);
+  if (r.status !== 0) {
+    if (optional) {
+      console.warn(`[intel:refresh] optional ${script} failed (exit ${r.status})`);
+      return;
+    }
+    process.exit(r.status || 1);
+  }
 }
 
+if (process.env.INTEL_OFFLINE !== "1" && process.env.AIHOT_SKIP !== "1") {
+  run("scripts/sync-aihot.ts", true);
+}
 run("scripts/pipeline/ingest.ts");
 run("scripts/pipeline/cluster-events.ts");
 run("scripts/pipeline/generate-briefs.ts");

@@ -9,3 +9,18 @@
 
 # Local TrendRadar install (large clone + venv + output)
 08-resources/TrendRadar/
+
+# Local RSSHub clone (~900MB)
+08-resources/RSSHub/
+
+# Local gtm-cofounder skill pack clone
+08-resources/gtm-cofounder/
+
+# Scratch / review dumps
+.tmp-*/
+.tmp-cap/
+.tmp-chrome-bookmarks-cleanup/
+.tmp-photos-review/
+
+# Python cache
+**/__pycache__/

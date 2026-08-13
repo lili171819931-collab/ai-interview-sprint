@@ -70,6 +70,8 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 - [`docs/16-global-trend-intelligence-architecture.md`](docs/16-global-trend-intelligence-architecture.md) ← **全网热点情报系统架构（Phase 1）**
 - [`docs/极致Prompt-全网热点情报系统.md`](docs/极致Prompt-全网热点情报系统.md) ← **GTI 极致 Prompt 归档**
 - [`docs/极致Prompt-日更实时更新与历史留存.md`](docs/极致Prompt-日更实时更新与历史留存.md) ← **日更实时 + 历史归档 Prompt**
+- [`docs/18-builderpulse-opportunity-archive.md`](docs/18-builderpulse-opportunity-archive.md) ← **机会日报方法与归档**
+- [`docs/19-featured-intel-full-loop.md`](docs/19-featured-intel-full-loop.md) ← **精选情报台全闭环（操作/测试/调试/成本/产品付出）**
 
 ### 5) 演示与故事化包装
 - [`docs/演示脚本.md`](docs/演示脚本.md)

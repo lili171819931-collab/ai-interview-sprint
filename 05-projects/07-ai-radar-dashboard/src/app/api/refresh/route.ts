@@ -6,7 +6,7 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-type Mode = "full" | "quick" | "hot";
+type Mode = "full" | "quick" | "hot" | "hourly";
 
 function allowed(): boolean {
   if (process.env.ALLOW_LIVE_REFRESH === "1") return true;
@@ -33,10 +33,12 @@ export async function POST(req: Request) {
   try {
     const url = new URL(req.url);
     const q = url.searchParams.get("mode");
-    if (q === "full" || q === "quick" || q === "hot") mode = q;
+    if (q === "full" || q === "quick" || q === "hot" || q === "hourly") mode = q;
     else {
       const body = (await req.json().catch(() => ({}))) as { mode?: string };
-      if (body.mode === "full" || body.mode === "quick" || body.mode === "hot") mode = body.mode;
+      if (body.mode === "full" || body.mode === "quick" || body.mode === "hot" || body.mode === "hourly") {
+        mode = body.mode;
+      }
     }
   } catch {
     // default quick
@@ -96,7 +98,7 @@ export async function POST(req: Request) {
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    endpoints: "POST /api/refresh?mode=quick|hot|full",
+    endpoints: "POST /api/refresh?mode=hourly|quick|hot|full",
     allowed: allowed(),
   });
 }

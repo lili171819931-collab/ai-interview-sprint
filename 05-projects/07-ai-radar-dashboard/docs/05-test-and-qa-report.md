@@ -36,6 +36,19 @@
 | TC-05 | 日更抓取 | 成功/失败状态写入报告 |
 | TC-06 | 构建 | build 无错误完成 |
 
+### 精选情报台（2026-08-13）
+
+| 编号 | 场景 | 预期 |
+|------|------|------|
+| TC-F1 | `/` 精选卡 | ✨精选、AI 评分、绿色推荐理由 |
+| TC-F2 | 推荐理由内容 | 不是 CSS 碎片 |
+| TC-A1 | `/all` 排序 | 最新在上 |
+| TC-A2 | 相对时间 | 无「42 天前」类脏时钟 |
+| TC-D1 | `intel:ingest` | aihot + trendradar + global-hot 合并去重 |
+| TC-D2 | `daily:refresh` | 热点/雷达/pulse/机会报告写出 |
+
+详见 [`19-featured-intel-full-loop.md`](19-featured-intel-full-loop.md) 第 6–7 节。
+
 ## 4. 当前结论
 
 - 主流程通过，构建通过。

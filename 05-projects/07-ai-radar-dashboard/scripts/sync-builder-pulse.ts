@@ -133,7 +133,7 @@ function parseEditorNote(md: string): string {
 }
 
 function parsePlainBrief(md: string): string {
-  const block = extractBlock(md, /^##\s+.*白话简报.*$/m);
+  const block = extractBlock(md, /^##\s+.*白话(速览|简报).*$/m);
   const quote = block.match(/>\s*(.+)/);
   return quote ? stripMd(quote[1]) : stripMd(block).slice(0, 280);
 }
@@ -147,15 +147,48 @@ function parseTimebox(md: string): { title: string; detail: string } {
 }
 
 function parseReadmeIdea(readme: string): { title: string; whyNow: string } | null {
-  const zh = readme.split(/##\s+💡\s*今日建议/)[1] || readme.split(/## 💡 今日建议/)[1];
+  const zh = readme.split(/💡\s*今日建议/)[1] || "";
   if (!zh) return null;
-  const chunk = zh.slice(0, 1200);
+  const chunk = zh.slice(0, 1800);
   const titleMatch = chunk.match(/>\s*\*\*(.+?)\*\*/);
-  const whyMatch = chunk.match(/\*\*为什么是现在:\*\*\s*(.+)/);
+  const whyMatch = chunk.match(/\*\*为什么是现在[:：]\*\*\s*(.+)/);
   if (!titleMatch) return null;
   return {
     title: stripMd(titleMatch[1]),
     whyNow: whyMatch ? stripMd(whyMatch[1]) : "",
+  };
+}
+
+function parseDailyBuild(md: string): {
+  title: string;
+  whyNow: string;
+  timeboxTitle: string;
+  timeboxDetail: string;
+} | null {
+  const block = extractBlock(md, /^##\s+.*今日 2 小时构建.*$/m);
+  if (!block) return null;
+  const bold = block.match(/\*\*([^*]+)\*\*/);
+  const timeboxTitle = bold ? stripMd(bold[1]) : "";
+  const timeboxDetail = stripMd(block.replace(/\*\*[^*]+\*\*/, "")).replace(/^[\s—–\-→]+/, "").slice(0, 400);
+  if (!timeboxTitle && !timeboxDetail) return null;
+
+  const editor = extractBlock(md, /^##\s+.*刘小排说.*$/m);
+  const window = editor.match(/\*\*为什么窗口现在就开着？\*\*\s*([\s\S]+?)(?:\n\*\*|\n\n\*\*|$)/);
+  const pain = editor.match(/痛点在于[^\n]+/);
+  const lastPlain = editor
+    .split(/\n\n+/)
+    .map((p) => stripMd(p))
+    .filter((p) => p && !p.startsWith("现状") && !p.startsWith("为什么窗口") && !p.startsWith("谁会"))
+    .at(-1);
+  const whyNow = stripMd(pain?.[0] || window?.[1] || lastPlain || "").slice(0, 280);
+  const lead = timeboxDetail.split(/[。；]/)[0]?.slice(0, 42) || timeboxTitle;
+  const title = timeboxTitle ? `做一个 ${timeboxTitle}` : lead;
+
+  return {
+    title,
+    whyNow,
+    timeboxTitle: timeboxTitle || "今日 2 小时构建",
+    timeboxDetail: timeboxDetail || title,
   };
 }
 
@@ -229,6 +262,7 @@ function buildBriefFromMarkdown(
   sourceUrl: string,
 ): BuilderPulseBrief {
   const idea = parseReadmeIdea(readme);
+  const daily = parseDailyBuild(md);
   const timebox = parseTimebox(md);
   const opportunities = parseOpportunities(md);
   const topSignals = parseTopSignals(md);
@@ -248,10 +282,10 @@ function buildBriefFromMarkdown(
     editorNote: editorNote || seed.editorNote,
     plainBrief: plainBrief || seed.plainBrief,
     buildIdea: {
-      title: idea?.title || seed.buildIdea.title,
-      whyNow: idea?.whyNow || seed.buildIdea.whyNow,
-      timeboxTitle: timebox.title || seed.buildIdea.timeboxTitle,
-      timeboxDetail: timebox.detail || seed.buildIdea.timeboxDetail,
+      title: idea?.title || daily?.title || seed.buildIdea.title,
+      whyNow: idea?.whyNow || daily?.whyNow || seed.buildIdea.whyNow,
+      timeboxTitle: daily?.timeboxTitle || timebox.title || seed.buildIdea.timeboxTitle,
+      timeboxDetail: daily?.timeboxDetail || timebox.detail || seed.buildIdea.timeboxDetail,
     },
     topSignals: topSignals.length ? topSignals : seed.topSignals,
     opportunities: opportunities.length ? opportunities : seed.opportunities,
@@ -266,10 +300,12 @@ async function main() {
   const preferred = process.env.PULSE_DATE?.trim() || shanghaiDay();
 
   let loaded = await loadMarkdown(preferred);
+  let reportDate = preferred;
   if (!loaded) {
     // try previous day once
     const prev = shanghaiDay(new Date(Date.now() - 24 * 60 * 60 * 1000));
     loaded = await loadMarkdown(prev);
+    if (loaded) reportDate = prev;
   }
 
   let brief: BuilderPulseBrief;
@@ -280,7 +316,7 @@ async function main() {
     brief = buildBriefFromMarkdown(
       loaded.md,
       loaded.readme,
-      preferred,
+      reportDate,
       loaded.source,
       loaded.sourceUrl,
     );

@@ -1,9 +1,10 @@
+import { aihotAdapter } from "./aihot";
 import { globalHotAdapter } from "./global-hot";
 import { rsshubAdapter } from "./rsshub";
 import { trendradarAdapter } from "./trendradar";
 import type { SourceAdapter } from "./types";
 
-const ALL: SourceAdapter[] = [trendradarAdapter, globalHotAdapter, rsshubAdapter];
+const ALL: SourceAdapter[] = [aihotAdapter, trendradarAdapter, globalHotAdapter, rsshubAdapter];
 
 export function listAdapters(): SourceAdapter[] {
   return [...ALL];

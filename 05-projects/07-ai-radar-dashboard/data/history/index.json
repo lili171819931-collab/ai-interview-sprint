@@ -1,14 +1,37 @@
 {
-  "updatedAt": "2026-08-12T11:41:30.493Z",
+  "updatedAt": "2026-08-13T11:42:07.095Z",
   "timezone": "Asia/Shanghai",
   "days": [
     {
-      "date": "2026-08-12",
-      "archivedAt": "2026-08-12T11:41:30.486Z\nreason=post-full-refresh\nfiles=daily-bundle.json,radar-daily-report.json,builder-pulse-daily.json,trendradar-hot.json,global-hot-topics.json",
+      "date": "2026-08-13",
+      "archivedAt": "2026-08-13T11:42:07.084Z\nreason=post-quick-refresh\nfiles=daily-bundle.json,radar-daily-report.json,builder-pulse-daily.json,opportunity-report-daily.json,trendradar-hot.json,global-hot-topics.json",
       "files": [
         "builder-pulse-daily.json",
         "daily-bundle.json",
         "global-hot-topics.json",
+        "opportunity-report-daily.json",
+        "opportunity-report.json",
+        "radar-daily-report.json",
+        "trendradar-hot.json"
+      ],
+      "summary": {
+        "radarReportDate": "2026-08-13",
+        "radarSignals": 32,
+        "pulseReportDate": "2026-08-13",
+        "hotGeneratedAt": "2026-08-13T19:42:05+08:00",
+        "bundleGeneratedAt": "2026-08-13T10:59:38.790Z",
+        "sourcesOk": 16,
+        "sourcesTotal": 16
+      }
+    },
+    {
+      "date": "2026-08-12",
+      "archivedAt": "2026-08-13T08:10:45.101Z\nreason=post-quick-refresh\nfiles=builder-pulse-daily.json",
+      "files": [
+        "builder-pulse-daily.json",
+        "daily-bundle.json",
+        "global-hot-topics.json",
+        "opportunity-report.json",
         "radar-daily-report.json",
         "trendradar-hot.json"
       ],

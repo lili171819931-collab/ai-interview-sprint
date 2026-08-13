@@ -8,6 +8,21 @@ const nextConfig: NextConfig = {
   outputFileTracingIncludes: {
     "/**": ["./data/**/*"],
   },
+  webpack: (config, { dev }) => {
+    if (dev) {
+      config.watchOptions = {
+        ...config.watchOptions,
+        ignored: ["**/node_modules/**", "**/.git/**", "**/data/**"],
+      };
+    }
+    return config;
+  },
+  async redirects() {
+    return [
+      { source: "/tools", destination: "/leaderboard", permanent: false },
+      { source: "/tools/:id", destination: "/leaderboard", permanent: false },
+    ];
+  },
 };
 
 export default nextConfig;

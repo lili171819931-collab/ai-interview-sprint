@@ -2,7 +2,7 @@
 
 ## 一句话
 
-我做了一个 AI 工具日更看板：功能介绍结构化，优劣势对比可追溯，并补上「大众热点 + 雷达发现 → 今日构建建议」的行动层，避免「网上 Top10」不可审计。
+我做了一个 AI 情报日更看板：精选带推荐理由、全部动态按最新抓取排序、工具优劣势可追溯，并补上「大众热点 + 雷达发现 → 今日构建建议」的行动层，避免「网上 Top10」不可审计。
 
 ## 为什么做
 
@@ -34,7 +34,8 @@
 完整 Q&A 见 [`08-ai-product-interview-qa.md`](08-ai-product-interview-qa.md)。
 商业价值分析见 [`09-commercial-value-and-landing.md`](09-commercial-value-and-landing.md)，AI 产品经理视角方法论见 [`10-ai-pm-perspective.md`](10-ai-pm-perspective.md)，思维链与全量风险见 [`11-thinking-chain-and-risks.md`](11-thinking-chain-and-risks.md)。专家版 Prompt 见 [`极致Prompt-思维链与风险专家版.md`](极致Prompt-思维链与风险专家版.md)。
 机会简报全流程见 [`14-opportunity-brief-full-loop.md`](14-opportunity-brief-full-loop.md)。  
-TrendRadar 热点融合全流程见 [`15-trendradar-fusion-full-loop.md`](15-trendradar-fusion-full-loop.md)。
+TrendRadar 热点融合全流程见 [`15-trendradar-fusion-full-loop.md`](15-trendradar-fusion-full-loop.md)。  
+精选情报台（视觉契约、多源合并、时间轴调试、成本与产品付出）见 [`19-featured-intel-full-loop.md`](19-featured-intel-full-loop.md)。
 
 面试收束可以这样讲：
 

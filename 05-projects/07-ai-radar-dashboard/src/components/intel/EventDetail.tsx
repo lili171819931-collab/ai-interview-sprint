@@ -28,6 +28,13 @@ export function EventDetail({ event }: { event: IntelEvent }) {
       </header>
 
       {a ? (
+        <section className="surface p-4 space-y-2">
+          <h2 className="text-sm font-semibold text-[var(--signal)]">最新进展</h2>
+          <p className="text-sm leading-relaxed">{a.one_liner}</p>
+        </section>
+      ) : null}
+
+      {a ? (
         <section className="grid md:grid-cols-2 gap-4">
           {[
             ["What", a.what],
@@ -70,8 +77,8 @@ export function EventDetail({ event }: { event: IntelEvent }) {
       </section>
 
       <section className="space-y-3">
-        <h2 className="display text-xl font-semibold">Sources</h2>
-        <p className="text-xs text-[var(--muted)]">仅展示抓取得到的真实链接，系统不会编造来源。</p>
+        <h2 className="display text-xl font-semibold">报道时间线</h2>
+        <p className="text-xs text-[var(--muted)]">逆序展示抓取到的真实链接，系统不会编造来源。</p>
         <ul className="space-y-2">
           {(a?.sources?.length ? a.sources : event.sample_items.filter((s) => s.url)).map((s) => (
             <li key={`${s.platform}-${s.url}-${s.title}`} className="surface p-3 text-sm">
