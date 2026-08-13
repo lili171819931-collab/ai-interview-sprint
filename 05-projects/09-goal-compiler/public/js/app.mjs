@@ -5,8 +5,9 @@
  *       8 数据源竞品、就绪度评估、⌘↵ 快捷编译、分享、设计自核验。
  */
 import { compile } from './compiler/index.mjs';
-import { buildReport, reportToMarkdown, categoryLabel, FEATURE_GAPS, DESIGN_FORMS } from './competitive.mjs';
-import { toCaseMeta, saveCase, removeCase, searchCases, categoriesOf, compileCase } from './caselib.mjs';
+import { buildReport, reportToMarkdown, categoryLabel, FEATURE_GAPS, DESIGN_FORMS, SCORING_RULES, QUADRANT_RULES, groupByCategory } from './competitive.mjs';
+import { toCaseMeta, saveCase, saveCaseByType, removeCase, searchCases, categoriesOf, compileCase } from './caselib.mjs';
+import { buildSkillMd, skillFilename } from './skilllib.mjs';
 
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
@@ -115,6 +116,8 @@ function applyI18n() {
   $$('.lang-btn').forEach((b) => b.classList.toggle('active', b.dataset.lang === lang));
   if (currentResult) renderResult(currentResult);
   if (window._caseRendered) renderCaseLibrary();
+  renderScoringRules();
+  renderUsageStats();
 }
 function setLang(l) {
   lang = l;
@@ -229,9 +232,10 @@ function compileNow() {
   const input = readInput();
   if (!input) return;
   currentResult = compile(input.augmented, { mode: input.opts.mode });
-  // 自动收录案例库
-  userCases = saveCase(userCases, toCaseMeta(currentResult));
+  // 案例库：只收集「不同类型」的需求（按 领域·意图 去重）
+  userCases = saveCaseByType(userCases, toCaseMeta(currentResult));
   persistCases();
+  trackStats(currentResult);
   renderResult(currentResult);
   switchTab('compile');
 }
@@ -435,6 +439,109 @@ function exportResultMD(r) {
   return L.join('\n');
 }
 
+/* ================= 本地用量统计（隐私友好埋点替代） ================= */
+function loadStats() {
+  try { return JSON.parse(localStorage.getItem('gc-stats') || 'null') || { compiles: 0, byDomain: {}, byIntent: {}, lastAt: null }; }
+  catch { return { compiles: 0, byDomain: {}, byIntent: {}, lastAt: null }; }
+}
+function trackStats(r) {
+  const st = loadStats();
+  st.compiles += 1;
+  st.byDomain[r.analysis.domains.primary] = (st.byDomain[r.analysis.domains.primary] || 0) + 1;
+  st.byIntent[r.analysis.intent.label] = (st.byIntent[r.analysis.intent.label] || 0) + 1;
+  st.lastAt = new Date().toISOString();
+  localStorage.setItem('gc-stats', JSON.stringify(st));
+  renderUsageStats();
+}
+function renderUsageStats() {
+  const st = loadStats();
+  const topDomain = Object.entries(st.byDomain).sort((a, b) => b[1] - a[1])[0];
+  const topIntent = Object.entries(st.byIntent).sort((a, b) => b[1] - a[1])[0];
+  const el = $('#usageStats');
+  if (!el) return;
+  el.innerHTML = `
+    <div class="usage-stat"><b>${st.compiles}</b><span>${lang === 'en' ? 'compiles' : '编译次数'}</span></div>
+    <div class="usage-stat"><b>${Object.keys(st.byDomain).length}</b><span>${lang === 'en' ? 'domains' : '覆盖领域'}</span></div>
+    <div class="usage-stat"><b>${topDomain ? `${topDomain[0]} ×${topDomain[1]}` : '—'}</b><span>${lang === 'en' ? 'top domain' : '高频领域'}</span></div>
+    <div class="usage-stat"><b>${topIntent ? `${topIntent[0]} ×${topIntent[1]}` : '—'}</b><span>${lang === 'en' ? 'top intent' : '高频意图'}</span></div>`;
+}
+
+/* ================= 模板库（竞品启示功能） ================= */
+let _templates = [];
+async function loadTemplates() {
+  try {
+    const res = await fetch('/api/templates');
+    const data = await res.json();
+    _templates = data.templates || [];
+  } catch { _templates = []; }
+  renderTemplates();
+}
+function renderTemplates() {
+  const box = $('#templateList');
+  if (!box) return;
+  if (!_templates.length) { box.innerHTML = '<span class="hint">—</span>'; return; }
+  box.innerHTML = _templates.map((t, i) => `<span class="chip" data-tpl="${i}" title="${escapeHtml(t.desc)}">${escapeHtml(t.title)}</span>`).join('');
+  $$('[data-tpl]').forEach((c) => c.addEventListener('click', () => {
+    const t = _templates[Number(c.dataset.tpl)];
+    if (!t) return;
+    $('#rawInput').value = t.raw;
+    $('#rawInput').dispatchEvent(new Event('input', { bubbles: true }));
+    switchTab('compile');
+    toast(`${lang === 'en' ? 'Template loaded' : '已载入模板'}：${t.title}`);
+  }));
+}
+
+/* ================= SKILL.md 导出 ================= */
+$('#skillBtn').addEventListener('click', () => {
+  if (!currentResult) return;
+  const md = buildSkillMd(currentResult, { lang });
+  download(skillFilename(currentResult), md);
+  toast(`${lang === 'en' ? 'SKILL.md exported (installable to .claude/skills or .codex/skills)' : '已导出可安装 SKILL.md（可放入 .claude/skills 或 .codex/skills）'}`);
+});
+
+/* ================= 评分规则 + 分类区域 ================= */
+function renderScoringRules() {
+  const grid = $('#scoringRules');
+  if (!grid) return;
+  grid.innerHTML = SCORING_RULES.map((r) => `
+    <div class="score-rule">
+      <div class="score-rule-head"><strong>${escapeHtml(r.dim)}</strong><span class="hint">${escapeHtml(r.en)} · ${r.range} 分</span></div>
+      <div class="score-rule-formula">${escapeHtml(r.formula)}</div>
+      <div class="gap-why">${escapeHtml(r.meaning)}</div>
+    </div>`).join('');
+  const qr = $('#quadrantRules');
+  if (qr) {
+    qr.innerHTML = QUADRANT_RULES.map((q) => `
+      <div class="quad-rule"><b>${lang === 'en' ? q.en : q.q}</b> <span class="hint">${escapeHtml(q.rule)}</span><div class="gap-why">${escapeHtml(q.note)}</div></div>`).join('');
+  }
+}
+
+function renderCompSections(report) {
+  const groups = groupByCategory(report.scored);
+  const box = $('#compSections');
+  box.innerHTML = groups.map((g) => `
+    <div class="comp-section">
+      <div class="comp-section-head">
+        <h4>${escapeHtml(g.name)} <span class="badge">${g.count}</span></h4>
+        <span class="hint">${lang === 'en' ? 'avg threat' : '平均威胁'} ${g.avgThreat} · ${lang === 'en' ? 'avg relevance' : '平均相关'} ${g.avgRelevance}</span>
+      </div>
+      <div class="comp-section-items">
+        ${g.items.map((it) => `
+          <div class="comp-item">
+            <div class="comp-item-main">
+              <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener"><strong>${escapeHtml(it.name)}</strong></a>
+              <span class="hint">${escapeHtml((it.description || '').slice(0, 90))}</span>
+            </div>
+            <div class="comp-item-scores">
+              <span class="mini-score" title="threat">${lang === 'en' ? 'T' : '威'} <b class="${badgeClass(it.scores.threat)}">${it.scores.threat.toFixed(1)}</b></span>
+              <span class="mini-score" title="relevance">${lang === 'en' ? 'R' : '相'} <b class="${badgeClass(it.scores.relevance)}">${it.scores.relevance.toFixed(1)}</b></span>
+              <span class="mini-score" title="stars">⭐ ${it.stars || '—'}</span>
+            </div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('') || '<div class="history-empty">—</div>';
+}
+
 /* ================= 思维链 ================= */
 function renderChain() {
   if (!currentResult) return;
@@ -524,6 +631,7 @@ function renderReport(report) {
     `<span class="badge badge-green">${escapeHtml(report.query)}</span>`,
     errNote,
   ].join('');
+  renderCompSections(report);
   renderCompTable(report.scored);
   renderPositioning(report);
   renderCategory(report.categoryDist);
@@ -734,7 +842,10 @@ async function init() {
   loadUserCases();
   applyI18n();
   renderDesignAudit();
+  renderScoringRules();
+  renderUsageStats();
   await loadCases();
+  await loadTemplates();
   fetch('/api/health').then((r) => r.json()).then((d) => { $('#serverStatus').textContent = d.ok ? (lang === 'en' ? 'online' : '服务正常') : 'local'; })
     .catch(() => { $('#serverStatus').textContent = 'offline'; });
   const name = (location.hash || '#/compile').replace('#/', '');

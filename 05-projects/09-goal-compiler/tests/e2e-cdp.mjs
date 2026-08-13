@@ -34,7 +34,10 @@ function cdp(method, params = {}) {
 
 async function evalJS(expr) {
   const r = await cdp('Runtime.evaluate', { expression: expr, returnByValue: true, awaitPromise: true });
-  if (r.exceptionDetails) throw new Error('eval failed: ' + JSON.stringify(r.exceptionDetails).slice(0, 300));
+  if (r.exceptionDetails) {
+    const desc = r.exceptionDetails.exception?.description || r.exceptionDetails.text;
+    throw new Error(`eval failed [${expr.slice(0, 120)}]: ${String(desc).slice(0, 400)}`);
+  }
   return r.result?.value;
 }
 
@@ -144,6 +147,46 @@ try {
   const enGoal = await evalJS(`document.getElementById('goalPrompt').value.includes('# MISSION')`);
   checks.push(['一键切换英文（Goal 含 # MISSION）', enGoal]);
   await evalJS(`document.querySelector('.lang-btn[data-lang="zh"]').click()`); await sleep(300);
+
+  // v4：评分规则 / 分类区域 / 模板库 / 按类型去重 / SKILL 导出按钮
+  await evalJS(`(() => {
+    const el = document.getElementById('caseSearch');
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(el, '');
+    el.dispatchEvent(new Event('input', { bubbles: true }));
+    return true;
+  })()`); await sleep(300);
+  // 同类型再次编译 → 案例数不变（去重）
+  await evalJS(`document.querySelector('.tab[data-tab="compile"]').click(); document.getElementById('compileBtn').click()`); await sleep(900);
+  await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(500);
+  const dedupeCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
+  checks.push([`同类型去重后案例数=1（${dedupeCount}）`, dedupeCount === 1]);
+  // 不同类型（学习/成长）→ 新增
+  await evalJS(`document.querySelector('.case-card[data-case="2"]').click()`); await sleep(900);
+  await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(500);
+  const typeCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
+  checks.push([`不同类型收录（${typeCount} 条）`, typeCount === 2]);
+  // 模板库
+  await evalJS(`document.querySelector('.tab[data-tab="compile"]').click()`); await sleep(400);
+  const tplCount = await evalJS(`document.querySelectorAll('#templateList .chip').length`);
+  checks.push([`模板库预设（${tplCount} 个）`, tplCount >= 8]);
+  const tplFill = await evalJS(`(() => {
+    document.querySelector('#templateList .chip').click();
+    return document.getElementById('rawInput').value.length > 10;
+  })()`);
+  checks.push(['模板点击填入输入框', tplFill]);
+  const skillBtn = await evalJS(`!!document.getElementById('skillBtn')`);
+  checks.push(['导出 SKILL.md 按钮存在', skillBtn]);
+  // 评分规则 + 分类区域
+  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(400);
+  const ruleCount = await evalJS(`document.querySelectorAll('#scoringRules .score-rule').length`);
+  checks.push([`评分规则维度（${ruleCount} 个）`, ruleCount === 5]);
+  const quadCount = await evalJS(`document.querySelectorAll('#quadrantRules .quad-rule').length`);
+  checks.push([`定位矩阵象限规则（${quadCount} 个）`, quadCount === 4]);
+  const sectionCount = await evalJS(`document.querySelectorAll('#compSections .comp-section').length`);
+  checks.push([`按分类区域分组（${sectionCount} 区）`, sectionCount >= 2]);
+  await evalJS(`document.querySelector('.tab[data-tab="about"]').click()`); await sleep(400);
+  const statCount = await evalJS(`document.querySelectorAll('#usageStats .usage-stat').length`);
+  checks.push([`本地用量统计（${statCount} 项）`, statCount === 4]);
 
   // 截图：各关键视图
   await shot('/tmp/gc-shot-result.png');

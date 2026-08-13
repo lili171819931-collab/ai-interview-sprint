@@ -58,6 +58,12 @@ const server = createServer(async (req, res) => {
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       return res.end(buf);
     }
+    if (pathname === '/api/templates') {
+      const buf = readFileSafe(join(DATA, 'templates.json'));
+      if (!buf) return sendJSON(res, 404, { error: 'templates not found' });
+      res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
+      return res.end(buf);
+    }
     if (pathname === '/api/competitors') {
       const buf = readFileSafe(join(DATA, 'competitors.db.json'));
       if (!buf) return sendJSON(res, 404, { error: 'competitors db not found' });

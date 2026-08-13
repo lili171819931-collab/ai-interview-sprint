@@ -41,6 +41,10 @@ test('API: health / cases / competitors / competitive', async () => {
     const comp = await (await fetch(`http://localhost:${PORT}/api/competitors`)).json();
     assert.ok(Array.isArray(comp) && comp.length >= 8, `精选竞品库应 >= 8（实际 ${comp.length}）`);
 
+    const tpl = await (await fetch(`http://localhost:${PORT}/api/templates`)).json();
+    assert.ok(tpl.templates.length >= 8, `模板库应 >= 8（实际 ${tpl.templates.length}）`);
+    assert.ok(tpl.templates.every((t) => t.raw && t.domain), '每个模板应有 raw 与 domain');
+
     const cr = await (await fetch(`http://localhost:${PORT}/api/competitive?q=goal+compiler&sources=curated`)).json();
     assert.ok(cr.items.length >= 5, '精选库检索应返回结果');
     assert.ok(cr.items.every((it) => it.name), '每条应有 name');

@@ -78,6 +78,10 @@
           <button class="chip" data-quick="1">报销发票小程序</button>
           <button class="chip" data-quick="2">英语口语提升</button>
         </div>
+        <details class="opt-details" id="templatePanel">
+          <summary>📋 <span data-i18n="tplLib">模板库（竞品启示 · 预设诉求）</span></summary>
+          <div id="templateList" class="chip-row"></div>
+        </details>
       </aside>
 
       <div class="panel output-panel">
@@ -125,6 +129,7 @@
               <button class="btn-ghost" id="copyGoalBtn2" data-i18n="copy">复制</button>
               <button class="btn-ghost" id="resetGoalBtn" data-i18n="reset">恢复原文</button>
               <button class="btn-ghost" id="shareBtn" data-i18n="share">🔗 复制分享文本</button>
+              <button class="btn-ghost" id="skillBtn">🧩 导出 SKILL.md</button>
               <span class="hint" id="goalCount"></span>
             </div>
             <textarea id="goalPrompt" class="goal-editor" rows="18" spellcheck="false"></textarea>
@@ -179,8 +184,21 @@
       <div id="compLoading" class="hidden loading" data-i18n="compLoading">检索中…（GitHub 未认证限流 10 次/分钟，稍候）</div>
       <div id="compError" class="hidden error-box"></div>
 
+      <section class="card" id="scoringCard">
+        <h3 data-i18n="scoringTitle">📐 竞品评分规则 <span class="hint" data-i18n="scoringHint">5 维 0-5 分 · 定位矩阵象限规则</span></h3>
+        <div id="scoringRules" class="scoring-grid"></div>
+        <div id="quadrantRules" class="quadrant-row"></div>
+      </section>
       <div id="compResult" class="hidden">
         <div class="result-meta" id="compMetrics"></div>
+        <section class="card">
+          <h3 data-i18n="compSectionsTitle">🗂 竞品清单 · 按分类区域</h3>
+          <div id="compSections" class="comp-sections"></div>
+        </section>
+        <details class="opt-details" style="margin: 0 0 14px;">
+          <summary data-i18n="compMaster">📊 查看全部竞品汇总表（可排序）</summary>
+          <div style="margin-top:10px;"><table class="tbl" id="compTable"><thead></thead><tbody></tbody></table></div>
+        </details>
         <div class="comp-grid">
           <section class="card">
             <h3 data-i18n="compTable">竞品清单与评分 <span class="hint" data-i18n="compTableHint">点击表头排序</span></h3>
@@ -214,7 +232,7 @@
   <!-- ============ Tab: 案例库 ============ -->
   <section id="tab-cases" class="tab-panel">
     <div class="panel">
-      <div class="panel-head"><h2 data-i18n="caseTitle">案例库 <span class="hint" data-i18n="caseHint">每次编译自动收录 · 搜索相似需求可参考分析</span></h2></div>
+      <div class="panel-head"><h2 data-i18n="caseTitle">案例库 <span class="hint" data-i18n="caseHint2">只收集不同类型的需求（按领域·意图去重）· 搜索相似需求可参考</span></h2></div>
       <div class="case-tools">
         <input id="caseSearch" data-i18n-ph="caseSearchPh" placeholder="🔍 搜索相似需求（关键词 / 领域 / 意图）…" />
         <select id="caseCatFilter"><option value="">全部分类</option></select>
@@ -250,6 +268,8 @@
         </ul>
         <h3 data-i18n="techStack">技术栈</h3>
         <p data-i18n="techDesc">Node.js（零第三方依赖）服务端 + 原生 JS/CSS 前端。编译引擎为规则模板 + 领域知识库 + 中英双语生成，可离线运行。</p>
+        <h3 data-i18n="statsTitle">📈 本地用量统计（隐私友好 · 替代云端埋点）</h3>
+        <div id="usageStats" class="usage-stats"></div>
         <h3>设计自核验（人性化视觉审计）</h3>
         <div id="designAudit" class="audit-grid"></div>
         <h3 data-i18n="docs">文档</h3>

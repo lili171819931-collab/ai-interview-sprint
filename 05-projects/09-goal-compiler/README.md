@@ -22,6 +22,15 @@
 - 💡 **竞品启示**：功能缺口清单 + 网页设计形式借鉴（补未考虑项）
 - ✅ **就绪度评估**、⌘↵ 快捷编译、🔗 复制分享、设计自核验（人性化视觉审计）
 
+## 本次升级（v4）
+
+- 🧩 **一键导出可安装 SKILL.md**：编译结果可直接导出为 `.claude/skills` / `.codex/skills` 可安装技能（对标 khazix/superpowers 生态）
+- 📋 **模板库（预设诉求 ×12）**：覆盖 SaaS/小程序/AI Agent/数据看板/爬虫/内容/学习/创业/增长/调研/面试/复盘，一键填入
+- 📈 **本地用量统计**：编译次数/覆盖领域/高频领域/高频意图（隐私友好，替代云端埋点）
+- 🗂 **案例库只收集不同类型**：按「领域·意图」去重，每种类型仅保留最新一条
+- 📐 **竞品评分规则公开**：5 维 0-5 分（相关度/产品化/拆解深度/采纳度/威胁度）+ 定位矩阵象限规则
+- 🗃 **竞品页按分类区域重组**：Skill / 仓库 / SaaS / 网页应用 / MCP / npm / AI 模型 / 社区讨论 分区展示（含平均威胁度）
+
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
 ## 快速开始
@@ -37,8 +46,8 @@ node server/server.mjs 8910
 ## 测试
 
 ```bash
-node --test tests/compile.test.mjs tests/caselib.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单元 + 案例库 + API（16/16）
-node tests/e2e-cdp.mjs                                                                             # 浏览器端到端（17/17，需本机 Chrome）
+node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+API（18/18）
+node tests/e2e-cdp.mjs                                                                                                         # 浏览器端到端（26/26，需本机 Chrome）
 ```
 
 ## 3 个内置测试用例

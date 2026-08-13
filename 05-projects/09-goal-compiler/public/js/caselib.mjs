@@ -26,6 +26,13 @@ export function saveCase(list, meta, max = 200) {
   return [meta, ...rest].slice(0, max);
 }
 
+/** 只收集「不同类型」的需求：按 领域·意图 组合去重，同类型仅保留最新一条 */
+export function saveCaseByType(list, meta, max = 60) {
+  const key = (m) => `${m.domain}·${m.intent}`;
+  const rest = (list || []).filter((c) => key(c) !== key(meta));
+  return [meta, ...rest].slice(0, max);
+}
+
 export function removeCase(list, id) {
   return (list || []).filter((c) => c.id !== id);
 }
@@ -65,4 +72,4 @@ export function compileCase(meta) {
   return compile(meta.rawInput, { mode: 'case-ref' });
 }
 
-export default { toCaseMeta, saveCase, removeCase, searchCases, categoriesOf, compileCase };
+export default { toCaseMeta, saveCase, saveCaseByType, removeCase, searchCases, categoriesOf, compileCase };

@@ -272,3 +272,38 @@ export function relevanceScore(it, query) {
   for (const t of q) if (hay.includes(t)) s += 1;
   return Math.min(5, s);
 }
+
+/* ================= 评分规则说明（竞品页展示） ================= */
+export const SCORING_RULES = [
+  { dim: '相关度', en: 'Relevance', range: '0-5', formula: '检索词命中 名称/描述/标签 的次数（≤5）', meaning: '与当前调研主题的相关程度' },
+  { dim: '产品化', en: 'Productization', range: '0-5', formula: 'SaaS/Web≈0.9 · npm≈0.7 · MCP≈0.6 · repo/skill≈0.4 · 讨论≈0.3（×5）', meaning: '交付形态的成熟度' },
+  { dim: '拆解深度', en: 'Depth', range: '0-5', formula: '0.25 + 能力关键词命中×0.16 + 类型加成（skill/repo +0.6，其他 +0.3），封顶 5', meaning: '目标拆解/验收/边界的方法论完备度' },
+  { dim: '采纳度', en: 'Adoption', range: '0-5', formula: 'log10(star+1)/4.5（×5）；精选库用人工评分', meaning: '社区热度/用户采纳水平' },
+  { dim: '威胁度', en: 'Threat', range: '0-5', formula: '0.35×采纳 + 0.35×深度 + 0.3×产品化 + 0.2 基础（×5）', meaning: '对本产品构成的竞争威胁' },
+];
+
+export const QUADRANT_RULES = [
+  { q: '领先者', en: 'Leaders', rule: '产品化 ≥ 55 且 深度 ≥ 55', note: '形态成熟 + 方法论完备，需重点对标' },
+  { q: '深度专精', en: 'Specialists', rule: '产品化 < 55 且 深度 ≥ 55', note: '方法论强但形态轻（多为 Skill/仓库）' },
+  { q: '产品化', en: 'Productized', rule: '产品化 ≥ 55 且 深度 < 55', note: '产品成熟但拆解深度一般（多为 SaaS）' },
+  { q: '细分/早期', en: 'Niche/Early', rule: '产品化 < 55 且 深度 < 55', note: '早期/细分玩家' },
+];
+
+/** 按分类分组（供「分类区域」布局） */
+export function groupByCategory(scored) {
+  const map = new Map();
+  for (const it of scored) {
+    const k = it.categoryLabel || '其他';
+    if (!map.has(k)) map.set(k, []);
+    map.get(k).push(it);
+  }
+  return [...map.entries()]
+    .map(([name, items]) => ({
+      name,
+      count: items.length,
+      avgThreat: +(items.reduce((s, i) => s + i.scores.threat, 0) / items.length).toFixed(1),
+      avgRelevance: +(items.reduce((s, i) => s + i.scores.relevance, 0) / items.length).toFixed(1),
+      items: [...items].sort((a, b) => b.scores.threat - a.scores.threat),
+    }))
+    .sort((a, b) => b.avgThreat - a.avgThreat);
+}

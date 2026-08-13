@@ -3,7 +3,7 @@
  */
 import { test } from 'node:test';
 import assert from 'node:assert/strict';
-import { toCaseMeta, saveCase, removeCase, searchCases, categoriesOf, compileCase } from '../public/js/caselib.mjs';
+import { toCaseMeta, saveCase, saveCaseByType, removeCase, searchCases, categoriesOf, compileCase } from '../public/js/caselib.mjs';
 import { compile } from '../public/js/compiler/index.mjs';
 
 test('toCaseMeta 提取领域/意图/标题', () => {
@@ -48,4 +48,19 @@ test('removeCase / categoriesOf / compileCase', () => {
   assert.equal(recompiled.inputHash, list[0].inputHash, '确定性重编译应一致');
   list = removeCase(list, list[0].id);
   assert.equal(list.length, 0);
+});
+
+test('saveCaseByType：只收集不同类型（按 领域·意图 去重）', () => {
+  const a = compile('做一个自动整理报销发票的小程序，拍照识别金额');   // 效率/自动化 · 构建
+  const b = compile('做一个自动记账的机器人，自动同步银行卡账单');     // 效率/自动化 · 构建（同类型）
+  const c = compile('用 AI 帮我系统提升英语口语');                     // 学习/成长 · 学习
+  let list = [];
+  list = saveCaseByType(list, toCaseMeta(a));
+  list = saveCaseByType(list, toCaseMeta(b)); // 同 领域·意图 → 替换
+  assert.equal(list.length, 1, '同类型应只保留 1 条');
+  list = saveCaseByType(list, toCaseMeta(c));
+  assert.equal(list.length, 2, '不同类型应新增');
+  assert.equal(list[0].title, c.analysis.entities.object, '新类型置顶');
+  const metaA = toCaseMeta(a), metaB = toCaseMeta(b);
+  assert.equal(metaA.domain + '·' + metaA.intent, metaB.domain + '·' + metaB.intent, '两者类型一致');
 });
