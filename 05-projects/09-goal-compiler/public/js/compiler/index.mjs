@@ -6,6 +6,7 @@ import { analyze } from './analyzer.mjs';
 import { buildOutput } from './goal.mjs';
 import { buildOutputEn } from './goal-en.mjs';
 import { buildChain } from './chain.mjs';
+import { buildDivergence } from '../divergence.mjs';
 
 let seq = 0;
 function shortHash(s) {
@@ -30,6 +31,7 @@ export function compile(rawInput, options = {}) {
     mode: options.mode || 'standard',
     analysis,
     chain,
+    divergence: buildDivergence(analysis),
     summary: output.summary,
     summaryEn: en.summary,
     suggestions: output.suggestions,

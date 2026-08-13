@@ -113,6 +113,7 @@ const I18N = {
   selfScan: { zh: '🔄 扫描本产品相关竞品（9 源）', en: '🔄 Scan self-competitors (9 sources)' },
   selfScanTitle: { zh: '📡 同口径分析结果（本产品 vs 竞品）', en: '📡 Same-pipeline results (self vs competitors)' },
   dialogueToggle: { zh: '展开', en: 'Open' },
+  divergenceTitle: { zh: '需求发散式分析（针对本需求的场景化扩展）', en: 'Divergent analysis (scenario-specific extensions for this request)' },
   selfReportExport: { zh: '导出 MD', en: 'Export MD' },
 };
 
@@ -676,13 +677,54 @@ function renderChainExpert(r) {
     ['质量门槛', `L${r.qualityLevel}`],
   ];
   $('#expertMetrics').innerHTML = metrics.map(([k, v]) => `<div class="expert-metric"><b>${v}</b><span>${k}</span></div>`).join('');
-  $('#expertNote').textContent = `专家点评：本次编译覆盖 ${r.chain.length} 个推理节点、${new Set(r.chain.map((n) => n.phase)).size} 个阶段，方法链完整（输入规范 → 六问模型 → 目标树 → 三态假设 → 阶段门禁 → 防作弊验收）。${r.analysis.gaps.length ? `输入存在 ${r.analysis.gaps.length} 处信息缺口，已用「最合理默认方案」兜底并在假设区标注，建议按需补充。` : '输入信息较完整，可直接进入执行。'}`;
+  const a = r.analysis;
+  const d = r.divergence;
+  $('#reqProfile').innerHTML = `
+    <div class="req-profile-row">
+      <span class="badge badge-blue">🎯 ${escapeHtml(a.entities.object || '目标对象')}</span>
+      <span class="badge">领域：${escapeHtml(a.domains.primary)}</span>
+      <span class="badge badge-cyan">意图：${escapeHtml(a.intent.label)}</span>
+      <span class="badge">缺口：${a.gaps.length}</span>
+      <span class="badge badge-green">发散：${d.features.length} 功能 · ${d.scenarios.length} 场景 · ${d.variants.length} 变体</span>
+    </div>`;
+  $('#expertNote').textContent = `专家点评：本次编译覆盖 ${r.chain.length} 个推理节点、${new Set(r.chain.map((n) => n.phase)).size} 个阶段，方法链完整（输入规范 → 六问模型 → 目标树 → 三态假设 → 阶段门禁 → 防作弊验收），并针对「${a.entities.object || '该需求'}」给出 ${d.features.length + d.scenarios.length + d.variants.length} 条发散式扩展建议。${a.gaps.length ? `输入存在 ${a.gaps.length} 处信息缺口，已用「最合理默认方案」兜底并在假设区标注。` : '输入信息较完整，可直接进入执行。'}`;
+  renderDivergence(r);
+}
+
+/** 发散式分析渲染（需求场景化扩展） */
+function renderDivergence(r) {
+  const sec = $('#divergenceSection');
+  if (!sec) return;
+  sec.classList.remove('hidden');
+  const d = r.divergence;
+  $('#divergenceSummary').textContent = d.summary;
+  const groups = [
+    { name: '💡 推荐添加的功能', items: d.features },
+    { name: '🧩 可扩展场景', items: d.scenarios },
+    { name: '👥 潜在用户变体', items: d.variants },
+    { name: '⚠️ 边界提醒', items: d.pitfalls },
+  ];
+  $('#divergenceGroups').innerHTML = groups.map((g) => `
+    <div class="divergence-group">
+      <div class="divergence-group-head">${g.name} <span class="hint">×${g.items.length}</span></div>
+      <div class="divergence-chips">${g.items.map((it, i) => `<span class="chip" data-dvg="${escapeHtml(g.name)}|${i}">${escapeHtml(it.title)}</span>`).join('')}</div>
+    </div>`).join('');
+  $$('#divergenceGroups [data-dvg]').forEach((el) => el.addEventListener('click', () => {
+    const [gname, idx] = el.dataset.dvg.split('|');
+    const group = groups.find((g) => g.name === gname);
+    const it = group.items[Number(idx)];
+    if (!it) return;
+    $('#insightModalTitle').textContent = `${gname} · ${it.title}`;
+    $('#insightModalBody').innerHTML = `<div class="result-meta"><span class="badge badge-cyan">${escapeHtml(it.tag)}</span></div><div class="chain-body-open"><div class="row"><span class="label">详情</span><div class="reasoning">${escapeHtml(it.detail)}</div></div></div>`;
+    $('#insightModal').classList.remove('hidden');
+  }));
 }
 
 function renderChain() {
   if (!currentResult) return;
   $('#chainEmpty').classList.add('hidden');
   renderChainExpert(currentResult);
+  renderDivergence(currentResult);
   renderChainDiagram();
   renderChainList();
   const isDiag = chainView === 'diagram';
@@ -713,11 +755,34 @@ function renderChainDiagram() {
           </div>`).join('')}
       </div>
     </div>
-    ${pi < phases.length - 1 ? '<div class="cd-arrow">→</div>' : ''}`).join('')}</div>`;
-  $$('#chainDiagram .cd-node').forEach((el) => el.addEventListener('click', () => {
-    chainModalIdx = currentResult.chain.findIndex((n) => n.step === el.dataset.cd);
-    openChainModal();
-  }));
+    ${pi < phases.length - 1 ? '<div class="cd-arrow">→</div>' : ''}`).join('')}
+    <div class="cd-arrow">→</div>
+    <div class="cd-lane divergence-lane">
+      <div class="cd-lane-head">🧭 发散分析 <span class="hint">×${[...currentResult.divergence.features, ...currentResult.divergence.scenarios].length}</span></div>
+      <div class="cd-lane-body">
+        ${[...currentResult.divergence.features, ...currentResult.divergence.scenarios].slice(0, 6).map((it) => `
+          <div class="cd-node" data-dvg-node="${escapeHtml(it.tag)}|${escapeHtml(it.title)}">
+            <span class="cd-node-step ok">↗</span>
+            <div class="cd-node-title">${escapeHtml(it.tag)}：${escapeHtml(it.title.slice(0, 22))}</div>
+            <div class="cd-node-method">${escapeHtml(it.detail.slice(0, 30))}…</div>
+          </div>`).join('')}
+      </div>
+    </div></div>`;
+  $$('#chainDiagram .cd-node').forEach((el) => {
+    if (el.dataset.cd) {
+      el.addEventListener('click', () => { chainModalIdx = currentResult.chain.findIndex((n) => n.step === el.dataset.cd); openChainModal(); });
+    } else if (el.dataset.dvgNode) {
+      el.addEventListener('click', () => {
+        const [tag, title] = el.dataset.dvgNode.split('|');
+        const all = [...currentResult.divergence.features, ...currentResult.divergence.scenarios, ...currentResult.divergence.variants, ...currentResult.divergence.pitfalls];
+        const it = all.find((x) => x.tag === tag && x.title === title) || all.find((x) => x.title === title);
+        if (!it) return;
+        $('#insightModalTitle').textContent = `${tag} · ${it.title}`;
+        $('#insightModalBody').innerHTML = `<div class="result-meta"><span class="badge badge-cyan">${escapeHtml(it.tag)}</span></div><div class="chain-body-open"><div class="row"><span class="label">详情</span><div class="reasoning">${escapeHtml(it.detail)}</div></div></div>`;
+        $('#insightModal').classList.remove('hidden');
+      });
+    }
+  });
 }
 
 function renderChainList() {

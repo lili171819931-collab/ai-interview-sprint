@@ -66,6 +66,11 @@
 - 📋 **模板库/AI 澄清重设计（突出且不拥挤）**：模板库改为**单行横向滚动条**；AI 多轮澄清改为**可折叠卡片**默认收起，展开后空间充足；推荐模板轻量内联
 - 🎨 **UI 专家级优化**：详见 [docs/07-ui-expert-prompt.md](docs/07-ui-expert-prompt.md)（自生成极致设计 Prompt + 执行清单：4px 间距基准、焦点辉光、卡片/按钮/标签一致性、响应式精修）
 
+## 本次升级（v9）
+
+- 🧭 **思维链场景化 + 发散式分析**：思维链升级为「针对本需求的逻辑链」——专家总览新增**需求画像**（对象/领域/意图/缺口/发散规模）；新增**需求发散式分析**（4 组 × 19 条：推荐添加的功能 / 可扩展场景 / 潜在用户变体 / 边界提醒），全部随需求领域动态生成、点击弹窗详情
+- 🗺 **思维框图新增「发散分析」泳道**：14 个主逻辑 + 发散节点同图展示（5 泳道 20 节点），发散节点点击可看详细说明
+
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
 ## 快速开始
@@ -81,8 +86,8 @@ node server/server.mjs 8910
 ## 测试
 
 ```bash
-node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+API（21/21）
-node tests/e2e-cdp.mjs                                                                                                                                  # 浏览器端到端（58/58，需本机 Chrome）
+node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/divergence.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+发散+API（23/23）
+node tests/e2e-cdp.mjs                                                                                                                                                                # 浏览器端到端（63/63，需本机 Chrome）
 ```
 
 ## 3 个内置测试用例

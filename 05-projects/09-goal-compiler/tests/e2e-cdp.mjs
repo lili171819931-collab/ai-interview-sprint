@@ -108,12 +108,28 @@ try {
   // v5：思维框图 + 节点弹窗 + 历史输入建议
   const laneCount = await evalJS(`document.querySelectorAll('#chainDiagram .cd-lane').length`);
   const nodeCount = await evalJS(`document.querySelectorAll('#chainDiagram .cd-node').length`);
-  checks.push([`思维框图泳道（${laneCount} 阶段）`, laneCount === 4]);
-  checks.push([`思维框图节点（${nodeCount} 个主逻辑）`, nodeCount === 14]);
+  checks.push([`思维框图泳道（${laneCount} 阶段+发散）`, laneCount === 5]);
+  checks.push([`思维框图节点（${nodeCount} 个主逻辑+发散）`, nodeCount >= 18]);
   const expertMetrics = await evalJS(`document.querySelectorAll('#expertMetrics .expert-metric').length`);
   checks.push([`专家版拆解指标（${expertMetrics} 项）`, expertMetrics >= 6]);
-  const methodTags = await evalJS(`document.querySelectorAll('#chainDiagram .cd-node-method').length`);
+  const methodTags = await evalJS(`document.querySelectorAll('#chainDiagram .cd-lane:not(.divergence-lane) .cd-node-method').length`);
   checks.push([`方法论标签（${methodTags} 节点）`, methodTags === 14]);
+  // v9：需求画像 + 发散式分析
+  const reqProfileBadges = await evalJS(`document.querySelectorAll('#reqProfile .badge').length`);
+  checks.push([`需求画像徽标（${reqProfileBadges} 项）`, reqProfileBadges >= 5]);
+  const dvgGroups = await evalJS(`document.querySelectorAll('#divergenceGroups .divergence-group').length`);
+  checks.push([`发散分析分组（${dvgGroups} 组）`, dvgGroups === 4]);
+  const dvgChips = await evalJS(`document.querySelectorAll('#divergenceGroups [data-dvg]').length`);
+  checks.push([`发散建议条目（${dvgChips} 条）`, dvgChips >= 10]);
+  const dvgLaneNodes = await evalJS(`document.querySelectorAll('#chainDiagram .divergence-lane .cd-node').length`);
+  checks.push([`框图发散泳道节点（${dvgLaneNodes}）`, dvgLaneNodes >= 4]);
+  const dvgModal = await evalJS(`(() => {
+    document.querySelector('#divergenceGroups [data-dvg]').click();
+    const ok = !document.getElementById('insightModal').classList.contains('hidden') && document.getElementById('insightModalBody').textContent.length > 5;
+    document.getElementById('insightModalClose').click();
+    return ok;
+  })()`);
+  checks.push(['发散建议点击弹窗详情', dvgModal]);
   const modalOpen = await evalJS(`(() => {
     document.querySelector('#chainDiagram .cd-node').click();
     return !document.getElementById('chainModal').classList.contains('hidden') &&
