@@ -54,6 +54,10 @@
 | WorkBuddy Skill | [`05-projects/04-workbuddy-invoice-reimburse/`](05-projects/04-workbuddy-invoice-reimburse/) | 同域对话 Skill 包 |
 | AI 功能 · 周复盘 | [`05-projects/02-ai-weekly-insight/`](05-projects/02-ai-weekly-insight/) | 本冲刺仓独有 |
 | 评测 Lab | [`05-projects/03-rag-validation-lab/`](05-projects/03-rag-validation-lab/) | 本冲刺仓独有 |
+| 智衡 AI Radar | [`05-projects/07-ai-radar-dashboard/`](05-projects/07-ai-radar-dashboard/) | 日更情报看板 · [致谢 CREDITS](05-projects/07-ai-radar-dashboard/docs/CREDITS.md) |
+| Goal Compiler | [`05-projects/09-goal-compiler/`](05-projects/09-goal-compiler/) | 目标编译器 · README 内致谢 |
+
+**开源致谢：** 凡参考外部开源 / 公开产品的作品，均在该项目 README（或 `docs/CREDITS.md`）中列出**参考源链接、作者与诚恳致谢**，并遵守上游许可（如 BuilderPulse CC BY-NC）。索引见 [`05-projects/README.md`](05-projects/README.md)。
 
 **AI 项目集：** https://github.com/lili171819931-collab/ai-projects
 

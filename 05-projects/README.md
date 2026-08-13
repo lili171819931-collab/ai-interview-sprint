@@ -74,3 +74,15 @@ git clone https://github.com/lili171819931-collab/ai-projects.git
 #   ai-projects/products/weiji-mini
 #   ai-projects/products/piaoji-mini
 ```
+
+## 参考源与开源致谢（各作品 README）
+
+本作品夹内的可运行项目，凡学习了外部开源 / 公开产品方法，均在对应 README 中列出**项目链接、作者与致谢**。请优先阅读：
+
+| 作品 | 致谢文档 |
+|------|----------|
+| 智衡 AI Radar | [`07-ai-radar-dashboard/README.md`](07-ai-radar-dashboard/README.md) · [`docs/CREDITS.md`](07-ai-radar-dashboard/docs/CREDITS.md) |
+| Goal Compiler | [`09-goal-compiler/README.md`](09-goal-compiler/README.md) |
+| Scrapling 研究脚本 | [`../08-resources/scrapling-examples/README.md`](../08-resources/scrapling-examples/README.md) |
+
+原则：**署名归原创者；改造与演示责任在本仓；遵守上游许可（尤其 BuilderPulse CC BY-NC、AIHOT 非商业条款）。**

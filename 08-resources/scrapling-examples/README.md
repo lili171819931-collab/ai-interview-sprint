@@ -36,6 +36,20 @@
 - BuilderPulse 报告内容为 CC BY-NC：产品内仅结构化展示并署名，不做商业转载。  
 - 示例 JSON 为某次运行快照，需重新跑脚本刷新。
 
+## 参考源与诚恳致谢
+
+本目录研究脚本依赖下列开源 / 公开能力，**诚恳致谢**：
+
+| 项目 | 作者 | 链接 | 用途 |
+|------|------|------|------|
+| Scrapling | [D4Vinci](https://github.com/D4Vinci) | [D4Vinci/Scrapling](https://github.com/D4Vinci/Scrapling) | 页面抓取与可复现实验 |
+| NewsNow | [ourongxing](https://github.com/ourongxing) | [ourongxing/newsnow](https://github.com/ourongxing/newsnow) | 国内热榜公开聚合 |
+| Agent-Reach | [Panniantong](https://github.com/Panniantong) | [Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach) | 多平台 CLI 能力对齐 |
+| BuilderPulse | [刘小排](https://github.com/liuxiaopai-ai) | [BuilderPulse](https://github.com/BuilderPulse/BuilderPulse#chinese) | 机会发现对标（CC BY-NC） |
+| Trends24 | trends24.in | [trends24.in](https://trends24.in/) | X 趋势公开页降级源 |
+
+产品侧完整致谢：[智衡 CREDITS](../../05-projects/07-ai-radar-dashboard/docs/CREDITS.md)。
+
 ## 快速运行
 
 ```bash

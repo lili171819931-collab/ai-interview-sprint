@@ -26,16 +26,16 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 
 | 路由 | 作用 |
 |------|------|
-| `/` | 总览：数据链、能力地图、品类柱状图、今日看点 |
-| `/radar` | AI 动态雷达日报：5 监控池 + TrendRadar 热点融合 + 信号看板 |
-| `/hot` | 国内外实时热点：Agent Reach + NewsNow/RSS/OpenCLI 多源看板 |
-| `/history` | 历史报告：日更归档回看（`data/archive/YYYY-MM-DD`） |
-| `/pulse` | BuilderPulse 风格机会简报：今日构建建议 + 机会发现题库 |
-| `/tools` | 目录：筛选 + 结果区（排序/视图/多选对比） |
-| `/tools/[id]` | 功能介绍 + 优劣势 + 来源数据链 |
-| `/compare` | 维度对比 + 决策流/树 + 柱状图 + 场景建议 |
-| `/sources` | 数据来源报告：资产路径 + 5 监控池矩阵 + 公开源抓取 |
-| `/methodology` | 评分口径与日更管道 |
+| `/` | 精选 |
+| `/all` | 全部动态 |
+| `/ranking` | AI 热点榜 |
+| `/hot` | 热点分析（国内 / 海外） |
+| `/briefs` | AI 日报 |
+| `/opportunities` | 机会点分析报告（日更存档） |
+| `/leaderboard` | 大模型排行榜 |
+| `/ask` | Agent |
+| `/items/[id]` | 精选阅读页 |
+| `/events/[id]` | 事件详情 |
 
 ## 完整项目文档地图
 
@@ -79,6 +79,7 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 - [`docs/极致Prompt-AI雷达看板从0到1.md`](docs/极致Prompt-AI雷达看板从0到1.md)
 - [`docs/极致Prompt-思维链与风险专家版.md`](docs/极致Prompt-思维链与风险专家版.md)
 - [`docs/极致Prompt-AI动态雷达日更.md`](docs/极致Prompt-AI动态雷达日更.md)
+- [`docs/极致Prompt-设计自检与功能补全.md`](docs/极致Prompt-设计自检与功能补全.md) ← **设计自检 + 热点分析/机会报告补全**
 
 ## 日更（真实公开源 + 动态雷达日报）
 
@@ -96,8 +97,10 @@ npm run dev            # http://localhost:3010  → 看 /pulse
    - 仅日报：`npm run radar:daily`  
    - 周报：`npm run radar:weekly`  
    - 实时热点：`npm run hot:sync`  
+   - AIHOT 精选：每小时自动更新（页面打开时调度 + GitHub Action `0 * * * *` + `npm run hourly`）
    - 离线：`npm run daily:refresh:offline`  
    - 仅机会简报：`npm run pulse:sync`  
+   - 机会分析报告（BP 方法 + 归档）：`npm run opp:sync`  
    - 仅热点融合：`npm run trendradar:sync`
    - **情报 ingest（GTI Phase 2）**：`npm run intel:ingest`（统一 Item；离线 `intel:ingest:offline`）
    - **事件聚类 + 热度（Phase 4–5）**：`npm run intel:cluster` · 一键 `npm run intel:refresh`
@@ -105,6 +108,22 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 6. 看板看 `/radar`（含 `#trendradar-hot`）；机会简报看 `/pulse`；抓取明细看 `/sources` 与 `data/live-fetch-report.json`
 
 **不会**因 RSS / 雷达日报 / 热搜同步自动改七维分数。
+
+## AIHOT 站点复刻
+
+参考 [AIHOT](https://aihot.virxact.com) / [khazix-skills aihot](https://github.com/KKKKhazix/khazix-skills/tree/main/aihot) 与 [leader](https://github.com/KKKKhazix/khazix-skills#-leader领导)：
+
+| AIHOT / leader 能力 | 本项目落点 |
+|---------------------|------------|
+| 精选时间窗 24h/7d + 主题 + 搜索 | `/` |
+| 热点榜（按名次，不展示热度值） | `/ranking` · `GET /api/v1/hot-topics` |
+| 日切日报 sections | `/briefs` · `GET /api/v1/dailies/latest` |
+| 全部动态 | `/all` |
+| Agent 匿名 v1 | `/agent` · `/api/v1/items` |
+| leader 目标七问 | `/goal` 生成可复制任务书 |
+| 公开精选同步 | `npm run aihot:sync` → `data/aihot/` |
+
+AIHOT 数据仅用于个人非商业 / 面试演示，遵守 [公开使用规则](https://aihot.virxact.com/terms)，不是公开镜像。
 
 ## BuilderPulse 能力映射
 
@@ -135,7 +154,31 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 
 ## 文档
 
-见 [`docs/`](docs/)（已覆盖完整项目生命周期）。
+见 [`docs/`](docs/)（已覆盖完整项目生命周期）。  
+参考源与作者致谢全文：[`docs/CREDITS.md`](docs/CREDITS.md)。
+
+## 参考源与诚恳致谢
+
+本项目是学习 / 面试作品，**站在开源与公开情报工作之上**。信息架构、机会分析方法、热点聚合能力均大量参考下列项目与作者；没有他们的公开工作，智衡无法成形。在此致以诚挚感谢。
+
+| 参考 / 开源项目 | 作者 / 维护者 | 链接 | 本项目如何学习与引用 |
+|-----------------|---------------|------|----------------------|
+| **BuilderPulse** | [Liu Xiaopai（刘小排）](https://github.com/liuxiaopai-ai) | [BuilderPulse/BuilderPulse](https://github.com/BuilderPulse/BuilderPulse#chinese) | 机会日报方法（今日建议 / Why now / 信号·白话·判断·反方）；`/pulse` · `/opportunities` |
+| **AIHOT** | [Virxact / AIHOT](https://aihot.virxact.com) | [aihot.virxact.com](https://aihot.virxact.com) · [使用条款](https://aihot.virxact.com/terms) | 精选 / 热点榜 / 日报信息架构与公开 v1 数据学习 |
+| **khazix-skills · aihot / leader** | [KKKKhazix](https://github.com/KKKKhazix) | [aihot](https://github.com/KKKKhazix/khazix-skills/tree/main/aihot) · [leader](https://github.com/KKKKhazix/khazix-skills) | Agent / 目标书与热点技能设计参考 |
+| **TrendRadar** | [sansan0](https://github.com/sansan0) | [sansan0/TrendRadar](https://github.com/sansan0/TrendRadar) | 多平台热搜聚合与融合流程 |
+| **Agent-Reach** | [Panniantong](https://github.com/Panniantong) | [Panniantong/Agent-Reach](https://github.com/Panniantong/Agent-Reach) | 多源公开抓取能力对齐（OpenCLI / 可选社交源） |
+| **NewsNow** | [ourongxing](https://github.com/ourongxing) | [ourongxing/newsnow](https://github.com/ourongxing/newsnow) · [newsnow.busiyi.world](https://newsnow.busiyi.world) | 公开热点聚合 API（微博/抖音/知乎等） |
+| **Scrapling** | [D4Vinci](https://github.com/D4Vinci) | [D4Vinci/Scrapling](https://github.com/D4Vinci/Scrapling) | 研究脚本与公开页抓取实验 |
+| **Next.js** | [Vercel](https://github.com/vercel) | [vercel/next.js](https://github.com/vercel/next.js) | Web 看板运行时 |
+
+**许可与边界（请务必阅读）：**
+
+- BuilderPulse 报告内容为 **[CC BY-NC 4.0](https://github.com/BuilderPulse/BuilderPulse/blob/main/LICENSE.md)**：本仓仅做结构化学习展示与署名，**非商业转载**；商业用途请先联系 [刘小排](https://github.com/liuxiaopai-ai)。
+- AIHOT 公开数据仅用于**个人非商业 / 面试演示**，遵守其公开使用规则，**不是**官方镜像站。
+- TrendRadar / Agent-Reach / NewsNow / Scrapling 等按各自仓库许可证使用；本仓不提交其 venv/源码整包，仅学习能力并链接致谢。
+
+若您是上表任一项目作者，发现署名有误或希望调整引用方式，欢迎开 Issue，我们会尽快更正。
 
 ## 非目标
 

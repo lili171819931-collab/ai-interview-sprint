@@ -86,11 +86,17 @@ tests/   单测 · API 测试 · CDP 端到端
 | [docs/05-business-value.md](docs/05-business-value.md) | 商业价值分析 |
 | [docs/06-user-guide.md](docs/06-user-guide.md) | 使用指南 |
 
-## 参考
+## 参考 · 开源致谢
 
-- 原始诉求：用户提供的「极致版 Goal Compiler」Prompt（930 行）
-- 参考项目：[khazix-skills/leader/SKILL.md](https://github.com/KKKKhazix/khazix-skills/blob/main/leader/SKILL.md)（防作弊验收、≤4000 字符目标书）
-- 竞品数据源：GitHub Search API、Hacker News Algolia、内置精选库（16 项）
+Goal Compiler 是学习 / 面试作品，方法与验收标准参考了下列公开项目，**在此诚恳致谢**：
+
+| 参考源 | 作者 | 链接 | 我们学到了什么 |
+|--------|------|------|----------------|
+| **khazix-skills · leader** | [KKKKhazix](https://github.com/KKKKhazix) | [leader/SKILL.md](https://github.com/KKKKhazix/khazix-skills/blob/main/leader/SKILL.md) | 防作弊验收、≤4000 字符目标书结构 |
+| GitHub Search API | [GitHub](https://github.com) | [docs.github.com/rest](https://docs.github.com/en/rest) | 公开仓库检索（遵守限流） |
+| Hacker News Algolia | HN / Algolia | [hn.algolia.com/api](https://hn.algolia.com/api) | 公开讨论检索 |
+
+原始诉求来自用户提供的「极致版 Goal Compiler」Prompt。竞品与案例数据仅供学习研究；错误与改造责任在本仓。
 
 ## 免责说明
 
