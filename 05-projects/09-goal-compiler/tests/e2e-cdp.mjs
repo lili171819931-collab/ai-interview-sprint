@@ -105,6 +105,37 @@ try {
   const chainNodes = await evalJS(`document.querySelectorAll('#chainList .chain-node').length`);
   checks.push([`思维链节点渲染（${chainNodes} 个）`, chainNodes >= 10]);
 
+  // v5：思维框图 + 节点弹窗 + 历史输入建议
+  const laneCount = await evalJS(`document.querySelectorAll('#chainDiagram .cd-lane').length`);
+  const nodeCount = await evalJS(`document.querySelectorAll('#chainDiagram .cd-node').length`);
+  checks.push([`思维框图泳道（${laneCount} 阶段）`, laneCount === 4]);
+  checks.push([`思维框图节点（${nodeCount} 个主逻辑）`, nodeCount === 14]);
+  const modalOpen = await evalJS(`(() => {
+    document.querySelector('#chainDiagram .cd-node').click();
+    return !document.getElementById('chainModal').classList.contains('hidden') &&
+           document.getElementById('chainModalBody').textContent.length > 50;
+  })()`);
+  checks.push(['点击主逻辑弹出解释弹窗', modalOpen]);
+  const modalNext = await evalJS(`(() => {
+    document.getElementById('chainModalNext').click();
+    return document.getElementById('chainModalPos').textContent === '2/14';
+  })()`);
+  checks.push(['弹窗前后节点导航（2/14）', modalNext]);
+  await evalJS(`document.getElementById('chainModalClose').click()`);
+  const sugOpen = await evalJS(`(() => {
+    const ta = document.getElementById('rawInput');
+    ta.focus(); ta.dispatchEvent(new Event('focus', { bubbles: true }));
+    return !document.getElementById('inputSuggestions').classList.contains('hidden') &&
+           document.querySelectorAll('#inputSuggestions .sug-item').length >= 1;
+  })()`);
+  checks.push(['输入框历史建议下拉', sugOpen]);
+  const sugPick = await evalJS(`(() => {
+    const n = document.querySelectorAll('#inputSuggestions .sug-item').length;
+    if (n > 0) { document.querySelector('#inputSuggestions .sug-item').click(); return document.getElementById('rawInput').value.length > 5; }
+    return false;
+  })()`);
+  checks.push(['点击建议填入输入框', sugPick]);
+
   const sugg = await evalJS(`document.querySelectorAll('#rSuggestions .chip').length`);
   checks.push([`补充建议条数（${sugg}）`, sugg >= 3]);
 

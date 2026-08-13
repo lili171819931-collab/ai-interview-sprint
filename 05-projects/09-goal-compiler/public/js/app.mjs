@@ -202,6 +202,65 @@ $('#voiceBtn').addEventListener('click', () => {
   rec.start();
 });
 
+/* ================= 输入历史建议 ================= */
+let suggestItems = [];
+let suggestIndex = -1;
+
+function buildSuggestItems() {
+  const map = new Map();
+  const add = (raw, source, domain, intent) => {
+    const key = (raw || '').trim();
+    if (!key || map.has(key)) return;
+    map.set(key, { raw: key, source, domain, intent });
+  };
+  for (const h of historyList) add(h.raw, '草稿', '', '');
+  for (const c of userCases) add(c.rawInput, '案例', c.domain, c.intent);
+  for (const c of _cases) add(c.rawInput, '演示', c.domain, '');
+  suggestItems = [...map.values()];
+}
+
+function renderSuggestions() {
+  const box = $('#inputSuggestions');
+  const val = $('#rawInput').value.trim().toLowerCase();
+  const items = suggestItems
+    .filter((it) => !val || it.raw.toLowerCase().includes(val))
+    .slice(0, 8);
+  if (!items.length) { box.classList.add('hidden'); return; }
+  box.innerHTML = items.map((it, i) => `
+    <button class="sug-item ${i === suggestIndex ? 'active' : ''}" data-sug="${i}" type="button">
+      <span class="sug-raw">${escapeHtml(it.raw.length > 64 ? it.raw.slice(0, 62) + '…' : it.raw)}</span>
+      <span class="sug-meta">${it.source}${it.domain ? ' · ' + escapeHtml(it.domain) : ''}</span>
+    </button>`).join('');
+  box.classList.remove('hidden');
+  $$('[data-sug]').forEach((b) => b.addEventListener('click', () => pickSuggestion(Number(b.dataset.sug))));
+}
+
+function pickSuggestion(i) {
+  const it = suggestItems[i];
+  if (!it) return;
+  $('#rawInput').value = it.raw;
+  attachments = [];
+  renderAttachments();
+  $('#rawInput').dispatchEvent(new Event('input', { bubbles: true }));
+  $('#inputSuggestions').classList.add('hidden');
+  $('#rawInput').focus();
+  toast(`${lang === 'en' ? 'Loaded history input' : '已填入历史输入'}：${it.source}`);
+}
+
+$('#rawInput').addEventListener('focus', () => { buildSuggestItems(); suggestIndex = -1; renderSuggestions(); });
+$('#rawInput').addEventListener('input', () => { suggestIndex = -1; renderSuggestions(); });
+$('#rawInput').addEventListener('keydown', (e) => {
+  const open = !$('#inputSuggestions').classList.contains('hidden');
+  if (!open) return;
+  if (e.key === 'ArrowDown') { e.preventDefault(); suggestIndex = Math.min(suggestIndex + 1, suggestItems.length - 1); renderSuggestions(); }
+  else if (e.key === 'ArrowUp') { e.preventDefault(); suggestIndex = Math.max(suggestIndex - 1, 0); renderSuggestions(); }
+  else if (e.key === 'Enter' && suggestIndex >= 0) { e.preventDefault(); pickSuggestion(suggestIndex); }
+  else if (e.key === 'Escape') { $('#inputSuggestions').classList.add('hidden'); }
+});
+document.addEventListener('click', (e) => {
+  if (!e.target.closest('.input-wrap')) $('#inputSuggestions').classList.add('hidden');
+});
+
 /* ================= 编译 ================= */
 function readInput() {
   const raw = $('#rawInput').value.trim();
@@ -542,11 +601,51 @@ function renderCompSections(report) {
     </div>`).join('') || '<div class="history-empty">—</div>';
 }
 
-/* ================= 思维链 ================= */
+/* ================= 思维链（框图 + 列表 + 弹窗） ================= */
+let chainView = 'diagram';
+let chainModalIdx = -1;
+const PHASE_ORDER = ['理解', '建模', '架构', '执行'];
+
 function renderChain() {
   if (!currentResult) return;
   $('#chainEmpty').classList.add('hidden');
-  $('#chainList').classList.remove('hidden');
+  renderChainDiagram();
+  renderChainList();
+  const isDiag = chainView === 'diagram';
+  $('#chainDiagram').classList.toggle('hidden', !isDiag);
+  $('#chainList').classList.toggle('hidden', isDiag);
+  $('#chainDiagramTip').classList.toggle('hidden', !isDiag);
+}
+$$('#chainViewSeg .seg-btn').forEach((b) => b.addEventListener('click', () => {
+  chainView = b.dataset.view;
+  $$('#chainViewSeg .seg-btn').forEach((x) => x.classList.toggle('active', x === b));
+  if (currentResult) renderChain();
+}));
+
+/** 思维框图：按阶段泳道 + 箭头连接 */
+function renderChainDiagram() {
+  const box = $('#chainDiagram');
+  const phases = PHASE_ORDER.map((ph) => currentResult.chain.filter((n) => n.phase === ph));
+  box.innerHTML = `<div class="cd-flow">${phases.map((nodes, pi) => `
+    <div class="cd-lane">
+      <div class="cd-lane-head">${escapeHtml(nodes[0]?.phase || '')} <span class="hint">×${nodes.length}</span></div>
+      <div class="cd-lane-body">
+        ${nodes.map((n) => `
+          <div class="cd-node" data-cd="${n.step}" title="${escapeHtml(n.title)}">
+            <span class="cd-node-step">${n.step}</span>
+            <div class="cd-node-title">${escapeHtml(n.title)}</div>
+            <div class="cd-node-out">${escapeHtml(Array.isArray(n.output) ? n.output[0] : n.output).slice(0, 34)}${(Array.isArray(n.output) ? n.output[0] : n.output).length > 34 ? '…' : ''}</div>
+          </div>`).join('')}
+      </div>
+    </div>
+    ${pi < phases.length - 1 ? '<div class="cd-arrow">→</div>' : ''}`).join('')}</div>`;
+  $$('#chainDiagram .cd-node').forEach((el) => el.addEventListener('click', () => {
+    chainModalIdx = currentResult.chain.findIndex((n) => n.step === el.dataset.cd);
+    openChainModal();
+  }));
+}
+
+function renderChainList() {
   $('#chainList').innerHTML = currentResult.chain.map((n) => `
     <div class="chain-node" id="cn-${n.step}" data-step="${n.step}">
       <div class="chain-head">
@@ -563,8 +662,46 @@ function renderChain() {
     </div>`).join('');
   $$('.chain-node .chain-head').forEach((h) => h.addEventListener('click', () => h.parentElement.classList.toggle('open')));
 }
+
+/** 弹窗解释 */
+function openChainModal() {
+  if (!currentResult || chainModalIdx < 0) return;
+  const n = currentResult.chain[chainModalIdx];
+  $('#chainModalTitle').textContent = `${n.step}. ${n.title}`;
+  $('#chainModalPos').textContent = `${chainModalIdx + 1}/${currentResult.chain.length}`;
+  $('#chainModalBody').innerHTML = `
+    <div class="result-meta"><span class="badge badge-blue">Step ${n.step}</span><span class="chain-phase">${n.phase}</span></div>
+    <div class="chain-body-open">
+      <div class="row"><span class="label">Input</span><div class="input-text">${escapeHtml(n.input)}</div></div>
+      <div class="row"><span class="label">Reasoning</span><div class="reasoning">${escapeHtml(n.reasoning)}</div></div>
+      <div class="row"><span class="label">Output</span><div class="outcome">${Array.isArray(n.output) ? n.output.map((o) => `• ${escapeHtml(o)}`).join('<br/>') : escapeHtml(n.output)}</div></div>
+      ${n.evidence && n.evidence.length ? `<div class="row"><span class="label">Evidence</span><ul class="ev">${n.evidence.map((e) => `<li>${escapeHtml(e)}</li>`).join('')}</ul></div>` : ''}
+      ${n.decisions && n.decisions.length ? `<div class="row"><span class="label">Decisions</span><ul class="dec">${n.decisions.map((d) => `<li>${escapeHtml(d)}</li>`).join('')}</ul></div>` : ''}
+    </div>`;
+  $('#chainModal').classList.remove('hidden');
+}
+function closeChainModal() { $('#chainModal').classList.add('hidden'); }
+$('#chainModalClose').addEventListener('click', closeChainModal);
+$('#chainModal').addEventListener('click', (e) => { if (e.target === $('#chainModal')) closeChainModal(); });
+$('#chainModalPrev').addEventListener('click', () => {
+  if (chainModalIdx > 0) { chainModalIdx -= 1; openChainModal(); }
+});
+$('#chainModalNext').addEventListener('click', () => {
+  if (chainModalIdx < currentResult.chain.length - 1) { chainModalIdx += 1; openChainModal(); }
+});
+
 $('#playChainBtn').addEventListener('click', async () => {
   if (!currentResult) return;
+  if (chainView === 'diagram') {
+    const nodes = $$('#chainDiagram .cd-node');
+    nodes.forEach((n) => n.classList.remove('active'));
+    for (const n of nodes) {
+      n.classList.add('active');
+      n.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      await new Promise((r) => setTimeout(r, 550));
+    }
+    return;
+  }
   const nodes = $$('#chainList .chain-node');
   nodes.forEach((n) => n.classList.remove('open'));
   for (const n of nodes) {
@@ -572,6 +709,7 @@ $('#playChainBtn').addEventListener('click', async () => {
     await new Promise((r) => setTimeout(r, 550));
   }
 });
+
 $('#exportChainMd').addEventListener('click', () => {
   if (!currentResult) return;
   const L = ['# Goal Compiler 完整思维链', ''];

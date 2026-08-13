@@ -325,3 +325,41 @@ kbd { font-family: var(--mono); font-size: 10px; background: rgba(0,0,0,.25); bo
 .usage-stat { background: linear-gradient(180deg, rgba(17,28,49,.8), rgba(12,19,33,.8)); border: 1px solid var(--border); border-radius: 10px; padding: 14px; text-align: center; }
 .usage-stat b { display: block; font-size: 24px; font-weight: 800; color: var(--primary-bright); }
 .usage-stat span { font-size: 12px; color: var(--muted); }
+
+/* ---- v5 组件：历史输入建议 / 思维框图 / 节点弹窗 ---- */
+.input-wrap { position: relative; }
+.input-suggest { position: absolute; top: 100%; left: 0; right: 0; z-index: 60; margin-top: 4px; background: #0c1424; border: 1px solid var(--border-strong); border-radius: 10px; box-shadow: 0 12px 32px rgba(0,0,0,.5), 0 0 16px rgba(59,130,246,.12); max-height: 260px; overflow: auto; padding: 6px; }
+.sug-item { display: flex; flex-direction: column; gap: 2px; width: 100%; text-align: left; background: transparent; border: none; border-radius: 7px; padding: 8px 10px; cursor: pointer; color: var(--text); }
+.sug-item:hover, .sug-item.active { background: rgba(59,130,246,.14); }
+.sug-raw { font-size: 12.5px; line-height: 1.45; }
+.sug-meta { font-size: 11px; color: var(--faint); }
+
+.seg { display: inline-flex; background: rgba(15,23,42,.8); border: 1px solid var(--border); border-radius: 8px; padding: 2px; }
+.seg-btn { border: none; background: transparent; color: var(--muted); font-size: 12.5px; padding: 5px 10px; border-radius: 6px; cursor: pointer; transition: all .15s; }
+.seg-btn.active { background: var(--primary-grad); color: #04101f; font-weight: 700; }
+.chain-diagram-tip { font-size: 12.5px; color: var(--faint); margin: 0 0 10px; padding: 8px 12px; background: rgba(59,130,246,.07); border: 1px dashed rgba(59,130,246,.3); border-radius: 8px; }
+
+/* 思维框图：四阶段泳道 + 箭头 */
+.cd-flow { display: flex; gap: 0; align-items: stretch; overflow-x: auto; padding-bottom: 8px; }
+.cd-lane { flex: 1; min-width: 210px; background: linear-gradient(180deg, rgba(15,23,42,.6), rgba(10,17,32,.6)); border: 1px solid var(--border); border-radius: 10px; padding: 10px; }
+.cd-lane-head { font-size: 13px; font-weight: 700; color: var(--cyan); padding: 2px 4px 10px; display: flex; align-items: center; gap: 8px; }
+.cd-lane-body { display: flex; flex-direction: column; gap: 8px; }
+.cd-node { background: rgba(17,28,49,.85); border: 1px solid var(--border); border-left: 3px solid var(--primary); border-radius: 8px; padding: 9px 11px; cursor: pointer; transition: all .15s; }
+.cd-node:hover { border-color: var(--primary); box-shadow: 0 0 12px rgba(59,130,246,.25); transform: translateY(-1px); }
+.cd-node.active { border-color: var(--cyan); box-shadow: 0 0 14px rgba(34,211,238,.4); }
+.cd-node-step { display: inline-flex; align-items: center; justify-content: center; min-width: 22px; height: 22px; border-radius: 6px; background: var(--primary-grad); color: #04101f; font-weight: 800; font-size: 11px; margin-bottom: 5px; }
+.cd-node-title { font-size: 12.5px; font-weight: 600; line-height: 1.4; }
+.cd-node-out { font-size: 11px; color: var(--faint); margin-top: 3px; line-height: 1.4; }
+.cd-arrow { display: flex; align-items: center; justify-content: center; min-width: 34px; color: var(--primary-bright); font-size: 20px; font-weight: 700; text-shadow: 0 0 10px rgba(59,130,246,.5); }
+@media (max-width: 1080px) {
+  .cd-flow { flex-direction: column; }
+  .cd-arrow { transform: rotate(90deg); min-height: 26px; }
+}
+
+/* 节点弹窗 */
+.chain-modal-box { max-width: 760px; }
+.chain-body-open .row { margin: 12px 0; }
+.chain-body-open .label { font-size: 11px; text-transform: uppercase; letter-spacing: .4px; color: var(--faint); font-weight: 600; display: block; margin-bottom: 4px; }
+.chain-body-open .reasoning { background: rgba(59,130,246,.08); border-left: 3px solid var(--primary); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 13px; }
+.chain-body-open .outcome { background: var(--green-soft); border-left: 3px solid var(--green); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 13px; }
+.chain-body-open .input-text { font-size: 12.5px; color: var(--faint); font-style: italic; }
