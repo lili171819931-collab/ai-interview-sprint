@@ -103,6 +103,12 @@ const I18N = {
   compInsightHint: { zh: '点击节点查看详细说明', en: 'click nodes for details' },
   compChartsTitle: { zh: '📊 相关图表分析', en: '📊 Charts & analysis' },
   selfReportTitle: { zh: '📊 本产品（需求拆解平台）竞品分析报告', en: '📊 Self (Requirement Platform) competitive report' },
+  cviewSelf: { zh: '📊 本产品竞品分析', en: '📊 Self analysis' },
+  cviewReq: { zh: '🎯 需求竞品分析', en: '🎯 Request analysis' },
+  closestTitle: { zh: '最接近需求的项目 Top3', en: 'Closest projects to your request · Top3' },
+  relOnly: { zh: '仅显示高相关（相关度 ≥ 1）', en: 'high-relevance only (≥1)' },
+  insightMode: { zh: '需求结构', en: 'Request structure' },
+  expertTitle: { zh: '专家版诉求思维模式拆解 · 全方位细节分析', en: 'Expert request-thinking breakdown · full detail analysis' },
   selfReportExport: { zh: '导出 MD', en: 'Export MD' },
 };
 
@@ -154,6 +160,7 @@ function switchTab(name) {
   if (name === 'cases' && !window._casesLoaded) loadCases();
   if (name === 'cases') renderCaseLibrary();
   if (name === 'market' && !window._marketLoaded) loadMarket();
+  if (name === 'competitive') renderSelfComp();
 }
 $$('.tab').forEach((t) => t.addEventListener('click', () => switchTab(t.dataset.tab)));
 window.addEventListener('hashchange', () => {
@@ -580,23 +587,29 @@ $('#skillBtn').addEventListener('click', () => {
 
 /* ================= 评分规则 + 分类区域 ================= */
 function renderScoringRules() {
-  const grid = $('#scoringRules');
-  if (!grid) return;
-  grid.innerHTML = SCORING_RULES.map((r) => `
-    <div class="score-rule">
-      <div class="score-rule-head"><strong>${escapeHtml(r.dim)}</strong><span class="hint">${escapeHtml(r.en)} · ${r.range} 分</span></div>
-      <div class="score-rule-formula">${escapeHtml(r.formula)}</div>
-      <div class="gap-why">${escapeHtml(r.meaning)}</div>
-    </div>`).join('');
-  const qr = $('#quadrantRules');
-  if (qr) {
-    qr.innerHTML = QUADRANT_RULES.map((q) => `
+  const grids = [['#scoringRules', '#quadrantRules'], ['#scoringRulesReq', '#quadrantRulesReq']];
+  for (const [gSel, qSel] of grids) {
+    const grid = $(gSel);
+    if (!grid) continue;
+    grid.innerHTML = SCORING_RULES.map((r) => `
+      <div class="score-rule">
+        <div class="score-rule-head"><strong>${escapeHtml(r.dim)}</strong><span class="hint">${escapeHtml(r.en)} · ${r.range} 分</span></div>
+        <div class="score-rule-formula">${escapeHtml(r.formula)}</div>
+        <div class="gap-why">${escapeHtml(r.meaning)}</div>
+      </div>`).join('');
+    const qr = $(qSel);
+    if (qr) qr.innerHTML = QUADRANT_RULES.map((q) => `
       <div class="quad-rule"><b>${lang === 'en' ? q.en : q.q}</b> <span class="hint">${escapeHtml(q.rule)}</span><div class="gap-why">${escapeHtml(q.note)}</div></div>`).join('');
   }
 }
 
 function renderCompSections(report) {
-  const groups = groupByCategory(report.scored);
+  const relOnly = $('#relOnly') ? $('#relOnly').checked : false;
+  let items = report.scored;
+  if (relOnly) items = items.filter((it) => it.scores.relevance >= 1);
+  const relStats = $('#relStats');
+  if (relStats) relStats.textContent = `显示 ${items.length}/${report.scored.length} 条（相关度≥1）`;
+  const groups = groupByCategory(items);
   const box = $('#compSections');
   box.innerHTML = groups.map((g) => `
     <div class="comp-section">
@@ -626,9 +639,46 @@ let chainView = 'diagram';
 let chainModalIdx = -1;
 const PHASE_ORDER = ['理解', '建模', '架构', '执行'];
 
+const METHOD_MAP = {
+  1: { method: '输入规范', note: '把原始诉求标准化：切句、抽词、识别意图与领域，作为后续推断的原材料基线。' },
+  2: { method: '表层/深层分离', note: '先识别「嘴上说的」，避免把手段当目标。' },
+  3: { method: '六问模型', note: '表层/深层/最终/价值/成功/隐含约束六问，穿透真实意图。' },
+  4: { method: '结果优先倒推', note: '最终价值 → 成果 → 成功标准 → 路径，而非 功能→步骤→工具 正推。' },
+  5: { method: '三态假设', note: 'FACT / ASSUMPTION / DECISION 分级补全，低风险自决、高风险默认+标注。' },
+  6: { method: '目标树五层', note: '目标 → 结果/能力/模块/验收/风险，识别决定成败的 20%。' },
+  7: { method: '边界与优先级', note: 'IN / OUT / OPTIONAL + P0-P3，杜绝范围蔓延。' },
+  8: { method: '交付物 + DoD', note: '每个交付物可验证；Definition of Done 九项全检。' },
+  9: { method: '阶段门禁', note: 'Discovery→…→Acceptance 串行推进，每阶段有输入/输出/判断标准。' },
+  10: { method: '风险登记册', note: '风险 × 等级 × 默认应对，信息缺口也入册。' },
+  11: { method: '自主执行 + 上下文表', note: '自决→执行→验证→修复→继续；维护 Current State/Next Action/Key Decisions。' },
+  12: { method: '领域知识注入', note: '按领域词典补全用户未考虑的方向与功能。' },
+  13: { method: '20 段机器执行结构', note: 'ROLE→FINAL REPORT 强制结构，脱离上下文可独立执行。' },
+  14: { method: '防作弊验收 + 汇报', note: '可复现证据、暗卷自留、最终 5 项汇报。' },
+};
+
+function renderChainExpert(r) {
+  const box = $('#chainExpert');
+  if (!box) return;
+  box.classList.remove('hidden');
+  const decisions = r.chain.filter((n) => n.decisions && n.decisions.length).length;
+  const evidence = r.chain.filter((n) => n.evidence && n.evidence.length).length;
+  const metrics = [
+    ['阶段', String(new Set(r.chain.map((n) => n.phase)).size)],
+    ['推理节点', String(r.chain.length)],
+    ['关键决策', String(decisions)],
+    ['证据引用', String(evidence)],
+    ['假设标注', String(r.summary.assumptions.length)],
+    ['风险登记', String(r.summary.risks.length)],
+    ['质量门槛', `L${r.qualityLevel}`],
+  ];
+  $('#expertMetrics').innerHTML = metrics.map(([k, v]) => `<div class="expert-metric"><b>${v}</b><span>${k}</span></div>`).join('');
+  $('#expertNote').textContent = `专家点评：本次编译覆盖 ${r.chain.length} 个推理节点、${new Set(r.chain.map((n) => n.phase)).size} 个阶段，方法链完整（输入规范 → 六问模型 → 目标树 → 三态假设 → 阶段门禁 → 防作弊验收）。${r.analysis.gaps.length ? `输入存在 ${r.analysis.gaps.length} 处信息缺口，已用「最合理默认方案」兜底并在假设区标注，建议按需补充。` : '输入信息较完整，可直接进入执行。'}`;
+}
+
 function renderChain() {
   if (!currentResult) return;
   $('#chainEmpty').classList.add('hidden');
+  renderChainExpert(currentResult);
   renderChainDiagram();
   renderChainList();
   const isDiag = chainView === 'diagram';
@@ -654,6 +704,7 @@ function renderChainDiagram() {
           <div class="cd-node" data-cd="${n.step}" title="${escapeHtml(n.title)}">
             <span class="cd-node-step">${n.step}</span>
             <div class="cd-node-title">${escapeHtml(n.title)}</div>
+            <div class="cd-node-method">${METHOD_MAP[n.step] ? escapeHtml(METHOD_MAP[n.step].method) : ''}</div>
             <div class="cd-node-out">${escapeHtml(Array.isArray(n.output) ? n.output[0] : n.output).slice(0, 34)}${(Array.isArray(n.output) ? n.output[0] : n.output).length > 34 ? '…' : ''}</div>
           </div>`).join('')}
       </div>
@@ -670,7 +721,9 @@ function renderChainList() {
     <div class="chain-node" id="cn-${n.step}" data-step="${n.step}">
       <div class="chain-head">
         <span class="chain-step">${n.step}</span><span class="chain-phase">${n.phase}</span>
-        <span class="chain-title">${escapeHtml(n.title)}</span><span class="chain-arrow">▾</span>
+        <span class="chain-title">${escapeHtml(n.title)}</span>
+        ${METHOD_MAP[n.step] ? `<span class="chain-method">${escapeHtml(METHOD_MAP[n.step].method)}</span>` : ''}
+        <span class="chain-arrow">▾</span>
       </div>
       <div class="chain-body">
         <div class="row"><span class="label">Input</span><div class="input-text">${escapeHtml(n.input)}</div></div>
@@ -690,7 +743,8 @@ function openChainModal() {
   $('#chainModalTitle').textContent = `${n.step}. ${n.title}`;
   $('#chainModalPos').textContent = `${chainModalIdx + 1}/${currentResult.chain.length}`;
   $('#chainModalBody').innerHTML = `
-    <div class="result-meta"><span class="badge badge-blue">Step ${n.step}</span><span class="chain-phase">${n.phase}</span></div>
+    <div class="result-meta"><span class="badge badge-blue">Step ${n.step}</span><span class="chain-phase">${n.phase}</span>${METHOD_MAP[n.step] ? `<span class="badge badge-cyan">🧠 ${escapeHtml(METHOD_MAP[n.step].method)}</span>` : ''}</div>
+    ${METHOD_MAP[n.step] ? `<div class="row"><span class="label">专家要点</span><div class="reasoning">${escapeHtml(METHOD_MAP[n.step].note)}</div></div>` : ''}
     <div class="chain-body-open">
       <div class="row"><span class="label">Input</span><div class="input-text">${escapeHtml(n.input)}</div></div>
       <div class="row"><span class="label">Reasoning</span><div class="reasoning">${escapeHtml(n.reasoning)}</div></div>
@@ -789,13 +843,14 @@ function renderReport(report) {
     `<span class="badge badge-green">${escapeHtml(report.query)}</span>`,
     errNote,
   ].join('');
+  renderClosestProjects(report);
   renderCompSections(report);
   renderCompTable(report.scored);
   renderPositioning(report);
   renderCategory(report.categoryDist);
   renderGaps(report.featureGaps);
   renderDesignForms(report.designForms);
-  renderInsightDiagram(report);
+  renderInsight(report);
   renderCharts(report);
   renderSwot(report.swot);
   $('#compOpps').innerHTML = report.opportunities.map((o) => `<li><strong>[${o.priority}] ${escapeHtml(o.title)}</strong> — ${escapeHtml(o.detail)}</li>`).join('');
@@ -877,7 +932,8 @@ function renderCategory(dist) {
 }
 
 function renderGaps(gaps) {
-  $('#compGaps').innerHTML = `<ul class="gap-list-ul">${gaps.map((g) => `
+  const box = $('#compGaps'); if (!box) return;
+  box.innerHTML = `<ul class="gap-list-ul">${gaps.map((g) => `
     <li class="gap-item ${g.status}">
       <span class="gap-mark">${g.status === 'implemented' ? '✅' : '◻️'}</span>
       <div><strong>[${g.priority}] ${escapeHtml(g.feature)}</strong> <span class="hint">来源：${escapeHtml(g.source)}</span>
@@ -885,7 +941,8 @@ function renderGaps(gaps) {
     </li>`).join('')}</ul>`;
 }
 function renderDesignForms(forms) {
-  $('#compDesign').innerHTML = `<ul class="gap-list-ul">${forms.map((d) => `
+  const box = $('#compDesign'); if (!box) return;
+  box.innerHTML = `<ul class="gap-list-ul">${forms.map((d) => `
     <li class="gap-item ${d.adopted ? 'implemented' : 'planned'}">
       <span class="gap-mark">${d.adopted ? '✅' : '◻️'}</span>
       <div><strong>${escapeHtml(d.form)}</strong> <span class="hint">借鉴：${escapeHtml(d.from)}</span>
@@ -1070,10 +1127,7 @@ $('#chatCompile').addEventListener('click', () => {
   compileNow();
 });
 $('#chatSkip').addEventListener('click', () => { dialogueTranscript = []; dialogueQ = null; renderChat(); compileNow(); });
-(() => {
-  const panel = $('#dialoguePanel');
-  if (panel) panel.querySelector('summary').addEventListener('click', () => { if (!dialogueQ && !dialogueTranscript.length) startDialogue(); });
-})();
+$('#chatInput').addEventListener('focus', () => { if (!dialogueQ && !dialogueTranscript.length) startDialogue(); });
 
 /* ================= 输入自动关联模板推荐 ================= */
 function renderRecommendTemplates() {
@@ -1162,11 +1216,53 @@ function currentReqForAnalysis() {
 $('#useReqBtn').addEventListener('click', () => {
   const req = currentReqForAnalysis();
   if (!req) { toast(lang === 'en' ? 'Compile or enter a request first' : '请先输入/编译一个需求'); return; }
-  $('#compQuery').value = req.slice(0, 60);
-  $('#compTarget').textContent = `需求：${req.slice(0, 40)}${req.length > 40 ? '…' : ''}`;
+  // 用「对象 + 关键词」构造更接近需求的检索词，提升相关度
+  let q = req.slice(0, 80);
+  if (currentResult) {
+    const obj = currentResult.analysis.entities.object || '';
+    const kws = currentResult.keywordTop.filter((k) => /[a-z]/i.test(k)).slice(0, 3).join(' ');
+    if (obj && !q.includes(obj)) q = `${obj} ${q}`;
+    if (kws) q = `${q} ${kws}`;
+  }
+  $('#compQuery').value = q;
+  $('#compTarget').textContent = `需求：${req.slice(0, 36)}${req.length > 36 ? '…' : ''}`;
+  if (currentResult) renderReqInsight(currentResult);
   runCompetitive();
 });
-$('#selfReportBtn').addEventListener('click', openSelfReport);
+// 双视图切换：本产品竞品分析 / 需求竞品分析
+$$('#compViewSeg .seg-btn').forEach((b) => b.addEventListener('click', () => {
+  const v = b.dataset.cview;
+  $$('#compViewSeg .seg-btn').forEach((x) => x.classList.toggle('active', x === b));
+  $('#compViewSelf').classList.toggle('hidden', v !== 'self');
+  $('#compViewReq').classList.toggle('hidden', v !== 'req');
+  if (v === 'self') renderSelfComp();
+  else renderScoringRules();
+}));
+function renderSelfComp() {
+  const r = SELF_REPORT;
+  $('#selfCompBody').innerHTML = `
+    <div class="result-meta"><span class="badge badge-blue">${escapeHtml(r.product)}</span><span class="badge badge-green">${escapeHtml(r.tagline)}</span></div>
+    <div class="comp-grid-2">
+      <div class="card"><h3>定位</h3><p>产品化 ${r.position.x} / 拆解深度 ${r.position.y} — ${escapeHtml(r.position.note)}</p><div class="mini-pos"><div class="mini-dot" style="left:${r.position.x}%;top:${100 - r.position.y}%"></div></div></div>
+      <div class="card"><h3>能力雷达（本产品 vs 精选库均值）</h3><div id="selfRadar"></div></div>
+    </div>
+    <div class="comp-grid-2">
+      <div class="card"><h3>优势</h3><ul class="check-list">${r.strengths.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>劣势</h3><ul class="check-list">${r.weaknesses.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="comp-grid-2">
+      <div class="card"><h3>机会</h3><ul class="check-list">${r.opportunities.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>威胁</h3><ul class="check-list">${r.threats.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="card"><h3>行动清单</h3><ul class="check-list">${r.actions.map((a) => `<li><strong>[${a.priority}]</strong> ${escapeHtml(a.action)}</li>`).join('')}</ul></div>`;
+  // 本产品雷达（无竞品数据时用精选库均值近似）
+  const radarData = { dims: [{ key: 'relevance', label: '相关度' }, { key: 'productization', label: '产品化' }, { key: 'depth', label: '拆解深度' }, { key: 'adoption', label: '采纳度' }], max: 5, series: [
+    { name: '本产品', scores: [4.5, 4.2, 4.8, 2.6] },
+    { name: '竞品均值', scores: [3.4, 2.9, 3.2, 3.6] },
+  ] };
+  $('#selfRadar').innerHTML = svgRadar(radarData);
+}
+$('#selfReportExport2').addEventListener('click', () => { download(`self-competitive-report.md`, selfReportToMarkdown()); toast('已导出'); });
 $('#insightDiagramBtn').addEventListener('click', () => {
   if (!currentReport) { runCompetitive(); setTimeout(() => document.getElementById('insightDiagram').scrollIntoView({ behavior: 'smooth' }), 2500); return; }
   document.getElementById('insightDiagram').scrollIntoView({ behavior: 'smooth' });
@@ -1190,6 +1286,60 @@ function openSelfReport() {
 $('#selfReportClose').addEventListener('click', () => $('#selfReportModal').classList.add('hidden'));
 $('#selfReportModal').addEventListener('click', (e) => { if (e.target === $('#selfReportModal')) $('#selfReportModal').classList.add('hidden'); });
 $('#selfReportExport').addEventListener('click', () => { download(`self-competitive-report.md`, selfReportToMarkdown()); toast('已导出'); });
+
+/** 需求结构思维框图：展示所填需求的结构思维（目标树 + 假设 + 建议），点击弹窗说明 */
+function renderReqInsight(r) {
+  const t = r.summary.goalTree;
+  const groups = [
+    { name: '目标树', items: [
+      { id: 'rt-goal', title: t.goal, detail: '最终目标（结果优先倒推）' },
+      ...t.results.map((x, i) => ({ id: `rt-r${i}`, title: `结果${i + 1}：${x.slice(0, 30)}`, detail: x })),
+      ...t.abilities.map((x, i) => ({ id: `rt-a${i}`, title: `能力${i + 1}：${x.slice(0, 30)}`, detail: x })),
+      ...t.modules.map((x, i) => ({ id: `rt-m${i}`, title: `模块${i + 1}：${x.slice(0, 30)}`, detail: x })),
+      ...t.standards.map((x, i) => ({ id: `rt-s${i}`, title: `验收${i + 1}：${x.slice(0, 30)}`, detail: x })),
+      ...t.risks.map((x, i) => ({ id: `rt-k${i}`, title: `风险${i + 1}：${x.slice(0, 30)}`, detail: x })),
+    ] },
+    { name: '关键假设', items: r.summary.assumptions.slice(0, 6).map((x, i) => ({ id: `as-${i}`, title: x.slice(0, 30), detail: x })) },
+    { name: '你没考虑到的方向', items: r.suggestions.map((x, i) => ({ id: `sg-${i}`, title: x.slice(0, 26), detail: x })) },
+  ].filter((g) => g.items.length);
+  const box = $('#insightDiagram');
+  box.innerHTML = `<div class="cd-flow">${groups.map((g) => `
+    <div class="cd-lane">
+      <div class="cd-lane-head">${escapeHtml(g.name)} <span class="hint">×${g.items.length}</span></div>
+      <div class="cd-lane-body">
+        ${g.items.map((n) => `<div class="cd-node" data-ri="${escapeHtml(n.id)}" data-group="${escapeHtml(g.name)}">
+          <span class="cd-node-step ok">▸</span><div class="cd-node-title">${escapeHtml(n.title)}</div></div>`).join('')}
+      </div>
+    </div>`).join('')}</div>`;
+  $$('#insightDiagram .cd-node').forEach((el) => el.addEventListener('click', () => {
+    const id = el.dataset.ri;
+    const all = groups.flatMap((g) => g.items);
+    const node = all.find((n) => n.id === id);
+    if (!node) return;
+    $('#insightModalTitle').textContent = `${el.dataset.group} · ${node.title}`;
+    $('#insightModalBody').innerHTML = `<div class="chain-body-open"><div class="row"><span class="label">说明</span><div class="reasoning">${escapeHtml(node.detail)}</div></div></div>`;
+    $('#insightModal').classList.remove('hidden');
+  }));
+}
+
+/** 洞察入口：勾选「需求结构」显示所填需求结构；否则显示竞品启示 */
+function renderInsight(report) {
+  const reqMode = $('#insightMode') ? $('#insightMode').checked : true;
+  if (reqMode && currentResult) { renderReqInsight(currentResult); return; }
+  renderInsightDiagram(report);
+}
+$('#insightMode').addEventListener('change', () => { if (currentReport) renderInsight(currentReport); });
+
+/** 最接近需求的项目 Top3（按相关度） */
+function renderClosestProjects(report) {
+  const top = [...report.scored].sort((a, b) => b.scores.relevance - a.scores.relevance).slice(0, 3);
+  $('#closestProjects').innerHTML = top.length ? `<ul class="closest-ul">${top.map((it) => `
+    <li class="closest-item">
+      <a href="${escapeHtml(it.url)}" target="_blank" rel="noopener"><strong>${escapeHtml(it.name)}</strong></a>
+      <span class="hint">相关度 ${it.scores.relevance.toFixed(1)} · 威胁 ${it.scores.threat.toFixed(1)} · ${escapeHtml((it.description || '').slice(0, 80))}</span>
+    </li>`).join('')}</ul>` : '<div class="history-empty">—</div>';
+}
+$('#relOnly').addEventListener('change', () => { if (currentReport) renderCompSections(currentReport); });
 
 function renderInsightDiagram(report) {
   const groups = buildInsightDiagram(report);

@@ -82,26 +82,28 @@
           <button class="chip" data-quick="1">报销发票小程序</button>
           <button class="chip" data-quick="2">英语口语提升</button>
         </div>
-        <div class="rec-templates" id="recTemplates"></div>
-        <details class="opt-details" id="templatePanel">
-          <summary>📋 <span data-i18n="tplLib">模板库（竞品启示 · 预设诉求）</span></summary>
-          <div id="templateList" class="chip-row"></div>
-        </details>
-        <details class="opt-details" id="dialoguePanel">
-          <summary>💬 <span data-i18n="dialogue">AI 多轮澄清式输入（先问清，再编译）</span></summary>
-          <div id="dialogueBox" class="dialogue-box">
-            <div class="chat-area" id="chatArea"></div>
-            <div class="chat-input-row">
-              <input id="chatInput" data-i18n-ph="chatPh" placeholder="回答 AI 的澄清问题…" />
-              <button class="btn-ghost" id="chatSend">↵</button>
-              <button class="btn-ghost" id="chatCompile" data-i18n="chatCompile">✅ 完成并编译</button>
-            </div>
-            <div class="chat-actions">
-              <button class="btn-ghost" id="chatSkip" data-i18n="chatSkip">跳过，直接编译</button>
-              <span class="hint" id="chatStatus"></span>
+        <div class="promo-grid">
+          <div class="promo-card" id="templatePanel">
+            <div class="promo-head">📋 <span data-i18n="tplLib">模板库 · 预设诉求</span></div>
+            <div id="templateList" class="chip-row"></div>
+            <div class="rec-templates" id="recTemplates"></div>
+          </div>
+          <div class="promo-card" id="dialoguePanel">
+            <div class="promo-head">💬 <span data-i18n="dialogue">AI 多轮澄清式输入</span></div>
+            <div id="dialogueBox" class="dialogue-box">
+              <div class="chat-area" id="chatArea"></div>
+              <div class="chat-input-row">
+                <input id="chatInput" data-i18n-ph="chatPh" placeholder="回答 AI 的澄清问题…" />
+                <button class="btn-ghost" id="chatSend">↵</button>
+                <button class="btn-ghost" id="chatCompile" data-i18n="chatCompile">✅ 编译</button>
+              </div>
+              <div class="chat-actions">
+                <button class="btn-ghost" id="chatSkip" data-i18n="chatSkip">跳过，直接编译</button>
+                <span class="hint" id="chatStatus"></span>
+              </div>
             </div>
           </div>
-        </details>
+        </div>
       </aside>
 
       <div class="panel output-panel">
@@ -183,100 +185,114 @@
       <div id="chainEmpty" class="empty-state">
         <p data-i18n="chainEmpty">先在上方「诉求拆解」中完成一次编译，<br/>这里将以 14 个推理节点展示完整思维链。</p>
       </div>
+      <div id="chainExpert" class="chain-expert hidden">
+        <div class="expert-overview">
+          <h3>🧑‍💼 <span data-i18n="expertTitle">专家版诉求思维模式拆解 · 全方位细节分析</span></h3>
+          <div id="expertMetrics" class="expert-metrics"></div>
+          <p id="expertNote" class="expert-note"></p>
+        </div>
+      </div>
       <div class="chain-diagram-tip" id="chainDiagramTip">💡 <span data-i18n="diagramTip">思维框图：按「理解 → 建模 → 架构 → 执行」四阶段泳道组织，点击任一主逻辑节点查看详细解释</span></div>
       <div id="chainDiagram" class="chain-diagram hidden"></div>
       <div id="chainList" class="chain-list hidden"></div>
     </div>
   </section>
 
-  <!-- ============ Tab: 竞品分析 ============ -->
+  <!-- ============ Tab: 竞品分析（双视图） ============ -->
   <section id="tab-competitive" class="tab-panel">
     <div class="panel">
       <div class="panel-head">
-        <h2 data-i18n="compTitle">竞品分析 <span class="hint" data-i18n="compHint">8 大数据源 · 产品总监视角</span></h2>
+        <h2 data-i18n="compTitle">竞品分析 <span class="hint" data-i18n="compHint">本产品分析 · 需求竞品分析</span></h2>
+        <div class="seg" id="compViewSeg">
+          <button class="seg-btn active" data-cview="self" data-i18n="cviewSelf">📊 本产品竞品分析</button>
+          <button class="seg-btn" data-cview="req" data-i18n="cviewReq">🎯 需求竞品分析</button>
+        </div>
       </div>
-      <div class="comp-search">
-        <input id="compQuery" value="goal compiler prompt agent skill" />
-        <label class="ck"><input type="checkbox" id="srcGithub" checked /> GitHub</label>
-        <label class="ck"><input type="checkbox" id="srcHN" checked /> HN</label>
-        <label class="ck"><input type="checkbox" id="srcCurated" checked /> 精选库</label>
-        <label class="ck"><input type="checkbox" id="srcNpm" checked /> npm</label>
-        <label class="ck"><input type="checkbox" id="srcSO" checked /> StackOverflow</label>
-        <label class="ck"><input type="checkbox" id="srcHF" checked /> HuggingFace</label>
-        <label class="ck"><input type="checkbox" id="srcGitee" /> Gitee</label>
-        <label class="ck"><input type="checkbox" id="srcReddit" /> Reddit</label>
-        <button class="btn-primary" id="compSearchBtn">🔍 <span data-i18n="compSearch">检索并分析</span></button>
-      </div>
-      <div id="compLoading" class="hidden loading" data-i18n="compLoading">检索中…（GitHub 未认证限流 10 次/分钟，稍候）</div>
-      <div id="compError" class="hidden error-box"></div>
 
-      <section class="card" id="scoringCard">
-        <h3 data-i18n="scoringTitle">📐 竞品评分规则 <span class="hint" data-i18n="scoringHint">5 维 0-5 分 · 定位矩阵象限规则</span></h3>
-        <div id="scoringRules" class="scoring-grid"></div>
-        <div id="quadrantRules" class="quadrant-row"></div>
-      </section>
-      <div class="comp-analyze-bar">
-        <span class="badge badge-blue" data-i18n="analyzeTarget">分析对象</span>
-        <span class="analyze-target" id="compTarget">自定义关键词</span>
-        <button class="btn-ghost" id="useReqBtn" data-i18n="useReq">🎯 用当前需求分析</button>
-        <button class="btn-ghost" id="selfReportBtn" data-i18n="selfReport">📊 本产品竞品分析报告</button>
-        <button class="btn-ghost" id="insightDiagramBtn" data-i18n="insightDiagramBtn">🧠 竞品启示思维框图</button>
-      </div>
-      <div id="compResult" class="hidden">
-        <div class="result-meta" id="compMetrics"></div>
-        <section class="card">
-          <h3 data-i18n="compSectionsTitle">🗂 竞品清单 · 按分类区域</h3>
-          <div id="compSections" class="comp-sections"></div>
-        </section>
-        <details class="opt-details" style="margin: 0 0 14px;">
-          <summary data-i18n="compMaster">📊 查看全部竞品汇总表（可排序）</summary>
-          <div style="margin-top:10px;"><table class="tbl" id="compTable"><thead></thead><tbody></tbody></table></div>
+      <!-- ===== 视图 A：本产品竞品分析（始终可查，无需检索） ===== -->
+      <div id="compViewSelf" class="comp-view">
+        <div class="comp-analyze-bar highlight">
+          <span class="badge badge-blue" data-i18n="analyzeTarget">分析对象</span>
+          <span class="analyze-target strong">🏢 Goal Compiler · 需求拆解平台</span>
+          <button class="btn-ghost" id="selfReportExport2" data-i18n="selfReportExport">导出 MD</button>
+        </div>
+        <details class="opt-details compact" open>
+          <summary data-i18n="scoringTitle">📐 竞品评分规则（5 维 0-5 · 缩小占比）</summary>
+          <div id="scoringRules" class="scoring-grid"></div>
+          <div id="quadrantRules" class="quadrant-row"></div>
         </details>
-        <div class="comp-grid">
-          <section class="card">
-            <h3 data-i18n="compTable">竞品清单与评分 <span class="hint" data-i18n="compTableHint">点击表头排序</span></h3>
-            <table class="tbl" id="compTable"><thead></thead><tbody></tbody></table>
-          </section>
-          <section class="card">
-            <h3 data-i18n="compMatrix">定位矩阵 <span class="hint">X=产品化 · Y=拆解深度</span></h3>
-            <div id="positioning" class="positioning"></div>
-            <div class="legend"><span class="lg lg-leader" data-i18n="lgLeader">领先者</span><span class="lg lg-specialist" data-i18n="lgSpec">深度专精</span><span class="lg lg-product" data-i18n="lgProd">产品化</span><span class="lg lg-niche" data-i18n="lgNiche">细分/早期</span></div>
-          </section>
+        <div id="selfCompBody" class="self-report-body"></div>
+      </div>
+
+      <!-- ===== 视图 B：需求竞品分析 ===== -->
+      <div id="compViewReq" class="comp-view hidden">
+        <div class="comp-analyze-bar highlight">
+          <span class="badge badge-blue" data-i18n="analyzeTarget">分析对象</span>
+          <span class="analyze-target strong" id="compTarget">自定义关键词</span>
+          <button class="btn-ghost" id="useReqBtn" data-i18n="useReq">🎯 用当前需求分析</button>
+          <button class="btn-ghost" id="insightDiagramBtn" data-i18n="insightDiagramBtn">🧠 需求结构思维框图</button>
         </div>
-        <section class="card"><h3 data-i18n="compCat">市场格局</h3><div id="compCategory" class="category-bars"></div></section>
-        <div class="comp-grid-2">
-          <section class="card">
-            <h3 data-i18n="compGapTitle">竞品启示 · 功能缺口</h3>
-            <div id="compGaps" class="gap-list"></div>
-          </section>
-          <section class="card">
-            <h3 data-i18n="compDesignTitle">竞品启示 · 网页设计形式借鉴</h3>
-            <div id="compDesign" class="design-list"></div>
-          </section>
+        <details class="opt-details compact">
+          <summary data-i18n="scoringTitle">📐 竞品评分规则（5 维 0-5）</summary>
+          <div id="scoringRulesReq" class="scoring-grid"></div>
+          <div id="quadrantRulesReq" class="quadrant-row"></div>
+        </details>
+        <div class="comp-search">
+          <input id="compQuery" value="goal compiler prompt agent skill" />
+          <label class="ck"><input type="checkbox" id="srcGithub" checked /> GitHub</label>
+          <label class="ck"><input type="checkbox" id="srcHN" checked /> HN</label>
+          <label class="ck"><input type="checkbox" id="srcCurated" checked /> 精选库</label>
+          <label class="ck"><input type="checkbox" id="srcNpm" checked /> npm</label>
+          <label class="ck"><input type="checkbox" id="srcSO" checked /> StackOverflow</label>
+          <label class="ck"><input type="checkbox" id="srcHF" checked /> HuggingFace</label>
+          <label class="ck"><input type="checkbox" id="srcGitee" /> Gitee</label>
+          <label class="ck"><input type="checkbox" id="srcReddit" /> Reddit</label>
+          <label class="ck"><input type="checkbox" id="srcDevto" checked /> Dev.to</label>
+          <button class="btn-primary" id="compSearchBtn">🔍 <span data-i18n="compSearch">检索并分析</span></button>
         </div>
-        <section class="card">
-          <h3 data-i18n="compInsightTitle">🧠 竞品启示 · 结构化思维框图 <span class="hint" data-i18n="compInsightHint">点击节点查看详细说明</span></h3>
-          <div id="insightDiagram" class="insight-diagram"></div>
-        </section>
-        <section class="card">
-          <h3 data-i18n="compChartsTitle">📊 相关图表分析 <span class="hint">能力雷达 · 威胁 Top5 · 分类分布</span></h3>
-          <div id="compCharts" class="comp-charts"></div>
-        </section>
-        <section class="card"><h3>SWOT（产品总监视角）</h3><div id="compSwot" class="swot-grid"></div></section>
-        <section class="card"><h3 data-i18n="compOpps">差异化机会</h3><ul id="compOpps" class="check-list"></ul></section>
-        <section class="card">
-          <h3 data-i18n="compRec">产品总监建议（汇总竞品启示）</h3>
-          <p id="compRec" class="lead"></p>
-          <ul id="compRecPoints" class="check-list"></ul>
-        </section>
-        <div class="toolbar right">
-          <button class="btn-ghost" id="compExport" data-i18n="compExport">导出分析报告 MD</button>
+        <div id="compLoading" class="hidden loading" data-i18n="compLoading">检索中…（含并发限制与缓存，稍候）</div>
+        <div id="compError" class="hidden error-box"></div>
+
+        <div id="compResult" class="hidden">
+          <div class="result-meta" id="compMetrics"></div>
+          <section class="card">
+            <h3>🎯 <span data-i18n="closestTitle">最接近需求的项目 Top3</span></h3>
+            <div id="closestProjects" class="closest-list"></div>
+          </section>
+          <section class="card">
+            <h3 data-i18n="compSectionsTitle">🗂 竞品清单 · 按分类区域（相关度优先）</h3>
+            <div class="rel-filter"><label class="ck"><input type="checkbox" id="relOnly" checked /> <span data-i18n="relOnly">仅显示高相关（相关度 ≥ 1）</span></label><span class="hint" id="relStats"></span></div>
+            <div id="compSections" class="comp-sections"></div>
+          </section>
+          <div class="comp-grid-2">
+            <section class="card"><h3 data-i18n="compGapTitle">竞品启示 · 功能缺口</h3><div id="compGaps" class="gap-list"></div></section>
+            <section class="card"><h3 data-i18n="compDesignTitle">竞品启示 · 网页设计形式借鉴</h3><div id="compDesign" class="design-list"></div></section>
+          </div>
+          <div class="comp-grid-2">
+            <section class="card"><h3 data-i18n="compMatrix">定位矩阵 <span class="hint">X=产品化 · Y=拆解深度</span></h3><div id="positioning" class="positioning"></div>
+              <div class="legend"><span class="lg lg-leader" data-i18n="lgLeader">领先者</span><span class="lg lg-specialist" data-i18n="lgSpec">深度专精</span><span class="lg lg-product" data-i18n="lgProd">产品化</span><span class="lg lg-niche" data-i18n="lgNiche">细分/早期</span></div></section>
+            <section class="card"><h3 data-i18n="compCat">市场格局</h3><div id="compCategory" class="category-bars"></div></section>
+          </div>
+          <section class="card">
+            <h3 data-i18n="compInsightTitle">🧠 需求结构思维框图 <span class="hint" data-i18n="compInsightHint">展示所填需求的结构思维 · 点击节点查看说明</span></h3>
+            <div class="rel-filter"><label class="ck"><input type="checkbox" id="insightMode" checked /> <span data-i18n="insightMode">需求结构</span></label><span class="hint">/ 竞品启示</span></div>
+            <div id="insightDiagram" class="insight-diagram"></div>
+          </section>
+          <section class="card"><h3 data-i18n="compChartsTitle">📊 相关图表分析</h3><div id="compCharts" class="comp-charts"></div></section>
+          <section class="card"><h3>SWOT（产品总监视角）</h3><div id="compSwot" class="swot-grid"></div></section>
+          <section class="card"><h3 data-i18n="compOpps">差异化机会</h3><ul id="compOpps" class="check-list"></ul></section>
+          <section class="card"><h3 data-i18n="compRec">产品总监建议（汇总竞品启示）</h3><p id="compRec" class="lead"></p><ul id="compRecPoints" class="check-list"></ul></section>
+          <details class="opt-details">
+            <summary data-i18n="compMaster">📊 查看全部竞品汇总表（可排序）</summary>
+            <div style="margin-top:10px;"><table class="tbl" id="compTable"><thead></thead><tbody></tbody></table></div>
+          </details>
+          <div class="toolbar right"><button class="btn-ghost" id="compExport" data-i18n="compExport">导出分析报告 MD</button></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- ============ Tab: 案例库 ============ -->
+<!-- ============ Tab: 案例库 ============ -->
   <section id="tab-cases" class="tab-panel">
     <div class="panel">
       <div class="panel-head"><h2 data-i18n="caseTitle">案例库 <span class="hint" data-i18n="caseHint2">只收集不同类型的需求（按领域·意图去重）· 搜索相似需求可参考</span></h2></div>

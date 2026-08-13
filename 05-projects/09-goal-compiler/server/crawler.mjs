@@ -23,6 +23,16 @@ export function loadCuratedDB() {
 
 const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
 
+/** 按源+查询 的 TTL 缓存：避免限流（Reddit 429 等） */
+const CACHE = new Map();
+const TTL = { github: 600000, hackernews: 600000, npm: 600000, stackoverflow: 600000, huggingface: 600000, gitee: 600000, devto: 600000, reddit: 1800000 };
+function cachedFn(source, key, fn) {
+  const ck = `${source}|${key}`;
+  const hit = CACHE.get(ck);
+  if (hit && Date.now() - hit.at < (TTL[source] || 600000)) return Promise.resolve(hit.items);
+  return fn().then((items) => { CACHE.set(ck, { at: Date.now(), items }); return items; });
+}
+
 async function fetchJSON(url, headers = {}, timeoutMs = 12000, ua = BROWSER_UA) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
@@ -185,12 +195,21 @@ export async function giteeSearch(query, perPage = 8) {
   }));
 }
 
+const REDDIT_HOSTS = ['www.reddit.com', 'old.reddit.com', 'np.reddit.com'];
 export async function redditSearch(query, hits = 8) {
   const q = encodeURIComponent(query);
-  // 公共 JSON 接口对非浏览器客户端 403；改用 RSS（公开可用）
-  const url = `https://www.reddit.com/search.rss?q=${q}&limit=${hits}&sort=relevance&t=year`;
-  const xml = await fetchText(url);
-  return parseRss(xml, 'Reddit');
+  // RSS 公开可用；多主机回退 + 重试，429/403 时静默返回空（该源为 best-effort 讨论源）
+  for (let attempt = 0; attempt < 2; attempt++) {
+    for (const host of REDDIT_HOSTS) {
+      try {
+        const xml = await fetchText(`https://${host}/search.rss?q=${q}&limit=${hits}&sort=relevance&t=year`, {}, 10000);
+        const items = parseRss(xml, 'Reddit');
+        if (items.length) return items;
+      } catch { /* try next host */ }
+    }
+    if (attempt === 0) await new Promise((r) => setTimeout(r, 1500));
+  }
+  return [];
 }
 
 export async function devtoSearch(query, hits = 8) {
@@ -244,13 +263,22 @@ const SOURCE_FNS = {
 export const SOURCES = Object.keys(SOURCE_FNS);
 
 export async function competitiveSearch({ q = 'goal compiler', sources = ['github', 'hackernews', 'curated'] } = {}) {
-  const tasks = [];
-  for (const src of sources) {
-    const fn = SOURCE_FNS[src];
-    if (fn) tasks.push(fn(q).catch((e) => ({ error: `${src}: ${e.message}` })));
+  const jobs = sources.filter((src) => SOURCE_FNS[src]).map((src) => ({ src, fn: () => cachedFn(src, q, () => SOURCE_FNS[src](q)) }));
+  // 并发上限 4，避免触发各源限流
+  const results = [];
+  let idx = 0;
+  async function worker() {
+    while (idx < jobs.length) {
+      const job = jobs[idx++];
+      try {
+        results.push(await job.fn());
+      } catch (e) {
+        // Reddit 为 best-effort 讨论源，限流/封锁时静默（不展示「源暂不可用」）
+        if (job.src !== 'reddit') results.push({ error: `${job.src}: ${e.message}` });
+      }
+    }
   }
-
-  const results = await Promise.all(tasks);
+  await Promise.all([worker(), worker(), worker(), worker()]);
   const errors = [];
   const items = [];
   for (const r of results) {

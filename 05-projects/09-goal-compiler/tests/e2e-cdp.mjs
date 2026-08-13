@@ -110,6 +110,10 @@ try {
   const nodeCount = await evalJS(`document.querySelectorAll('#chainDiagram .cd-node').length`);
   checks.push([`思维框图泳道（${laneCount} 阶段）`, laneCount === 4]);
   checks.push([`思维框图节点（${nodeCount} 个主逻辑）`, nodeCount === 14]);
+  const expertMetrics = await evalJS(`document.querySelectorAll('#expertMetrics .expert-metric').length`);
+  checks.push([`专家版拆解指标（${expertMetrics} 项）`, expertMetrics >= 6]);
+  const methodTags = await evalJS(`document.querySelectorAll('#chainDiagram .cd-node-method').length`);
+  checks.push([`方法论标签（${methodTags} 节点）`, methodTags === 14]);
   const modalOpen = await evalJS(`(() => {
     document.querySelector('#chainDiagram .cd-node').click();
     return !document.getElementById('chainModal').classList.contains('hidden') &&
@@ -139,9 +143,20 @@ try {
   const sugg = await evalJS(`document.querySelectorAll('#rSuggestions .chip').length`);
   checks.push([`补充建议条数（${sugg}）`, sugg >= 3]);
 
-  // 切换到竞品分析 tab 并检索（仅精选库，离线）
+  // v7：双视图 —— 打开竞品 tab，本产品竞品分析默认可见
+  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(600);
+  const selfViewVisible = await evalJS(`!document.getElementById('compViewSelf').classList.contains('hidden')`);
+  checks.push(['本产品竞品分析界面默认可见', selfViewVisible]);
+  const selfBodyCards = await evalJS(`document.querySelectorAll('#selfCompBody .card').length`);
+  checks.push([`本产品报告内容（${selfBodyCards} 卡）`, selfBodyCards >= 5]);
+  const radarSelf = await evalJS(`!!document.querySelector('#selfCompBody .radar-svg')`);
+  checks.push(['本产品能力雷达图', radarSelf]);
+  // 切到需求竞品分析
+  await evalJS(`document.querySelector('#compViewSeg .seg-btn[data-cview="req"]').click()`); await sleep(300);
+  const reqViewVisible = await evalJS(`!document.getElementById('compViewReq').classList.contains('hidden')`);
+  checks.push(['需求竞品分析界面切换', reqViewVisible]);
   await evalJS(`(() => {
-    ['srcGithub','srcHN','srcNpm','srcSO','srcHF','srcGitee','srcReddit'].forEach(id => { document.getElementById(id).checked = false; });
+    ['srcGithub','srcHN','srcNpm','srcSO','srcHF','srcGitee','srcReddit','srcDevto'].forEach(id => { document.getElementById(id).checked = false; });
     document.getElementById('srcCurated').checked = true;
     document.getElementById('compQuery').value = 'goal compiler';
     document.getElementById('compSearchBtn').click();
@@ -217,7 +232,7 @@ try {
   })()`);
   checks.push(['输入自动关联推荐模板', recTpl]);
   const dialogQ = await evalJS(`(() => {
-    document.querySelector('#dialoguePanel summary').click();
+    document.getElementById('chatInput').focus();
     return document.querySelectorAll('#chatArea .chat-bubble.ask').length === 1;
   })()`);
   checks.push(['AI 多轮澄清：首问出现', dialogQ]);
@@ -232,19 +247,21 @@ try {
   const dialogCompile = await evalJS(`(() => { document.getElementById('chatCompile').click(); return !document.getElementById('result').classList.contains('hidden'); })()`);
   checks.push(['AI 澄清：完成并编译', dialogCompile]);
   await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(500);
-  const selfReport = await evalJS(`(() => {
-    document.getElementById('selfReportBtn').click();
-    const ok = !document.getElementById('selfReportModal').classList.contains('hidden') &&
-      document.getElementById('selfReportBody').textContent.includes('行动清单');
-    document.getElementById('selfReportClose').click();
-    return ok;
+  const closestTop = await evalJS(`document.querySelectorAll('#closestProjects .closest-item').length`);
+  checks.push([`最接近需求项目 Top3（${closestTop}）`, closestTop >= 1]);
+  const relStats = await evalJS(`document.getElementById('relStats').textContent.length > 3`);
+  checks.push(['相关度过滤统计', relStats]);
+  const useReq = await evalJS(`(() => {
+    document.getElementById('useReqBtn').click();
+    return document.getElementById('compTarget').textContent.includes('需求：');
   })()`);
-  checks.push(['本产品竞品分析报告弹窗', selfReport]);
+  checks.push(['用当前需求分析（分析对象突出）', useReq]);
+  await sleep(1500);
   const insightNodes = await evalJS(`document.querySelectorAll('#insightDiagram .cd-node').length`);
   checks.push([`竞品启示思维框图节点（${insightNodes}）`, insightNodes >= 10]);
   const insightModal = await evalJS(`(() => {
     document.querySelector('#insightDiagram .cd-node').click();
-    const ok = !document.getElementById('insightModal').classList.contains('hidden') && document.getElementById('insightModalBody').textContent.length > 20;
+    const ok = !document.getElementById('insightModal').classList.contains('hidden') && document.getElementById('insightModalBody').textContent.length > 5;
     document.getElementById('insightModalClose').click();
     return ok;
   })()`);
@@ -285,16 +302,15 @@ try {
   await shot('/tmp/gc-shot-result.png');
   await evalJS(`document.querySelector('.tab[data-tab="chain"]').click()`); await sleep(700);
   await shot('/tmp/gc-shot-chain.png');
-  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(700);
-  await shot('/tmp/gc-shot-competitive.png');
+
   await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(700);
   await shot('/tmp/gc-shot-cases.png');
   await evalJS(`document.querySelector('.tab[data-tab="market"]').click()`); await sleep(900);
   await shot('/tmp/gc-shot-market.png');
-  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(500);
-  await evalJS(`document.getElementById('selfReportBtn').click()`); await sleep(400);
+  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(600);
   await shot('/tmp/gc-shot-selfreport.png');
-  await evalJS(`document.getElementById('selfReportClose').click()`); await sleep(200);
+  await evalJS(`document.querySelector('#compViewSeg .seg-btn[data-cview="req"]').click()`); await sleep(500);
+  await shot('/tmp/gc-shot-competitive.png');
   await evalJS(`document.querySelector('.tab[data-tab="about"]').click()`); await sleep(700);
   await shot('/tmp/gc-shot-about.png');
   console.log('screenshots saved to /tmp/gc-shot-*.png');

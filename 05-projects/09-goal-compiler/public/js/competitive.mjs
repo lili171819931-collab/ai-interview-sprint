@@ -303,7 +303,7 @@ export function groupByCategory(scored) {
       count: items.length,
       avgThreat: +(items.reduce((s, i) => s + i.scores.threat, 0) / items.length).toFixed(1),
       avgRelevance: +(items.reduce((s, i) => s + i.scores.relevance, 0) / items.length).toFixed(1),
-      items: [...items].sort((a, b) => b.scores.threat - a.scores.threat),
+      items: [...items].sort((a, b) => b.scores.relevance - a.scores.relevance || b.scores.threat - a.scores.threat),
     }))
     .sort((a, b) => b.avgThreat - a.avgThreat);
 }

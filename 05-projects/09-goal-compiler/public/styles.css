@@ -425,3 +425,37 @@ kbd { font-family: var(--mono); font-size: 10px; background: rgba(0,0,0,.25); bo
 .self-report-modal { max-width: 860px; }
 .self-report-body { display: flex; flex-direction: column; gap: 12px; }
 .self-report-body .card { margin-bottom: 0; }
+
+/* ---- v7 组件 ---- */
+.comp-view { animation: fade .18s ease; }
+.comp-analyze-bar.highlight { border-color: rgba(34,211,238,.45); background: linear-gradient(90deg, rgba(34,211,238,.08), rgba(59,130,246,.06)); box-shadow: 0 0 16px rgba(34,211,238,.12); }
+.analyze-target.strong { font-weight: 700; font-size: 14px; }
+.opt-details.compact summary { font-size: 12.5px; color: var(--muted); }
+.opt-details.compact[open] summary { color: var(--primary-bright); }
+.closest-ul { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 8px; }
+.closest-item { display: flex; flex-direction: column; gap: 2px; background: rgba(59,130,246,.06); border: 1px solid rgba(59,130,246,.25); border-radius: 8px; padding: 8px 12px; }
+.closest-item a { color: var(--cyan); text-decoration: none; font-size: 13.5px; }
+.closest-item a:hover { text-decoration: underline; }
+.rel-filter { display: flex; gap: 12px; align-items: center; margin-bottom: 10px; flex-wrap: wrap; }
+.mini-pos { position: relative; height: 90px; margin-top: 8px; background: linear-gradient(180deg, rgba(34,211,238,.04), rgba(59,130,246,.05)); border: 1px dashed var(--border); border-radius: 8px; }
+.mini-pos::before { content: "产品化 →"; position: absolute; right: 6px; bottom: 4px; font-size: 10px; color: var(--faint); }
+.mini-pos::after { content: "深度 ↑"; position: absolute; left: 6px; top: 4px; font-size: 10px; color: var(--faint); }
+.mini-dot { position: absolute; transform: translate(-50%, -50%); width: 14px; height: 14px; border-radius: 50%; background: var(--primary-grad); box-shadow: 0 0 12px rgba(34,211,238,.6); }
+
+/* 输入面板常驻区块 */
+.promo-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+.promo-card { background: rgba(15,23,42,.55); border: 1px solid var(--border); border-radius: 10px; padding: 10px 12px; }
+.promo-head { font-size: 12.5px; font-weight: 700; color: var(--cyan); margin-bottom: 8px; display: flex; align-items: center; gap: 6px; }
+@media (max-width: 1080px) { .promo-grid { grid-template-columns: 1fr; } }
+
+/* 专家版思维链 */
+.chain-expert { margin-bottom: 12px; }
+.expert-overview { background: linear-gradient(180deg, rgba(20,32,54,.8), rgba(11,18,32,.8)); border: 1px solid rgba(59,130,246,.35); border-radius: 10px; padding: 14px 16px; box-shadow: 0 0 18px rgba(59,130,246,.1); }
+.expert-overview h3 { margin: 0 0 12px; font-size: 14.5px; }
+.expert-metrics { display: grid; grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); gap: 8px; margin-bottom: 10px; }
+.expert-metric { background: rgba(15,23,42,.6); border: 1px solid var(--border); border-radius: 8px; padding: 8px; text-align: center; }
+.expert-metric b { display: block; font-size: 20px; font-weight: 800; color: var(--primary-bright); }
+.expert-metric span { font-size: 11px; color: var(--muted); }
+.expert-note { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.7; }
+.cd-node-method { font-size: 10.5px; color: var(--cyan); margin-top: 3px; opacity: .85; }
+.chain-method { font-size: 10.5px; color: var(--cyan); background: rgba(34,211,238,.1); border: 1px solid rgba(34,211,238,.25); border-radius: 999px; padding: 1px 8px; white-space: nowrap; }
