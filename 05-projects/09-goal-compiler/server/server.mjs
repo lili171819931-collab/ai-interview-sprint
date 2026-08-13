@@ -9,6 +9,7 @@ import { readFileSync, statSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import { dirname, join, extname, normalize } from 'node:path';
 import { competitiveSearch } from './crawler.mjs';
+import { marketData } from './market.mjs';
 
 const __dirname = dirname(fileURLToPath(import.meta.url));
 const ROOT = join(__dirname, '..');
@@ -57,6 +58,11 @@ const server = createServer(async (req, res) => {
       if (!buf) return sendJSON(res, 404, { error: 'cases not found' });
       res.writeHead(200, { 'Content-Type': 'application/json; charset=utf-8', 'Cache-Control': 'no-store' });
       return res.end(buf);
+    }
+    if (pathname === '/api/templates/market') {
+      const q = url.searchParams.get('q') || '';
+      const data = await marketData({ q });
+      return sendJSON(res, 200, data);
     }
     if (pathname === '/api/templates') {
       const buf = readFileSafe(join(DATA, 'templates.json'));

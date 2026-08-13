@@ -307,3 +307,126 @@ export function groupByCategory(scored) {
     }))
     .sort((a, b) => b.avgThreat - a.avgThreat);
 }
+
+/* ================= v6：输入需求型竞品分析 + 本产品报告 + 启示思维框图 ================= */
+
+/** 本产品（需求拆解平台）竞品分析报告 —— 始终保留、弹窗展示 */
+export const SELF_REPORT = {
+  product: 'Goal Compiler · 需求拆解平台',
+  tagline: '可视化思维链 + 可编辑目标资产 + 竞品情报台',
+  position: { x: 72, y: 88, note: '产品化中高 + 拆解深度领先' },
+  strengths: [
+    '网页可视化 + 人工编辑 + 版本历史（竞品多为纯文本 Skill/仓库）',
+    '完整思维链结构化输出（14 节点 + 思维框图 + 弹窗解释）——「会教人的编译器」',
+    '8-9 大数据源竞品情报 + 产品总监视角（评分规则公开/定位矩阵/功能缺口/设计借鉴）',
+    '零依赖本地运行、数据不出本地、中英双语、多模态输入',
+  ],
+  weaknesses: [
+    '规则模板引擎（非 LLM），长尾复杂诉求深度受限',
+    '无账号/云端协作',
+    '品牌与生态尚未建立',
+  ],
+  opportunities: [
+    '「诉求→目标任务书」市场快速增长但成熟产品少',
+    '与 Claude Code / Codex / Cursor 生态深度集成（SKILL.md 一键导出）',
+    '「Agent 使用者的教练」定位：教会用户写 Goal 是蓝海',
+    '模板市场 + AI 多轮澄清：降低上手门槛',
+  ],
+  threats: [
+    'SaaS 巨头（ClickUp/Notion/Taskade）可能快速补齐目标拆解',
+    'Anthropic/OpenAI 官方内置 Goal 编译将挤压独立空间',
+    '开源 Skill 方法论易被复制',
+  ],
+  actions: [
+    { priority: 'P0', action: '坚持「思维链教学 + 目标资产沉淀 + 情报台」三件套差异化，不与文本能力正面竞争' },
+    { priority: 'P0', action: '模板市场 + AI 多轮澄清式输入，把空白页焦虑降到最低' },
+    { priority: 'P1', action: 'SKILL.md 导出与 Agent 生态分发，形成「生成→安装→使用」闭环' },
+    { priority: 'P1', action: '公开评分规则与数据来源，建立「透明情报」信任感' },
+    { priority: 'P2', action: 'LLM 深度增强 + 团队空间，服务企业流程标准化' },
+  ],
+};
+
+/** 竞品启示思维框图：按类别组织建议节点（可点开详细说明） */
+export function buildInsightDiagram(report) {
+  const nodes = [];
+  for (const g of report.featureGaps) {
+    nodes.push({
+      id: `gap-${g.feature}`,
+      group: g.category || '功能',
+      title: g.feature,
+      status: g.status,
+      detail: `来源证据：${g.source}。为什么补：${g.why}。优先级：${g.priority}。`,
+    });
+  }
+  for (const d of report.designForms) {
+    nodes.push({
+      id: `form-${d.form}`,
+      group: '设计',
+      title: d.form,
+      status: d.adopted ? 'implemented' : 'planned',
+      detail: `借鉴来源：${d.from}。说明：${d.note}。`,
+    });
+  }
+  // 按类别分组
+  const groups = new Map();
+  for (const n of nodes) {
+    if (!groups.has(n.group)) groups.set(n.group, []);
+    groups.get(n.group).push(n);
+  }
+  return [...groups.entries()].map(([name, items]) => ({ name, items }));
+}
+
+/** 雷达图数据：本产品 vs 行业均值 vs 领先者（5 维能力） */
+export function buildRadarData(scored) {
+  const dims = [
+    { key: 'relevance', label: '相关度' },
+    { key: 'productization', label: '产品化' },
+    { key: 'depth', label: '拆解深度' },
+    { key: 'adoption', label: '采纳度' },
+  ];
+  const avg = (arr) => (arr.length ? arr.reduce((s, x) => s + x, 0) / arr.length : 0);
+  const leader = (arr) => (arr.length ? Math.max(...arr) : 0);
+  const series = [
+    { name: '本产品', scores: [4.5, 4.2, 4.8, 2.6] },
+    { name: '行业均值', scores: dims.map((d) => +(avg(scored.map((it) => it.scores[d.key]))).toFixed(2)) },
+    { name: '领先者', scores: dims.map((d) => +(leader(scored.map((it) => it.scores[d.key]))).toFixed(2)) },
+  ];
+  return { dims, series, max: 5 };
+}
+
+/** 汇总竞品启示 → 产品总监建议（结构化） */
+export function buildAggregatedRecommendation(report) {
+  const impl = report.featureGaps.filter((g) => g.status === 'implemented').length;
+  const planned = report.featureGaps.filter((g) => g.status === 'planned').length;
+  const topThreatName = report.topThreat[0]?.name || '头部竞品';
+  const topThreatScore = report.topThreat[0]?.scores.threat || 0;
+  const landscape = report.categoryDist.map((c) => `${c.name}×${c.count}`).join('、');
+  return {
+    summary: `市场共 ${report.total} 个相关竞品（${landscape}）。威胁度最高为「${topThreatName}」（${topThreatScore}/5）。竞品启示已补 ${impl} 项功能、规划 ${planned} 项。`,
+    points: [
+      `以「可视化思维链 + 可编辑目标资产 + 竞品情报台」三件套切入，不正面拼文本生成能力`,
+      `优先落地：模板市场 + AI 多轮澄清（降低上手门槛）；SKILL.md 导出（生态分发）`,
+      `保持透明：公开评分规则与数据来源，建立情报信任`,
+      `监测 ${report.topThreat.slice(0, 2).map((t) => t.name).join('、')}，若其补齐「思维链教学」则强化目标资产沉淀壁垒`,
+    ],
+  };
+}
+
+export function selfReportToMarkdown() {
+  const r = SELF_REPORT;
+  const L = [];
+  L.push(`# 本产品竞品分析报告：${r.product}`);
+  L.push('');
+  L.push(`> ${r.tagline}`);
+  L.push('');
+  L.push('## 定位'); L.push(`- 定位矩阵：产品化 ${r.position.x} / 拆解深度 ${r.position.y}（${r.position.note}）`);
+  L.push('');
+  L.push('## 优势'); r.strengths.forEach((x) => L.push(`- ${x}`));
+  L.push(''); L.push('## 劣势'); r.weaknesses.forEach((x) => L.push(`- ${x}`));
+  L.push(''); L.push('## 机会'); r.opportunities.forEach((x) => L.push(`- ${x}`));
+  L.push(''); L.push('## 威胁'); r.threats.forEach((x) => L.push(`- ${x}`));
+  L.push(''); L.push('## 行动清单');
+  for (const a of r.actions) L.push(`- [${a.priority}] ${a.action}`);
+  L.push('');
+  return L.join('\n');
+}

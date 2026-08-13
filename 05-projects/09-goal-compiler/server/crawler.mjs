@@ -21,16 +21,60 @@ export function loadCuratedDB() {
   }
 }
 
-async function fetchJSON(url, headers = {}, timeoutMs = 10000) {
+const BROWSER_UA = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36';
+
+async function fetchJSON(url, headers = {}, timeoutMs = 12000, ua = BROWSER_UA) {
   const ctrl = new AbortController();
   const timer = setTimeout(() => ctrl.abort(), timeoutMs);
   try {
-    const res = await fetch(url, { headers: { 'User-Agent': 'goal-compiler-crawler/1.0', Accept: 'application/json', ...headers }, signal: ctrl.signal });
+    const res = await fetch(url, { headers: { 'User-Agent': ua, Accept: 'application/json, text/html, application/rss+xml', ...headers }, signal: ctrl.signal });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
     return await res.json();
   } finally {
     clearTimeout(timer);
   }
+}
+
+/** 拉取原始文本（用于 RSS/HTML 类源） */
+async function fetchText(url, headers = {}, timeoutMs = 12000, ua = BROWSER_UA) {
+  const ctrl = new AbortController();
+  const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+  try {
+    const res = await fetch(url, { headers: { 'User-Agent': ua, Accept: 'application/rss+xml, application/xml, text/xml, */*', ...headers }, signal: ctrl.signal });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    return await res.text();
+  } finally {
+    clearTimeout(timer);
+  }
+}
+
+/** 简易 Atom/RSS 解析（零依赖） */
+function parseRss(xml, sourceName) {
+  const items = [];
+  const entryRe = /<entry>([\s\S]*?)<\/entry>|<item>([\s\S]*?)<\/item>/g;
+  let m;
+  while ((m = entryRe.exec(xml))) {
+    const body = m[1] || m[2] || '';
+    const title = (body.match(/<title>([\s\S]*?)<\/title>/) || [])[1] || '';
+    const link = (body.match(/<link[^>]*href=["']([^"']+)["']/) || [])[1] || (body.match(/<link>([\s\S]*?)<\/link>/) || [])[1] || '';
+    const id = (body.match(/<id>([\s\S]*?)<\/id>/) || [])[1] || link;
+    const published = (body.match(/<published>([\s\S]*?)<\/published>/) || [])[1] || '';
+    const author = (body.match(/<name>([\s\S]*?)<\/name>/) || [])[1] || '';
+    const summary = (body.match(/<summary[^>]*>([\s\S]*?)<\/summary>/) || [])[1] || '';
+    const clean = (x) => x.replace(/<!\[CDATA\[|\]\]>|<[^>]+>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').trim();
+    if (clean(title)) {
+      items.push({
+        name: `${sourceName}: ${clean(title).slice(0, 90)}`,
+        title: clean(title),
+        url: clean(id) || clean(link),
+        source: sourceName,
+        description: clean(summary).slice(0, 220),
+        stars: 0, language: '', updatedAt: (published || '').slice(0, 10),
+        topics: ['discussion'], kind: 'discussion',
+      });
+    }
+  }
+  return items;
 }
 
 export async function githubSearch(query, perPage = 8) {
@@ -126,7 +170,7 @@ export async function huggingfaceSearch(query, hits = 8) {
 export async function giteeSearch(query, perPage = 8) {
   const q = encodeURIComponent(query);
   const url = `https://gitee.com/api/v5/search/repositories?q=${q}&sort=stars_count&order=desc&per_page=${perPage}`;
-  const data = await fetchJSON(url);
+  const data = await fetchJSON(url, {}, 20000);
   return (Array.isArray(data) ? data : []).map((it) => ({
     name: it.full_name,
     title: it.name || it.full_name,
@@ -143,20 +187,30 @@ export async function giteeSearch(query, perPage = 8) {
 
 export async function redditSearch(query, hits = 8) {
   const q = encodeURIComponent(query);
-  const url = `https://www.reddit.com/search.json?q=${q}&limit=${hits}&sort=relevance&t=year`;
+  // 公共 JSON 接口对非浏览器客户端 403；改用 RSS（公开可用）
+  const url = `https://www.reddit.com/search.rss?q=${q}&limit=${hits}&sort=relevance&t=year`;
+  const xml = await fetchText(url);
+  return parseRss(xml, 'Reddit');
+}
+
+export async function devtoSearch(query, hits = 8) {
+  const q = encodeURIComponent(query);
+  const url = `https://dev.to/api/articles?per_page=${hits}&tag=ai`;
   const data = await fetchJSON(url);
-  return (data.data?.children || []).map(({ data: it }) => ({
-    name: `Reddit: ${(it.title || '').slice(0, 90)}`,
-    title: it.title || '',
-    url: `https://www.reddit.com${it.permalink || ''}`,
-    source: 'Reddit',
-    description: `r/${it.subreddit} · Score ${it.score} · Comments ${it.num_comments}`,
-    stars: it.score || 0,
-    language: '',
-    updatedAt: new Date(it.created_utc * 1000).toISOString().slice(0, 10),
-    topics: ['discussion'],
-    kind: 'discussion',
-  }));
+  const hay = query.toLowerCase();
+  return (Array.isArray(data) ? data : [])
+    .filter((it) => !hay || `${it.title || ''} ${it.description || ''} ${(it.tag_list || []).join(' ')}`.toLowerCase().includes(hay))
+    .slice(0, hits)
+    .map((it) => ({
+      name: `Dev.to: ${(it.title || '').slice(0, 90)}`,
+      title: it.title || '',
+      url: it.url,
+      source: 'Dev.to',
+      description: `❤️ ${it.positive_reactions_count || 0} · 💬 ${it.comments_count || 0} · ${(it.description || '').slice(0, 120)}`,
+      stars: it.positive_reactions_count || 0,
+      language: '', updatedAt: (it.published_at || '').slice(0, 10),
+      topics: (it.tag_list || []).slice(0, 6), kind: 'discussion',
+    }));
 }
 
 function curatedFilter(db, query) {
@@ -185,7 +239,7 @@ export function curatedSearch(query) {
 const SOURCE_FNS = {
   github: githubSearch, hackernews: hnSearch, curated: (q) => Promise.resolve(curatedSearch(q)),
   npm: npmSearch, stackoverflow: stackoverflowSearch, huggingface: huggingfaceSearch,
-  gitee: giteeSearch, reddit: redditSearch,
+  gitee: giteeSearch, reddit: redditSearch, devto: devtoSearch,
 };
 export const SOURCES = Object.keys(SOURCE_FNS);
 

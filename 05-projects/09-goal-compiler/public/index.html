@@ -23,6 +23,7 @@
       <button class="tab" data-tab="chain" data-i18n="tabChain">思维链</button>
       <button class="tab" data-tab="competitive" data-i18n="tabComp">竞品分析</button>
       <button class="tab" data-tab="cases" data-i18n="tabCases">案例库</button>
+      <button class="tab" data-tab="market" data-i18n="tabMarket">模板市场</button>
       <button class="tab" data-tab="about" data-i18n="tabAbout">关于</button>
     </nav>
     <div class="lang-switch" id="langSwitch">
@@ -81,9 +82,25 @@
           <button class="chip" data-quick="1">报销发票小程序</button>
           <button class="chip" data-quick="2">英语口语提升</button>
         </div>
+        <div class="rec-templates" id="recTemplates"></div>
         <details class="opt-details" id="templatePanel">
           <summary>📋 <span data-i18n="tplLib">模板库（竞品启示 · 预设诉求）</span></summary>
           <div id="templateList" class="chip-row"></div>
+        </details>
+        <details class="opt-details" id="dialoguePanel">
+          <summary>💬 <span data-i18n="dialogue">AI 多轮澄清式输入（先问清，再编译）</span></summary>
+          <div id="dialogueBox" class="dialogue-box">
+            <div class="chat-area" id="chatArea"></div>
+            <div class="chat-input-row">
+              <input id="chatInput" data-i18n-ph="chatPh" placeholder="回答 AI 的澄清问题…" />
+              <button class="btn-ghost" id="chatSend">↵</button>
+              <button class="btn-ghost" id="chatCompile" data-i18n="chatCompile">✅ 完成并编译</button>
+            </div>
+            <div class="chat-actions">
+              <button class="btn-ghost" id="chatSkip" data-i18n="chatSkip">跳过，直接编译</button>
+              <span class="hint" id="chatStatus"></span>
+            </div>
+          </div>
         </details>
       </aside>
 
@@ -198,6 +215,13 @@
         <div id="scoringRules" class="scoring-grid"></div>
         <div id="quadrantRules" class="quadrant-row"></div>
       </section>
+      <div class="comp-analyze-bar">
+        <span class="badge badge-blue" data-i18n="analyzeTarget">分析对象</span>
+        <span class="analyze-target" id="compTarget">自定义关键词</span>
+        <button class="btn-ghost" id="useReqBtn" data-i18n="useReq">🎯 用当前需求分析</button>
+        <button class="btn-ghost" id="selfReportBtn" data-i18n="selfReport">📊 本产品竞品分析报告</button>
+        <button class="btn-ghost" id="insightDiagramBtn" data-i18n="insightDiagramBtn">🧠 竞品启示思维框图</button>
+      </div>
       <div id="compResult" class="hidden">
         <div class="result-meta" id="compMetrics"></div>
         <section class="card">
@@ -220,17 +244,31 @@
           </section>
         </div>
         <section class="card"><h3 data-i18n="compCat">市场格局</h3><div id="compCategory" class="category-bars"></div></section>
+        <div class="comp-grid-2">
+          <section class="card">
+            <h3 data-i18n="compGapTitle">竞品启示 · 功能缺口</h3>
+            <div id="compGaps" class="gap-list"></div>
+          </section>
+          <section class="card">
+            <h3 data-i18n="compDesignTitle">竞品启示 · 网页设计形式借鉴</h3>
+            <div id="compDesign" class="design-list"></div>
+          </section>
+        </div>
         <section class="card">
-          <h3 data-i18n="compGapTitle">竞品启示 · 功能缺口（补充未考虑的功能）</h3>
-          <div id="compGaps" class="gap-list"></div>
+          <h3 data-i18n="compInsightTitle">🧠 竞品启示 · 结构化思维框图 <span class="hint" data-i18n="compInsightHint">点击节点查看详细说明</span></h3>
+          <div id="insightDiagram" class="insight-diagram"></div>
         </section>
         <section class="card">
-          <h3 data-i18n="compDesignTitle">竞品启示 · 网页设计形式借鉴</h3>
-          <div id="compDesign" class="design-list"></div>
+          <h3 data-i18n="compChartsTitle">📊 相关图表分析 <span class="hint">能力雷达 · 威胁 Top5 · 分类分布</span></h3>
+          <div id="compCharts" class="comp-charts"></div>
         </section>
         <section class="card"><h3>SWOT（产品总监视角）</h3><div id="compSwot" class="swot-grid"></div></section>
         <section class="card"><h3 data-i18n="compOpps">差异化机会</h3><ul id="compOpps" class="check-list"></ul></section>
-        <section class="card"><h3 data-i18n="compRec">产品总监建议</h3><p id="compRec" class="lead"></p></section>
+        <section class="card">
+          <h3 data-i18n="compRec">产品总监建议（汇总竞品启示）</h3>
+          <p id="compRec" class="lead"></p>
+          <ul id="compRecPoints" class="check-list"></ul>
+        </section>
         <div class="toolbar right">
           <button class="btn-ghost" id="compExport" data-i18n="compExport">导出分析报告 MD</button>
         </div>
@@ -250,6 +288,21 @@
       <div id="userCaseGrid" class="case-grid"></div>
       <div class="case-subhead"><h3>⭐ <span data-i18n="demoCases">内置演示用例</span></h3></div>
       <div id="caseGrid" class="case-grid"></div>
+    </div>
+  </section>
+
+  <!-- ============ Tab: 模板市场 ============ -->
+  <section id="tab-market" class="tab-panel">
+    <div class="panel">
+      <div class="panel-head">
+        <h2 data-i18n="marketTitle">🧩 模板市场 <span class="hint" data-i18n="marketHint">内置模板 + 开源 GitHub 集合 · 按分类展示 · 输入自动关联推荐</span></h2>
+      </div>
+      <div class="comp-search">
+        <input id="marketSearch" data-i18n-ph="marketSearchPh" placeholder="🔍 搜索模板 / 技能库 / 提示词…" />
+        <div class="cat-chips" id="marketCats"></div>
+      </div>
+      <div id="marketLoading" class="hidden loading" data-i18n="marketLoading">加载中…（含 GitHub 实时检索）</div>
+      <div id="marketGroups" class="market-groups"></div>
     </div>
   </section>
 
@@ -294,6 +347,28 @@
     </div>
   </section>
 </main>
+
+<!-- 本产品竞品分析报告弹窗 -->
+<div id="selfReportModal" class="modal hidden">
+  <div class="modal-box self-report-modal">
+    <div class="modal-head">
+      <h3 data-i18n="selfReportTitle">📊 本产品（需求拆解平台）竞品分析报告</h3>
+      <div class="toolbar">
+        <button class="btn-ghost" id="selfReportExport" data-i18n="selfReportExport">导出 MD</button>
+        <button class="btn-ghost" id="selfReportClose">✕</button>
+      </div>
+    </div>
+    <div id="selfReportBody" class="self-report-body"></div>
+  </div>
+</div>
+
+<!-- 竞品启示节点弹窗 -->
+<div id="insightModal" class="modal hidden">
+  <div class="modal-box chain-modal-box">
+    <div class="modal-head"><h3 id="insightModalTitle">竞品启示节点</h3><button class="btn-ghost" id="insightModalClose">✕</button></div>
+    <div id="insightModalBody"></div>
+  </div>
+</div>
 
 <!-- 思维链节点解释弹窗 -->
 <div id="chainModal" class="modal hidden">

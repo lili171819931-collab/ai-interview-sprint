@@ -5,9 +5,10 @@
  *       8 数据源竞品、就绪度评估、⌘↵ 快捷编译、分享、设计自核验。
  */
 import { compile } from './compiler/index.mjs';
-import { buildReport, reportToMarkdown, categoryLabel, FEATURE_GAPS, DESIGN_FORMS, SCORING_RULES, QUADRANT_RULES, groupByCategory } from './competitive.mjs';
+import { buildReport, reportToMarkdown, categoryLabel, FEATURE_GAPS, DESIGN_FORMS, SCORING_RULES, QUADRANT_RULES, groupByCategory, SELF_REPORT, buildInsightDiagram, buildRadarData, buildAggregatedRecommendation, selfReportToMarkdown } from './competitive.mjs';
 import { toCaseMeta, saveCase, saveCaseByType, removeCase, searchCases, categoriesOf, compileCase } from './caselib.mjs';
 import { buildSkillMd, skillFilename } from './skilllib.mjs';
+import { nextQuestion, addTurn, transcriptToInput } from './dialogue.mjs';
 
 const $ = (sel) => document.querySelector(sel);
 const $$ = (sel) => [...document.querySelectorAll(sel)];
@@ -85,6 +86,24 @@ const I18N = {
   techStack: { zh: '技术栈', en: 'Tech stack' },
   techDesc: { zh: 'Node.js（零第三方依赖）服务端 + 原生 JS/CSS 前端。编译引擎为规则模板 + 领域知识库 + 中英双语生成，可离线运行。', en: 'Node.js (zero-dependency) server + vanilla JS/CSS frontend. Rule-template + domain KB + bilingual generator; runs offline.' },
   docs: { zh: '文档', en: 'Docs' }, histTitle: { zh: '草稿历史', en: 'Draft history' },
+  tabMarket: { zh: '模板市场', en: 'Market' },
+  marketTitle: { zh: '🧩 模板市场 <span class="hint">内置模板 + 开源 GitHub 集合 · 按分类展示 · 输入自动关联推荐</span>', en: '🧩 Template Market <span class="hint">built-in + open-source GitHub · categorized · auto-recommends</span>' },
+  marketHint: { zh: '内置模板 + 开源 GitHub 集合 · 按分类展示 · 输入自动关联推荐', en: 'built-in + GitHub · categorized · auto-recommend' },
+  marketSearchPh: { zh: '🔍 搜索模板 / 技能库 / 提示词…', en: '🔍 Search templates / skills / prompts…' },
+  marketLoading: { zh: '加载中…（含 GitHub 实时检索）', en: 'Loading… (incl. live GitHub scan)' },
+  dialogue: { zh: 'AI 多轮澄清式输入（先问清，再编译）', en: 'AI multi-turn clarification (ask first, then compile)' },
+  chatPh: { zh: '回答 AI 的澄清问题…', en: 'Answer the AI clarification…' },
+  chatCompile: { zh: '✅ 完成并编译', en: '✅ Compile' },
+  chatSkip: { zh: '跳过，直接编译', en: 'Skip & compile' },
+  analyzeTarget: { zh: '分析对象', en: 'Analyzing' },
+  useReq: { zh: '🎯 用当前需求分析', en: '🎯 Use current request' },
+  selfReport: { zh: '📊 本产品竞品分析报告', en: '📊 Self competitive report' },
+  insightDiagramBtn: { zh: '🧠 竞品启示思维框图', en: '🧠 Insights diagram' },
+  compInsightTitle: { zh: '🧠 竞品启示 · 结构化思维框图', en: '🧠 Insights · structured diagram' },
+  compInsightHint: { zh: '点击节点查看详细说明', en: 'click nodes for details' },
+  compChartsTitle: { zh: '📊 相关图表分析', en: '📊 Charts & analysis' },
+  selfReportTitle: { zh: '📊 本产品（需求拆解平台）竞品分析报告', en: '📊 Self (Requirement Platform) competitive report' },
+  selfReportExport: { zh: '导出 MD', en: 'Export MD' },
 };
 
 /* ================= 通用工具 ================= */
@@ -134,11 +153,12 @@ function switchTab(name) {
   if (name === 'chain' && currentResult) renderChain();
   if (name === 'cases' && !window._casesLoaded) loadCases();
   if (name === 'cases') renderCaseLibrary();
+  if (name === 'market' && !window._marketLoaded) loadMarket();
 }
 $$('.tab').forEach((t) => t.addEventListener('click', () => switchTab(t.dataset.tab)));
 window.addEventListener('hashchange', () => {
   const name = (location.hash || '#/compile').replace('#/', '');
-  if (['compile', 'chain', 'competitive', 'cases', 'about'].includes(name)) switchTab(name);
+  if (['compile', 'chain', 'competitive', 'cases', 'market', 'about'].includes(name)) switchTab(name);
 });
 
 /* ================= 多模态输入 ================= */
@@ -775,9 +795,14 @@ function renderReport(report) {
   renderCategory(report.categoryDist);
   renderGaps(report.featureGaps);
   renderDesignForms(report.designForms);
+  renderInsightDiagram(report);
+  renderCharts(report);
   renderSwot(report.swot);
   $('#compOpps').innerHTML = report.opportunities.map((o) => `<li><strong>[${o.priority}] ${escapeHtml(o.title)}</strong> — ${escapeHtml(o.detail)}</li>`).join('');
-  $('#compRec').textContent = report.recommendation;
+  const agg = buildAggregatedRecommendation(report);
+  $('#compRec').textContent = agg.summary;
+  $('#compRecPoints').innerHTML = agg.points.map((x) => `<li>${escapeHtml(x)}</li>`).join('');
+  if (!$('#compTarget').textContent.includes('需求：')) $('#compTarget').textContent = `自定义：${report.query.slice(0, 40)}`;
 }
 
 function renderCompTable(items) {
@@ -897,6 +922,30 @@ async function loadCases() {
   } catch { _cases = window._cases = []; }
   renderCaseLibrary();
 }
+const DOMAIN_STYLE = {
+  '软件/产品': ['#3b82f6', '🖥'], '数据/AI': ['#8b5cf6', '🤖'], '内容/创作': ['#ec4899', '✍️'],
+  '学习/成长': ['#22d3ee', '📚'], '商业/创业': ['#f59e0b', '💼'], '运营/增长': ['#10b981', '📈'],
+  '效率/自动化': ['#14b8a6', '⚙️'], '硬件/IoT': ['#f97316', '🔧'], '设计/体验': ['#6366f1', '🎨'],
+};
+const DOMAIN_COLOR = (d) => (DOMAIN_STYLE[d] ? DOMAIN_STYLE[d][0] : '#64748b');
+const DOMAIN_ICON = (d) => (DOMAIN_STYLE[d] ? DOMAIN_STYLE[d][1] : '📌');
+function galleryCard({ title, domain, intent, raw, sub, actionHtml, onClick }) {
+  const color = DOMAIN_COLOR(domain);
+  return `
+  <div class="case-card gallery" style="--cat:${color}" onclick="${onClick ? `(${onClick})` : ''}">
+    <div class="case-banner" style="background:linear-gradient(120deg, ${color}33, ${color}11);border-bottom:1px solid ${color}55">
+      <span class="case-banner-icon">${DOMAIN_ICON(domain)}</span>
+      <span class="badge" style="color:${color};background:${color}22;border-color:${color}44">${escapeHtml(domain)}</span>
+    </div>
+    <div class="case-body">
+      <div class="case-title-row"><h3>${escapeHtml(title)}</h3><span class="hint">${escapeHtml(intent || '')}</span></div>
+      <div class="case-raw">${escapeHtml(raw.slice(0, 90))}${raw.length > 90 ? '…' : ''}</div>
+      ${sub ? `<div class="case-meta">${sub}</div>` : ''}
+      <span class="case-action">${actionHtml}</span>
+    </div>
+  </div>`;
+}
+
 function renderCaseLibrary() {
   window._caseRendered = true;
   // 分类过滤下拉
@@ -917,33 +966,30 @@ function renderCaseLibrary() {
   $('#userCaseCount').textContent = `${lang === 'en' ? 'Total' : '共'} ${userCases.length} ${lang === 'en' ? 'cases' : '条'} · ${lang === 'en' ? 'matched' : '命中'} ${filteredUser.length}`;
 
   $('#userCaseGrid').innerHTML = filteredUser.length
-    ? filteredUser.map((c, i) => `
-      <div class="case-card" data-usercase="${c.id}">
-        <span class="badge badge-cyan">📚 ${lang === 'en' ? 'Collected' : '已收录'} ${escapeHtml(c.domain)}</span>
-        <h3>${escapeHtml(c.title)}</h3>
-        <p>${escapeHtml(c.rawInput.slice(0, 90))}${c.rawInput.length > 90 ? '…' : ''}</p>
-        <div class="case-meta"><span class="hint">${escapeHtml(c.intent)} · ${new Date(c.createdAt).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })}</span></div>
-        <span class="case-action">${lang === 'en' ? 'Load & reference →' : '载入并参考分析 →'}</span>
-      </div>`).join('')
+    ? filteredUser.map((c) => galleryCard({
+        title: c.title, domain: c.domain, intent: c.intent, raw: c.rawInput,
+        sub: `📚 ${lang === 'en' ? 'Collected' : '已收录'} · ${new Date(c.createdAt).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', hour12: false })} · Goal ${c.goalLen || ''} 字符`,
+        actionHtml: lang === 'en' ? 'Load & reference →' : '载入并参考分析 →',
+        onClick: `loadUserCase('${c.id}')`,
+      })).join('')
     : `<div class="history-empty">${lang === 'en' ? 'No matching cases yet — every compile is auto-collected here.' : '暂无匹配案例 —— 每次编译会自动收录到这里。'}</div>`;
 
-  $('#caseGrid').innerHTML = filteredDemo.map((c, i) => `
-    <div class="case-card" data-case="${_cases.indexOf(c)}">
-      <span class="badge badge-blue">⭐ ${lang === 'en' ? 'Demo' : '演示'} ${String(i + 1).padStart(2, '0')}</span>
-      <h3>${escapeHtml(c.title)}</h3><p>${escapeHtml(c.note || '')}</p>
-      <div class="case-raw">${escapeHtml(c.rawInput)}</div>
-      <span class="case-action">${lang === 'en' ? 'Load & compile →' : '载入并编译 →'}</span>
-    </div>`).join('');
+  $('#caseGrid').innerHTML = filteredDemo.map((c, i) => galleryCard({
+      title: c.title, domain: c.domain || '通用', intent: '演示', raw: c.rawInput,
+      sub: `⭐ ${lang === 'en' ? 'Demo' : '演示'} ${String(i + 1).padStart(2, '0')} · ${escapeHtml(c.note || '')}`,
+      actionHtml: lang === 'en' ? 'Load & compile →' : '载入并编译 →',
+      onClick: `loadCaseById(${_cases.indexOf(c)})`,
+    })).join('');
 
-  $$('.case-card[data-case]').forEach((el) => el.addEventListener('click', () => loadCaseById(Number(el.dataset.case))));
-  $$('.case-card[data-usercase]').forEach((el) => el.addEventListener('click', () => {
-    const meta = userCases.find((c) => c.id === el.dataset.usercase);
+  window.loadCaseById = loadCaseById;
+  window.loadUserCase = (id) => {
+    const meta = userCases.find((c) => c.id === id);
     if (!meta) return;
     currentResult = compileCase(meta);
     renderResult(currentResult);
     switchTab('compile');
     toast(lang === 'en' ? 'Referenced collected case' : '已载入案例并生成参考分析');
-  }));
+  };
 }
 $('#caseSearch').addEventListener('input', (e) => { caseSearchActive = e.target.value.trim(); renderCaseLibrary(); });
 $('#caseCatFilter').addEventListener('change', () => renderCaseLibrary());
@@ -974,6 +1020,252 @@ function renderDesignAudit() {
       </div>`).join('')}</div>`;
 }
 
+/* ================= AI 多轮澄清式输入 ================= */
+let dialogueTranscript = [];
+let dialogueQ = null;
+
+function renderChat() {
+  const area = $('#chatArea');
+  let html = '<div class="chat-bubble bot">👋 ' + (lang === 'en' ? 'Tell me your idea first, then I will clarify step by step.' : '先告诉我你的想法，我会逐步澄清关键信息。') + '</div>';
+  for (const t of dialogueTranscript) {
+    html += `<div class="chat-bubble user">${escapeHtml(t.answer)}</div>`;
+    html += `<div class="chat-bubble bot">${escapeHtml(t.question)}</div>`;
+  }
+  if (dialogueQ) html += `<div class="chat-bubble bot ask">❓ ${escapeHtml(dialogueQ.question)}</div>`;
+  else html += `<div class="chat-bubble bot done">✅ ${lang === 'en' ? 'Clarification complete — click Compile.' : '澄清完成，点击「完成并编译」。'}</div>`;
+  area.innerHTML = html;
+  area.scrollTop = area.scrollHeight;
+  $('#chatStatus').textContent = dialogueTranscript.length ? `${dialogueTranscript.length}/${dialogueTranscript.length + (dialogueQ ? 1 : 0)}` : '';
+}
+
+function startDialogue() {
+  const raw = $('#rawInput').value.trim();
+  if (!raw) { toast(lang === 'en' ? 'Enter a request first' : '请先输入诉求'); return; }
+  dialogueTranscript = [];
+  dialogueQ = nextQuestion(dialogueTranscript);
+  renderChat();
+}
+function askNext() {
+  const inputText = transcriptToInput(dialogueTranscript, $('#rawInput').value);
+  // 用原始输入重新分析，仅当对话已加入时
+  if (dialogueTranscript.length) dialogueQ = nextQuestion(dialogueTranscript);
+  renderChat();
+}
+$('#chatSend').addEventListener('click', () => {
+  const v = $('#chatInput').value.trim();
+  if (!v) return;
+  if (!dialogueQ) { toast(lang === 'en' ? 'Clarification done' : '澄清已完成'); return; }
+  dialogueTranscript = addTurn(dialogueTranscript, dialogueQ.qid, dialogueQ.question, v);
+  $('#chatInput').value = '';
+  dialogueQ = nextQuestion(dialogueTranscript);
+  renderChat();
+});
+$('#chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('#chatSend').click(); } });
+$('#chatCompile').addEventListener('click', () => {
+  const raw = $('#rawInput').value.trim();
+  if (!raw) { toast(lang === 'en' ? 'Enter a request first' : '请先输入诉求'); return; }
+  const input = transcriptToInput(dialogueTranscript, raw);
+  $('#rawInput').value = input;
+  $('#rawInput').dispatchEvent(new Event('input', { bubbles: true }));
+  compileNow();
+});
+$('#chatSkip').addEventListener('click', () => { dialogueTranscript = []; dialogueQ = null; renderChat(); compileNow(); });
+(() => {
+  const panel = $('#dialoguePanel');
+  if (panel) panel.querySelector('summary').addEventListener('click', () => { if (!dialogueQ && !dialogueTranscript.length) startDialogue(); });
+})();
+
+/* ================= 输入自动关联模板推荐 ================= */
+function renderRecommendTemplates() {
+  const box = $('#recTemplates');
+  if (!box) return;
+  const raw = $('#rawInput').value.trim().toLowerCase();
+  if (!raw || !_templates.length) { box.innerHTML = ''; return; }
+  const scored = _templates.map((t) => {
+    const hay = `${t.title} ${t.domain} ${t.desc} ${t.raw}`.toLowerCase();
+    const tokens = raw.split(/[\s，。！？、]+/).filter((x) => x.length >= 2);
+    let score = 0;
+    for (const tk of tokens) if (hay.includes(tk)) score += 2;
+    for (const kw of t.raw.split(/[\s，。！？、]+/).filter((x) => x.length >= 2)) if (raw.includes(kw)) score += 1;
+    return { t, score };
+  }).filter((x) => x.score > 0).sort((a, b) => b.score - a.score).slice(0, 3);
+  if (!scored.length) { box.innerHTML = ''; return; }
+  box.innerHTML = `<span class="hint">✨ ${lang === 'en' ? 'Recommended templates' : '推荐模板'}：</span>` + scored.map((x) => {
+    const idx = _templates.indexOf(x.t);
+    return `<span class="chip" data-rectpl="${idx}">${escapeHtml(x.t.title)}</span>`;
+  }).join('');
+  $$('[data-rectpl]').forEach((c) => c.addEventListener('click', () => {
+    const t = _templates[Number(c.dataset.rectpl)];
+    if (t) { $('#rawInput').value = t.raw; $('#rawInput').dispatchEvent(new Event('input', { bubbles: true })); toast(`${lang === 'en' ? 'Template loaded' : '已载入模板'}：${t.title}`); }
+  }));
+}
+$('#rawInput').addEventListener('input', renderRecommendTemplates);
+
+/* ================= 模板市场页 ================= */
+let _marketData = null;
+async function loadMarket() {
+  window._marketLoaded = true;
+  $('#marketLoading').classList.remove('hidden');
+  try {
+    const res = await fetch('/api/templates/market');
+    _marketData = await res.json();
+    renderMarket();
+  } catch (e) { $('#marketLoading').textContent = `market error: ${e.message}`; }
+  $('#marketLoading').classList.add('hidden');
+}
+let marketCat = '';
+function renderMarket() {
+  if (!_marketData) return;
+  const kw = $('#marketSearch').value.trim().toLowerCase();
+  const groups = _marketData.byCategory
+    .map((g) => ({ ...g, items: g.items.filter((it) => (!marketCat || it.category === marketCat) && (!kw || `${it.name} ${it.description} ${it.title || ''} ${(it.tags || []).join(' ')} ${it.domain || ''}`.toLowerCase().includes(kw))) }))
+    .filter((g) => g.items.length);
+  const cats = ['', ..._marketData.byCategory.map((g) => g.name)];
+  $('#marketCats').innerHTML = cats.map((c) => `<span class="chip ${marketCat === c ? 'active' : ''}" data-mcat="${escapeHtml(c)}">${c ? escapeHtml(c) : (lang === 'en' ? 'All' : '全部')}</span>`).join('');
+  $$('[data-mcat]').forEach((c) => c.addEventListener('click', () => { marketCat = c.dataset.mcat; renderMarket(); }));
+  $('#marketGroups').innerHTML = groups.map((g) => `
+    <section class="card market-group">
+      <h3>${escapeHtml(g.name)} <span class="badge">${g.items.length}</span></h3>
+      <div class="market-grid">
+        ${g.items.map((it) => it.kind === 'template' ? `
+          <div class="market-card">
+            <div class="market-badge">📋 模板</div>
+            <h4>${escapeHtml(it.title)}</h4>
+            <p>${escapeHtml(it.desc || '')}</p>
+            <div class="market-raw">${escapeHtml(it.raw.slice(0, 90))}${it.raw.length > 90 ? '…' : ''}</div>
+            <div class="market-actions"><button class="btn-ghost" data-mfill="${escapeHtml(it.raw)}">${lang === 'en' ? 'Fill input' : '填入输入框'}</button></div>
+          </div>` : `
+          <div class="market-card repo">
+            <div class="market-badge">🐙 开源 ${it.stars ? `⭐ ${it.stars}` : ''}</div>
+            <h4>${escapeHtml(it.name)}</h4>
+            <p>${escapeHtml(it.description || '')}</p>
+            <div class="market-tags">${(it.tags || []).slice(0, 4).map((t) => `<span class="chip">${escapeHtml(t)}</span>`).join('')}</div>
+            <div class="market-actions"><a class="btn-ghost" href="${escapeHtml(it.url)}" target="_blank" rel="noopener">${lang === 'en' ? 'Visit repo' : '访问仓库 ↗'}</a></div>
+          </div>`).join('')}
+      </div>
+    </section>`).join('') || '<div class="history-empty">—</div>';
+  $$('[data-mfill]').forEach((b) => b.addEventListener('click', () => {
+    $('#rawInput').value = b.dataset.mfill;
+    $('#rawInput').dispatchEvent(new Event('input', { bubbles: true }));
+    switchTab('compile');
+    toast(lang === 'en' ? 'Template filled' : '模板已填入输入框');
+  }));
+}
+$('#marketSearch').addEventListener('input', renderMarket);
+
+/* ================= 竞品 v6：分析对象 / 本产品报告 / 启示框图 / 图表 ================= */
+function currentReqForAnalysis() {
+  if (currentResult) return currentResult.analysis.raw;
+  const v = $('#rawInput').value.trim();
+  return v || '';
+}
+$('#useReqBtn').addEventListener('click', () => {
+  const req = currentReqForAnalysis();
+  if (!req) { toast(lang === 'en' ? 'Compile or enter a request first' : '请先输入/编译一个需求'); return; }
+  $('#compQuery').value = req.slice(0, 60);
+  $('#compTarget').textContent = `需求：${req.slice(0, 40)}${req.length > 40 ? '…' : ''}`;
+  runCompetitive();
+});
+$('#selfReportBtn').addEventListener('click', openSelfReport);
+$('#insightDiagramBtn').addEventListener('click', () => {
+  if (!currentReport) { runCompetitive(); setTimeout(() => document.getElementById('insightDiagram').scrollIntoView({ behavior: 'smooth' }), 2500); return; }
+  document.getElementById('insightDiagram').scrollIntoView({ behavior: 'smooth' });
+});
+function openSelfReport() {
+  const r = SELF_REPORT;
+  $('#selfReportBody').innerHTML = `
+    <div class="result-meta"><span class="badge badge-blue">${escapeHtml(r.product)}</span><span class="badge badge-green">${escapeHtml(r.tagline)}</span></div>
+    <div class="card"><h3>定位</h3><p>产品化 ${r.position.x} / 拆解深度 ${r.position.y} — ${escapeHtml(r.position.note)}</p></div>
+    <div class="comp-grid-2">
+      <div class="card"><h3>优势</h3><ul class="check-list">${r.strengths.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>劣势</h3><ul class="check-list">${r.weaknesses.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="comp-grid-2">
+      <div class="card"><h3>机会</h3><ul class="check-list">${r.opportunities.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+      <div class="card"><h3>威胁</h3><ul class="check-list">${r.threats.map((x) => `<li>${escapeHtml(x)}</li>`).join('')}</ul></div>
+    </div>
+    <div class="card"><h3>行动清单</h3><ul class="check-list">${r.actions.map((a) => `<li><strong>[${a.priority}]</strong> ${escapeHtml(a.action)}</li>`).join('')}</ul></div>`;
+  $('#selfReportModal').classList.remove('hidden');
+}
+$('#selfReportClose').addEventListener('click', () => $('#selfReportModal').classList.add('hidden'));
+$('#selfReportModal').addEventListener('click', (e) => { if (e.target === $('#selfReportModal')) $('#selfReportModal').classList.add('hidden'); });
+$('#selfReportExport').addEventListener('click', () => { download(`self-competitive-report.md`, selfReportToMarkdown()); toast('已导出'); });
+
+function renderInsightDiagram(report) {
+  const groups = buildInsightDiagram(report);
+  const box = $('#insightDiagram');
+  box.innerHTML = `<div class="cd-flow">${groups.map((g, gi) => `
+    <div class="cd-lane">
+      <div class="cd-lane-head">${escapeHtml(g.name)} <span class="hint">×${g.items.length}</span></div>
+      <div class="cd-lane-body">
+        ${g.items.map((n) => `
+          <div class="cd-node" data-insight="${escapeHtml(n.id)}" data-group="${escapeHtml(g.name)}">
+            <span class="cd-node-step ${n.status === 'implemented' ? 'ok' : ''}">${n.status === 'implemented' ? '✓' : '◻'}</span>
+            <div class="cd-node-title">${escapeHtml(n.title)}</div>
+          </div>`).join('')}
+      </div>
+    </div>`).join('')}</div>`;
+  $$('#insightDiagram .cd-node').forEach((el) => el.addEventListener('click', () => {
+    const id = el.dataset.insight;
+    const g = report.featureGaps.find((x) => `gap-${x.feature}` === id);
+    const d = report.designForms.find((x) => `form-${x.form}` === id);
+    const node = g || d;
+    if (!node) return;
+    const detail = g ? `来源证据：${g.source}。为什么补：${g.why}。优先级：${g.priority}。状态：${g.status === 'implemented' ? '已实现' : '规划中'}。` : `借鉴来源：${d.from}。说明：${d.note}。状态：${d.adopted ? '已采纳' : '规划中'}。`;
+    $('#insightModalTitle').textContent = `${el.dataset.group} · ${node.feature || node.form}`;
+    $('#insightModalBody').innerHTML = `
+      <div class="result-meta"><span class="badge ${(g ? g.status : d.adopted) === 'implemented' || (g ? g.status : d.adopted) === true ? 'badge-green' : 'badge-gray'}">${g ? (g.status === 'implemented' ? '✅ 已实现' : '◻️ 规划中') : (d.adopted ? '✅ 已采纳' : '◻️ 规划中')}</span></div>
+      <div class="chain-body-open">
+        <div class="row"><span class="label">说明</span><div class="reasoning">${escapeHtml(detail)}</div></div>
+        <div class="row"><span class="label">建议</span><div class="outcome">${escapeHtml(g ? g.why : d.note)}</div></div>
+      </div>`;
+    $('#insightModal').classList.remove('hidden');
+  }));
+}
+$('#insightModalClose').addEventListener('click', () => $('#insightModal').classList.add('hidden'));
+$('#insightModal').addEventListener('click', (e) => { if (e.target === $('#insightModal')) $('#insightModal').classList.add('hidden'); });
+
+/* ---- 图表：SVG 雷达 + 威胁 Top5 条形 ---- */
+function svgRadar(data) {
+  const W = 300, H = 240, cx = W / 2, cy = H / 2, R = 78;
+  const n = data.dims.length;
+  const pt = (i, r) => {
+    const ang = -Math.PI / 2 + (i * 2 * Math.PI) / n;
+    return [cx + r * Math.cos(ang), cy + r * Math.sin(ang)];
+  };
+  const poly = (r) => data.dims.map((_, i) => pt(i, r).map((v) => v.toFixed(1)).join(',')).join(' ');
+  const series = data.series.map((sr, si) => {
+    const color = ['#22d3ee', '#64748b', '#fbbf24'][si] || '#3b82f6';
+    const pts = sr.scores.map((v, i) => pt(i, (v / data.max) * R).map((x) => x.toFixed(1)).join(',')).join(' ');
+    return { name: sr.name, color, pts };
+  });
+  let svg = `<svg viewBox="0 0 ${W} ${H}" class="radar-svg" role="img" aria-label="radar">`;
+  for (let ring = 1; ring <= 4; ring++) svg += `<polygon points="${poly((R * ring) / 4)}" fill="none" stroke="#1e2a44" stroke-width="1"/>`;
+  data.dims.forEach((d, i) => {
+    const [x, y] = pt(i, R + 16);
+    svg += `<line x1="${cx}" y1="${cy}" x2="${pt(i, R)[0].toFixed(1)}" y2="${pt(i, R)[1].toFixed(1)}" stroke="#1e2a44"/>`;
+    svg += `<text x="${x}" y="${y}" fill="#94a3b8" font-size="10" text-anchor="middle">${escapeHtml(d.label)}</text>`;
+  });
+  series.forEach((sr) => { svg += `<polygon points="${sr.pts}" fill="${sr.color}" fill-opacity="0.14" stroke="${sr.color}" stroke-width="2"/>`; });
+  svg += '</svg>';
+  const legend = series.map((sr) => `<span class="lg" style="--c:${sr.color}"><i style="background:${sr.color}"></i>${escapeHtml(sr.name)}</span>`).join('');
+  return `<div class="radar-wrap"><div class="radar-chart">${svg}</div><div class="legend">${legend}</div></div>`;
+}
+function renderCharts(report) {
+  const radar = svgRadar(buildRadarData(report.scored));
+  const top = [...report.scored].sort((a, b) => b.scores.threat - a.scores.threat).slice(0, 5);
+  const maxT = Math.max(1, ...top.map((t) => t.scores.threat));
+  const threatBars = `<div class="chart-block"><h4>威胁度 Top 5</h4>${top.map((t) => `
+    <div class="cat-bar"><span style="font-size:11px">${escapeHtml(t.name.slice(0, 14))}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(t.scores.threat / maxT) * 100}%;background:linear-gradient(90deg,#f87171,#fbbf24)"></div></div>
+      <span>${t.scores.threat.toFixed(1)}</span></div>`).join('')}</div>`;
+  const catBars = `<div class="chart-block"><h4>分类分布</h4>${report.categoryDist.map((c) => `
+    <div class="cat-bar"><span style="font-size:11px">${escapeHtml(categoryLabel(c.name))}</span>
+      <div class="bar-track"><div class="bar-fill" style="width:${(c.count / Math.max(1, ...report.categoryDist.map((x) => x.count))) * 100}%"></div></div>
+      <span>${c.count}</span></div>`).join('')}</div>`;
+  $('#compCharts').innerHTML = `<div class="comp-charts-grid">${radar}${threatBars}${catBars}</div>`;
+}
+
 /* ================= 初始化 ================= */
 async function init() {
   loadHistory();
@@ -987,7 +1279,7 @@ async function init() {
   fetch('/api/health').then((r) => r.json()).then((d) => { $('#serverStatus').textContent = d.ok ? (lang === 'en' ? 'online' : '服务正常') : 'local'; })
     .catch(() => { $('#serverStatus').textContent = 'offline'; });
   const name = (location.hash || '#/compile').replace('#/', '');
-  if (['compile', 'chain', 'competitive', 'cases', 'about'].includes(name)) {
+  if (['compile', 'chain', 'competitive', 'cases', 'market', 'about'].includes(name)) {
     $$('.tab').forEach((t) => t.classList.toggle('active', t.dataset.tab === name));
     $$('.tab-panel').forEach((p) => p.classList.toggle('active', p.id === `tab-${name}`));
   }

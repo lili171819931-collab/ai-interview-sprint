@@ -37,6 +37,17 @@
 - 🧠 **思维链改为思维框图**：「理解 → 建模 → 架构 → 执行」四阶段泳道 + 箭头连接；点击任一主逻辑节点弹出**解释弹窗**（输入/推理/结论/证据/决策），支持 ←/→ 前后节点导航；保留列表模式可切换
 - ✅ 列表模式 / 框图模式一键切换；「▶ 逐步演示」在框图模式高亮节点
 
+## 本次升级（v6）
+
+- 🎯 **输入需求型竞品分析**：一键「用当前需求分析」，全网数据围绕你的诉求展开；「📊 本产品竞品分析报告」弹窗始终可查（定位/优势/劣势/机会/威胁/行动清单）
+- 🧠 **竞品启示结构化思维框图**：功能缺口 + 设计形式借鉴合并为分类节点框图，点击节点弹窗查看详细说明；新增**能力雷达图 / 威胁 Top5 / 分类分布**图表
+- 🐙 **修复数据源 403**：Reddit 改走公开 RSS、Gitee 换浏览器 UA、新增 Dev.to —— 9 源全部可用（实测 errors: none）
+- 🧩 **模板市场新页面**：内置模板 ×12 + 开源 GitHub 集合 ×18（Anthropic Skills / awesome-claude-skills / superpowers / 提示词库等），按分类展示、可搜索、一键填入输入框；**输入框自动关联推荐模板**
+- 💬 **AI 多轮澄清式输入**：规则引擎逐轮提问（用户/时间盒/预算/验收/形态/背景），回答累积为 Q&A 上下文再编译
+- 🖼 **案例库升级为画廊形态**：分类渐变横幅 + 意图图标 + 关键词，浏览体验更直观
+- 📊 **产品总监建议汇总竞品启示**：市场格局 + 威胁 Top + 已补/规划功能 + 行动要点
+- 📐 **并列显示优化**：功能缺口与设计借鉴、本产品报告的优势/劣势等成对面板双列并排
+
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
 ## 快速开始
@@ -52,8 +63,8 @@ node server/server.mjs 8910
 ## 测试
 
 ```bash
-node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+API（18/18）
-node tests/e2e-cdp.mjs                                                                                                         # 浏览器端到端（32/32，需本机 Chrome）
+node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+API（21/21）
+node tests/e2e-cdp.mjs                                                                                                                                  # 浏览器端到端（45/45，需本机 Chrome）
 ```
 
 ## 3 个内置测试用例

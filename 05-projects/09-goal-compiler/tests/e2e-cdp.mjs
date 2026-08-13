@@ -192,7 +192,7 @@ try {
   const dedupeCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
   checks.push([`同类型去重后案例数=1（${dedupeCount}）`, dedupeCount === 1]);
   // 不同类型（学习/成长）→ 新增
-  await evalJS(`document.querySelector('.case-card[data-case="2"]').click()`); await sleep(900);
+  await evalJS(`document.querySelectorAll('#caseGrid .case-card')[2].click()`); await sleep(900);
   await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(500);
   const typeCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
   checks.push([`不同类型收录（${typeCount} 条）`, typeCount === 2]);
@@ -207,6 +207,68 @@ try {
   checks.push(['模板点击填入输入框', tplFill]);
   const skillBtn = await evalJS(`!!document.getElementById('skillBtn')`);
   checks.push(['导出 SKILL.md 按钮存在', skillBtn]);
+
+  // v6：推荐模板 / AI 多轮澄清 / 本产品报告 / 启示框图 / 图表 / 汇总建议
+  const recTpl = await evalJS(`(() => {
+    const ta = document.getElementById('rawInput');
+    Object.getOwnPropertyDescriptor(window.HTMLTextAreaElement.prototype, 'value').set.call(ta, '我想做一个 AI 面试官工具，模拟面试打分');
+    ta.dispatchEvent(new Event('input', { bubbles: true }));
+    return document.querySelectorAll('#recTemplates .chip').length >= 1;
+  })()`);
+  checks.push(['输入自动关联推荐模板', recTpl]);
+  const dialogQ = await evalJS(`(() => {
+    document.querySelector('#dialoguePanel summary').click();
+    return document.querySelectorAll('#chatArea .chat-bubble.ask').length === 1;
+  })()`);
+  checks.push(['AI 多轮澄清：首问出现', dialogQ]);
+  const dialogTurn = await evalJS(`(() => {
+    const ci = document.getElementById('chatInput');
+    Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(ci, '程序员和求职者');
+    document.getElementById('chatSend').click();
+    return document.querySelectorAll('#chatArea .chat-bubble.user').length === 1 &&
+           document.querySelectorAll('#chatArea .chat-bubble.ask').length === 1;
+  })()`);
+  checks.push(['AI 澄清：回答后进入下一问', dialogTurn]);
+  const dialogCompile = await evalJS(`(() => { document.getElementById('chatCompile').click(); return !document.getElementById('result').classList.contains('hidden'); })()`);
+  checks.push(['AI 澄清：完成并编译', dialogCompile]);
+  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(500);
+  const selfReport = await evalJS(`(() => {
+    document.getElementById('selfReportBtn').click();
+    const ok = !document.getElementById('selfReportModal').classList.contains('hidden') &&
+      document.getElementById('selfReportBody').textContent.includes('行动清单');
+    document.getElementById('selfReportClose').click();
+    return ok;
+  })()`);
+  checks.push(['本产品竞品分析报告弹窗', selfReport]);
+  const insightNodes = await evalJS(`document.querySelectorAll('#insightDiagram .cd-node').length`);
+  checks.push([`竞品启示思维框图节点（${insightNodes}）`, insightNodes >= 10]);
+  const insightModal = await evalJS(`(() => {
+    document.querySelector('#insightDiagram .cd-node').click();
+    const ok = !document.getElementById('insightModal').classList.contains('hidden') && document.getElementById('insightModalBody').textContent.length > 20;
+    document.getElementById('insightModalClose').click();
+    return ok;
+  })()`);
+  checks.push(['启示节点点击弹窗说明', insightModal]);
+  const radarSvg = await evalJS(`!!document.querySelector('#compCharts .radar-svg')`);
+  const chartBlocks = await evalJS(`document.querySelectorAll('#compCharts .chart-block').length`);
+  checks.push([`图表（雷达 ${radarSvg ? '✓' : '✗'} + 区块 ${chartBlocks}）`, radarSvg && chartBlocks >= 2]);
+  const recPoints = await evalJS(`document.querySelectorAll('#compRecPoints li').length`);
+  checks.push([`产品总监建议汇总要点（${recPoints} 条）`, recPoints >= 3]);
+  const grid2 = await evalJS(`document.querySelectorAll('.comp-grid-2 .card').length`);
+  checks.push(['功能缺口+设计借鉴并列显示（comp-grid-2）', grid2 >= 2]);
+  // 模板市场
+  await evalJS(`document.querySelector('.tab[data-tab="market"]').click()`); await sleep(900);
+  const marketGroups = await evalJS(`document.querySelectorAll('#marketGroups .market-group').length`);
+  checks.push([`模板市场分类区（${marketGroups} 组）`, marketGroups >= 3]);
+  const marketRepo = await evalJS(`document.querySelectorAll('#marketGroups .market-card.repo').length`);
+  checks.push([`开源 GitHub 集合条目（${marketRepo}）`, marketRepo >= 3]);
+  const marketFill = await evalJS(`(() => {
+    const b = document.querySelector('#marketGroups [data-mfill]');
+    if (!b) return false;
+    b.click();
+    return document.getElementById('rawInput').value.length > 5;
+  })()`);
+  checks.push(['模板市场条目填入输入框', marketFill]);
   // 评分规则 + 分类区域
   await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(400);
   const ruleCount = await evalJS(`document.querySelectorAll('#scoringRules .score-rule').length`);
@@ -227,6 +289,12 @@ try {
   await shot('/tmp/gc-shot-competitive.png');
   await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(700);
   await shot('/tmp/gc-shot-cases.png');
+  await evalJS(`document.querySelector('.tab[data-tab="market"]').click()`); await sleep(900);
+  await shot('/tmp/gc-shot-market.png');
+  await evalJS(`document.querySelector('.tab[data-tab="competitive"]').click()`); await sleep(500);
+  await evalJS(`document.getElementById('selfReportBtn').click()`); await sleep(400);
+  await shot('/tmp/gc-shot-selfreport.png');
+  await evalJS(`document.getElementById('selfReportClose').click()`); await sleep(200);
   await evalJS(`document.querySelector('.tab[data-tab="about"]').click()`); await sleep(700);
   await shot('/tmp/gc-shot-about.png');
   console.log('screenshots saved to /tmp/gc-shot-*.png');
