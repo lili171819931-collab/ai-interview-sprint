@@ -1,0 +1,19 @@
+{
+  "name": "goal-compiler",
+  "version": "1.0.0",
+  "description": "Goal Compiler 诉求拆解平台：把模糊想法编译成可自主执行的专家级目标任务书（含完整思维链、人工编辑、竞品分析）。",
+  "type": "module",
+  "private": true,
+  "scripts": {
+    "start": "node server/server.mjs",
+    "dev": "node server/server.mjs 8910",
+    "test": "node --test tests/",
+    "test:compile": "node tests/compile.test.mjs",
+    "test:api": "node tests/api.test.mjs"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": ["goal-compiler", "prompt", "ai-agent", "task-spec", "competitor-analysis"],
+  "license": "MIT"
+}
