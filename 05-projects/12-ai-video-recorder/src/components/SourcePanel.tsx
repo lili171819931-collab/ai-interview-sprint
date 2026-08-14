@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { studio } from "../engine/Studio";
 import { useForceUpdate, useStudioState } from "../hooks";
 
@@ -15,6 +15,19 @@ async function listDevices(): Promise<{ cams: DeviceInfo[]; mics: DeviceInfo[] }
   };
 }
 
+function describeError(e: unknown): string {
+  const err = e as DOMException;
+  const map: Record<string, string> = {
+    NotAllowedError: "权限被拒绝——请在浏览器地址栏左侧允许使用摄像头，然后重试",
+    NotFoundError: "未找到可用摄像头——请检查摄像头是否被其他应用占用或已断开",
+    NotReadableError: "摄像头正被其他应用/页面占用——请关闭占用后重试",
+    OverconstrainedError: "无法满足所选设备要求——请尝试「自动（默认摄像头）」",
+    SecurityError: "浏览器安全限制——请通过 http://127.0.0.1 或 HTTPS 访问",
+    AbortError: "请求被中断，请重试",
+  };
+  return map[err?.name] ?? `打开摄像头失败（${err?.name ?? "未知错误"}）：${err?.message ?? ""}`;
+}
+
 export function SourcePanel() {
   const state = useStudioState();
   const force = useForceUpdate();
@@ -23,43 +36,43 @@ export function SourcePanel() {
   const [micVol, setMicVol] = useState(1);
   const [sysVol, setSysVol] = useState(1);
   const [micOn, setMicOn] = useState(false);
+  const [micError, setMicError] = useState<string | null>(null);
   const [cam1Id, setCam1Id] = useState("");
   const [cam2Id, setCam2Id] = useState("");
+  const [cam1Error, setCam1Error] = useState<string | null>(null);
+  const [cam2Error, setCam2Error] = useState<string | null>(null);
+  const [busy, setBusy] = useState<"cam1" | "cam2" | null>(null);
   const cam1Preview = useRef<HTMLVideoElement>(null);
   const cam2Preview = useRef<HTMLVideoElement>(null);
 
-  const refreshDevices = async () => {
+  const mediaSupported = typeof navigator !== "undefined" && !!navigator.mediaDevices?.getUserMedia;
+
+  const refreshDevices = useCallback(async () => {
+    if (!mediaSupported) return;
     try {
       const { cams, mics } = await listDevices();
       setCams(cams);
       setMics(mics);
-      if (!cam1Id && cams[0]) setCam1Id(cams[0].deviceId);
-      if (!cam2Id && cams[1]) setCam2Id(cams[1].deviceId);
-      else if (!cam2Id && cams[0]) setCam2Id(cams[0].deviceId);
+      // 默认选中第一个设备（保持用户已选的不变）
+      setCam1Id((prev) => prev || cams[0]?.deviceId || "");
+      setCam2Id((prev) => prev || cams[0]?.deviceId || "");
     } catch { /* 权限拒绝时忽略 */ }
-  };
+  }, [mediaSupported]);
 
   useEffect(() => {
     refreshDevices();
     const timer = window.setInterval(refreshDevices, 3000);
     return () => clearInterval(timer);
-  }, []);
+  }, [refreshDevices]);
 
   useEffect(() => {
-    if (cam1Preview.current && studio.cam1Stream) {
-      cam1Preview.current.srcObject = studio.cam1Stream;
-    }
-    if (cam2Preview.current && studio.cam2Stream) {
-      cam2Preview.current.srcObject = studio.cam2Stream;
-    }
+    if (cam1Preview.current && studio.cam1Stream) cam1Preview.current.srcObject = studio.cam1Stream;
+    if (cam2Preview.current && studio.cam2Stream) cam2Preview.current.srcObject = studio.cam2Stream;
   }, [studio.cam1Stream, studio.cam2Stream, state, force]);
 
   const pickScreen = async () => {
     try {
-      const stream = await navigator.mediaDevices.getDisplayMedia({
-        video: { frameRate: 60 },
-        audio: true,
-      });
+      const stream = await navigator.mediaDevices.getDisplayMedia({ video: { frameRate: 60 }, audio: true });
       await studio.setScreen(stream);
       stream.getVideoTracks()[0]?.addEventListener("ended", () => studio.setScreen(null));
     } catch (e) {
@@ -67,21 +80,52 @@ export function SourcePanel() {
     }
   };
 
+  /**
+   * 打开摄像头。
+   * - 使用 ideal（非 exact）设备匹配，设备变动时自动降级到默认摄像头
+   * - Camera 2 与 Camera 1 共用同一摄像头时（单摄像头设备），自动复用 Camera 1 画面
+   */
   const pickCamera = async (slot: "cam1" | "cam2", deviceId: string) => {
+    setBusy(slot);
+    if (slot === "cam1") setCam1Error(null);
+    else setCam2Error(null);
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({
-        video: { deviceId: deviceId ? { exact: deviceId } : undefined, width: { ideal: 1280 }, height: { ideal: 720 } },
-        audio: false,
-      });
+      let stream: MediaStream;
+      try {
+        stream = await navigator.mediaDevices.getUserMedia({
+          video: deviceId
+            ? { deviceId: { ideal: deviceId }, width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } }
+            : { width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } },
+          audio: false,
+        });
+      } catch (e) {
+        // 单摄像头被 Camera 1 占用时，Camera 2 复用 Camera 1 的画面
+        const name = (e as DOMException)?.name;
+        if (slot === "cam2" && studio.cam1Stream && (name === "NotReadableError" || name === "OverconstrainedError" || name === "NotFoundError")) {
+          const track = studio.cam1Stream.getVideoTracks()[0];
+          if (track) {
+            stream = new MediaStream([track.clone()]);
+            setCam2Error("ℹ️ 检测到单摄像头：Camera 2 已自动复用 Camera 1 的画面");
+          } else {
+            throw e;
+          }
+        } else {
+          throw e;
+        }
+      }
       if (slot === "cam1") await studio.setCamera1(stream);
       else await studio.setCamera2(stream);
       stream.getVideoTracks()[0]?.addEventListener("ended", () => {
-        if (slot === "cam1") studio.setCamera1(null);
-        else studio.setCamera2(null);
+        if (slot === "cam1") { studio.setCamera1(null); setCam1Error(null); }
+        else { studio.setCamera2(null); setCam2Error(null); }
       });
     } catch (e) {
       console.warn("摄像头打开失败", e);
-      alert("无法打开该摄像头，请检查权限。");
+      const msg = describeError(e);
+      if (slot === "cam1") setCam1Error(msg);
+      else setCam2Error(msg);
+    } finally {
+      setBusy(null);
     }
   };
 
@@ -90,13 +134,15 @@ export function SourcePanel() {
       if (studio.micStream) studio.micStream.getTracks().forEach((t) => t.stop());
       await studio.setMic(null);
       setMicOn(false);
+      setMicError(null);
     } else {
       try {
         const stream = await navigator.mediaDevices.getUserMedia({ audio: { echoCancellation: true, noiseSuppression: true } });
         await studio.setMic(stream);
         setMicOn(true);
-      } catch {
-        alert("无法访问麦克风，请检查权限。");
+        setMicError(null);
+      } catch (e) {
+        setMicError("无法访问麦克风：" + describeError(e));
       }
     }
   };
@@ -107,7 +153,17 @@ export function SourcePanel() {
 
   return (
     <div className="source-panel-inner">
-      <h2 className="panel-title">🎛️ 音视频源</h2>
+      <div className="panel-title-row">
+        <h2 className="panel-title">🎛️ 音视频源</h2>
+        <button className="btn small ghost" onClick={refreshDevices} title="重新检测设备">🔄 重新检测</button>
+      </div>
+
+      {!mediaSupported && (
+        <div className="source-warning">
+          ⚠️ 当前浏览器不支持摄像头 / 麦克风（需要 getUserMedia）。<br />
+          请使用 <b>Chrome / Edge</b>，并通过 <b>http://127.0.0.1</b> 或 HTTPS 访问本应用。
+        </div>
+      )}
 
       <div className="source-card" data-on={hasScreen}>
         <div className="source-head">
@@ -130,12 +186,14 @@ export function SourcePanel() {
         emoji="🎥"
         devices={cams}
         selected={cam1Id}
-        onSelect={(id) => { setCam1Id(id); pickCamera("cam1", id); }}
+        onSelect={(id) => setCam1Id(id)}
         onConnect={() => pickCamera("cam1", cam1Id)}
-        onDisconnect={() => { if (studio.cam1Stream) studio.cam1Stream.getTracks().forEach((t) => t.stop()); studio.setCamera1(null); }}
+        onDisconnect={() => { if (studio.cam1Stream) studio.cam1Stream.getTracks().forEach((t) => t.stop()); studio.setCamera1(null); setCam1Error(null); }}
         connected={hasCam1}
         previewRef={cam1Preview}
         disabled={state === "recording"}
+        error={cam1Error}
+        busy={busy === "cam1"}
       />
 
       <CameraCard
@@ -143,12 +201,14 @@ export function SourcePanel() {
         emoji="📷"
         devices={cams}
         selected={cam2Id}
-        onSelect={(id) => { setCam2Id(id); pickCamera("cam2", id); }}
+        onSelect={(id) => setCam2Id(id)}
         onConnect={() => pickCamera("cam2", cam2Id)}
-        onDisconnect={() => { if (studio.cam2Stream) studio.cam2Stream.getTracks().forEach((t) => t.stop()); studio.setCamera2(null); }}
+        onDisconnect={() => { if (studio.cam2Stream) studio.cam2Stream.getTracks().forEach((t) => t.stop()); studio.setCamera2(null); setCam2Error(null); }}
         connected={hasCam2}
         previewRef={cam2Preview}
         disabled={state === "recording"}
+        error={cam2Error}
+        busy={busy === "cam2"}
       />
 
       <div className="source-card" data-on={micOn}>
@@ -164,6 +224,7 @@ export function SourcePanel() {
             {micOn ? "关闭麦克风" : "开启麦克风"}
           </button>
         </div>
+        {micError && <p className="source-error">{micError}</p>}
         {micOn && (
           <div className="slider-row">
             <label>麦克风音量</label>
@@ -194,6 +255,8 @@ export function SourcePanel() {
 
       <div className="tips">
         💡 提示：录制前先连接好源。<br />
+        · 打不开摄像头？点「🔄 重新检测」，或在浏览器地址栏左侧允许摄像头权限<br />
+        · 只有 1 个摄像头时，Camera 2 会自动复用 Camera 1 画面<br />
         空格键暂停 / 继续 · ⌘R 开始 / 停止
       </div>
     </div>
@@ -211,15 +274,17 @@ function CameraCard(props: {
   connected: boolean;
   previewRef: React.RefObject<HTMLVideoElement | null>;
   disabled?: boolean;
+  error?: string | null;
+  busy?: boolean;
 }) {
-  const { title, emoji, devices, selected, onSelect, onConnect, onDisconnect, connected, previewRef, disabled } = props;
+  const { title, emoji, devices, selected, onSelect, onConnect, onDisconnect, connected, previewRef, disabled, error, busy } = props;
   return (
     <div className="source-card" data-on={connected}>
       <div className="source-head">
         <span className="source-emoji">{emoji}</span>
         <div className="source-info">
           <strong>{title}</strong>
-          <small>{connected ? "已连接 ✓" : "未连接"}</small>
+          <small>{connected ? "已连接 ✓" : busy ? "连接中…" : "未连接"}</small>
         </div>
       </div>
       <select
@@ -228,18 +293,21 @@ function CameraCard(props: {
         onChange={(e) => onSelect(e.target.value)}
         disabled={disabled || connected}
       >
-        {devices.length === 0 && <option value="">检测设备中…</option>}
+        <option value="">✨ 自动（默认摄像头）</option>
         {devices.map((d, i) => (
           <option key={d.deviceId + i} value={d.deviceId}>{d.label || `${title} 设备 ${i + 1}`}</option>
         ))}
       </select>
       <div className="source-actions">
         {!connected ? (
-          <button className="btn small" onClick={onConnect} disabled={disabled || devices.length === 0}>打开摄像头</button>
+          <button className="btn small" onClick={onConnect} disabled={disabled || busy}>
+            {busy ? "⏳ 连接中…" : "打开摄像头"}
+          </button>
         ) : (
           <button className="btn small danger" onClick={onDisconnect} disabled={disabled}>断开</button>
         )}
       </div>
+      {error && <p className="source-error">{error}</p>}
       {connected && <video ref={previewRef} className="cam-preview" muted playsInline autoPlay />}
     </div>
   );

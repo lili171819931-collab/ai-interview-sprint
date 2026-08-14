@@ -108,6 +108,8 @@ async function main() {
   ok(await page.locator(".brand h1").textContent().then((t) => t?.includes("AI Video Recorder")), "品牌标题显示");
   ok(await page.locator(".layout aside").count() === 2, "左右面板存在");
   ok(await page.locator(".stage-canvas").isVisible(), "合成画布可见");
+  ok(await page.locator(".device-select option", { hasText: "自动（默认摄像头）" }).count() === 2, "摄像头默认「自动」选项存在");
+  ok(await page.locator("button", { hasText: "🔄 重新检测" }).isVisible(), "重新检测设备按钮存在");
   await page.screenshot({ path: path.join(SHOT_DIR, "01-loaded.png") });
 
   // ---------- 2. 源连接 ----------
