@@ -1,0 +1,245 @@
+/* ============================================================
+ * CreatorOS 完整思维链（结构化输出 · 供快速掌握搭建本产品的思维链条）
+ * 每个节点 = 一个真实产品决策：问题 → 思考过程 → 备选方案 → 决策 → 产物 → 复盘要点
+ * ============================================================ */
+(function (global) {
+  'use strict';
+
+  const phases = [
+    { id: 'req', name: '01 需求理解', icon: '🎯', desc: '从一句愿景拆出可执行的产品问题' },
+    { id: 'pos', name: '02 产品定位', icon: '🧭', desc: '解决谁的什么问题，凭什么赢' },
+    { id: 'ia', name: '03 信息架构', icon: '🗂️', desc: '22 个一级模块如何收敛为闭环' },
+    { id: 'data', name: '04 数据模型', icon: '🗄️', desc: '数据如何打通形成增长飞轮' },
+    { id: 'tech', name: '05 技术架构', icon: '⚙️', desc: '前端/后端/AI/Agent/工作流分层' },
+    { id: 'com', name: '06 商业化设计', icon: '💰', desc: '从第一天就为 SaaS 付费留好接口' },
+    { id: 'dev', name: '07 开发策略', icon: '🛠️', desc: '垂直切片优先，拒绝假页面' },
+    { id: 'test', name: '08 测试与验证', icon: '🧪', desc: '可运行的测试用例与验收标准' },
+    { id: 'growth', name: '09 增长与运营', icon: '📈', desc: '冷启动、留存与长期壁垒' },
+  ];
+
+  const nodes = [
+    /* ================= 01 需求理解 ================= */
+    { id: 'req1', phase: 'req', title: '把愿景翻译成用户问题', question: '「AI 自媒体增长操作系统」到底解决用户的什么痛苦？',
+      steps: [
+        { text: '先不写代码，把原始需求里反复出现的词抽出来：热点、竞品、选题、文案、脚本、发布、数据、复盘', note: '词频即优先级' },
+        { text: '发现用户的真实痛点是「每天不知道做什么 + 做完不知道效果」，而不是缺一个写作按钮', note: '写作只是手段' },
+        { text: '用「5 个问题」检验产品：今天什么值得做？对手在做什么？我该做什么？怎么快速做出来？效果如何？', note: '5 问全部能答 = 产品成立' },
+        { text: '结论：这是一个「决策支持 + 生产执行 + 数据反馈」三合一系统，不是内容工具合集', note: '定位前提' },
+      ],
+      decision: '产品本质 = 内容增长决策系统：帮创作者把「凭感觉做内容」升级为「数据驱动的内容飞轮」。',
+      alternatives: [
+        { text: '只做一个爆款文案生成器', why: '单点工具无壁垒、无留存，且市场已有大量竞品' },
+        { text: '只做数据看板', why: '只解决「看」不解决「做」，价值闭环断裂' },
+      ],
+      output: '产品定义一句话：让一个人拥有一支完整的 AI 自媒体团队。',
+      learn: '先定义「要回答什么问题」，再定义「做什么功能」；功能是答案的载体。' },
+
+    { id: 'req2', phase: 'req', title: '目标用户分层', question: '为谁先做？个人、团队还是企业？',
+      steps: [
+        { text: '企业内容团队需要审批流/权限/多账号，MVP 做不动', note: '复杂度爆炸' },
+        { text: '个人/一人公司创作者决策链路短、付费意愿真实、痛点最痛', note: '冷启动最优人群' },
+        { text: '团队版留到商业化第二阶段，但权限模型第一天就要设计', note: '预留扩展' },
+      ],
+      decision: 'MVP 聚焦「个人创作者 / 一人公司」；架构上保留 Workspace + 角色权限，未来平滑升级团队/企业版。',
+      alternatives: [{ text: '先做企业版', why: '销售周期长、需求重，不适合快速验证' }],
+      output: '用户画像：25-40 岁，全职/兼职自媒体，1-5 个账号，日更或周更，愿意为「省时间+涨粉」付费。',
+      learn: 'MVP 用户要选「决策快、痛点痛、能付费」的人群。' },
+
+    { id: 'req3', phase: 'req', title: '竞品盲区扫描', question: '市场已经有什么？还缺什么？',
+      steps: [
+        { text: '数据类（新榜/蝉妈妈/飞瓜）：会看不会做', note: '下游缺失' },
+        { text: '工具类（剪映/稿定/易撰）：会做不会想', note: '上游缺失' },
+        { text: 'AI 写作类（Jasper/Copy.ai）：通用不垂直，中文多平台适配弱', note: '本地化空白' },
+        { text: 'Skill 生态（Claude/ChatGPT Skills）：单点能力白菜价，但没有统一数据与闭环', note: '最大变量' },
+      ],
+      decision: '市场空白 = 「热点→创作→发布→复盘」全链路闭环 + 多平台原生化 + 可解释的思维链输出。',
+      alternatives: [{ text: '与剪映正面竞争', why: '平台级资源不可对抗，选择协同' }],
+      output: '差异化定位：不抢「做」的环节，抢「想清楚做什么」和「知道做得怎么样」。',
+      learn: '竞品分析要按「数据-创作-分发-复盘」价值链切片，找断点而不是找功能差。' },
+
+    /* ================= 02 产品定位 ================= */
+    { id: 'pos1', phase: 'pos', title: '一句话定位与心智', question: '用户如何向朋友介绍 CreatorOS？',
+      steps: [
+        { text: '候选定位 1：自媒体人的 AI 工作台（太泛）', note: '与 Notion/飞书撞车' },
+        { text: '候选定位 2：AI 内容增长操作系统（聚焦增长结果）', note: '「增长」是用户付费理由' },
+        { text: '用「核心公式」固化心智：数据→洞察→选题→创作→发布→复盘→反哺', note: '飞轮即记忆点' },
+      ],
+      decision: '定位语：AI 自媒体全平台增长操作系统 —— 让一个人拥有一支完整的 AI 自媒体团队。',
+      alternatives: [{ text: 'AI 写作助手', why: '心智已被占满且没有增长闭环' }],
+      output: '一句话价值主张 + 内容增长飞轮图（官网/首页第一屏）。',
+      learn: '定位要落在「用户可感知的结果」（增长），而不是「技术形态」（AI）。' },
+
+    { id: 'pos2', phase: 'pos', title: '5 问一屏应答', question: '首页如何让用户 3 秒内得到 5 个答案？',
+      steps: [
+        { text: 'Q1 今天做什么 → 今日机会榜 + AI 建议（置顶卡片）', note: '决策优先' },
+        { text: 'Q2 对手在做什么 → 竞品动态流（竞品情报模块）', note: '情报次之' },
+        { text: 'Q3 我该做什么 → 今日推荐选题 + 评分', note: '可执行' },
+        { text: 'Q4 怎么快速做 → 内容生产看板 + 一键生成入口', note: '行动' },
+        { text: 'Q5 效果如何 → 昨日数据卡 + 本周趋势图', note: '反馈' },
+      ],
+      decision: '首页=「指挥中心」：上中下三区分别回答 决策/行动/反馈，生产看板横贯中部。',
+      alternatives: [{ text: '首页放欢迎页/引导', why: '浪费首屏，用户要的是立刻能用' }],
+      output: 'Dashboard 布局规范：KPI 行 + AI 建议列 + Kanban 主区 + 趋势图。',
+      learn: '产品首页不是展示页，而是「每日工作台」；5 个问题就是信息架构的验收标准。' },
+
+    { id: 'pos3', phase: 'pos', title: '数据真实性原则前置', question: '没有真实 API 时怎么保证不变成假 Demo？',
+      steps: [
+        { text: '禁止「假热点/假发布/假成功」是原始需求的底线', note: '信任是产品生命线' },
+        { text: '方案：Mock 数据 + 清晰数据源接口 + Provider Adapter 三层', note: '可无痛替换' },
+        { text: '所有 Mock 元素打标：Demo/快照/API 未接入', note: '诚实即差异化' },
+      ],
+      decision: '全局 Data Trust 标记体系：真实 / 快照 / Mock / 未接入 四态，UI 可见、数据可追溯。',
+      alternatives: [{ text: '用假数据伪装实时', why: '一旦被识破信任崩塌，且违反原始禁令' }],
+      output: '竞品爬虫管线、热点引擎均输出 source/trust 元数据。',
+      learn: '「诚实标注」本身就是产品信任设计，尤其面向专业用户。' },
+
+    /* ================= 03 信息架构 ================= */
+    { id: 'ia1', phase: 'ia', title: '22 个一级模块如何收敛', question: '原始需求列了 22 个一级导航，全要吗？',
+      steps: [
+        { text: '22 个模块按价值链归类：发现(热点/赛道/账号/对标/爆款) → 生产(选题/文案/脚本/视频/素材/剪辑/审核) → 分发(发布/日历/适配) → 反馈(数据/增长/复盘) → 底座(Agent/工作流/知识库/设置/资产)', note: '归类即排序' },
+        { text: 'MVP 不需要 22 个独立页面：同类合并为 7 个一级导航 + 子视图', note: '少即是多' },
+        { text: '信息架构的验收 = 用户完成「热点→发布→复盘」闭环时不跳出主流程', note: '闭环优先' },
+      ],
+      decision: '一级导航收敛为：指挥中心 / 热点雷达 / 对标研究 / 选题中心 / AI 内容工厂 / 发布与数据 / 增长系统（Agent·工作流·知识库）+ 思维链 + 竞品情报 + 项目文档。',
+      alternatives: [{ text: '保持 22 个导航', why: '信息密度失衡，操作路径长，违背「操作路径短」设计原则' }],
+      output: '导航模型：7+3 结构（7 个业务导航 + 3 个能力导航）。',
+      learn: '信息架构 = 价值链的分组艺术；导航数量是结果不是目标。' },
+
+    { id: 'ia2', phase: 'ia', title: '数据打通是架构的灵魂', question: '如何避免做出一堆孤立页面？',
+      steps: [
+        { text: '定一条「主链路」：热点 → 选题 → 文案 → 脚本 → 内容 → 发布 → 数据 → 复盘 → 反哺选题', note: '闭环主线' },
+        { text: '每个对象带 lineage（来源链）：选题记得来自哪个热点/账号', note: '可追溯' },
+        { text: '复用：热点详情一键「生成本赛道选题」；选题一键「生成文案」', note: '页面间跳转即数据流动' },
+      ],
+      decision: '全局 Store 以「内容对象 + 来源链」为核心，所有视图读写同一份状态，保证跨模块联动。',
+      alternatives: [{ text: '每页独立本地数据', why: '无法形成闭环，违背原则三' }],
+      output: '跨模块联动演示：热点 ht01 → 选题 tp01 → 文案 → 脚本 → 发布 → 数据。',
+      learn: '「数据打通」不是技术细节，而是产品闭环的实体化。' },
+
+    /* ================= 04 数据模型 ================= */
+    { id: 'data1', phase: 'data', title: '核心实体与关系', question: '哪些表是必须的？',
+      steps: [
+        { text: '围绕「人-内容-反馈」建模：User/Workspace → Creator/Account → Topic/Content → Metric/Publication', note: '四层' },
+        { text: '原始需求给出 26 个实体清单，按 MVP 裁剪到 18 个，其余留 TODO', note: '防过度设计' },
+        { text: '关键外键：Topic.sourceTopicId（选题来自热点）、Content.topicId、Publication.accountId+platformId、Metric.contentId', note: '打通靠外键' },
+      ],
+      decision: 'Schema 采用「Workspace 隔离 + 对象血缘」：每个对象带来源链，支撑复盘归因。',
+      alternatives: [{ text: '扁平表', why: '无法回答「这条爆款怎么来的」归因问题' }],
+      output: 'docs 中给出 18 表 ER 描述（见项目文档 00-产品分析）。',
+      learn: '数据模型是产品闭环的镜像：表之间没有关系，产品模块之间也没有。' },
+
+    { id: 'data2', phase: 'data', title: '评分体系可计算', question: 'Hot Score / Topic Score 如何让 AI 决策可解释？',
+      steps: [
+        { text: 'Hot Score = 7 个信号加权 - 竞争惩罚 - 生命周期风险惩罚', note: '可复现' },
+        { text: 'Topic Score = 7 维加权（竞争/难度取反），≥80 推荐制作', note: '可执行' },
+        { text: '评分做成纯函数库（src/lib/scoring.js），浏览器与 Node 测试共用', note: '可测试' },
+      ],
+      decision: '所有评分 = 确定性纯函数 + 权重配置，AI 输出只作为信号之一，不替代可解释规则。',
+      alternatives: [{ text: '全交给 LLM 打分', why: '不可复现、成本高、难测试' }],
+      output: 'Hot Score / Topic Score 引擎 + 频段徽章（爆发中/快速增长/高竞争/商业价值高）。',
+      learn: '可解释的确定性引擎是「AI 原生产品」的骨架，LLM 负责生成、规则负责裁决。' },
+
+    /* ================= 05 技术架构 ================= */
+    { id: 'tech1', phase: 'tech', title: '分层与模块边界', question: '怎么搭才能长期演进成 SaaS？',
+      steps: [
+        { text: '分层：UI → 视图逻辑 → 领域引擎(lib) → 数据(store/seed) → 外部 Provider Adapter', note: '单向依赖' },
+        { text: 'AI/视频/发布等外部能力全部抽象为 Provider 接口（LLMProvider/VideoProvider/PublishProvider）', note: '可替换' },
+        { text: '静态优先：零构建可运行，未来平滑迁移 Next.js + PostgreSQL + Queue', note: '演进路径' },
+      ],
+      decision: '本期采用「纯前端工程化 SPA（原生 JS + 模块化）」，领域逻辑独立成 lib，外部能力走 Adapter。',
+      alternatives: [
+        { text: '直接上 Next.js 全栈', why: '依赖安装/构建链路在当前环境不可行，且不利于快速验证' },
+        { text: '纯静态无逻辑', why: '无法承载评分/竞品/测试等真实逻辑' },
+      ],
+      output: '架构图：src/views · src/lib · src/data · scripts · tests 五层。',
+      learn: '技术选型服从「可运行、可测试、可演进」三原则，不为炫技买单。' },
+
+    { id: 'tech2', phase: 'tech', title: '竞品爬虫的 Adapter 设计', question: '「从各大平台爬取类似 Skill」怎么做得既真实又可替换？',
+      steps: [
+        { text: '定义统一 Schema：name/category/source/features/评分/URL', note: '异源归一' },
+        { text: '每个来源一个 Adapter：GitHub Search API / Awesome 列表 / Toolify / Product Hunt / 行业网站', note: '可插拔' },
+        { text: '管线：发现→抓取→清洗→结构化→入库→分析；无网时用快照数据并标注', note: '诚实' },
+        { text: '分析层输出：覆盖率/差距/定位象限/产品总监报告', note: '从数据到决策' },
+      ],
+      decision: 'crawler.js 定义管线与来源适配器；scripts/crawl-skills.mjs 在有网环境执行真实抓取合并入库。',
+      alternatives: [{ text: '前端直接 fetch 第三方', why: 'CORS/反爬/合规不可控，必须服务端代理' }],
+      output: '竞品情报视图 + data/competitors-snapshot.json（快照可被脚本更新）。',
+      learn: '爬虫的工程重点不是「爬」，而是「清洗归一 + 标注可信度 + 分析输出」。' },
+
+    { id: 'tech3', phase: 'tech', title: 'AI 成本与模型路由', question: 'AI 调用如何不被成本拖垮？',
+      steps: [
+        { text: 'Model Router：简单任务(改写/标题)→低成本模型；复杂分析(拆解/复盘)→高能力模型', note: '成本分层' },
+        { text: '缓存 + 批量 + 重试 + Fallback + Token/成本统计', note: '工程护栏' },
+        { text: '本期 AI 为「规则引擎+可替换 Provider 接口」，LLM 键位预留在配置中心', note: '无 Key 也能跑' },
+      ],
+      decision: 'AI Layer 以「确定性引擎为主 + Provider Adapter 为辅」，任何模型可插拔、可计量。',
+      alternatives: [{ text: '全部硬编码 LLM 调用', why: '不可测、不可控成本、无 Key 无法演示' }],
+      output: '配置中心(settings)预留：LLM Provider / 模型路由表 / 额度统计。',
+      learn: 'AI 产品要像管钱一样管 Token：路由、缓存、计量三件套。' },
+
+    /* ================= 06 商业化设计 ================= */
+    { id: 'com1', phase: 'com', title: '定价与付费墙设计', question: '免费/Pro/团队怎么切才不伤体验？',
+      steps: [
+        { text: '免费版：1 账号 + 3 赛道 + 每日 10 次 AI 生成（验证价值）', note: '钩子' },
+        { text: 'Pro：无限生成 + 多账号 + 竞品情报 + 工作流（核心付费点）', note: '主力' },
+        { text: '团队/企业：席位 + 权限 + 数据隔离 + 专属支持', note: '扩展' },
+      ],
+      decision: '按「账号数/生成额度/席位」三维计费；额度计量组件第一天就埋点。',
+      alternatives: [{ text: '全免费', why: '无法支撑数据与 AI 成本，不可持续' }],
+      output: '商业化章节：定价矩阵 + 额度计量 + 升级路径（见项目文档 03-商业价值分析）。',
+      learn: '付费墙应切在「高频高价值能力」上，免费版也要能跑通完整闭环。' },
+
+    /* ================= 07 开发策略 ================= */
+    { id: 'dev1', phase: 'dev', title: '垂直切片先行', question: '先做哪些功能才叫「完整可用」？',
+      steps: [
+        { text: 'P0 垂直切片：热点 → 选题 → 文案 → 脚本 → 发布 → 数据 → 复盘', note: '先跑通' },
+        { text: '每一个切片都要能「演示 + 测试 + 被 Mock 替换」', note: '非假按钮' },
+        { text: '边缘功能（AI 视频/剪辑/自动发布）标 Mock/Adapter，不假装成功', note: '诚实' },
+      ],
+      decision: '开发顺序：引擎(lib) → 数据(seed) → 视图(views) → 文档(docs) → 测试(tests) → 打包(README)。',
+      alternatives: [{ text: '先做所有页面外壳', why: '违背「先闭环再堆功能」原则' }],
+      output: '13 个视图全部围绕主链路组织，MVP 即闭环。',
+      learn: 'Vertical Slice 的价值：每完成一块都有「可感知的完整」，而不是一堆积木。' },
+
+    /* ================= 08 测试与验证 ================= */
+    { id: 'test1', phase: 'test', title: '测试用例的可运行化', question: '3 个测试用例怎么选才最能证明产品成立？',
+      steps: [
+        { text: '选「核心引擎」而非 UI：评分引擎、选题引擎、竞品分析引擎', note: '逻辑可自动验证' },
+        { text: 'TC-01 热点评分：验证排序与频段分类', note: '决策正确性' },
+        { text: 'TC-02 选题评分：验证推荐阈值与优先级', note: '执行正确性' },
+        { text: 'TC-03 竞品矩阵：验证覆盖率/差距/象限/报告完整性', note: '情报正确性' },
+      ],
+      decision: '3 个测试用例同时提供 Node 运行器（tests/run-tests.mjs）与浏览器端「测试中心」视图。',
+      alternatives: [{ text: '只测 UI 截图', why: '无法证明逻辑正确，且不可回归' }],
+      output: 'tests/ 目录 + 测试中心视图（一键运行、展示断言明细）。',
+      learn: '测试用例要选「用户结果依赖的逻辑」，而不是「容易测的代码」。' },
+
+    /* ================= 09 增长与运营 ================= */
+    { id: 'growth1', phase: 'growth', title: '冷启动与留存飞轮', question: '没有投放预算，怎么让用户留下来？',
+      steps: [
+        { text: '新用户体验爆点：「10 分钟产出 30 天增长计划」', note: '首日价值' },
+        { text: '留存钩子：每日 AI 简报（热点+建议）推送到微信/邮件', note: '日活习惯' },
+        { text: '内容资产沉淀：发布越多 → 数据越多 → 复盘越准 → 越离不开', note: '数据壁垒' },
+      ],
+      decision: '增长策略 = 内容自带流量（产品本身就是自媒体工具）+ 每日价值推送 + 数据迁移成本壁垒。',
+      alternatives: [{ text: '投广告买量', why: '无预算且产品未验证' }],
+      output: '增长章节：冷启动路径 + 留存机制 + 传播设计（见项目文档 03/04）。',
+      learn: 'To-Creator 产品的增长引擎就是「帮用户做出爆款」，案例即广告。' },
+
+    { id: 'growth2', phase: 'growth', title: '长期壁垒：Creator Intelligence Graph', question: '如何不被大厂与 Skill 生态碾压？',
+      steps: [
+        { text: '可复制的功能终将免费（Skill 生态会做）', note: '功能无壁垒' },
+        { text: '壁垒来自私有数据：账号数据/竞品数据/内容资产/历史表现/增长反馈', note: '越用越准' },
+        { text: '把数据织成图：热点×账号×选题×内容×效果 的关系网络 = Creator Intelligence Graph', note: '终极形态' },
+      ],
+      decision: '产品战略锚点：让系统「越来越懂你、越来越懂你的赛道」，数据资产即护城河。',
+      alternatives: [{ text: '押注独家模型能力', why: '模型会开源/降价，壁垒会蒸发' }],
+      output: '战略章节：数据飞轮 → 知识库 → 个人 IP 大脑 →  Autonomous Creator。',
+      learn: 'AI 产品的壁垒不是模型，而是「模型+私有数据+闭环反馈」形成的飞轮。' },
+  ];
+
+  const api = { phases, nodes };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api;
+  global.CreatorOS = global.CreatorOS || {};
+  global.CreatorOS.thinkingChain = api;
+})(typeof window !== 'undefined' ? window : globalThis);

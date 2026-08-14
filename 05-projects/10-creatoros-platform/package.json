@@ -1,0 +1,14 @@
+{
+  "name": "creatoros-platform",
+  "version": "1.0.0",
+  "private": true,
+  "description": "CreatorOS · AI 自媒体全平台增长操作系统（Web 端 + 完整思维链结构化输出 + 竞品情报雷达 + 项目制文档包）",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node scripts/serve.mjs",
+    "test": "node tests/run-tests.mjs",
+    "crawl": "node scripts/crawl-skills.mjs",
+    "seed": "node scripts/seed-data.mjs"
+  },
+  "engines": { "node": ">=18" }
+}
