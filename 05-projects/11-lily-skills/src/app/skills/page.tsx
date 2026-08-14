@@ -7,6 +7,7 @@ import { Star, Play, Search } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, Badge, Select, EmptyState, StatusLabel } from "@/components/ui";
 import { api, fmtTime } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface SkillLite {
   id: string;
@@ -27,6 +28,7 @@ interface Category { id: string; name: string; icon: string | null }
 
 function SkillsContent() {
   const params = useSearchParams();
+  const { t } = useI18n();
   const [skills, setSkills] = useState<SkillLite[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [q, setQ] = useState(params.get("q") ?? "");
@@ -68,22 +70,22 @@ function SkillsContent() {
       <div className="flex flex-wrap items-center gap-3">
         <div>
           <h1 className="text-xl font-semibold tracking-tight">Skills</h1>
-          <p className="text-xs text-subtle">{skills.length} 个能力单元 · 新 Skill 注册后自动进入 Registry / 搜索 / Agent Tool Registry</p>
+          <p className="text-xs text-subtle">{skills.length} {t("skills.subtitle")}</p>
         </div>
         <div className="ml-auto flex items-center gap-2">
           <div className="relative">
             <Search className="pointer-events-none absolute left-3 top-1/2 h-3.5 w-3.5 -translate-y-1/2 text-subtle" />
-            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder="搜索 Skill…" className="h-9 w-56 rounded-lg border border-border2 bg-surface pl-9 pr-3 text-sm outline-none placeholder:text-subtle focus:border-accent/60" />
+            <input value={q} onChange={(e) => setQ(e.target.value)} placeholder={t("skills.search_ph")} className="h-9 w-56 rounded-lg border border-border2 bg-surface pl-9 pr-3 text-sm outline-none placeholder:text-subtle focus:border-accent/60" />
           </div>
           <Select value={category} onChange={(e) => setCategory(e.target.value)}>
-            <option value="">全部分类</option>
+            <option value="">{t("skills.all_categories")}</option>
             {categories.map((c) => <option key={c.id} value={c.id}>{c.icon ?? ""} {c.name}</option>)}
           </Select>
           <Select value={sort} onChange={(e) => setSort(e.target.value)}>
-            <option value="relevance">相关度</option>
-            <option value="usage">最常用</option>
-            <option value="newest">最新</option>
-            <option value="success">成功率</option>
+            <option value="relevance">{t("skills.sort_relevance")}</option>
+            <option value="usage">{t("skills.sort_usage")}</option>
+            <option value="newest">{t("skills.sort_newest")}</option>
+            <option value="success">{t("skills.sort_success")}</option>
           </Select>
           <div className="flex overflow-hidden rounded-lg border border-border2">
             {(["grid", "list"] as const).map((v) => (
@@ -96,8 +98,8 @@ function SkillsContent() {
       </div>
 
       <div className="mt-5">
-        {loading && <Card className="p-10 text-center text-sm text-subtle">加载中…</Card>}
-        {!loading && skills.length === 0 && <EmptyState title="没有找到匹配的 Skill" hint="试试换一个关键词，或到 Developer Center 注册新 Skill" />}
+        {loading && <Card className="p-10 text-center text-sm text-subtle">{t("common.loading")}</Card>}
+        {!loading && skills.length === 0 && <EmptyState title={t("skills.empty")} hint={t("skills.empty_hint")} />}
         {view === "grid" ? (
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
             {skills.map((s) => (
@@ -113,14 +115,14 @@ function SkillsContent() {
                   </button>
                 </div>
                 <div className="mt-3 flex flex-wrap gap-1.5">
-                  <Badge tone="accent">{s.category?.name ?? "未分类"}</Badge>
+                  <Badge tone="accent">{s.category?.name ?? t("dash.uncategorized")}</Badge>
                   {s.tags.slice(0, 2).map((t) => <Badge key={t}>{t}</Badge>)}
                   <StatusLabel status={s.status} />
                 </div>
                 <div className="mt-3 flex items-center justify-between border-t border-border pt-3 text-[11px] text-subtle">
-                  <span>{s.usage_count} 次使用 · 成功率 {s.usage_count ? Math.round((s.success_count / s.usage_count) * 100) : 0}%</span>
+                  <span>{s.usage_count} {t("common.usage")} · {t("common.success_rate")} {s.usage_count ? Math.round((s.success_count / s.usage_count) * 100) : 0}%</span>
                   <Link href={`/skills/${s.id}?run=1`} className="inline-flex items-center gap-1 text-accent hover:text-[#b3a6ff]">
-                    <Play className="h-3 w-3" /> 运行
+                    <Play className="h-3 w-3" /> {t("common.run")}
                   </Link>
                 </div>
               </Card>
@@ -135,9 +137,9 @@ function SkillsContent() {
                   <div className="text-sm font-medium">{s.name}</div>
                   <div className="truncate text-xs text-subtle">{s.description}</div>
                 </Link>
-                <Badge tone="accent">{s.category?.name ?? "未分类"}</Badge>
+                <Badge tone="accent">{s.category?.name ?? t("dash.uncategorized")}</Badge>
                 <StatusLabel status={s.status} />
-                <span className="w-20 text-right text-[11px] text-subtle">{s.usage_count} 次</span>
+                <span className="w-20 text-right text-[11px] text-subtle">{s.usage_count} {t("common.usage")}</span>
                 <span className="w-24 text-right text-[11px] text-subtle">{fmtTime(s.last_used_at)}</span>
               </div>
             ))}
@@ -149,9 +151,10 @@ function SkillsContent() {
 }
 
 export default function SkillsPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
-      <Suspense fallback={<div className="p-10 text-center text-sm text-subtle">加载中…</div>}>
+      <Suspense fallback={<div className="p-10 text-center text-sm text-subtle">{t("common.loading")}</div>}>
         <SkillsContent />
       </Suspense>
     </AppShell>

@@ -6,6 +6,7 @@ import { Send, Bot, User, Sparkles, Play, CheckCircle2, ShieldAlert, RotateCcw }
 import { AppShell } from "@/components/app-shell";
 import { Card, Button, Badge, Spinner, StatusLabel, EmptyState } from "@/components/ui";
 import { api, fmtTime } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface RecSkill { id: string; name: string; icon?: string | null; score: number; reasons: string[] }
 interface PlanStep {
@@ -31,6 +32,7 @@ interface Msg { id: string; role: string; content: string; created_at: string }
 
 function AgentContent() {
   const params = useSearchParams();
+  const { t } = useI18n();
   const [prompt, setPrompt] = useState(params.get("prompt") ?? "");
   const [sessions, setSessions] = useState<Session[]>([]);
   const [currentSession, setCurrentSession] = useState<string | null>(null);
@@ -112,8 +114,8 @@ function AgentContent() {
         {/* Sessions sidebar */}
         <div className="hidden w-52 shrink-0 lg:block">
           <div className="mb-3 flex items-center justify-between">
-            <span className="text-xs font-semibold text-muted">会话</span>
-            <Button size="sm" variant="ghost" onClick={newSession}>+ 新建</Button>
+            <span className="text-xs font-semibold text-muted">{t("agent.sessions")}</span>
+            <Button size="sm" variant="ghost" onClick={newSession}>+ {t("agent.new_session")}</Button>
           </div>
           <div className="space-y-1">
             {sessions.map((s) => (
@@ -137,8 +139,8 @@ function AgentContent() {
                 <div className="flex h-full flex-col items-center justify-center gap-3 text-center">
                   <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-accent/15 text-accent glow"><Bot className="h-6 w-6" /></div>
                   <div>
-                    <div className="text-sm font-medium">Lily AI Agent</div>
-                    <div className="mt-1 max-w-sm text-xs text-subtle">告诉我你想完成什么，我会自动找到合适的 Skill、生成计划并执行。</div>
+                    <div className="text-sm font-medium">{t("agent.hero_title")}</div>
+                    <div className="mt-1 max-w-sm text-xs text-subtle">{t("agent.hero_desc")}</div>
                   </div>
                 </div>
               )}
@@ -155,7 +157,7 @@ function AgentContent() {
               {thinking && (
                 <div className="flex items-center gap-2 text-sm text-muted">
                   <div className="flex h-7 w-7 items-center justify-center rounded-lg bg-accent/15 text-accent"><Bot className="h-4 w-4" /></div>
-                  <Spinner /> Agent 正在理解你的需求…
+                  <Spinner /> {t("agent.thinking")}
                 </div>
               )}
 
@@ -163,14 +165,14 @@ function AgentContent() {
               {plan && !thinking && (
                 <div className="rounded-2xl border border-accent/25 bg-bg/60 p-4">
                   <div className="flex items-center gap-2 text-xs font-medium text-[#b3a6ff]">
-                    <Sparkles className="h-3.5 w-3.5" /> AGENT 执行计划
-                    <span className="ml-auto text-subtle">意图：{plan.intent.category} · {plan.intent.actions.join(" / ")}</span>
+                    <Sparkles className="h-3.5 w-3.5" /> {t("agent.plan_badge")}
+                    <span className="ml-auto text-subtle">{t("agent.intent")}{plan.intent.category} · {plan.intent.actions.join(" / ")}</span>
                   </div>
                   <div className="mt-2 text-sm">{plan.task}</div>
 
                   {plan.recommendations.length > 0 && (
                     <div className="mt-3">
-                      <div className="text-[11px] font-medium text-subtle">推荐 Skills</div>
+                      <div className="text-[11px] font-medium text-subtle">{t("agent.rec_skills")}</div>
                       <div className="mt-1.5 flex flex-wrap gap-2">
                         {plan.recommendations.map((r) => (
                           <div key={r.id} className="rounded-lg border border-border2 bg-surface px-2.5 py-1.5 text-xs">
@@ -200,19 +202,19 @@ function AgentContent() {
                     {plan.status === "proposed" && (
                       <>
                         <Button size="sm" onClick={() => executePlan(false)} disabled={executing}>
-                          {executing ? <Spinner className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} 确认执行
+                          {executing ? <Spinner className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} {t("agent.confirm_exec")}
                         </Button>
-                        <Button size="sm" variant="secondary" onClick={() => executePlan(false)} disabled={executing}><RotateCcw className="h-3.5 w-3.5" /> 直接执行</Button>
+                        <Button size="sm" variant="secondary" onClick={() => executePlan(false)} disabled={executing}><RotateCcw className="h-3.5 w-3.5" /> {t("agent.run_direct")}</Button>
                       </>
                     )}
                     {plan.status === "awaiting_approval" && (
                       <div className="flex items-center gap-2 text-xs text-warn">
-                        <ShieldAlert className="h-4 w-4" /> 部分步骤需要审批
-                        <Button size="sm" onClick={() => executePlan(true)} disabled={executing}>批准并继续</Button>
+                        <ShieldAlert className="h-4 w-4" /> {t("agent.needs_approval")}
+                        <Button size="sm" onClick={() => executePlan(true)} disabled={executing}>{t("agent.approve_continue")}</Button>
                       </div>
                     )}
                     {plan.status === "completed" && (
-                      <div className="flex items-center gap-1.5 text-xs text-accent2"><CheckCircle2 className="h-4 w-4" /> 任务完成</div>
+                      <div className="flex items-center gap-1.5 text-xs text-accent2"><CheckCircle2 className="h-4 w-4" /> {t("agent.completed")}</div>
                     )}
                     {plan.status === "failed" && <StatusLabel status="failed" />}
                   </div>
@@ -228,14 +230,14 @@ function AgentContent() {
                   value={prompt}
                   onChange={(e) => setPrompt(e.target.value)}
                   onKeyDown={(e) => { if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); send(false); } }}
-                  placeholder="描述你的目标… 例如：帮我分析 AI Agent 海外热点并生成内容选题"
+                  placeholder={t("agent.input_ph")}
                   className="min-h-[44px] flex-1 resize-none rounded-xl border border-border2 bg-surface px-3 py-2.5 text-sm outline-none placeholder:text-subtle focus:border-accent/60"
                 />
                 <Button onClick={() => send(false)} disabled={thinking || !prompt.trim()} className="self-end">
                   <Send className="h-4 w-4" />
                 </Button>
               </div>
-              <div className="mt-1.5 text-[10px] text-subtle">Agent 会先给出理解与计划，确认后再执行 · 高风险操作需审批</div>
+              <div className="mt-1.5 text-[10px] text-subtle">{t("agent.hint")}</div>
             </div>
           </div>
         </div>
@@ -245,8 +247,9 @@ function AgentContent() {
 }
 
 export default function AgentPage() {
+  const { t } = useI18n();
   return (
-    <Suspense fallback={<AppShell><div className="p-10 text-center text-sm text-muted">加载中…</div></AppShell>}>
+    <Suspense fallback={<AppShell><div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div></AppShell>}>
       <AgentContent />
     </Suspense>
   );

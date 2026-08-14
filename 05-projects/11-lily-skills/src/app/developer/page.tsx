@@ -5,6 +5,7 @@ import { Code2, FileJson, FlaskConical, RefreshCw, Rocket } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, Button, Badge, Input, Select, Textarea, SectionTitle, StatusLabel, Spinner } from "@/components/ui";
 import { api } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface Category { id: string; name: string; icon: string | null }
 
@@ -17,6 +18,7 @@ const EXEC_TYPES = [
 ];
 
 function DeveloperContent() {
+  const { t } = useI18n();
   const [tab, setTab] = useState<"create" | "import" | "test" | "scan">("create");
   const [categories, setCategories] = useState<Category[]>([]);
   const [result, setResult] = useState<string | null>(null);
@@ -80,23 +82,23 @@ function DeveloperContent() {
 
   const inputCls = "h-9 w-full rounded-lg border border-border2 bg-surface px-3 text-sm outline-none focus:border-accent/60";
   const tabs = [
-    { key: "create" as const, label: "创建 Skill", icon: Code2 },
-    { key: "import" as const, label: "Manifest 导入", icon: FileJson },
-    { key: "test" as const, label: "测试控制台", icon: FlaskConical },
-    { key: "scan" as const, label: "自动扫描", icon: RefreshCw },
+    { key: "create" as const, labelKey: "dev.tab.create", icon: Code2 },
+    { key: "import" as const, labelKey: "dev.tab.import", icon: FileJson },
+    { key: "test" as const, labelKey: "dev.tab.test", icon: FlaskConical },
+    { key: "scan" as const, labelKey: "dev.tab.scan", icon: RefreshCw },
   ];
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">Developer Center</h1>
-        <p className="text-xs text-subtle">新 Skill 接入平台的标准方式：注册后自动进入 Registry / 搜索 / Agent Tool Registry，无需开发页面</p>
+        <h1 className="text-xl font-semibold tracking-tight">{t("dev.title")}</h1>
+        <p className="text-xs text-subtle">{t("dev.subtitle")}</p>
       </div>
 
       <div className="mt-4 flex gap-1.5">
-        {tabs.map((t) => (
-          <button key={t.key} onClick={() => setTab(t.key)} className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium ${tab === t.key ? "bg-accent text-white" : "text-muted hover:bg-surface hover:text-fg"}`}>
-            <t.icon className="h-3.5 w-3.5" /> {t.label}
+        {tabs.map((item) => (
+          <button key={item.key} onClick={() => setTab(item.key)} className={`inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-xs font-medium ${tab === item.key ? "bg-accent text-white" : "text-muted hover:bg-surface hover:text-fg"}`}>
+            <item.icon className="h-3.5 w-3.5" /> {t(item.labelKey)}
           </button>
         ))}
       </div>
@@ -104,33 +106,33 @@ function DeveloperContent() {
       <div className="mt-5">
         {tab === "create" && (
           <Card className="max-w-2xl p-5">
-            <SectionTitle sub="填写基本信息，注册后立即可用">创建新 Skill</SectionTitle>
+            <SectionTitle sub={t("dev.create_sub")}>{t("dev.tab.create")}</SectionTitle>
             <div className="grid gap-3 sm:grid-cols-2">
-              <div><label className="mb-1 block text-xs text-muted">名称 *</label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder="如 TikTok Trend Scanner" /></div>
-              <div><label className="mb-1 block text-xs text-muted">图标</label><Input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} /></div>
-              <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">描述 *</label><Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder="一句话描述这个能力" /></div>
-              <div><label className="mb-1 block text-xs text-muted">分类</label>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.name")}</label><Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} placeholder={t("dev.name_ph")} /></div>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.icon")}</label><Input value={form.icon} onChange={(e) => setForm({ ...form, icon: e.target.value })} /></div>
+              <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">{t("dev.desc")}</label><Input value={form.description} onChange={(e) => setForm({ ...form, description: e.target.value })} placeholder={t("dev.desc_ph")} /></div>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.category")}</label>
                 <Select value={form.category} onChange={(e) => setForm({ ...form, category: e.target.value })} className="w-full">{categories.map((c) => <option key={c.id} value={c.name}>{c.icon ?? ""} {c.name}</option>)}</Select>
               </div>
-              <div><label className="mb-1 block text-xs text-muted">Tags（逗号分隔）</label><Input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="trend, research" /></div>
-              <div><label className="mb-1 block text-xs text-muted">执行类型</label>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.tags")}</label><Input value={form.tags} onChange={(e) => setForm({ ...form, tags: e.target.value })} placeholder="trend, research" /></div>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.exec_type")}</label>
                 <Select value={form.execution_type} onChange={(e) => setForm({ ...form, execution_type: e.target.value })} className="w-full">{EXEC_TYPES.map((t) => <option key={t.value} value={t.value}>{t.label}</option>)}</Select>
               </div>
-              <div><label className="mb-1 block text-xs text-muted">风险等级</label>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.risk")}</label>
                 <Select value={form.risk_level} onChange={(e) => setForm({ ...form, risk_level: e.target.value })} className="w-full">
-                  <option value="low">低风险</option><option value="medium">中风险</option><option value="high">高风险（需审批）</option><option value="critical">严重风险（需审批）</option>
+                  <option value="low">{t("detail.risk_low")}</option><option value="medium">{t("detail.risk_medium")}</option><option value="high">{t("detail.risk_high")}（{t("common.approve")}）</option><option value="critical">{t("detail.risk_critical")}（{t("common.approve")}）</option>
                 </Select>
               </div>
               {(form.execution_type === "http" || form.execution_type === "api") && (
-                <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">Endpoint URL</label><Input value={form.endpoint} onChange={(e) => setForm({ ...form, endpoint: e.target.value })} placeholder="https://api.example.com/..." /></div>
+                <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">{t("dev.endpoint")}</label><Input value={form.endpoint} onChange={(e) => setForm({ ...form, endpoint: e.target.value })} placeholder="https://api.example.com/..." /></div>
               )}
               {form.execution_type === "cli" && (
-                <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">命令模板（{"{{key}}"} 占位符）</label><Input value={form.command} onChange={(e) => setForm({ ...form, command: e.target.value })} placeholder="echo {{query}}" /></div>
+                <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">{t("dev.command")}</label><Input value={form.command} onChange={(e) => setForm({ ...form, command: e.target.value })} placeholder="echo {{query}}" /></div>
               )}
-              <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">Input Schema (JSON Schema)</label><Textarea value={form.input_schema} onChange={(e) => setForm({ ...form, input_schema: e.target.value })} rows={7} className="code text-xs" /></div>
+              <div className="sm:col-span-2"><label className="mb-1 block text-xs text-muted">{t("dev.schema")}</label><Textarea value={form.input_schema} onChange={(e) => setForm({ ...form, input_schema: e.target.value })} rows={7} className="code text-xs" /></div>
             </div>
             <div className="mt-4 flex items-center gap-2">
-              <Button onClick={createSkill} disabled={busy || !form.name}>{busy ? <Spinner className="h-3.5 w-3.5" /> : <Rocket className="h-4 w-4" />} 注册 Skill</Button>
+              <Button onClick={createSkill} disabled={busy || !form.name}>{busy ? <Spinner className="h-3.5 w-3.5" /> : <Rocket className="h-4 w-4" />} {t("dev.register")}</Button>
               {error && <span className="text-xs text-danger">{error}</span>}
             </div>
             {result && <pre className="code mt-3 rounded-lg border border-accent2/30 bg-accent2/5 p-3 text-xs text-accent2">{result}</pre>}
@@ -139,7 +141,7 @@ function DeveloperContent() {
 
         {tab === "import" && (
           <Card className="max-w-3xl p-5">
-            <SectionTitle sub="粘贴标准 Skill Manifest，系统自动分类、打 Tag、建立搜索索引并加入 Agent Tool Registry">Manifest 导入</SectionTitle>
+            <SectionTitle sub={t("dev.import_sub")}>{t("dev.tab.import")}</SectionTitle>
             <Textarea
               defaultValue={JSON.stringify({
                 name: "My New Skill", version: "1.0.0", description: "…", category: "Productivity",
@@ -162,7 +164,7 @@ function DeveloperContent() {
                   } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
                 }}
                 disabled={busy}
-              >{busy ? <Spinner className="h-3.5 w-3.5" /> : <FileJson className="h-4 w-4" />} 导入并注册</Button>
+              >{busy ? <Spinner className="h-3.5 w-3.5" /> : <FileJson className="h-4 w-4" />} {t("dev.import_btn")}</Button>
               {error && <span className="text-xs text-danger">{error}</span>}
             </div>
             {result && <pre className="code mt-3 rounded-lg border border-accent2/30 bg-accent2/5 p-3 text-xs text-accent2">{result}</pre>}
@@ -171,19 +173,19 @@ function DeveloperContent() {
 
         {tab === "test" && (
           <Card className="max-w-3xl p-5">
-            <SectionTitle sub="选择 Skill 并直接执行，验证输入输出">测试控制台</SectionTitle>
+            <SectionTitle sub={t("dev.test_sub")}>{t("dev.tab.test")}</SectionTitle>
             <div className="grid gap-3 sm:grid-cols-2">
               <div>
                 <label className="mb-1 block text-xs text-muted">Skill</label>
                 <SkillPicker value={testSkill} onChange={setTestSkill} />
               </div>
               <div>
-                <label className="mb-1 block text-xs text-muted">输入 JSON</label>
+                <label className="mb-1 block text-xs text-muted">{t("dev.input_json")}</label>
                 <Textarea value={testInput} onChange={(e) => setTestInput(e.target.value)} rows={3} className="code text-xs" />
               </div>
             </div>
             <div className="mt-3 flex items-center gap-2">
-              <Button onClick={testRun} disabled={busy || !testSkill}>{busy ? <Spinner className="h-3.5 w-3.5" /> : <FlaskConical className="h-4 w-4" />} 执行</Button>
+              <Button onClick={testRun} disabled={busy || !testSkill}>{busy ? <Spinner className="h-3.5 w-3.5" /> : <FlaskConical className="h-4 w-4" />} {t("common.execute")}</Button>
               {error && <span className="text-xs text-danger">{error}</span>}
             </div>
             {testOutput && (
@@ -199,13 +201,10 @@ function DeveloperContent() {
 
         {tab === "scan" && (
           <Card className="max-w-2xl p-5">
-            <SectionTitle sub="扫描 skills/ 目录下的 skill.json，自动注册或更新所有本地 Skill 包">自动扫描</SectionTitle>
-            <p className="text-sm text-muted">
-              每个 <code className="code">skills/&lt;name&gt;/skill.json</code> + <code className="code">adapter.ts</code> 是一个 Skill 包。
-              运行扫描后，新 Skill 会自动进入 Registry、分类、Tag、搜索索引与 Agent Tool Registry。
-            </p>
+            <SectionTitle sub={t("dev.scan_sub")}>{t("dev.tab.scan")}</SectionTitle>
+            <p className="text-sm text-muted">{t("dev.scan_desc")}</p>
             <div className="mt-3">
-              <Button onClick={scanSkills} disabled={busy}>{busy ? <Spinner className="h-3.5 w-3.5" /> : <RefreshCw className="h-4 w-4" />} 立即扫描</Button>
+              <Button onClick={scanSkills} disabled={busy}>{busy ? <Spinner className="h-3.5 w-3.5" /> : <RefreshCw className="h-4 w-4" />} {t("dev.scan_btn")}</Button>
               {error && <span className="ml-2 text-xs text-danger">{error}</span>}
             </div>
             {result && <pre className="code mt-3 rounded-lg border border-accent2/30 bg-accent2/5 p-3 text-xs text-accent2">{result}</pre>}
@@ -217,22 +216,24 @@ function DeveloperContent() {
 }
 
 function SkillPicker({ value, onChange }: { value: string; onChange: (v: string) => void }) {
+  const { t } = useI18n();
   const [skills, setSkills] = useState<{ id: string; name: string }[]>([]);
   useEffect(() => {
     api<{ skills: { id: string; name: string }[] }>("/api/skills?limit=200").then((d) => setSkills(d.skills)).catch(() => {});
   }, []);
   return (
     <Select value={value} onChange={(e) => onChange(e.target.value)} className="w-full">
-      <option value="">选择 Skill…</option>
+      <option value="">{t("dev.pick_skill")}</option>
       {skills.map((s) => <option key={s.id} value={s.id}>{s.name}</option>)}
     </Select>
   );
 }
 
 export default function DeveloperPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
-      <Suspense fallback={<div className="p-10 text-center text-sm text-muted">加载中…</div>}>
+      <Suspense fallback={<div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div>}>
         <DeveloperContent />
       </Suspense>
     </AppShell>

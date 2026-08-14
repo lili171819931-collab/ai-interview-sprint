@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import React from "react";
+import { useI18n } from "@/lib/i18n";
 
 export function Card({ className = "", children, ...rest }: React.HTMLAttributes<HTMLDivElement>) {
   return (
@@ -73,24 +74,7 @@ export function StatusDot({ status }: { status: string }) {
 }
 
 export function StatusLabel({ status }: { status: string }) {
-  const labels: Record<string, string> = {
-    completed: "已完成",
-    running: "执行中",
-    queued: "排队中",
-    failed: "失败",
-    cancelled: "已取消",
-    awaiting_approval: "待审批",
-    healthy: "健康",
-    degraded: "降级",
-    down: "不可用",
-    active: "启用",
-    draft: "草稿",
-    testing: "测试中",
-    deprecated: "已弃用",
-    archived: "已归档",
-    proposed: "待确认",
-    approved: "已批准",
-  };
+  const { t } = useI18n();
   const tones: Record<string, "green" | "info" | "warn" | "danger" | "neutral"> = {
     completed: "green",
     running: "info",
@@ -109,7 +93,7 @@ export function StatusLabel({ status }: { status: string }) {
   return (
     <Badge tone={tones[status] ?? "neutral"}>
       <StatusDot status={status} />
-      {labels[status] ?? status}
+      {t(`status.${status}`)}
     </Badge>
   );
 }

@@ -42,6 +42,7 @@ npm run dev        # http://localhost:3210
 | ⚡ Execution Center | 全部执行记录、日志、审批/取消 |
 | 📊 Analytics | 成功率、耗时、Top Skills、14 天趋势、推荐采纳率 |
 | 🛠️ Developer Center | 创建 Skill、Manifest 导入、测试控制台、自动扫描 |
+| 🌐 多语言 | 顶栏一键中 / EN 切换，全站文案即时翻译并记忆偏好 |
 
 ## 一键体验（推荐）
 
@@ -88,7 +89,7 @@ npm run test:e2e    # 26 项全链路 E2E（真实 HTTP + 审批 + Agent + Workf
 ## 技术栈
 
 Next.js 15 (App Router) · TypeScript 5 · Tailwind CSS v4 · SQLite (`node:sqlite`) ·
-Vitest · 自研 Adapter Runner（JSON-over-stdio 子进程协议）
+Vitest · 自研 Adapter Runner（JSON-over-stdio 子进程协议）· 自研轻量 i18n（中/EN）· SVG 品牌标识
 
 ## 路线图
 

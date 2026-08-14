@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Card, Badge, Select, StatusLabel, EmptyState, SectionTitle } from "@/components/ui";
 import { api, fmtDuration, fmtTime } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface Execution {
   id: string;
@@ -20,6 +21,7 @@ interface Execution {
 }
 
 function ExecutionsContent() {
+  const { t } = useI18n();
   const [executions, setExecutions] = useState<Execution[]>([]);
   const [status, setStatus] = useState("");
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -33,24 +35,24 @@ function ExecutionsContent() {
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div className="flex items-center gap-3">
         <div>
-          <h1 className="text-xl font-semibold tracking-tight">Execution Center</h1>
-          <p className="text-xs text-subtle">所有 Skill 执行的统一记录与审计</p>
+          <h1 className="text-xl font-semibold tracking-tight">{t("exec.title")}</h1>
+          <p className="text-xs text-subtle">{t("exec.subtitle")}</p>
         </div>
         <div className="ml-auto">
           <Select value={status} onChange={(e) => setStatus(e.target.value)}>
-            <option value="">全部状态</option>
-            <option value="completed">已完成</option>
-            <option value="running">执行中</option>
-            <option value="queued">排队中</option>
-            <option value="awaiting_approval">待审批</option>
-            <option value="failed">失败</option>
-            <option value="cancelled">已取消</option>
+            <option value="">{t("exec.all_status")}</option>
+            <option value="completed">{t("status.completed")}</option>
+            <option value="running">{t("status.running")}</option>
+            <option value="queued">{t("status.queued")}</option>
+            <option value="awaiting_approval">{t("status.awaiting_approval")}</option>
+            <option value="failed">{t("status.failed")}</option>
+            <option value="cancelled">{t("status.cancelled")}</option>
           </Select>
         </div>
       </div>
 
       <div className="mt-5 space-y-2">
-        {executions.length === 0 && <EmptyState title="暂无执行记录" hint="运行一个 Skill 或让 Agent 执行任务后，这里会出现记录" />}
+        {executions.length === 0 && <EmptyState title={t("exec.empty")} hint={t("exec.empty_hint")} />}
         {executions.map((e) => (
           <Card key={e.id} className="overflow-hidden">
             <button onClick={() => setExpanded(expanded === e.id ? null : e.id)} className="flex w-full items-center gap-3 px-4 py-3 text-left hover:bg-surface2">
@@ -68,9 +70,9 @@ function ExecutionsContent() {
             </button>
             {expanded === e.id && (
               <div className="space-y-3 border-t border-border p-4">
-                <SectionTitle>输入</SectionTitle>
-                <pre className="code max-h-40 overflow-auto rounded-lg bg-bg p-3 text-[11px]">{JSON.stringify(e.output ?? e.error ?? "无输出", null, 2)}</pre>
-                <SectionTitle>日志</SectionTitle>
+                <SectionTitle>{t("exec.input")}</SectionTitle>
+                <pre className="code max-h-40 overflow-auto rounded-lg bg-bg p-3 text-[11px]">{JSON.stringify(e.output ?? e.error ?? t("exec.no_output"), null, 2)}</pre>
+                <SectionTitle>{t("exec.logs")}</SectionTitle>
                 <div className="space-y-1">
                   {e.logs.map((l, i) => (
                     <div key={i} className="flex gap-2 text-[11px]">
@@ -78,7 +80,7 @@ function ExecutionsContent() {
                       <span className="text-muted">{l.message}</span>
                     </div>
                   ))}
-                  {e.logs.length === 0 && <span className="text-xs text-subtle">无结构化日志</span>}
+                  {e.logs.length === 0 && <span className="text-xs text-subtle">{t("exec.no_logs")}</span>}
                 </div>
               </div>
             )}
@@ -90,9 +92,10 @@ function ExecutionsContent() {
 }
 
 export default function ExecutionsPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
-      <Suspense fallback={<div className="p-10 text-center text-sm text-muted">加载中…</div>}>
+      <Suspense fallback={<div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div>}>
         <ExecutionsContent />
       </Suspense>
     </AppShell>

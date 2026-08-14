@@ -4,6 +4,7 @@ import { Suspense, useEffect, useState } from "react";
 import { AppShell } from "@/components/app-shell";
 import { Card, StatCard, SectionTitle, EmptyState } from "@/components/ui";
 import { api } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface Analytics {
   totalSkills: number; activeSkills: number; totalExecutions: number; completedExecutions: number;
@@ -16,39 +17,40 @@ interface Analytics {
 }
 
 function AnalyticsContent() {
+  const { t } = useI18n();
   const [a, setA] = useState<Analytics | null>(null);
 
   useEffect(() => {
     api<{ analytics: Analytics }>("/api/analytics").then((d) => setA(d.analytics)).catch(() => {});
   }, []);
 
-  if (!a) return <div className="p-10 text-center text-sm text-muted">加载中…</div>;
+  if (!a) return <div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div>;
   const maxDaily = Math.max(1, ...a.dailyUsage.map((d) => d.count));
   const maxCat = Math.max(1, ...a.categoryDistribution.map((c) => c.count));
 
   return (
     <div className="mx-auto max-w-6xl px-6 py-8">
       <div>
-        <h1 className="text-xl font-semibold tracking-tight">Analytics</h1>
-        <p className="text-xs text-subtle">Skill 使用数据与平台健康度</p>
+        <h1 className="text-xl font-semibold tracking-tight">{t("an.title")}</h1>
+        <p className="text-xs text-subtle">{t("an.subtitle")}</p>
       </div>
 
       <div className="mt-5 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatCard label="Skills" value={a.totalSkills} sub={`${a.activeSkills} 启用`} icon="🧩" />
-        <StatCard label="成功率" value={`${a.successRate}%`} sub={`${a.completedExecutions}/${a.totalExecutions}`} icon="🎯" />
-        <StatCard label="平均耗时" value={a.avgDurationMs ? `${(a.avgDurationMs / 1000).toFixed(1)}s` : "—"} icon="⏱️" />
-        <StatCard label="工作流完成率" value={`${a.workflowCompletionRate}%`} sub={`${a.workflowRuns} 次运行`} icon="🔁" />
+        <StatCard label={t("dash.stat_skills")} value={a.totalSkills} sub={`${a.activeSkills} ${t("dash.stat_skills_sub")}`} icon="🧩" />
+        <StatCard label={t("dash.stat_exec_sub")} value={`${a.successRate}%`} sub={`${a.completedExecutions}/${a.totalExecutions}`} icon="🎯" />
+        <StatCard label={t("an.avg_duration")} value={a.avgDurationMs ? `${(a.avgDurationMs / 1000).toFixed(1)}s` : "—"} icon="⏱️" />
+        <StatCard label={t("an.wf_completion")} value={`${a.workflowCompletionRate}%`} sub={`${a.workflowRuns} runs`} icon="🔁" />
       </div>
       <div className="mt-3 grid grid-cols-2 gap-3 md:grid-cols-4">
-        <StatCard label="失败执行" value={a.failedExecutions} sub={`${a.awaitingApproval} 待审批`} icon="❌" />
-        <StatCard label="AI 推荐" value={a.recommendationCount} sub={`采纳率 ${a.recommendationAcceptanceRate}%`} icon="🧠" />
-        <StatCard label="Agent 会话" value={a.totalSessions} icon="💬" />
-        <StatCard label="待审批" value={a.awaitingApproval} icon="🛡️" />
+        <StatCard label={t("an.failed")} value={a.failedExecutions} sub={`${a.awaitingApproval} ${t("an.awaiting")}`} icon="❌" />
+        <StatCard label={t("an.ai_recs")} value={a.recommendationCount} sub={`${t("an.accept_rate")} ${a.recommendationAcceptanceRate}%`} icon="🧠" />
+        <StatCard label={t("an.sessions")} value={a.totalSessions} icon="💬" />
+        <StatCard label={t("an.awaiting")} value={a.awaitingApproval} icon="🛡️" />
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <Card className="p-4">
-          <SectionTitle>近 14 天执行量</SectionTitle>
+          <SectionTitle>{t("an.daily")}</SectionTitle>
           <div className="flex h-40 items-end gap-1">
             {a.dailyUsage.map((d) => (
               <div key={d.date} className="group relative flex-1">
@@ -57,12 +59,12 @@ function AnalyticsContent() {
                 <div className="pointer-events-none absolute -top-6 left-1/2 z-10 -translate-x-1/2 rounded bg-surface2 px-1.5 py-0.5 text-[10px] text-fg opacity-0 group-hover:opacity-100">{d.count}</div>
               </div>
             ))}
-            {a.dailyUsage.length === 0 && <div className="py-14 text-center text-xs text-subtle">暂无数据</div>}
+            {a.dailyUsage.length === 0 && <div className="py-14 text-center text-xs text-subtle">{t("an.no_data")}</div>}
           </div>
         </Card>
 
         <Card className="p-4">
-          <SectionTitle>分类分布</SectionTitle>
+          <SectionTitle>{t("an.categories")}</SectionTitle>
           <div className="space-y-2">
             {a.categoryDistribution.map((c) => (
               <div key={c.category} className="flex items-center gap-2 text-xs">
@@ -78,9 +80,9 @@ function AnalyticsContent() {
       </div>
 
       <div className="mt-6">
-        <SectionTitle>最常用 Skills</SectionTitle>
+        <SectionTitle>{t("an.top_skills")}</SectionTitle>
         {a.topSkills.length === 0 ? (
-          <EmptyState title="暂无使用数据" />
+          <EmptyState title={t("an.no_usage")} />
         ) : (
           <div className="grid gap-3 md:grid-cols-2 lg:grid-cols-4">
             {a.topSkills.map((s, i) => (
@@ -91,7 +93,7 @@ function AnalyticsContent() {
                 </div>
                 <div className="mt-2 flex items-end gap-2">
                   <span className="text-xl font-semibold">{s.usage_count}</span>
-                  <span className="text-[11px] text-subtle">次 · 成功率 {s.success_rate}%</span>
+                  <span className="text-[11px] text-subtle">{t("common.usage")} · {t("common.success_rate")} {s.success_rate}%</span>
                 </div>
               </Card>
             ))}
@@ -103,9 +105,10 @@ function AnalyticsContent() {
 }
 
 export default function AnalyticsPage() {
+  const { t } = useI18n();
   return (
     <AppShell>
-      <Suspense fallback={<div className="p-10 text-center text-sm text-muted">加载中…</div>}>
+      <Suspense fallback={<div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div>}>
         <AnalyticsContent />
       </Suspense>
     </AppShell>

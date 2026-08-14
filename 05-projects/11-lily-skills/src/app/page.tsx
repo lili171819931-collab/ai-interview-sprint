@@ -3,10 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { ArrowRight, Sparkles, Puzzle, Workflow, Activity, Star, Clock } from "lucide-react";
+import { ArrowRight, Sparkles, Puzzle, Workflow, Activity, Star } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, StatCard, Badge, SectionTitle, StatusLabel } from "@/components/ui";
 import { api, fmtTime } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface SkillLite {
   id: string;
@@ -20,7 +21,6 @@ interface SkillLite {
   last_used_at: string | null;
   success_count: number;
   failure_count: number;
-  execution_type: string;
 }
 
 interface Analytics {
@@ -38,6 +38,7 @@ interface Analytics {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { t } = useI18n();
   const [prompt, setPrompt] = useState("");
   const [analytics, setAnalytics] = useState<Analytics | null>(null);
   const [recommended, setRecommended] = useState<SkillLite[]>([]);
@@ -55,33 +56,40 @@ export default function DashboardPage() {
     router.push(`/agent?prompt=${encodeURIComponent(prompt)}`);
   };
 
+  const quickActions = [
+    { label: t("dash.quick_ask"), icon: Sparkles, href: "/agent", desc: t("dash.quick_ask_desc") },
+    { label: t("dash.quick_search"), icon: Puzzle, href: "/skills", desc: t("dash.quick_search_desc") },
+    { label: t("dash.quick_wf"), icon: Workflow, href: "/workflows", desc: t("dash.quick_wf_desc") },
+    { label: t("dash.quick_exec"), icon: Activity, href: "/executions", desc: t("dash.quick_exec_desc") },
+  ];
+
   return (
     <AppShell>
       <div className="mx-auto max-w-6xl px-6 py-8">
         {/* Hero / Agent entry */}
         <Card className="glow p-6">
           <div className="flex items-center gap-2 text-xs font-medium text-[#b3a6ff]">
-            <Sparkles className="h-3.5 w-3.5" /> AI AGENT READY
+            <Sparkles className="h-3.5 w-3.5" /> {t("dash.agent_ready")}
           </div>
           <h1 className="mt-2 text-2xl font-semibold tracking-tight">
-            What do you want to <span className="gradient-text">accomplish</span> today?
+            {t("dash.hero")} <span className="gradient-text">.</span>
           </h1>
           <form onSubmit={submit} className="mt-4 flex gap-2">
             <input
               value={prompt}
               onChange={(e) => setPrompt(e.target.value)}
-              placeholder="例如：帮我分析 TikTok 上 AI Agent 的热点，并生成 5 个适合我的选题"
+              placeholder={t("dash.placeholder")}
               className="h-12 flex-1 rounded-xl border border-border2 bg-surface px-4 text-sm outline-none placeholder:text-subtle focus:border-accent/60 focus:ring-2 focus:ring-accent/20"
             />
             <button
               type="submit"
               className="inline-flex h-12 items-center gap-2 rounded-xl bg-accent px-5 text-sm font-medium text-white hover:bg-[#8c7df5]"
             >
-              交给 Agent <ArrowRight className="h-4 w-4" />
+              {t("dash.submit")} <ArrowRight className="h-4 w-4" />
             </button>
           </form>
           <div className="mt-3 flex flex-wrap gap-2">
-            {["AI 热点选题", "竞品分析", "生成内容简报", "每周报告"].map((s) => (
+            {[t("dash.chip1"), t("dash.chip2"), t("dash.chip3"), t("dash.chip4")].map((s) => (
               <button key={s} onClick={() => setPrompt(s)} className="rounded-full border border-border2 px-3 py-1 text-xs text-muted hover:border-accent/50 hover:text-fg">
                 {s}
               </button>
@@ -91,22 +99,17 @@ export default function DashboardPage() {
 
         {/* Stats */}
         <div className="mt-6 grid grid-cols-2 gap-3 md:grid-cols-4">
-          <StatCard label="Skills" value={analytics?.totalSkills ?? "—"} sub={`${analytics?.activeSkills ?? 0} 个启用`} icon="🧩" />
-          <StatCard label="Executions" value={analytics?.totalExecutions ?? "—"} sub={`成功率 ${analytics?.successRate ?? 0}%`} icon="⚡" />
-          <StatCard label="Workflows" value={analytics?.totalWorkflows ?? "—"} sub={`已运行 ${analytics?.workflowRuns ?? 0} 次`} icon="🔁" />
-          <StatCard label="AI 推荐采纳率" value={`${analytics?.recommendationAcceptanceRate ?? 0}%`} sub="推荐引擎在学习" icon="🧠" />
+          <StatCard label={t("dash.stat_skills")} value={analytics?.totalSkills ?? "—"} sub={`${analytics?.activeSkills ?? 0} ${t("dash.stat_skills_sub")}`} icon="🧩" />
+          <StatCard label={t("dash.stat_exec")} value={analytics?.totalExecutions ?? "—"} sub={`${t("dash.stat_exec_sub")} ${analytics?.successRate ?? 0}%`} icon="⚡" />
+          <StatCard label={t("dash.stat_wf")} value={analytics?.totalWorkflows ?? "—"} sub={t("dash.stat_wf_sub", { n: analytics?.workflowRuns ?? 0 })} icon="🔁" />
+          <StatCard label={t("dash.stat_rec")} value={`${analytics?.recommendationAcceptanceRate ?? 0}%`} sub={t("dash.stat_rec_sub")} icon="🧠" />
         </div>
 
         {/* Quick actions */}
         <div className="mt-8">
-          <SectionTitle>Quick Actions</SectionTitle>
+          <SectionTitle>{t("dash.quick")}</SectionTitle>
           <div className="grid grid-cols-2 gap-3 md:grid-cols-4">
-            {[
-              { label: "Ask AI Agent", icon: Sparkles, href: "/agent", desc: "自然语言发起任务" },
-              { label: "Search Skills", icon: Puzzle, href: "/skills", desc: "浏览全部能力" },
-              { label: "Create Workflow", icon: Workflow, href: "/workflows", desc: "编排多 Skill 流程" },
-              { label: "Execution Center", icon: Activity, href: "/executions", desc: "查看运行记录" },
-            ].map((a) => (
+            {quickActions.map((a) => (
               <Link key={a.label} href={a.href} className="card card-hover p-4">
                 <a.icon className="h-5 w-5 text-accent" />
                 <div className="mt-2 text-sm font-medium">{a.label}</div>
@@ -119,7 +122,7 @@ export default function DashboardPage() {
         <div className="mt-8 grid gap-6 lg:grid-cols-3">
           {/* AI Recommendations */}
           <div className="lg:col-span-2">
-            <SectionTitle sub="基于语义匹配与历史使用偏好">AI Recommendation</SectionTitle>
+            <SectionTitle sub={t("dash.recommended_sub")}>{t("dash.recommended")}</SectionTitle>
             <div className="space-y-2">
               {recommended.map((s, i) => (
                 <Link key={s.id} href={`/skills/${s.id}`} className="card card-hover flex items-center gap-3 p-3">
@@ -127,21 +130,21 @@ export default function DashboardPage() {
                   <div className="min-w-0 flex-1">
                     <div className="flex items-center gap-2">
                       <span className="text-sm font-medium">{s.name}</span>
-                      <Badge tone="accent">#{i + 1} 推荐</Badge>
+                      <Badge tone="accent">#{i + 1} {t("dash.rec_badge")}</Badge>
                     </div>
                     <div className="truncate text-xs text-subtle">{s.description}</div>
                   </div>
-                  <Badge tone="neutral">{s.category?.name ?? "未分类"}</Badge>
+                  <Badge tone="neutral">{s.category?.name ?? t("dash.uncategorized")}</Badge>
                 </Link>
               ))}
-              {recommended.length === 0 && <Card className="p-6 text-center text-sm text-subtle">正在加载推荐…</Card>}
+              {recommended.length === 0 && <Card className="p-6 text-center text-sm text-subtle">{t("dash.rec_loading")}</Card>}
             </div>
           </div>
 
           {/* Recent activity + favorites */}
           <div className="space-y-6">
             <div>
-              <SectionTitle>Recent Activity</SectionTitle>
+              <SectionTitle>{t("dash.recent")}</SectionTitle>
               <Card className="divide-y divide-border p-1">
                 {(analytics?.recentExecutions ?? []).slice(0, 6).map((e) => (
                   <Link key={e.id} href="/executions" className="flex items-center justify-between px-3 py-2.5 hover:bg-surface2">
@@ -155,20 +158,20 @@ export default function DashboardPage() {
                     </div>
                   </Link>
                 ))}
-                {!analytics?.recentExecutions?.length && <div className="px-3 py-6 text-center text-xs text-subtle">暂无执行记录</div>}
+                {!analytics?.recentExecutions?.length && <div className="px-3 py-6 text-center text-xs text-subtle">{t("dash.recent_empty")}</div>}
               </Card>
             </div>
             <div>
-              <SectionTitle>⭐ Favorites</SectionTitle>
+              <SectionTitle>{t("dash.favs")}</SectionTitle>
               <div className="space-y-2">
                 {favorites.slice(0, 4).map((s) => (
                   <Link key={s.id} href={`/skills/${s.id}`} className="card card-hover flex items-center gap-2 p-3">
                     <Star className="h-4 w-4 text-warn" />
                     <span className="text-sm">{s.name}</span>
-                    <span className="ml-auto text-xs text-subtle">{s.usage_count} 次使用</span>
+                    <span className="ml-auto text-xs text-subtle">{s.usage_count} {t("common.usage")}</span>
                   </Link>
                 ))}
-                {favorites.length === 0 && <Card className="p-4 text-center text-xs text-subtle">还没有收藏，去 Skills 页点亮 ⭐</Card>}
+                {favorites.length === 0 && <Card className="p-4 text-center text-xs text-subtle">{t("dash.favs_empty")}</Card>}
               </div>
             </div>
           </div>

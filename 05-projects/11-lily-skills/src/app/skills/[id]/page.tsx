@@ -5,8 +5,9 @@ import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Play, Star, ArrowLeft, ShieldCheck, Clock } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
-import { Card, Badge, Button, Input, Textarea, StatusLabel, Spinner, SectionTitle } from "@/components/ui";
+import { Card, Badge, Button, Input, StatusLabel, Spinner, SectionTitle } from "@/components/ui";
 import { api, fmtDuration, fmtTime } from "@/lib/client";
+import { useI18n } from "@/lib/i18n";
 
 interface SkillDetail {
   id: string;
@@ -25,15 +26,12 @@ interface SkillDetail {
   last_used_at: string | null;
   ai_description: string | null;
   input_schema: string;
-  output_schema: string;
   permissions_list: string[];
   tags: string[];
   use_cases: string[];
-  examples: string[];
   category: { name: string; icon: string | null } | null;
   source: string;
   endpoint: string | null;
-  command: string | null;
   created_at: string;
 }
 
@@ -49,7 +47,7 @@ interface Execution {
 
 function DetailContent() {
   const params = useParams<{ id: string }>();
-  const search = useSearchParams();
+  const { t } = useI18n();
   const [skill, setSkill] = useState<SkillDetail | null>(null);
   const [inputs, setInputs] = useState<Record<string, string>>({});
   const [execution, setExecution] = useState<Execution | null>(null);
@@ -70,9 +68,8 @@ function DetailContent() {
         else init[k] = "";
       }
       setInputs(init);
-    }).catch(() => setError("Skill 不存在"));
-    api<{ favorite: boolean } | { skills: never[] }>("/api/skills?favorite=true").then(() => {}).catch(() => {});
-  }, [params.id]);
+    }).catch(() => setError(t("detail.not_found")));
+  }, [params.id, t]);
 
   useEffect(() => {
     if (skill) {
@@ -81,7 +78,7 @@ function DetailContent() {
         .then((d) => setRelated(d.results.filter((r) => r.skill.id !== skill.id).map((r) => r.skill)))
         .catch(() => {});
     }
-  }, [params.id, execution?.id]);
+  }, [params.id, execution?.id, skill]);
 
   const run = async (skipApproval = false) => {
     if (!skill) return;
@@ -110,15 +107,15 @@ function DetailContent() {
   };
 
   if (error && !skill) return <AppShell><div className="p-10 text-center text-sm text-muted">{error}</div></AppShell>;
-  if (!skill) return <AppShell><div className="p-10 text-center text-sm text-muted">加载中…</div></AppShell>;
+  if (!skill) return <AppShell><div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div></AppShell>;
 
   const schema = JSON.parse(skill.input_schema || "{}");
-  const outputSchema = JSON.parse(skill.output_schema || "{}");
+  const riskKey = `detail.risk_${skill.risk_level}`;
 
   return (
     <AppShell>
       <div className="mx-auto max-w-5xl px-6 py-8">
-        <Link href="/skills" className="inline-flex items-center gap-1 text-xs text-muted hover:text-fg"><ArrowLeft className="h-3.5 w-3.5" /> 返回 Skills</Link>
+        <Link href="/skills" className="inline-flex items-center gap-1 text-xs text-muted hover:text-fg"><ArrowLeft className="h-3.5 w-3.5" /> {t("detail.back")}</Link>
 
         <div className="mt-4 flex items-start gap-4">
           <div className="flex h-14 w-14 items-center justify-center rounded-2xl bg-surface2 text-3xl">{skill.icon ?? "🧩"}</div>
@@ -130,18 +127,18 @@ function DetailContent() {
             </div>
             <p className="mt-1 max-w-2xl text-sm text-muted">{skill.description}</p>
             <div className="mt-2 flex flex-wrap items-center gap-2 text-[11px] text-subtle">
-              <Badge tone="accent">{skill.category?.icon ?? ""} {skill.category?.name ?? "未分类"}</Badge>
-              {skill.tags.map((t) => <Badge key={t}>#{t}</Badge>)}
-              <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> {riskText(skill.risk_level)}</span>
-              <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" /> {skill.usage_count} 次使用 · 最近 {fmtTime(skill.last_used_at)}</span>
+              <Badge tone="accent">{skill.category?.icon ?? ""} {skill.category?.name ?? t("dash.uncategorized")}</Badge>
+              {skill.tags.map((tag) => <Badge key={tag}>#{tag}</Badge>)}
+              <span className="inline-flex items-center gap-1"><ShieldCheck className="h-3 w-3" /> {t(riskKey)}</span>
+              <span className="inline-flex items-center gap-1"><Clock className="h-3 w-3" /> {skill.usage_count} {t("common.usage")} · {t("common.last_used")} {fmtTime(skill.last_used_at)}</span>
             </div>
           </div>
           <div className="flex gap-2">
             <Button variant="secondary" size="sm" onClick={() => api("/api/favorites", { method: "POST", body: JSON.stringify({ skillId: skill.id }) }).then(() => setFaved(!faved))}>
-              <Star className={`h-3.5 w-3.5 ${faved ? "fill-warn text-warn" : ""}`} /> {faved ? "已收藏" : "收藏"}
+              <Star className={`h-3.5 w-3.5 ${faved ? "fill-warn text-warn" : ""}`} /> {faved ? t("common.favorited") : t("common.favorite")}
             </Button>
             <Button size="sm" onClick={() => run(false)} disabled={running}>
-              {running ? <Spinner className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} 运行
+              {running ? <Spinner className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} {t("common.run")}
             </Button>
           </div>
         </div>
@@ -150,7 +147,7 @@ function DetailContent() {
           <div className="space-y-4 lg:col-span-2">
             {skill.ai_description && (
               <Card className="p-4">
-                <SectionTitle>AI 理解</SectionTitle>
+                <SectionTitle>{t("detail.ai_understand")}</SectionTitle>
                 <p className="text-sm leading-relaxed text-muted">{skill.ai_description}</p>
                 {skill.use_cases.length > 0 && (
                   <div className="mt-3 flex flex-wrap gap-1.5">
@@ -162,9 +159,9 @@ function DetailContent() {
 
             {/* Run panel */}
             <Card className="p-4">
-              <SectionTitle>Run Skill</SectionTitle>
+              <SectionTitle>{t("detail.run_skill")}</SectionTitle>
               <div className="space-y-3">
-                {Object.keys(schema.properties ?? {}).length === 0 && <p className="text-xs text-subtle">该 Skill 无需输入参数。</p>}
+                {Object.keys(schema.properties ?? {}).length === 0 && <p className="text-xs text-subtle">{t("detail.no_input")}</p>}
                 {Object.entries(schema.properties ?? {}).map(([k, v]) => {
                   const prop = v as { type?: string; description?: string };
                   return (
@@ -178,20 +175,20 @@ function DetailContent() {
                           <option value="false">false</option><option value="true">true</option>
                         </select>
                       ) : prop.type === "array" ? (
-                        <Input value={inputs[k] ?? ""} onChange={(e) => setInputs({ ...inputs, [k]: e.target.value })} placeholder='JSON 数组，如 ["a","b"]' className="font-mono" />
+                        <Input value={inputs[k] ?? ""} onChange={(e) => setInputs({ ...inputs, [k]: e.target.value })} placeholder='JSON array, e.g. ["a","b"]' className="font-mono" />
                       ) : (
                         <Input value={inputs[k] ?? ""} onChange={(e) => setInputs({ ...inputs, [k]: e.target.value })} placeholder={prop.description ?? k} className="font-mono" />
                       )}
                     </div>
                   );
                 })}
-                {skill.execution_type === "http" && <p className="text-[11px] text-warn">⚠ 该 Skill 会请求外部网络：{skill.endpoint}</p>}
+                {skill.execution_type === "http" && <p className="text-[11px] text-warn">⚠ {t("detail.network_warn")} {skill.endpoint}</p>}
                 {skill.risk_level === "high" || skill.risk_level === "critical" ? (
-                  <p className="text-[11px] text-warn">⚠ 高风险 Skill 执行前需要人工审批。</p>
+                  <p className="text-[11px] text-warn">⚠ {t("detail.risk_warn")}</p>
                 ) : null}
                 <div className="flex items-center gap-2">
                   <Button onClick={() => run(false)} disabled={running}>
-                    {running ? <Spinner className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} 执行
+                    {running ? <Spinner className="h-3.5 w-3.5" /> : <Play className="h-3.5 w-3.5" />} {t("common.execute")}
                   </Button>
                   {error && <span className="text-xs text-danger">{error}</span>}
                 </div>
@@ -201,13 +198,13 @@ function DetailContent() {
             {/* Execution result */}
             {execution && (
               <Card className="p-4">
-                <SectionTitle>执行结果 <StatusLabel status={execution.status} /></SectionTitle>
+                <SectionTitle>{t("detail.result")} <StatusLabel status={execution.status} /></SectionTitle>
                 {execution.status === "awaiting_approval" ? (
                   <div className="rounded-lg border border-warn/30 bg-warn/5 p-4 text-sm text-warn">
-                    该执行需要审批（高风险 / 敏感权限）。
+                    {t("detail.approval_required")}
                     <div className="mt-2 flex gap-2">
-                      <Button size="sm" onClick={() => api(`/api/executions/${execution.id}/approve`, { method: "POST" }).then((d) => setExecution((d as { execution: Execution }).execution))}>批准并执行</Button>
-                      <Button size="sm" variant="ghost" onClick={() => api(`/api/executions/${execution.id}/cancel`, { method: "POST" }).then((d) => setExecution((d as { execution: Execution }).execution))}>取消</Button>
+                      <Button size="sm" onClick={() => api(`/api/executions/${execution.id}/approve`, { method: "POST" }).then((d) => setExecution((d as { execution: Execution }).execution))}>{t("detail.approve_run")}</Button>
+                      <Button size="sm" variant="ghost" onClick={() => api(`/api/executions/${execution.id}/cancel`, { method: "POST" }).then((d) => setExecution((d as { execution: Execution }).execution))}>{t("common.cancel")}</Button>
                     </div>
                   </div>
                 ) : execution.status === "completed" ? (
@@ -215,10 +212,10 @@ function DetailContent() {
                 ) : execution.status === "failed" ? (
                   <pre className="code max-h-96 overflow-auto rounded-lg border border-danger/30 bg-danger/5 p-3 text-xs text-danger">{execution.error}</pre>
                 ) : (
-                  <div className="flex items-center gap-2 text-sm text-muted"><Spinner /> 执行中…</div>
+                  <div className="flex items-center gap-2 text-sm text-muted"><Spinner /> {t("detail.executing")}</div>
                 )}
                 <div className="mt-3 text-[11px] text-subtle">
-                  耗时 {fmtDuration(execution.duration_ms)} · {fmtTime(execution.created_at)}
+                  {t("common.duration")} {fmtDuration(execution.duration_ms)} · {fmtTime(execution.created_at)}
                 </div>
               </Card>
             )}
@@ -227,25 +224,25 @@ function DetailContent() {
           {/* Sidebar */}
           <div className="space-y-4">
             <Card className="p-4">
-              <SectionTitle>元数据</SectionTitle>
+              <SectionTitle>{t("detail.meta")}</SectionTitle>
               <dl className="space-y-2 text-xs">
-                <Row k="执行类型" v={<Badge tone="info">{skill.execution_type}</Badge>} />
-                <Row k="风险等级" v={<Badge tone={skill.risk_level === "low" ? "green" : skill.risk_level === "medium" ? "warn" : "danger"}>{riskText(skill.risk_level)}</Badge>} />
-                <Row k="健康状态" v={<StatusLabel status={skill.health_status} />} />
-                <Row k="作者" v={skill.author} />
-                <Row k="来源" v={skill.source} />
-                <Row k="注册时间" v={fmtTime(skill.created_at)} />
+                <Row k={t("detail.exec_type")} v={<Badge tone="info">{skill.execution_type}</Badge>} />
+                <Row k={t("detail.risk_level")} v={<Badge tone={skill.risk_level === "low" ? "green" : skill.risk_level === "medium" ? "warn" : "danger"}>{t(riskKey)}</Badge>} />
+                <Row k={t("detail.health")} v={<StatusLabel status={skill.health_status} />} />
+                <Row k={t("detail.author")} v={skill.author} />
+                <Row k={t("detail.source")} v={skill.source} />
+                <Row k={t("detail.created")} v={fmtTime(skill.created_at)} />
               </dl>
             </Card>
             <Card className="p-4">
-              <SectionTitle>权限</SectionTitle>
+              <SectionTitle>{t("detail.permissions")}</SectionTitle>
               <div className="flex flex-wrap gap-1.5">
-                {skill.permissions_list.length ? skill.permissions_list.map((p) => <Badge key={p} tone="neutral">{p}</Badge>) : <span className="text-xs text-subtle">只读</span>}
+                {skill.permissions_list.length ? skill.permissions_list.map((p) => <Badge key={p} tone="neutral">{t(`perm.${p}`)}</Badge>) : <span className="text-xs text-subtle">{t("detail.readonly")}</span>}
               </div>
             </Card>
             {related.length > 0 && (
               <Card className="p-4">
-                <SectionTitle>相关 Skills</SectionTitle>
+                <SectionTitle>{t("detail.related")}</SectionTitle>
                 <div className="space-y-2">
                   {related.map((r) => (
                     <Link key={r.id} href={`/skills/${r.id}`} className="flex items-center gap-2 rounded-lg p-2 hover:bg-surface2">
@@ -272,13 +269,10 @@ function Row({ k, v }: { k: string; v: React.ReactNode }) {
   );
 }
 
-function riskText(risk: string): string {
-  return { low: "低风险", medium: "中风险", high: "高风险", critical: "严重风险" }[risk] ?? risk;
-}
-
 export default function SkillDetailPage() {
+  const { t } = useI18n();
   return (
-    <Suspense fallback={<AppShell><div className="p-10 text-center text-sm text-muted">加载中…</div></AppShell>}>
+    <Suspense fallback={<AppShell><div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div></AppShell>}>
       <DetailContent />
     </Suspense>
   );
