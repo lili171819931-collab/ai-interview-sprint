@@ -47,6 +47,8 @@ export interface SubtitleState {
   timedEntries: { start: number; end: number; text: string }[];
 }
 
+export type PipShape = "rounded" | "circle" | "ellipse" | "square" | "diamond";
+
 export interface PipRect {
   x: number; // 归一化 0..1
   y: number;
@@ -55,6 +57,22 @@ export interface PipRect {
   radius: number; // 圆角 px
   label: string;
   mirror: boolean;
+}
+
+/** 简单美颜（CSS/canvas filter 参数，0..1） */
+export interface BeautyState {
+  smooth: number; // 磨皮
+  bright: number; // 美白
+  rosy: number;   // 红润
+  sharp: number;  // 清晰度
+}
+
+export type PipBlurMode = "none" | "screen" | "soft";
+
+export interface ClickEffect {
+  x: number; // 归一化
+  y: number;
+  t: number; // 起始时间 ms
 }
 
 export interface TemplateDef {

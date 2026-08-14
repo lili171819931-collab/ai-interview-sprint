@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { studio } from "./engine/Studio";
 import { formatDuration } from "./engine/export";
 import { useElapsed, useStudioEvent, useStudioState } from "./hooks";
@@ -13,6 +13,20 @@ export default function App() {
   const status = useStudioEvent("status", "就绪 — 选择屏幕 / 摄像头开始创作");
   const recorded = useStudioEvent("recorded", null as null | { blob: Blob; url: string; duration: number });
   const [showExport, setShowExport] = useState(false);
+  const importRef = useRef<HTMLInputElement>(null);
+
+  const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const f = e.target.files?.[0];
+    e.target.value = "";
+    if (!f) return;
+    const url = URL.createObjectURL(f);
+    if (studio.recordedUrl) URL.revokeObjectURL(studio.recordedUrl);
+    studio.recordedBlob = f;
+    studio.recordedUrl = url;
+    studio.recordedDuration = 0;
+    studio.setState("recorded");
+    studio.setStatus(`✅ 已导入本地视频「${f.name}」— 可 AI 剪辑 / 导出 / 发布`);
+  };
 
   const recording = state === "recording" || state === "paused";
 
@@ -67,6 +81,12 @@ export default function App() {
           )}
           {!recording && state === "recorded" && (
             <button className="btn btn-stop ghost" onClick={() => studio.reset()}>↺ 重新开始</button>
+          )}
+          {!recording && state !== "exporting" && (
+            <>
+              <input ref={importRef} type="file" accept="video/*" hidden onChange={handleImport} />
+              <button className="btn ghost" onClick={() => importRef.current?.click()} title="导入本地视频继续剪辑（配合浏览器扩展录制）">📥 导入视频</button>
+            </>
           )}
           <button className="btn btn-export" onClick={() => setShowExport(true)} disabled={state !== "recorded" && !recorded}>
             🚀 导出 & 发布

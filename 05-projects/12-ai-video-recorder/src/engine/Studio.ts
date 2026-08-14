@@ -173,6 +173,7 @@ class Studio {
     if (this.recorder.state === "recording") {
       this.recorder.pause();
       this.pausedAt = performance.now();
+      if (this.timerHandle) { clearInterval(this.timerHandle); this.timerHandle = null; }
       this.setState("paused");
       this.setStatus("⏸ 已暂停");
     }
@@ -183,6 +184,10 @@ class Studio {
     if (this.recorder.state === "paused") {
       this.recorder.resume();
       this.startTs += performance.now() - this.pausedAt;
+      this.timerHandle = window.setInterval(() => {
+        this.elapsedMs = performance.now() - this.startTs;
+        this.emit("tick", { elapsed: this.elapsedMs });
+      }, 200);
       this.setState("recording");
       this.setStatus("▶ 继续录制");
     }

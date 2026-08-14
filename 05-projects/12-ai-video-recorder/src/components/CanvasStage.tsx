@@ -84,11 +84,17 @@ export function CanvasStage() {
     const p = toNorm(e);
     if (tool === "none") {
       if (cropMode) return;
-      // 点击屏幕区域设置缩放焦点
+      // 点击屏幕区域设置缩放焦点 + 点击特效 + 自动聚焦缩放
       const s = comp.template.screen;
       if (p.x >= s.x && p.x <= s.x + s.w && p.y >= s.y && p.y <= s.y + s.h) {
         comp.zoom.focusX = (p.x - s.x) / s.w;
         comp.zoom.focusY = (p.y - s.y) / s.h;
+        if (comp.autoZoomOnClick) {
+          comp.zoom.scale = Math.max(comp.zoom.scale, 1.6);
+        }
+        if (comp.clickFxEnabled) {
+          comp.clickEffects.push({ x: p.x, y: p.y, t: performance.now() });
+        }
       }
       return;
     }

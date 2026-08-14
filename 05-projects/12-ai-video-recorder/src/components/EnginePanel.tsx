@@ -7,11 +7,12 @@ import { downloadBlob, toSrt } from "../engine/export";
 import type { EditPlan, SubtitleState } from "../types";
 import { useStudioState } from "../hooks";
 
-type Tab = "crop" | "zoom" | "subtitle" | "template" | "bgm" | "ai";
+type Tab = "crop" | "zoom" | "pip" | "subtitle" | "template" | "bgm" | "ai";
 
 const TABS: { id: Tab; label: string; emoji: string }[] = [
   { id: "crop", label: "裁剪", emoji: "✂️" },
   { id: "zoom", label: "缩放", emoji: "🔎" },
+  { id: "pip", label: "小窗·美颜", emoji: "🪞" },
   { id: "subtitle", label: "字幕", emoji: "💬" },
   { id: "template", label: "模板", emoji: "🎨" },
   { id: "bgm", label: "BGM", emoji: "🎵" },
@@ -33,11 +34,120 @@ export function EnginePanel() {
       <div className="tab-body">
         {tab === "crop" && <CropTab />}
         {tab === "zoom" && <ZoomTab />}
+        {tab === "pip" && <PipTab />}
         {tab === "subtitle" && <SubtitleTab />}
         {tab === "template" && <TemplateTab />}
         {tab === "bgm" && <BgmTab />}
         {tab === "ai" && <AiEditTab />}
       </div>
+    </div>
+  );
+}
+
+
+// ---------- 小窗 / 美颜（OpenScreen/Cap 融合） ----------
+const SHAPES: { id: "rounded" | "circle" | "ellipse" | "square" | "diamond"; label: string }[] = [
+  { id: "rounded", label: "圆角" },
+  { id: "circle", label: "圆形" },
+  { id: "ellipse", label: "椭圆" },
+  { id: "square", label: "方形" },
+  { id: "diamond", label: "菱形" },
+];
+
+function PipTab() {
+  const [shape, setShape] = useState<"rounded" | "circle" | "ellipse" | "square" | "diamond">("rounded");
+  const [beauty, setBeauty] = useState({ smooth: 0, bright: 0, rosy: 0, sharp: 0 });
+  const [blur, setBlur] = useState<"none" | "screen" | "soft">("none");
+  const [pipSize, setPipSize] = useState(1);
+  const [mirror, setMirror] = useState(true);
+  const [clickFx, setClickFx] = useState(true);
+  const [autoZoom, setAutoZoom] = useState(false);
+  const [source1, setSource1] = useState(true);
+  const [source2, setSource2] = useState(true);
+
+  useEffect(() => {
+    const comp = studio.compositor;
+    if (!comp) return;
+    comp.pipShape = shape;
+    comp.beauty = beauty;
+    comp.blurMode = blur;
+    comp.enabled.camera1 = source1;
+    comp.enabled.camera2 = source2;
+  }, [shape, beauty, blur, source1, source2]);
+
+  const applySize = (v: number) => {
+    setPipSize(v);
+    const comp = studio.compositor;
+    if (!comp) return;
+    const tpl = comp.template;
+    for (const key of ["cam1", "cam2"] as const) {
+      const base = tpl.pips[key];
+      if (!base) continue;
+      comp.pipOverrides[key] = { ...comp.pipOverrides[key], w: base.w * v, h: base.h * v };
+    }
+  };
+
+  return (
+    <div className="tab-section">
+      <p className="tab-desc">🪞 摄像头小窗：位置/大小可在画布上直接拖动，形状、美颜与背景模糊实时生效（录制中也生效）。</p>
+
+      <div className="subsection">
+        <label className="sub-label">小窗形状（Cap / OpenScreen）</label>
+        <div className="preset-row">
+          {SHAPES.map((sh) => (
+            <button key={sh.id} className={`btn small ${shape === sh.id ? "active" : ""}`} onClick={() => setShape(sh.id)}>{sh.label}</button>
+          ))}
+        </div>
+      </div>
+
+      <div className="slider-row">
+        <label>小窗大小</label>
+        <input type="range" min="0.5" max="2" step="0.05" value={pipSize} onChange={(e) => applySize(+e.target.value)} />
+        <span>{Math.round(pipSize * 100)}%</span>
+      </div>
+
+      <div className="subsection">
+        <label className="sub-label">💄 简单美颜</label>
+        {([
+          ["smooth", "磨皮"],
+          ["bright", "美白"],
+          ["rosy", "红润"],
+          ["sharp", "清晰度"],
+        ] as const).map(([k, label]) => (
+          <div className="slider-row" key={k}>
+            <label>{label}</label>
+            <input type="range" min="0" max="1" step="0.01" value={beauty[k]}
+              onChange={(e) => setBeauty({ ...beauty, [k]: +e.target.value })} />
+            <span>{Math.round(beauty[k] * 100)}%</span>
+          </div>
+        ))}
+      </div>
+
+      <div className="subsection">
+        <label className="sub-label">🌫️ 背景模糊优化</label>
+        <div className="preset-row">
+          {([
+            ["none", "无"],
+            ["screen", "页面模糊"],
+            ["soft", "人像柔焦"],
+          ] as const).map(([id, label]) => (
+            <button key={id} className={`btn small ${blur === id ? "active" : ""}`} onClick={() => setBlur(id)}>{label}</button>
+          ))}
+        </div>
+        <p className="tab-desc">「页面模糊」= 小窗背后的网页内容模糊；「人像柔焦」= 摄像头中心清晰、边缘虚化。</p>
+      </div>
+
+      <label className="check-row"><input type="checkbox" checked={mirror} onChange={(e) => setMirror(e.target.checked)} /> 摄像头镜像</label>
+      <label className="check-row"><input type="checkbox" checked={clickFx} onChange={(e) => setClickFx(e.target.checked)} /> 点击特效（OpenScreen/Recordly）</label>
+      <label className="check-row"><input type="checkbox" checked={autoZoom} onChange={(e) => setAutoZoom(e.target.checked)} /> 点击自动聚焦缩放（Recordly）</label>
+
+      <div className="subsection">
+        <label className="sub-label">来源可见性（OBS 风格，录制中可切换）</label>
+        <label className="check-row"><input type="checkbox" checked={source1} onChange={(e) => setSource1(e.target.checked)} /> Camera 1 可见</label>
+        <label className="check-row"><input type="checkbox" checked={source2} onChange={(e) => setSource2(e.target.checked)} /> Camera 2 可见</label>
+      </div>
+
+      <div className="pip-tip">💡 录制中也可随时调整形状 / 美颜 / 模糊 / 可见性，全部实时写入视频。</div>
     </div>
   );
 }

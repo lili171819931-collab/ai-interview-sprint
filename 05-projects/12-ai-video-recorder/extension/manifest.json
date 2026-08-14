@@ -1,0 +1,19 @@
+{
+  "manifest_version": 3,
+  "name": "AI Video Recorder · 网页内录屏",
+  "version": "1.0.0",
+  "description": "在任意网页内直接操作录制：录屏 + 摄像头小窗（可拖动/改形状/美颜/背景模糊）+ 点击特效 + 实时字幕。融合 OBS / Cap / OpenScreen / Recordly 核心能力。",
+  "permissions": ["storage"],
+  "host_permissions": ["<all_urls>"],
+  "content_scripts": [
+    {
+      "matches": ["http://*/*", "https://*/*"],
+      "js": ["content.js"],
+      "css": ["content.css"],
+      "run_at": "document_idle"
+    }
+  ],
+  "action": {
+    "default_title": "AI Video Recorder · 网页内录屏"
+  }
+}

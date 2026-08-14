@@ -254,3 +254,16 @@ body {
 .diag-line.info { color: #9fb0e0; }
 .diag-wait { color: var(--muted); font-size: 13px; }
 .diag-hint { font-size: 12px; color: var(--muted); margin-top: 10px; }
+
+/* ---------- 融合功能样式 ---------- */
+.subsection { display: flex; flex-direction: column; gap: 6px; border-top: 1px dashed var(--border); padding-top: 10px; }
+.sub-label { font-size: 12px; color: var(--accent2); font-weight: 700; }
+.btn.dim { opacity: 0.5; }
+.pip-tip { font-size: 11px; color: var(--muted); border: 1px dashed var(--border); border-radius: 8px; padding: 8px; line-height: 1.6; }
+
+/* ---------- 扩展安装卡片 ---------- */
+.ext-card { margin: 0 12px 12px; background: rgba(108,92,231,0.1); border: 1px solid rgba(108,92,231,0.5); border-radius: 10px; overflow: hidden; }
+.ext-head { padding: 8px 12px; font-size: 12px; font-weight: 800; color: var(--accent2); background: rgba(108,92,231,0.15); }
+.ext-body { padding: 8px 12px 10px; font-size: 11px; color: var(--muted); line-height: 1.7; }
+.ext-body ol { margin: 6px 0 0; padding-left: 18px; }
+.ext-body code { background: #0d1226; border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 10px; color: var(--text); }

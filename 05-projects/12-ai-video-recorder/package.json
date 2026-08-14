@@ -9,7 +9,8 @@
     "build": "tsc --noEmit && vite build",
     "preview": "vite preview --port 3220 --strictPort",
     "typecheck": "tsc --noEmit",
-    "test:e2e": "node tests/e2e.mjs"
+    "test:e2e": "node tests/e2e.mjs",
+    "test:e2e:ext": "node tests/extension-e2e.mjs"
   },
   "dependencies": {
     "react": "^19.2.0",

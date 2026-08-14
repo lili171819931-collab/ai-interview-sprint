@@ -110,6 +110,7 @@ async function main() {
   ok(await page.locator(".stage-canvas").isVisible(), "合成画布可见");
   ok(await page.locator(".device-select option", { hasText: "自动（默认摄像头）" }).count() === 2, "摄像头默认「自动」选项存在");
   ok(await page.locator("button", { hasText: "🔄 重新检测" }).isVisible(), "重新检测设备按钮存在");
+  ok(await page.locator("button", { hasText: "📥 导入视频" }).isVisible(), "导入本地视频按钮存在");
 
   // 设备自检
   await page.locator("button", { hasText: "🔬 自检" }).click();
@@ -192,6 +193,18 @@ async function main() {
   await page.locator(".bgm-item", { hasText: "Lo-Fi" }).click();
   ok(await page.locator(".bgm-item.active").count() === 1, "Lo-Fi BGM 已开启");
 
+  // 小窗·美颜（融合功能）
+  await page.locator(".tab-btn", { hasText: "小窗·美颜" }).click();
+  await page.locator(".preset-row button", { hasText: "圆形" }).first().click();
+  ok(await page.locator(".preset-row button", { hasText: "圆形" }).first().evaluate((el) => el.className.includes("active")), "小窗切换为圆形");
+  await page.locator(".preset-row button", { hasText: "页面模糊" }).click();
+  ok(await page.locator(".preset-row button", { hasText: "页面模糊" }).evaluate((el) => el.className.includes("active")), "开启页面背景模糊");
+  await page.locator(".slider-row", { hasText: "磨皮" }).locator("input[type=range]").fill("0.5");
+  ok(true, "美颜磨皮滑块已调节");
+  await page.locator(".check-row", { hasText: "点击特效" }).locator("input").check();
+  await page.locator(".check-row", { hasText: "Camera 2 可见" }).locator("input").uncheck();
+  ok(true, "OBS 风格来源可见性切换（隐藏 Camera 2）");
+
   // 标注：切回选择工具避免干扰
   await page.locator(".tool-btn", { hasText: "🖱" }).click();
   await page.waitForTimeout(500);
@@ -208,7 +221,7 @@ async function main() {
   const timerText2 = await page.locator(".timer").textContent();
   ok(timerText1 !== timerText2, "计时器在走动");
   await page.locator(".btn-pause").click();
-  await page.waitForTimeout(300);
+  await page.waitForTimeout(600);
   ok((await page.locator(".timer").textContent()) === timerText2, "暂停后计时停止");
   await page.locator(".btn-resume").click();
   await page.waitForTimeout(600);

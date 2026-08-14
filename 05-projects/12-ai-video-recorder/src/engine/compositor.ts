@@ -1,7 +1,11 @@
 import type {
   Annotation,
+  BeautyState,
+  ClickEffect,
   CropRect,
+  PipBlurMode,
   PipRect,
+  PipShape,
   SubtitleState,
   TemplateDef,
   ZoomState,
@@ -52,6 +56,21 @@ export class Compositor {
   showTimestamp = false;
   showGrid = false;
   backgroundImage: HTMLCanvasElement | null = null;
+
+  /** OBS 风格来源开关（录制中可切换） */
+  enabled = { screen: true, camera1: true, camera2: true };
+  /** 小窗形状 */
+  pipShape: PipShape = "rounded";
+  /** 简单美颜参数 */
+  beauty: BeautyState = { smooth: 0, bright: 0, rosy: 0, sharp: 0 };
+  /** 背景模糊模式 */
+  blurMode: PipBlurMode = "none";
+  /** 点击特效（录制中显示点击位置） */
+  clickEffects: ClickEffect[] = [];
+  clickFxEnabled = true;
+  autoZoomOnClick = false;
+  private blurCanvas: HTMLCanvasElement | null = null;
+  private maskCanvas: HTMLCanvasElement | null = null;
 
   private raf = 0;
   private lastT = 0;
@@ -151,7 +170,7 @@ export class Compositor {
     const sRect = this.template.screen;
     const sX = sRect.x * W, sY = sRect.y * H, sW = sRect.w * W, sH = sRect.h * H;
     const screenVideo = this.screenSlot.el;
-    if (screenVideo && this.screenSlot.ready && screenVideo.videoWidth > 0) {
+    if (this.enabled.screen && screenVideo && this.screenSlot.ready && screenVideo.videoWidth > 0) {
       this.updateScale();
       const vw = screenVideo.videoWidth, vh = screenVideo.videoHeight;
       // 裁剪源矩形
@@ -181,8 +200,11 @@ export class Compositor {
     }
 
     // 摄像头 PiP
-    this.drawPip(ctx, "cam1", this.cam1Slot, this.template.pips.cam1, this.pipOverrides.cam1);
-    this.drawPip(ctx, "cam2", this.cam2Slot, this.template.pips.cam2, this.pipOverrides.cam2);
+    if (this.enabled.camera1) this.drawPip(ctx, "cam1", this.cam1Slot, this.template.pips.cam1, this.pipOverrides.cam1);
+    if (this.enabled.camera2) this.drawPip(ctx, "cam2", this.cam2Slot, this.template.pips.cam2, this.pipOverrides.cam2);
+
+    // 点击特效
+    this.drawClickEffects(ctx);
 
     // 网格辅助线
     if (this.showGrid) this.drawGrid(ctx);
@@ -228,22 +250,34 @@ export class Compositor {
     const pip: PipRect = { ...base, ...override };
     const W = this.width, H = this.height;
     const x = pip.x * W, y = pip.y * H, w = pip.w * W, h = pip.h * H;
-    // 占位框（即使无源也显示）
+    const shape = this.pipShape;
+    const radius = pip.radius;
+
+    // 背景模糊（屏幕内容）：小窗背后显示模糊的页面内容
+    if (this.blurMode === "screen" && this.enabled.screen && this.screenSlot.el && this.screenSlot.ready && this.screenSlot.el.videoWidth > 0) {
+      ctx.save();
+      this.clipPip(ctx, x, y, w, h, radius, shape);
+      const v = this.screenSlot.el;
+      const sRect = this.template.screen;
+      const sX = sRect.x * W, sY = sRect.y * H, sW = sRect.w * W, sH = sRect.h * H;
+      const z = Math.max(1, this.currentScale);
+      const dw = sW / z, dh = sH / z;
+      const dx = sX + this.zoom.focusX * (sW - dw), dy = sY + this.zoom.focusY * (sH - dh);
+      const cov = coverFit(v.videoWidth, v.videoHeight, dw, dh);
+      const cx = this.crop.x * v.videoWidth, cy = this.crop.y * v.videoHeight;
+      const cw = this.crop.w * v.videoWidth, ch = this.crop.h * v.videoHeight;
+      ctx.filter = "blur(20px) brightness(0.5)";
+      ctx.drawImage(v, cx, cy, cw, ch, dx + cov.dx, dy + cov.dy, cov.w, cov.h);
+      ctx.filter = "none";
+      ctx.restore();
+    }
+
     ctx.save();
-    this.clipRect(ctx, x, y, w, h, pip.radius);
+    this.clipPip(ctx, x, y, w, h, radius, shape);
     ctx.fillStyle = "rgba(2,6,23,0.9)";
     ctx.fillRect(x, y, w, h);
     if (slot.el && slot.ready && slot.el.videoWidth > 0) {
-      const vw = slot.el.videoWidth, vh = slot.el.videoHeight;
-      const cov = coverFit(vw, vh, w, h);
-      ctx.save();
-      if (pip.mirror) {
-        ctx.translate(x + w / 2, 0);
-        ctx.scale(-1, 1);
-        ctx.translate(-(x + w / 2), 0);
-      }
-      ctx.drawImage(slot.el, x + cov.dx, y + cov.dy, cov.w, cov.h);
-      ctx.restore();
+      this.drawCameraVideo(ctx, slot.el, x, y, w, h, pip.mirror, radius, shape);
     } else {
       ctx.font = `${Math.max(14, Math.round(h * 0.22))}px system-ui`;
       ctx.textAlign = "center";
@@ -254,11 +288,15 @@ export class Compositor {
       ctx.fillText(pip.label, x + w / 2, y + h / 2 + h * 0.22);
     }
     ctx.restore();
-    // 边框 + 标签
+
+    // 边框
+    ctx.save();
     ctx.strokeStyle = "rgba(255,255,255,0.85)";
     ctx.lineWidth = 3;
-    this.roundRectPath(ctx, x, y, w, h, pip.radius);
+    this.strokePip(ctx, x, y, w, h, radius, shape);
     ctx.stroke();
+    ctx.restore();
+
     if (pip.label) {
       ctx.font = "600 13px system-ui";
       const tw = ctx.measureText(pip.label).width + 14;
@@ -271,6 +309,151 @@ export class Compositor {
       ctx.fillStyle = "#ffffff";
       ctx.textBaseline = "alphabetic";
       ctx.fillText(pip.label, x + 7, labelY - 1);
+    }
+  }
+
+  /** 绘制摄像头视频（含镜像 + 美颜 + 柔焦背景） */
+  private drawCameraVideo(
+    ctx: CanvasRenderingContext2D,
+    video: HTMLVideoElement,
+    x: number, y: number, w: number, h: number,
+    mirror: boolean, radius: number, shape: PipShape,
+  ) {
+    const vw = video.videoWidth, vh = video.videoHeight;
+    const cov = coverFit(vw, vh, w, h);
+    const b = this.beauty;
+    ctx.save();
+    if (mirror) {
+      ctx.translate(x + w / 2, 0);
+      ctx.scale(-1, 1);
+      ctx.translate(-(x + w / 2), 0);
+    }
+    const hasColor = b.bright > 0 || b.rosy > 0 || b.sharp > 0;
+    if (hasColor) {
+      ctx.filter = `brightness(${(1 + b.bright * 0.45).toFixed(3)}) contrast(${(1 + b.sharp * 0.4).toFixed(3)}) saturate(${(1 + b.rosy * 0.5).toFixed(3)})`;
+    }
+    ctx.drawImage(video, x + cov.dx, y + cov.dy, cov.w, cov.h);
+    ctx.filter = "none";
+    // 磨皮：叠一层轻微模糊
+    if (b.smooth > 0.02) {
+      ctx.save();
+      ctx.globalAlpha = Math.min(0.6, b.smooth * 0.55);
+      ctx.filter = `blur(${(2 + b.smooth * 9).toFixed(1)}px)`;
+      ctx.drawImage(video, x + cov.dx, y + cov.dy, cov.w, cov.h);
+      ctx.restore();
+    }
+    ctx.restore();
+
+    // 柔焦背景：中心清晰、边缘虚化（人像柔焦）
+    if (this.blurMode === "soft") {
+      const blur = this.getBlurCanvas(vw, vh);
+      const bctx = blur.getContext("2d")!;
+      bctx.clearRect(0, 0, blur.width, blur.height);
+      bctx.save();
+      if (mirror) {
+        bctx.translate(blur.width / 2, 0);
+        bctx.scale(-1, 1);
+        bctx.translate(-(blur.width / 2), 0);
+      }
+      bctx.filter = "blur(13px) brightness(1.04)";
+      bctx.drawImage(video, 0, 0, blur.width, blur.height);
+      bctx.restore();
+      bctx.filter = "none";
+      const off = this.getMaskCanvas(w, h);
+      const octx = off.getContext("2d")!;
+      octx.clearRect(0, 0, w, h);
+      octx.drawImage(blur, 0, 0, w, h);
+      const grad = ctx.createRadialGradient(x + w / 2, y + h / 2, Math.min(w, h) * 0.26, x + w / 2, y + h / 2, Math.max(w, h) * 0.72);
+      grad.addColorStop(0, "rgba(0,0,0,0)");
+      grad.addColorStop(0.55, "rgba(0,0,0,0.25)");
+      grad.addColorStop(1, "rgba(0,0,0,0.92)");
+      ctx.save();
+      this.clipPip(ctx, x, y, w, h, radius, shape);
+      octx.globalCompositeOperation = "destination-in";
+      octx.fillStyle = grad;
+      octx.fillRect(0, 0, w, h);
+      octx.globalCompositeOperation = "source-over";
+      ctx.drawImage(off, x, y);
+      ctx.restore();
+    }
+  }
+
+  private getBlurCanvas(w: number, h: number): HTMLCanvasElement {
+    if (!this.blurCanvas) this.blurCanvas = document.createElement("canvas");
+    this.blurCanvas.width = Math.max(2, Math.round(w / 2));
+    this.blurCanvas.height = Math.max(2, Math.round(h / 2));
+    return this.blurCanvas;
+  }
+
+  private getMaskCanvas(w: number, h: number): HTMLCanvasElement {
+    if (!this.maskCanvas) this.maskCanvas = document.createElement("canvas");
+    this.maskCanvas.width = Math.max(2, Math.round(w));
+    this.maskCanvas.height = Math.max(2, Math.round(h));
+    return this.maskCanvas;
+  }
+
+  /** 按形状裁剪小窗 */
+  private clipPip(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, radius: number, shape: PipShape) {
+    ctx.save();
+    ctx.beginPath();
+    if (shape === "circle") {
+      ctx.arc(x + w / 2, y + h / 2, Math.min(w, h) / 2, 0, Math.PI * 2);
+    } else if (shape === "ellipse") {
+      ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+    } else if (shape === "square") {
+      ctx.rect(x, y, w, h);
+    } else if (shape === "diamond") {
+      ctx.moveTo(x + w / 2, y);
+      ctx.lineTo(x + w, y + h / 2);
+      ctx.lineTo(x + w / 2, y + h);
+      ctx.lineTo(x, y + h / 2);
+      ctx.closePath();
+    } else {
+      this.roundRectPath(ctx, x, y, w, h, radius);
+    }
+    ctx.clip();
+  }
+
+  private strokePip(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, radius: number, shape: PipShape) {
+    ctx.beginPath();
+    if (shape === "circle") {
+      ctx.arc(x + w / 2, y + h / 2, Math.min(w, h) / 2, 0, Math.PI * 2);
+    } else if (shape === "ellipse") {
+      ctx.ellipse(x + w / 2, y + h / 2, w / 2, h / 2, 0, 0, Math.PI * 2);
+    } else if (shape === "square") {
+      ctx.rect(x, y, w, h);
+    } else if (shape === "diamond") {
+      ctx.moveTo(x + w / 2, y);
+      ctx.lineTo(x + w, y + h / 2);
+      ctx.lineTo(x + w / 2, y + h);
+      ctx.lineTo(x, y + h / 2);
+      ctx.closePath();
+    } else {
+      this.roundRectPath(ctx, x, y, w, h, radius);
+    }
+  }
+
+  /** 点击特效：扩散圆环 */
+  private drawClickEffects(ctx: CanvasRenderingContext2D) {
+    const now = performance.now();
+    this.clickEffects = this.clickEffects.filter((c) => now - c.t < 650);
+    if (this.clickEffects.length === 0) return;
+    for (const c of this.clickEffects) {
+      const p = Math.min(1, (now - c.t) / 650);
+      const r = 12 + p * 52;
+      const x = c.x * this.width, y = c.y * this.height;
+      ctx.save();
+      ctx.globalAlpha = 1 - p;
+      ctx.strokeStyle = "#ffd76a";
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(x, y, r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = "#ffd76a";
+      ctx.beginPath();
+      ctx.arc(x, y, 3 + p * 5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.restore();
     }
   }
 

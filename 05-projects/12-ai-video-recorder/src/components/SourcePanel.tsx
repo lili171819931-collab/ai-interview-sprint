@@ -45,6 +45,7 @@ export function SourcePanel() {
   const [busy, setBusy] = useState<"cam1" | "cam2" | null>(null);
   const [showDiag, setShowDiag] = useState(false);
   const [devChecked, setDevChecked] = useState(false);
+  const [vis, setVis] = useState({ screen: true, cam1: true, cam2: true });
   const cam1Preview = useRef<HTMLVideoElement>(null);
   const cam2Preview = useRef<HTMLVideoElement>(null);
 
@@ -151,6 +152,18 @@ export function SourcePanel() {
     }
   };
 
+  const toggleVis = (key: "screen" | "cam1" | "cam2") => {
+    setVis((prev) => {
+      const next = { ...prev, [key]: !prev[key] };
+      if (studio.compositor) {
+        if (key === "screen") studio.compositor.enabled.screen = next.screen;
+        if (key === "cam1") studio.compositor.enabled.camera1 = next.cam1;
+        if (key === "cam2") studio.compositor.enabled.camera2 = next.cam2;
+      }
+      return next;
+    });
+  };
+
   const hasScreen = !!studio.screenStream;
   const hasCam1 = !!studio.cam1Stream;
   const hasCam2 = !!studio.cam2Stream;
@@ -162,6 +175,19 @@ export function SourcePanel() {
         <div className="panel-title-actions">
           <button className="btn small ghost" onClick={() => setShowDiag(true)} title="运行设备自检">🔬 自检</button>
           <button className="btn small ghost" onClick={refreshDevices} title="重新检测设备">🔄 重新检测</button>
+        </div>
+      </div>
+
+      <div className="ext-card">
+        <div className="ext-head">🧩 网页内录制（浏览器扩展）</div>
+        <div className="ext-body">
+          在任意网页上直接录屏 + 摄像头小窗（形状/美颜/背景模糊），无需打开本页面。
+          <ol>
+            <li>打开 Chrome 扩展页：<code>chrome://extensions</code></li>
+            <li>右上角开启「开发者模式」→「加载已解压的扩展程序」</li>
+            <li>选择文件夹：<code>…/12-ai-video-recorder/extension</code></li>
+            <li>任意网页右上角出现 🎥 悬浮工具栏，点「● 录制」即可</li>
+          </ol>
         </div>
       </div>
 
@@ -193,6 +219,9 @@ export function SourcePanel() {
             {hasScreen ? "切换屏幕" : "选择屏幕 / 窗口"}
           </button>
           {hasScreen && <button className="btn small ghost" onClick={() => studio.setScreen(null)} disabled={state === "recording"}>断开</button>}
+          <button className={`btn small ${vis.screen ? "" : "dim"}`} onClick={() => toggleVis("screen")} title="屏幕源可见性（OBS 风格）">
+            {vis.screen ? "👁 可见" : "🚫 隐藏"}
+          </button>
         </div>
       </div>
 
@@ -209,6 +238,8 @@ export function SourcePanel() {
         disabled={state === "recording"}
         error={cam1Error}
         busy={busy === "cam1"}
+        visible={vis.cam1}
+        onToggleVis={() => toggleVis("cam1")}
       />
 
       <CameraCard
@@ -224,6 +255,8 @@ export function SourcePanel() {
         disabled={state === "recording"}
         error={cam2Error}
         busy={busy === "cam2"}
+        visible={vis.cam2}
+        onToggleVis={() => toggleVis("cam2")}
       />
 
       <div className="source-card" data-on={micOn}>
@@ -293,8 +326,10 @@ function CameraCard(props: {
   disabled?: boolean;
   error?: string | null;
   busy?: boolean;
+  visible?: boolean;
+  onToggleVis?: () => void;
 }) {
-  const { title, emoji, devices, selected, onSelect, onConnect, onDisconnect, connected, previewRef, disabled, error, busy } = props;
+  const { title, emoji, devices, selected, onSelect, onConnect, onDisconnect, connected, previewRef, disabled, error, busy, visible, onToggleVis } = props;
   return (
     <div className="source-card" data-on={connected}>
       <div className="source-head">
@@ -322,6 +357,11 @@ function CameraCard(props: {
           </button>
         ) : (
           <button className="btn small danger" onClick={onDisconnect} disabled={disabled}>断开</button>
+        )}
+        {onToggleVis && (
+          <button className={`btn small ${visible ? "" : "dim"}`} onClick={onToggleVis} title="来源可见性（OBS 风格）">
+            {visible ? "👁 可见" : "🚫 隐藏"}
+          </button>
         )}
       </div>
       {error && <p className="source-error">{error}</p>}
