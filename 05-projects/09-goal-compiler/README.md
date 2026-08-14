@@ -87,6 +87,10 @@
 - ⚖️ **法 vs 情报分家**、👥 **多 Agent 并行**（全局段/地界/接缝）、✅ **任务 0 基线核验**、📋 **明卷+暗卷验收**、💬 **澄清 ≤5 问+选项+推荐**
 - 🔍 About 页新增「khazix 自检对齐 12/12」面板
 
+## v11.1 修复
+
+- 🐛 **修复 npm: HTTP 400**：npm 检索接口要求 `text` 2-64 字符，需求分析构造的长查询（>64）触发 400。新增 `sanitizeQuery`（折叠空白 + 截断到安全长度），实测原 65 字长查询恢复正常（8 条、无错误）；补充回归测试
+
 设计风格：**商务科技深色**（深空蓝黑底 + 电光蓝/青渐变、玻璃拟态卡片、高信息密度，保持商务高效简约）。
 
 ## 快速开始
@@ -102,7 +106,7 @@ node server/server.mjs 8910
 ## 测试
 
 ```bash
-node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/divergence.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+发散+API（28/28）
+node --test tests/compile.test.mjs tests/caselib.test.mjs tests/skilllib.test.mjs tests/dialogue.test.mjs tests/divergence.test.mjs tests/api.test.mjs tests/api2.test.mjs   # 单测+案例库+SKILL+对话+发散+API（29/29）
 node tests/e2e-cdp.mjs                                                                                                                                                                # 浏览器端到端（69/69，需本机 Chrome）
 ```
 

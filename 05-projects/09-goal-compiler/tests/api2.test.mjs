@@ -21,3 +21,14 @@ test('数据源错误优雅降级（不抛异常）', async () => {
   assert.ok(Array.isArray(r.items), 'curated 仍应返回');
   assert.ok(r.items.length >= 5, '精选库离线可用');
 });
+
+test('npm 修复：超长需求查询不再 400（自动截断 ≤64）', { timeout: 30000 }, async () => {
+  const longQ = 'AI 面试官工具 我想做一个帮程序员准备面试的 AI 面试官工具，可以模拟面试并打分反馈，按岗位定制问题，目标用户是程序员和求职者，两周内做出 P0';
+  const r = await competitiveSearch({ q: longQ, sources: ['npm'] });
+  assert.ok(!r.errors.some((e) => /npm/.test(e)), `npm 不应报错（实际 ${r.errors.join('；')}）`);
+  assert.ok(Array.isArray(r.items), 'npm 应返回数组');
+  // sanitizeQuery 单元校验
+  const { sanitizeQuery } = await import('../server/crawler.mjs');
+  assert.ok(sanitizeQuery(longQ, 60).length <= 60, '清洗后应 ≤60');
+  assert.ok(sanitizeQuery('  a   b  ', 60) === 'a b', '应折叠空白');
+});

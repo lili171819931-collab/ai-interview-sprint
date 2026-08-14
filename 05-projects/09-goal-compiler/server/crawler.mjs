@@ -58,6 +58,18 @@ async function fetchText(url, headers = {}, timeoutMs = 12000, ua = BROWSER_UA) 
   }
 }
 
+/** 清洗检索词：折叠空白、压缩到目标长度，避免各源 API 400/超限 */
+export function sanitizeQuery(query, maxLen = 60) {
+  let q = String(query || '').trim().replace(/\s+/g, ' ');
+  if (q.length < 2) return q;
+  if (q.length <= maxLen) return q;
+  // 超长：先按空格截断到完整词，再硬截断
+  let cut = q.slice(0, maxLen);
+  const sp = cut.lastIndexOf(' ');
+  if (sp > maxLen * 0.5) cut = cut.slice(0, sp);
+  return cut.trim();
+}
+
 /** 简易 Atom/RSS 解析（零依赖） */
 function parseRss(xml, sourceName) {
   const items = [];
@@ -126,7 +138,9 @@ export async function hnSearch(query, hits = 8) {
 }
 
 export async function npmSearch(query, hits = 8) {
-  const q = encodeURIComponent(query);
+  const clean = sanitizeQuery(query, 60); // npm: text 必须 2-64 字符
+  if (clean.length < 2) return [];
+  const q = encodeURIComponent(clean);
   const url = `https://registry.npmjs.org/-/v1/search?text=${q}&size=${hits}`;
   const data = await fetchJSON(url);
   return (data.objects || []).map((o) => ({
