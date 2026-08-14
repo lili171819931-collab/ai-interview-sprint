@@ -8,6 +8,8 @@
     "start": "node scripts/serve.mjs",
     "test": "node tests/run-tests.mjs",
     "crawl": "node scripts/crawl-skills.mjs",
+    "crawl:hot": "node scripts/crawl-hot-topics.mjs && node scripts/build-hot-final.mjs",
+    "build:hot": "node scripts/build-hot-final.mjs",
     "seed": "node scripts/seed-data.mjs"
   },
   "engines": { "node": ">=18" }

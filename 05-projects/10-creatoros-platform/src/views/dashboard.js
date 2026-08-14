@@ -38,7 +38,7 @@
     const weekLabels = S.metricDays.slice(-7);
 
     const kpis = [
-      { label: '今日发现热点', value: '46', delta: '国内 38 + 全球 8', up: true },
+      { label: '实时抓取热点', value: C.hotLive ? String(C.hotLive.totalLive || C.hotLive.total || 100) : '46', delta: '多源真实 + 18 赛道', up: true },
       { label: '高价值机会', value: '10', delta: 'Opportunity ≥ 70', up: true },
       { label: '今日推荐选题', value: '3', delta: 'S/A 级', up: true },
       { label: '待发布内容', value: '3', delta: '含 TikTok / IG', up: false },
