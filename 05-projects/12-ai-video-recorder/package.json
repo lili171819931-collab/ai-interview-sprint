@@ -1,0 +1,26 @@
+{
+  "name": "ai-video-recorder",
+  "version": "1.0.0",
+  "private": true,
+  "description": "AI Video Recorder — 本地 AI 录屏 / 多摄像头合成 / 智能剪辑工作室（Screenity 同类型应用）",
+  "type": "module",
+  "scripts": {
+    "dev": "vite --port 3220 --strictPort",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview --port 3220 --strictPort",
+    "typecheck": "tsc --noEmit",
+    "test:e2e": "node tests/e2e.mjs"
+  },
+  "dependencies": {
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.57.0",
+    "@types/react": "^19.2.0",
+    "@types/react-dom": "^19.2.0",
+    "@vitejs/plugin-react": "^5.0.0",
+    "typescript": "^5.9.0",
+    "vite": "^7.0.0"
+  }
+}
