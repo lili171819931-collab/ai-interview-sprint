@@ -191,6 +191,8 @@ export function buildGoalPrompt(analysis, tree, assumptions, scope, criteria, ro
   const subject = analysis.entities.object || '目标成果';
   const domain = analysis.domains.primary;
   const user = analysis.entities.targetUser || '诉求发起者';
+  const isExploration = analysis.intent.type === 'research';
+  const taskTypeLabel = isExploration ? '探索型' : '执行型';
   const constraintLine = analysis.entities.constraints.length
     ? analysis.entities.constraints.map((c) => `- ${c}`).join('\n')
     : '- 未显式给出，采用默认合理假设（时间、预算以「先跑通 P0 最小闭环」为准）';
@@ -205,7 +207,9 @@ export function buildGoalPrompt(analysis, tree, assumptions, scope, criteria, ro
     '5. 沉淀交付：输出交付物清单、验证证据与最终汇报。',
   ].join('\n');
 
-  return `# ROLE
+  return `> 使用指引：在执行 Agent（Claude Code / Codex Goal Mode）中输入 \`/goal\` 并粘贴以下全文（${taskTypeLabel} · 目标 ${subject}）。若超出 4000 字符，请拆分任务或使用紧凑模式。
+
+# ROLE
 
 你现在是一名「高级任务架构团队」：顶级战略咨询顾问、优秀产品经理、Principal/Staff Engineer、项目负责人、AI Agent 架构师、QA/验收负责人与企业家 Founder 的组合体。你的职责不是回答问题，而是把一份模糊诉求编译成可自主执行、可人类验收的专家级目标任务书并交付真实结果。
 
@@ -220,9 +224,16 @@ export function buildGoalPrompt(analysis, tree, assumptions, scope, criteria, ro
 - 已识别目标用户/受益方：${user}
 - 输入信息完整度：${gapsLine}
 
+# TASK TYPE
+
+- 任务类型：${taskTypeLabel}（${isExploration ? '调研/选型/答案导向' : '交付可运行成果 + 验收证据'}）。
+- ${isExploration
+    ? '探索型改法：以「有依据的结论 + 决策建议 + 置信度」为交付核心；验收看结论质量与来源可靠性，不追求代码交付。'
+    : '执行型：按下方 TASK BREAKDOWN 完成基线核验 → 实现 → 验证 → 交付。'}
+
 # OBJECTIVE
 
-${tree.goal}。核心原则：结果优先（最终价值 → 成果 → 成功标准 → 路径），而不是过程优先。
+${tree.goal}。核心原则：结果优先（最终价值 → 成果 → 成功标准 → 路径），而不是过程优先。${isExploration ? ' 本次为探索型任务：交付高质量结论与建议，而非可运行代码。' : ''}
 
 # SUCCESS DEFINITION
 
@@ -259,6 +270,18 @@ ${assumptions.decisions.map((a) => `- ${a}`).join('\n')}
 - 关键路径的验证证据（命令输出、测试报告、截图等）
 - 最终交付汇报（完成了什么/输出在哪/验证了什么/遗留问题/后续建议）
 
+# RULES & GUIDANCE（法 vs 情报）
+
+【法 RULES · 违反即不合格，每条可溯源到实测或用户裁决】
+- 不许以「让测试变绿」替代「修好功能」：禁止 .skip / 放宽断言 / mock 被测对象 / 删测试 / \`|| true\` 凑绿。
+- 不许编造命令或数字：每条关键命令必须亲手运行并粘贴输出；摸不到环境的写进任务 0 实测。
+- 不许隐瞒失败：结果比基线更差必须回滚并如实报告。
+- 不许越界：只做 IN SCOPE；任何扩展一律进 P2/P3。
+
+【情报 GUIDANCE · 建议，可偏离但需在 PROGRESS.md 记录原因】
+- 优先复用已有规格文件（测试套件 / schema / 验收脚本 / 设计稿）作为验收规格。
+- 采用最小可行闭环优先；低成本验证先行。
+
 # EXECUTION STRATEGY
 
 - 从最终价值倒推，先定义成功标准再动手。
@@ -268,6 +291,7 @@ ${assumptions.decisions.map((a) => `- ${a}`).join('\n')}
 
 # TASK BREAKDOWN
 
+${isExploration ? '0. 调研基线（任务 0）：明确信息源、检索范围与来源可靠性标准；对关键事实标注「已验证 / 推测」。' : '0. 基线核验（任务 0）：环境可用性 + 关键命令亲手实测 + 建立基线数字（测试数/覆盖率/耗时）；写 ≤10 行开工回执。'}
 ${taskBreakdown}
 
 # PRIORITY
@@ -300,10 +324,26 @@ ${taskBreakdown}
 - 逐条对照 SUCCESS DEFINITION 执行验证，输出可复现证据。
 - 每个任务格式化为：Action → Expected Result → Verification Method → Pass/Fail。
 - 关键异常情况必须真实处理并记录。
+- 基线不可退：测试数/覆盖率 ≥ 基线、skipped = 0；判卷标准冻结，不许临时放宽。
+- 暗卷：管理者自留 2-3 条执行者不可见的抽查（不进本任务书），验收时单独核对。
+- 反向验证：对「坏了没人知道」的风险（假绿灯/失效告警），亲手制造一次失败证明会响。
 
 # ERROR RECOVERY
 
 发现问题：定位根因 → 判断影响范围 → 提出 ≥1 种修复方案 → 选择风险最低方案 → 执行 → 重新验证 → 记录 → 继续。失败后按 Retry → Alternative → Simplified → Fallback 顺序尝试；多路合理路径都失败后才报告阻塞。
+
+# CHECKPOINT & RESUME（断点续跑）
+
+- 维护 PROGRESS.md：当前目标 / 已完成 / 进行中 / 阻塞 / 下一步 / 关键决策 / 假设 / 验证状态。
+- 接手会话先读 PROGRESS.md，不要重做；出现阻塞写 BLOCKED.md。
+- 同一验收连败 3 次：换一种实现路径（Retry → Alternative → Simplified → Fallback）。
+- 每个阶段可断点续跑，不因中断而返工。
+
+# MULTI-AGENT（如需拆分并行）
+
+- 每份子任务带「全局段」：整体目标 / 谁管哪段 / 接缝归属（接缝没人接是头号事故）。
+- 地界错开；共享写入点（lockfile 等）指定唯一归属；证据互不覆盖。
+- 建设与删除不交给同一 Agent；合并排队变慢是新常态，不要自行协调。
 
 # STOP CONDITIONS
 
@@ -316,11 +356,14 @@ ${taskBreakdown}
 # FINAL REPORT
 
 任务完成后汇报：
-1. 完成了什么
+1. 完成了什么（对照 P0-P3 与任务 0 基线）
 2. 输出在哪里
-3. 哪些内容经过验证（附证据）
-4. 哪些问题仍存在
-5. 后续建议
+3. 哪些内容经过验证（附证据 + 明卷结果 + 暗卷结论）
+4. 基线数字变化（测试数/覆盖率/耗时 vs 任务 0 基线）
+5. 哪些问题仍存在（含 BLOCKED.md 中的阻塞）
+6. 后续建议
+
+> 使用指引：若中断，回贴本目标书到 /goal 即可按 PROGRESS.md 断点续跑。
 
 # EXECUTION PRINCIPLES（最重要的执行原则）
 
@@ -335,6 +378,53 @@ ${taskBreakdown}
 }
 
 /** 组装完整输出 */
+/** 逐段压缩：每节只保留前 N 行非空内容（保留全部小节标题） */
+function trimVerbose(prompt, maxLines = 4) {
+  const parts = prompt.split(/(?=^# )/m);
+  return parts.map((sec) => {
+    if (!sec.trim().startsWith('#')) return sec; // 使用指引等非小节
+    const lines = sec.split('\n');
+    const header = lines[0];
+    const body = lines.slice(1);
+    const keep = [];
+    let count = 0;
+    for (const l of body) {
+      if (l.trim() && count >= maxLines) { keep.push('  …（compact）'); break; }
+      keep.push(l);
+      if (l.trim()) count++;
+    }
+    return [header, ...keep].join('\n');
+  }).join('');
+}
+
+/** 紧凑模式：保证 ≤4000 字符（khazix /goal 硬上限），中英双语通用 */
+export function compactGoalPrompt(prompt) {
+  let g = prompt;
+  // 1) 内容级压缩（双语）
+  g = g.replace(/^> (?:使用|Usage):[^\n]*\n\n/m, '> Use: paste into /goal (≤4000 chars).\n\n');
+  g = g.replace(/【情报 GUIDANCE[^]*?- 采用最小可行闭环优先；低成本验证先行。/, '【情报 GUIDANCE · 建议，可偏离但需记录原因】\n- 优先复用已有规格文件；最小可行闭环优先。');
+  g = g.replace(/【GUIDANCE · suggestions[\s\S]*?- Ship the smallest viable loop first\./, '【GUIDANCE · suggestions; may deviate, record why】\n- Prefer reusing existing spec files; smallest viable loop first.');
+  // 1.5) 仍超长 → 逐段压缩（保留全部小节，只压内容）
+  if (g.length > 4000) g = trimVerbose(g, 4);
+  // 2) 按优先级移除/压缩整段，直到 ≤4000
+  const stepReplace = [
+    [/^# MULTI-AGENT[\s\S]*?(?=^# )/m, ''],
+    [/^# EXECUTION PRINCIPLES[\s\S]*$/m, ''],
+    [/^# CHECKPOINT[\s\S]*?(?=^# )/m, '# CHECKPOINT & RESUME\n\n- Maintain PROGRESS.md; on resume read it first; 3 fails → switch approach.\n\n'],
+    [/^# TASK TYPE[\s\S]*?(?=^# )/m, ''],
+    [/^# TOOL USAGE[\s\S]*?(?=^# )/m, ''],
+    [/^# PRIORITY[\s\S]*?(?=^# )/m, ''],
+    [/^# DECISION RULES[\s\S]*?(?=^# )/m, ''],
+    [/^# QUALITY STANDARD[\s\S]*?(?=^# )/m, ''],
+  ];
+  for (const [re, rep] of stepReplace) {
+    if (g.length <= 4000) break;
+    g = g.replace(re, rep);
+  }
+  // 3) 兜底截断
+  return g.length <= 4000 ? g : g.slice(0, 3998).trimEnd() + '…';
+}
+
 export function buildOutput(analysis) {
   const tree = buildGoalTree(analysis);
   const assumptions = buildAssumptions(analysis);

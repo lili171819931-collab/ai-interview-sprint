@@ -89,7 +89,10 @@ export function buildSummaryEn(analysis) {
 /** 英文版 20 段 Goal Prompt */
 export function buildGoalPromptEn(s) {
   const c = s;
-  return `# ROLE
+  const isExploration = /research/i.test(String(c.intent || ''));
+  return `> Usage: paste into /goal (≤4000 chars). Type: ${isExploration ? 'Exploration' : 'Execution'}.
+
+# ROLE
 
 You are a "Senior Task Architecture Team": a top strategy consultant, a strong product manager, a Principal/Staff Engineer, a project lead, an AI Agent architect, a QA/acceptance lead, and a founder. Your job is not to answer questions — it is to compile a vague request into an expert-level, autonomously executable, human-verifiable task spec, and to deliver real results.
 
@@ -104,9 +107,14 @@ Compile and execute "${cap(c.raw, 60)}" as a complete loop: goal definition → 
 - Default target user/beneficiary: ${c.entities?.targetUser || 'the requester'}
 - Info completeness: ${c.gaps?.length ? c.gaps.map((g) => `- ${g}`).join('\n') : '- mostly complete'}
 
+# TASK TYPE
+
+- Type: ${isExploration ? 'Exploration (research / selection / answer-driven)' : 'Execution (deliver runnable outcome + evidence)'}.
+- ${isExploration ? 'Deliver evidence-based conclusions, recommendations and confidence levels; acceptance = quality of conclusions, not code delivery.' : 'Follow TASK BREAKDOWN: baseline check → build → verify → deliver.'}
+
 # OBJECTIVE
 
-${c.goalTree.goal}. Core principle: outcome first (final value → outcome → success criteria → path), not process first.
+${c.goalTree.goal}. Core principle: outcome first (final value → outcome → success criteria → path), not process first.${isExploration ? ' This is an exploration task: deliver conclusions, not runnable code.' : ''}
 
 # SUCCESS DEFINITION
 
@@ -141,6 +149,18 @@ ${c.assumptions.map((x) => `- ${x}`).join('\n')}
 - Reproducible evidence for key paths (command output, test report, screenshots)
 - Final report (what was done / where / verified / gaps / next steps)
 
+# RULES & GUIDANCE
+
+【LAWS · violate = fail; each traceable to a real measurement or user decision】
+- Never make tests "green" instead of fixing the product: no .skip, no loosened asserts, no mocking the unit under test, no deleting tests, no \`|| true\` to fake green.
+- Never invent commands or numbers: every key command must be actually run and pasted; if the environment is unreachable, put it in Task 0.
+- Never hide failure: if the result is worse than baseline, roll back and report honestly.
+- Never go out of scope: only IN SCOPE; any extension goes to P2/P3.
+
+【GUIDANCE · suggestions; may deviate, but record why in PROGRESS.md】
+- Prefer reusing existing spec files (tests / schema / acceptance scripts / design) as the acceptance spec.
+- Ship the smallest viable loop first.
+
 # EXECUTION STRATEGY
 
 - Reason backwards from final value; define success before acting.
@@ -150,6 +170,7 @@ ${c.assumptions.map((x) => `- ${x}`).join('\n')}
 
 # TASK BREAKDOWN
 
+${isExploration ? '0. Baseline (Task 0): list sources, search scope and reliability criteria; label facts as "verified / assumed".' : '0. Baseline check (Task 0): environment works + run key commands + capture baseline numbers (tests/coverage/time); write a ≤10-line kickoff receipt.'}
 1. Requirement modeling: goal tree, scope, acceptance, quantified metrics.
 2. Architecture: minimal viable architecture + ${domainEn(c.domain)} best practices + security/compliance check.
 3. Build P0: make "${c.subject}" core loop really run.
@@ -186,10 +207,25 @@ Level ≥ 3 (stable); aim for Level 4 (maintainable) / 5 (extensible). Highest r
 - Check each SUCCESS DEFINITION item with reproducible evidence.
 - Format each task as: Action → Expected Result → Verification Method → Pass/Fail.
 - Handle and record key exceptions for real.
+- Baseline is non-negotiable: tests/coverage ≥ baseline, skipped = 0; freeze the grading standard.
+- Blind checks: keep 2-3 invisible spot-checks (not in this spec) and verify them at acceptance.
+- Reverse validation: for "nobody would notice if it broke" risks, break it once on purpose to prove the alarm fires.
 
 # ERROR RECOVERY
 
 Find root cause → assess impact → propose ≥1 fix → pick lowest-risk → fix → re-verify → record → continue. Retry → Alternative → Simplified → Fallback; only report blocked after multiple reasonable paths fail.
+
+# CHECKPOINT & RESUME
+
+- Maintain PROGRESS.md (current goal / done / in progress / blocked / next / decisions / assumptions / validation).
+- On resume, read PROGRESS.md first; do not redo. Blockers go to BLOCKED.md.
+- If the same acceptance fails 3 times, switch approach (Retry → Alternative → Simplified → Fallback).
+
+# MULTI-AGENT
+
+- Each sub-spec carries a "global segment": overall goal / who owns which slice / seam ownership (unowned seams are the #1 accident).
+- Keep territories disjoint; assign unique ownership for shared write points; never let evidence overwrite each other.
+- Don't give build and delete to the same agent; slower merges are the new normal.
 
 # STOP CONDITIONS
 
@@ -201,11 +237,14 @@ Stop only when ALL hold:
 
 # FINAL REPORT
 
-1. What was done (vs P0-P3)
+1. What was done (vs P0-P3 and Task 0 baseline)
 2. Where the outputs are
-3. What was verified (with evidence)
-4. Remaining issues
-5. Next steps & business-value judgment
+3. What was verified (evidence + open checks + blind-check verdict)
+4. Baseline delta (tests/coverage/time vs Task 0)
+5. Remaining issues (incl. blockers in BLOCKED.md)
+6. Next steps & business-value judgment
+
+> If interrupted, re-paste this spec into /goal to resume from PROGRESS.md.
 
 # EXECUTION PRINCIPLES
 
@@ -252,4 +291,72 @@ export function buildOutputEn(analysis) {
     goalPrompt: buildGoalPromptEn(s),
     machineGoal: buildMachineGoalEn(s),
   };
+}
+
+/** 英文精简版 Goal（khazix 风格 ≤4000，直接可粘贴 /goal） */
+export function buildGoalPromptEnCompact(analysis) {
+  const s = buildSummaryEn(analysis);
+  const isExploration = /research/i.test(intentEn(analysis.intent.type)) || analysis.intent.type === 'research';
+  const c = s;
+  const cap = (x, n = 70) => (String(x || '').length > n ? String(x).slice(0, n) + '…' : x);
+  return `> Usage: paste into /goal (≤4000 chars). Type: ${isExploration ? 'Exploration' : 'Execution'}.
+
+# ROLE
+Senior Task Architecture Team: strategy + PM + engineering + agent architect + QA + founder. Compile a vague request into an executable, verifiable task spec and deliver real results.
+
+# MISSION
+${cap(c.raw, 120)} → full loop: goal → architecture → build → validate → deliver; prove with runnable outcome + evidence.
+
+# CONTEXT
+- Request (${c.charCount} chars): ${cap(c.raw, 140)}
+- Domain: ${domainEn(c.domain)}; Intent: ${c.intent}; User: ${c.entities?.targetUser || 'requester'}
+${c.gaps && c.gaps.length ? `- Gaps (${c.gaps.length}): ${c.gaps.slice(0, 3).join('; ')} — proceed with sensible defaults, label them.` : '- Input mostly complete.'}
+
+# OBJECTIVE
+${cap(c.goalTree.goal, 110)}. Outcome first: value → outcome → success → path.${isExploration ? ' Exploration task: deliver conclusions + confidence, not code.' : ''}
+
+# SUCCESS
+${c.successCriteria.slice(0, 3).map((x) => `- ${cap(x, 90)}`).join('\n')}
+
+# SCOPE
+IN: ${c.scope.inScope.slice(0, 2).map((x) => cap(x, 60)).join('; ')}
+OUT: ${c.scope.outOfScope.slice(0, 2).map((x) => cap(x, 60)).join('; ')}
+OPTIONAL: ${c.scope.optional.slice(0, 2).map((x) => cap(x, 50)).join('; ')}
+Priority: P0 core → P1 strong → P2 if time → P3 never. No scope creep.
+
+# ASSUMPTIONS
+${c.assumptions.slice(0, 4).map((x) => `- ${cap(x, 100)}`).join('\n')}
+
+# INPUTS / OUTPUTS
+Inputs: raw request + optional attachments + editable spec.
+Outputs: runnable "${c.subject}" + spec + evidence + final report.
+
+# RULES (violate = fail; traceable to a real measurement or user decision)
+- Never fake green: no .skip, loosened asserts, mocking the unit, deleted tests, or \`|| true\`.
+- Never invent commands/numbers: run every key command; paste output; else put it in Task 0.
+- Never hide failure: worse than baseline → roll back and report.
+- Never leave IN SCOPE; extensions go to P2/P3.
+
+# PLAN
+${c.roadmap.map((r) => r.phase).join(' → ')}. Task 0: baseline check (env + key commands + numbers + ≤10-line kickoff receipt)${isExploration ? ' → sources, search scope, reliability criteria' : ''}.
+
+# VALIDATION
+- Action → Expected → Method → Pass/Fail; reproducible evidence.
+- Baseline non-negotiable: tests/coverage ≥ baseline, skipped=0.
+- Blind checks: 2-3 invisible spot-checks kept by manager; reverse-validate alarms (break once to prove it fires).
+${isExploration ? '- Acceptance = quality/confidence of conclusions with sources.' : ''}
+
+# CHECKPOINT & RESUME
+Maintain PROGRESS.md; on resume read it first; blockers to BLOCKED.md; 3 fails → switch approach.
+
+# STOP CONDITIONS
+- [ ] All P0 done and verified
+- [ ] No unlabeled assumptions
+- [ ] Evidence reproducible (incl. blind checks)
+- [ ] Final report delivered
+
+# FINAL REPORT
+1) Done vs P0-P3 & Task-0 baseline  2) Where outputs are  3) Verified (evidence + blind verdict)  4) Baseline delta  5) Remaining issues  6) Next steps.
+> Interrupted? Re-paste into /goal to resume from PROGRESS.md.
+`;
 }

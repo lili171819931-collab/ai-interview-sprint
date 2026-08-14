@@ -359,7 +359,10 @@ function renderResult(r) {
   $('#result').classList.remove('hidden');
   const a = r.analysis;
   const S = lang === 'en' ? r.summaryEn : r.summary;
-  const goal = lang === 'en' ? r.goalPromptEn : r.goalPrompt;
+  const goalFull = lang === 'en' ? r.goalPromptEn : r.goalPrompt;
+  const goalCompact = lang === 'en' ? r.goalPromptEnCompact : r.goalPromptCompact;
+  const goalCompactUsed = goalFull.length > 4000;
+  const goal = goalCompactUsed ? goalCompact : goalFull;
   const machine = lang === 'en' ? r.machineGoalEn : r.machineGoal;
 
   $('#rIntent').textContent = `${lang === 'en' ? 'Intent' : '意图'}：${lang === 'en' ? a.intent.type : a.intent.label}`;
@@ -412,7 +415,7 @@ function renderResult(r) {
   $('#rSuggestions').innerHTML = r.suggestions.map((s) => `<span class="chip">💡 ${escapeHtml(s)}</span>`).join('');
 
   $('#goalPrompt').value = goal;
-  $('#goalCount').textContent = `${goal.length} chars`;
+  $('#goalCount').textContent = `${goal.length} chars / 4000${goalCompactUsed ? '（已压缩）' : ''}`;
   $('#rMachineGoal').textContent = machine;
 
   renderReadyBanner(r);
@@ -432,8 +435,10 @@ function renderReadyBanner(r) {
   else checks.push(lang === 'en' ? `${a.gaps.length} gaps, defaults applied` : `${a.gaps.length} 处缺口已用默认方案兜底`);
   if (a.entities.constraints.length) checks.push(lang === 'en' ? 'constraints captured' : '约束已捕获');
   const ok = a.gaps.length <= 3;
-  $('#readyBanner').className = `ready-banner ${ok ? 'ready' : 'warn'}`;
-  $('#readyBanner').innerHTML = `${ok ? '✅' : '⚠️'} ${lang === 'en' ? 'Readiness' : '就绪度'}：${checks.join(' · ')}`;
+  const goalLen = (lang === 'en' ? r.goalPromptEn : r.goalPrompt).length;
+  const charOk = goalLen <= 4000;
+  $('#readyBanner').className = `ready-banner ${ok && charOk ? 'ready' : 'warn'}`;
+  $('#readyBanner').innerHTML = `${ok && charOk ? '✅' : '⚠️'} ${lang === 'en' ? 'Readiness' : '就绪度'}：${checks.join(' · ')} · 📏 Goal ${goalLen}/4000（${charOk ? '可直接粘贴 /goal' : '已自动压缩'}）`;
 }
 
 /* ================= Goal 编辑/导出 ================= */
@@ -444,7 +449,11 @@ $('#translateBtn').addEventListener('click', () => {
 });
 $('#copyGoalBtn').addEventListener('click', () => currentResult && copyText($('#goalPrompt').value));
 $('#copyGoalBtn2').addEventListener('click', () => currentResult && copyText($('#goalPrompt').value));
-$('#resetGoalBtn').addEventListener('click', () => { if (currentResult) { $('#goalPrompt').value = lang === 'en' ? currentResult.goalPromptEn : currentResult.goalPrompt; toast(lang === 'en' ? 'Reset' : '已恢复原文'); } });
+$('#resetGoalBtn').addEventListener('click', () => { if (currentResult) {
+  const full = lang === 'en' ? currentResult.goalPromptEn : currentResult.goalPrompt;
+  $('#goalPrompt').value = full.length > 4000 ? (lang === 'en' ? currentResult.goalPromptEnCompact : currentResult.goalPromptCompact) : full;
+  toast(lang === 'en' ? 'Reset' : '已恢复原文');
+} });
 $('#shareBtn').addEventListener('click', () => {
   if (!currentResult) return;
   const share = `# Goal Compiler 编译结果 #${currentResult.inputHash}\n\n> ${currentResult.analysis.raw}\n\n${$('#goalPrompt').value}`;
@@ -499,7 +508,10 @@ $('#historyModal').addEventListener('click', (e) => {
 
 function exportResultMD(r) {
   const S = lang === 'en' ? r.summaryEn : r.summary;
-  const goal = lang === 'en' ? r.goalPromptEn : r.goalPrompt;
+  const goalFull = lang === 'en' ? r.goalPromptEn : r.goalPrompt;
+  const goalCompact = lang === 'en' ? r.goalPromptEnCompact : r.goalPromptCompact;
+  const goalCompactUsed = goalFull.length > 4000;
+  const goal = goalCompactUsed ? goalCompact : goalFull;
   const machine = lang === 'en' ? r.machineGoalEn : r.machineGoal;
   const L = [];
   L.push(`# Goal Compiler 编译结果 · #${r.inputHash}（${lang === 'en' ? 'EN' : '中文'}）`);
@@ -1184,8 +1196,12 @@ function renderChat() {
     html += `<div class="chat-bubble user">${escapeHtml(t.answer)}</div>`;
     html += `<div class="chat-bubble bot">${escapeHtml(t.question)}</div>`;
   }
-  if (dialogueQ) html += `<div class="chat-bubble bot ask">❓ ${escapeHtml(dialogueQ.question)}</div>`;
-  else html += `<div class="chat-bubble bot done">✅ ${lang === 'en' ? 'Clarification complete — click Compile.' : '澄清完成，点击「完成并编译」。'}</div>`;
+  if (dialogueQ) {
+    html += `<div class="chat-bubble bot ask">❓ ${escapeHtml(dialogueQ.question)}${dialogueQ.recommend ? ` <span class="hint">（推荐：${escapeHtml(dialogueQ.recommend)}）</span>` : ''}</div>`;
+    if (dialogueQ.options && dialogueQ.options.length) {
+      html += `<div class="chat-options">${dialogueQ.options.map((o) => `<span class="chip" data-opt="${escapeHtml(o)}">${escapeHtml(o)}</span>`).join('')}</div>`;
+    }
+  } else html += `<div class="chat-bubble bot done">✅ ${lang === 'en' ? 'Clarification complete — click Compile.' : '澄清完成，点击「完成并编译」。'}</div>`;
   area.innerHTML = html;
   area.scrollTop = area.scrollHeight;
   $('#chatStatus').textContent = dialogueTranscript.length ? `${dialogueTranscript.length}/${dialogueTranscript.length + (dialogueQ ? 1 : 0)}` : '';
@@ -1195,22 +1211,31 @@ function startDialogue() {
   const raw = $('#rawInput').value.trim();
   if (!raw) { toast(lang === 'en' ? 'Enter a request first' : '请先输入诉求'); return; }
   dialogueTranscript = [];
-  dialogueQ = nextQuestion(dialogueTranscript);
+  dialogueQ = nextQuestion(dialogueTranscript, $('#rawInput').value);
   renderChat();
 }
 function askNext() {
   const inputText = transcriptToInput(dialogueTranscript, $('#rawInput').value);
   // 用原始输入重新分析，仅当对话已加入时
-  if (dialogueTranscript.length) dialogueQ = nextQuestion(dialogueTranscript);
+  if (dialogueTranscript.length) dialogueQ = nextQuestion(dialogueTranscript, $('#rawInput').value);
   renderChat();
 }
+document.addEventListener('click', (e) => {
+  const opt = e.target.closest && e.target.closest('[data-opt]');
+  if (opt && opt.closest('#dialoguePanel')) {
+    if (!dialogueQ) return;
+    dialogueTranscript = addTurn(dialogueTranscript, dialogueQ.qid, dialogueQ.question, opt.dataset.opt);
+    dialogueQ = nextQuestion(dialogueTranscript, $('#rawInput').value);
+    renderChat();
+  }
+});
 $('#chatSend').addEventListener('click', () => {
   const v = $('#chatInput').value.trim();
   if (!v) return;
   if (!dialogueQ) { toast(lang === 'en' ? 'Clarification done' : '澄清已完成'); return; }
   dialogueTranscript = addTurn(dialogueTranscript, dialogueQ.qid, dialogueQ.question, v);
   $('#chatInput').value = '';
-  dialogueQ = nextQuestion(dialogueTranscript);
+  dialogueQ = nextQuestion(dialogueTranscript, $('#rawInput').value);
   renderChat();
 });
 $('#chatInput').addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); $('#chatSend').click(); } });
@@ -1552,6 +1577,34 @@ function renderCharts(report) {
   $('#compCharts').innerHTML = `<div class="comp-charts-grid">${radar}${threatBars}${catBars}</div>`;
 }
 
+/* ================= 参考项目 khazix/leader 自检 ================= */
+const KHAZIX_CHECK = [
+  { item: '探索型/执行型自动分流', ref: '执行型与探索型自动分流', status: 'done', note: 'TASK TYPE 段按意图自动判别' },
+  { item: '≤4000 字符硬上限 + 紧凑模式', ref: '/goal 官方限制', status: 'done', note: '超长自动压缩；就绪度显示 N/4000' },
+  { item: '防作弊验收（基线不可退/点名禁止/暗卷/反向验证）', ref: '防五种死法', status: 'done', note: 'RULES + VALIDATION 段' },
+  { item: '断点续跑（PROGRESS.md/开工回执/BLOCKED.md）', ref: '失忆防护', status: 'done', note: 'CHECKPOINT & RESUME 段' },
+  { item: '法 vs 情报分家', ref: '法与情报分家', status: 'done', note: 'RULES（法）+ GUIDANCE（情报）' },
+  { item: '多 Agent 并行（全局段/地界/接缝）', ref: '多 agent 并行', status: 'done', note: 'MULTI-AGENT 段' },
+  { item: '澄清提问 ≤5 + 选项 + 推荐', ref: '一次性提问 ≤5 个', status: 'done', note: 'AI 多轮澄清 5 问封顶，每题 4 选项+推荐' },
+  { item: '任务 0 基线核验 + 实测数字', ref: '先进代码库实测', status: 'done', note: 'TASK BREAKDOWN 任务 0' },
+  { item: '明卷 + 暗卷验收', ref: '明卷/暗卷', status: 'done', note: 'FINAL REPORT 含明卷+暗卷结论' },
+  { item: '可安装 SKILL.md 导出', ref: 'Skill 形态', status: 'done', note: '🧩 一键导出' },
+  { item: '交付三样（用法/任务书/收尾）', ref: '交付三样', status: 'done', note: 'Goal 顶部使用指引 + 编辑器 + 汇报' },
+  { item: '联网竞品情报（9 源）', ref: '必要时联网调研', status: 'done', note: '竞品情报台' },
+];
+function renderKhazixCheck() {
+  const box = $('#khazixCheck');
+  if (!box) return;
+  const done = KHAZIX_CHECK.filter((k) => k.status === 'done').length;
+  box.innerHTML = `
+    <div class="audit-score" style="min-height:auto">${done}/${KHAZIX_CHECK.length} <span>已对齐</span></div>
+    <div class="audit-items">${KHAZIX_CHECK.map((k) => `
+      <div class="audit-item ok"><span class="audit-mark">✅</span>
+        <div><strong>${escapeHtml(k.item)}</strong> <span class="hint">｜ 参考：${escapeHtml(k.ref)}</span>
+        <div class="gap-why">${escapeHtml(k.note)}</div></div>
+      </div>`).join('')}</div>`;
+}
+
 /* ================= 初始化 ================= */
 async function init() {
   loadHistory();
@@ -1560,6 +1613,7 @@ async function init() {
   renderDesignAudit();
   renderScoringRules();
   renderUsageStats();
+  renderKhazixCheck();
   renderSelfSources();
   updateGhStatus();
   $('#ghToken').value = ghToken();

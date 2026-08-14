@@ -513,3 +513,9 @@ textarea, input[type="text"], select { caret-color: var(--cyan); }
 /* ---- v10：案例分类数量状态 ---- */
 .case-cat-summary { display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0 4px; }
 .case-cat-summary .chip b { color: var(--cyan); }
+
+/* ---- v11：khazix 自检 + 对话选项 ---- */
+.khazix-check { display: grid; grid-template-columns: 160px 1fr; gap: 14px; margin-bottom: 10px; }
+.khazix-check .audit-score { min-height: auto; }
+@media (max-width: 1080px) { .khazix-check { grid-template-columns: 1fr; } }
+.chat-options { align-self: flex-start; display: flex; flex-wrap: wrap; gap: 6px; max-width: 90%; }

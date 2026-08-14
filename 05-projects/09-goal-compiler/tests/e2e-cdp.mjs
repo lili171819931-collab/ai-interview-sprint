@@ -209,6 +209,8 @@ try {
   // v3：就绪度评估 + 案例库自动收录 + 英文切换
   const readyVisible = await evalJS(`!document.getElementById('readyBanner').classList.contains('hidden')`);
   checks.push(['就绪度评估横幅显示', readyVisible]);
+  const ready4000 = await evalJS(`document.getElementById('readyBanner').textContent.includes('/4000')`);
+  checks.push(['就绪度含 4000 字符预算', ready4000]);
   await evalJS(`document.querySelector('.tab[data-tab="cases"]').click()`); await sleep(600);
   const userCaseCount = await evalJS(`document.querySelectorAll('#userCaseGrid .case-card').length`);
   checks.push([`案例库自动收录（${userCaseCount} 条用户案例）`, userCaseCount >= 1]);
@@ -270,9 +272,10 @@ try {
   const dialogQ = await evalJS(`(() => {
     document.getElementById('dialogueToggle').click();
     document.getElementById('chatInput').focus();
-    return document.querySelectorAll('#chatArea .chat-bubble.ask').length === 1;
+    return document.querySelectorAll('#chatArea .chat-bubble.ask').length === 1 &&
+           document.querySelectorAll('#chatArea .chat-options .chip').length >= 2;
   })()`);
-  checks.push(['AI 多轮澄清：首问出现', dialogQ]);
+  checks.push(['AI 多轮澄清：首问+选项+推荐', dialogQ]);
   const dialogTurn = await evalJS(`(() => {
     const ci = document.getElementById('chatInput');
     Object.getOwnPropertyDescriptor(window.HTMLInputElement.prototype, 'value').set.call(ci, '程序员和求职者');
@@ -354,6 +357,10 @@ try {
   await evalJS(`document.querySelector('.tab[data-tab="about"]').click()`); await sleep(400);
   const statCount = await evalJS(`document.querySelectorAll('#usageStats .usage-stat').length`);
   checks.push([`本地用量统计（${statCount} 项）`, statCount === 4]);
+  const khazixItems = await evalJS(`document.querySelectorAll('#khazixCheck .audit-item').length`);
+  checks.push([`khazix 自检对齐（${khazixItems}/12）`, khazixItems >= 12]);
+  const gcText = await evalJS(`document.getElementById('goalCount').textContent`);
+  checks.push([`Goal 计数含 4000 预算（${gcText.slice(0, 30)}）`, gcText.includes('4000')]);
 
   // 截图：各关键视图
   await shot('/tmp/gc-shot-result.png');

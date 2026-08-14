@@ -26,6 +26,20 @@ test('信息足够时不再提问', () => {
   assert.equal(nextQuestion(tr), null, '信息完整应无后续问题');
 });
 
+test('澄清问题：每题带选项+推荐，且 ≤5 问封顶', () => {
+  let tr = [];
+  let n = 0;
+  for (let i = 0; i < 10; i++) {
+    const q = nextQuestion(tr, '我想做一个 AI 面试官工具');
+    if (!q) break;
+    n++;
+    assert.ok(q.options.length >= 2, '每题应有 ≥2 选项');
+    assert.ok(q.recommend, '每题应有推荐默认');
+    tr = addTurn(tr, q.qid, q.question, q.recommend);
+  }
+  assert.ok(n <= 5, `澄清应 ≤5 问（实际 ${n}）`);
+});
+
 test('transcriptToInput 聚合 Q&A 为可编译输入', () => {
   const tr = [{ qid: 'user', question: '目标用户？', answer: '程序员' }];
   const input = transcriptToInput(tr, '做一个 AI 面试官工具');

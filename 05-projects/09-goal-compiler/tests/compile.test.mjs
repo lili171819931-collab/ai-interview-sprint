@@ -77,6 +77,28 @@ test('目标树结构五层齐全', () => {
 
 console.log(`\n  ✔ 编译引擎测试：${cases.length} 个用例 × 结构断言全部通过\n`);
 
+test('khazix 对齐：RULES/TASK TYPE/CHECKPOINT/MULTI-AGENT/任务0/暗卷 + ≤4000 紧凑', () => {
+  const r = compile(cases[0].rawInput);
+  assert.ok(r.goalPrompt.includes('# RULES & GUIDANCE'), '应有法/情报分家');
+  assert.ok(r.goalPrompt.includes('# TASK TYPE'), '应有任务类型');
+  assert.ok(r.goalPrompt.includes('# CHECKPOINT & RESUME'), '应有断点续跑');
+  assert.ok(r.goalPrompt.includes('# MULTI-AGENT'), '应有多 Agent');
+  assert.ok(r.goalPrompt.includes('任务 0'), '应有任务 0 基线核验');
+  assert.ok(r.goalPrompt.includes('暗卷'), '应有暗卷验收');
+  assert.ok(r.goalPrompt.includes('使用指引'), '应有使用指引');
+  assert.ok(r.goalPromptCompact.length <= 4000, '中文紧凑版应 ≤4000');
+  assert.ok(r.goalPromptCompact.includes('# STOP CONDITIONS'), '紧凑版应保留停止条件');
+  assert.ok(r.goalPromptEnCompact.length <= 4000, '英文精简版应 ≤4000');
+  assert.ok(r.goalPromptEnCompact.includes('# STOP CONDITIONS'), '英文精简版应保留停止条件');
+  assert.ok(r.goalPromptEnCompact.includes('# RULES'), '英文精简版应有 RULES');
+});
+
+test('探索型分流：调研诉求生成探索型 Goal', () => {
+  const r = compile('调研一下新能源汽车市场现状与趋势，比较主要竞品');
+  assert.ok(r.goalPrompt.includes('探索型'), '调研诉求应为探索型');
+  assert.ok(r.goalPrompt.includes('以「有依据的结论 + 决策建议 + 置信度」为交付核心'), '探索型应强调结论交付');
+});
+
 test('英文输出：Goal Prompt + 分析（i18n）', () => {
   const r = compile(cases[0].rawInput);
   assert.ok(r.goalPromptEn.includes('# ROLE'), 'EN Goal 应有 ROLE');

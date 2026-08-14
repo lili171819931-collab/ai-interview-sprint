@@ -3,8 +3,8 @@
  * compile(rawInput, options) → 完整编译结果（分析 + 思维链 + 摘要 + Goal Prompt）
  */
 import { analyze } from './analyzer.mjs';
-import { buildOutput } from './goal.mjs';
-import { buildOutputEn } from './goal-en.mjs';
+import { buildOutput, compactGoalPrompt } from './goal.mjs';
+import { buildOutputEn, buildGoalPromptEnCompact } from './goal-en.mjs';
 import { buildChain } from './chain.mjs';
 import { buildDivergence } from '../divergence.mjs';
 
@@ -36,7 +36,9 @@ export function compile(rawInput, options = {}) {
     summaryEn: en.summary,
     suggestions: output.suggestions,
     goalPrompt: output.goalPrompt,
+    goalPromptCompact: compactGoalPrompt(output.goalPrompt),
     goalPromptEn: en.goalPrompt,
+    goalPromptEnCompact: buildGoalPromptEnCompact(analysis),
     machineGoal: output.machineGoal,
     machineGoalEn: en.machineGoal,
     keywordTop: output.keywordTop,
