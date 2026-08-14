@@ -12,6 +12,7 @@
     { id: '03', file: '03-商业价值分析.md', label: '03 · 商业价值分析', icon: '💰' },
     { id: '04', file: '04-产品完成报告.md', label: '04 · 产品完成报告', icon: '✅' },
     { id: '05', file: '05-优化版Prompt.md', label: '05 · 优化版 Prompt', icon: '📝' },
+    { id: '06', file: '06-真实GitHub相似项目.md', label: '06 · 真实 GitHub 相似项目', icon: '🐙' },
   ];
   const cache = {};
   let current = '00';

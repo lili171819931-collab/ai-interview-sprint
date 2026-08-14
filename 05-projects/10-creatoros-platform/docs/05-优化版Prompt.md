@@ -166,3 +166,34 @@ AI 复盘 → 得到下一轮建议 —— 全链路闭环且数据打通。
 | 12 | 项目制交付 | 产品分析→项目管理→开发测试→商业价值→完成报告→GitHub 打包 |
 | 13 | 测试体系 | 核心引擎可运行测试用例 + 浏览器端测试中心 |
 | 14 | 热点去重与可信度 | 跨平台同事件合并，来源可信度标注 |
+
+---
+
+# 附 2：V2 版本更新说明（对照最新目标 V2）
+
+> 依据最新「AI Creator Intelligence & Growth OS V2」目标，本产品已同步升级：
+
+## V2 新增/强化（已在产品中落地）
+
+| # | V2 方向 | 落地 |
+|---|---------|------|
+| 1 | 深色商务极简主题 | 全站 Dark Theme（Linear/Bloomberg 质感） |
+| 2 | 全球平台（TikTok/Instagram/YouTube） | 全球热点雷达 + 创作者情报 + PlatformAdapter 6 平台 |
+| 3 | 商业变现闭环（Business Flywheel） | 新增「商业机会中心」：变现地图/品牌合作/Commercial Score/内容战略矩阵 |
+| 4 | 爆款案例库 | 新增「爆款案例库」：3 大案例 + Cover/Copy/Script/Timeline 四视图工作台 |
+| 5 | 中英双语 | AI 内容工厂支持「中文+English 跨文化重构」 |
+| 6 | 多平台原生重构 | TikTok/Instagram/抖音/小红书/B站/视频号 一键适配 |
+| 7 | 版权与合规一级能力 | Compliance Center：Content Quality Score / Pre-Publish Check / Risk Alert |
+| 8 | 实时数据架构 | TrendSnapshot 时间序列 + Live/Updated X min ago/Mock 标注 |
+| 9 | Agent 体系升级 | 12 Agent + Creator Orchestrator |
+| 10 | Creator Brain | 我的创作者大脑：Creator DNA / 优势雷达 / 知识库 |
+| 11 | 真实联网爬取 | 已爬取 74 个真实 GitHub 相似项目（含链接+时间），见 06-真实GitHub相似项目.md |
+| 12 | 内容机会评分 | Opportunity Score 新增「内容空白」维度（权重 18%） |
+
+## V2 三个核心闭环（已打通）
+
+```text
+闭环一 内容：热点 → 选题 → 创作 → 发布 → 数据 → 复盘
+闭环二 竞品：竞品 → 爆款 → 拆解 → 规律 → 创新 → 自己的内容
+闭环三 商业：账号 → 受众 → 影响力 → 商业机会 → 品牌合作 → 收入 → 优化定位
+```

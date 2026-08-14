@@ -45,7 +45,17 @@
       </div>`;
     } else if (tab === 'publish') {
       body.innerHTML = `
-        <div class="alert warn"><span class="a-ico">⚠️</span><div><b>数据真实性：</b>当前发布状态为演示模拟。真实一键发布需接入各平台开放平台 API（PublishProvider · OAuth），未接入前不做假成功。</div></div>
+        <div class="alert warn"><span class="a-ico">⚠️</span><div><b>数据真实性：</b>当前发布状态为演示模拟。真实一键发布需接入各平台开放平台 API（PlatformAdapter · OAuth），未接入前不做假成功。</div></div>
+        <div class="card">
+          <div class="card-head"><div class="card-title">🌐 Omnichannel Publishing</div><div class="card-sub">一个核心内容 → AI 平台适配 → 平台版本 → 审核 → 统一排期 → 多平台发布 → 数据回收</div></div>
+          <div class="card-body">
+            <div class="grid g6">
+              ${[['TikTok', '9:16 · #fyp'], ['Instagram', 'Reels+Caps'], ['抖音', '强节奏'], ['小红书', '图文+封面'], ['B站', '完整版'], ['视频号', '社交传播']].map(([pl, note]) => `
+                <div class="kpi" style="margin:0"><div class="k-label">${pl}</div><div class="small text-3" style="font-size:11px">${note}</div>
+                <div class="mt-8">${badge('Adapter', 'primary')}</div></div>`).join('')}
+            </div>
+          </div>
+        </div>
         <div class="card"><div class="table-wrap"><table class="tbl">
           <thead><tr><th>内容</th><th>平台</th><th>账号</th><th>排期</th><th>状态</th><th>动作</th></tr></thead>
           <tbody>${S.schedule.map((s) => `
@@ -79,7 +89,7 @@
               <tbody>${S.platformMetrics.map((p) => `<tr>
                 <td class="b">${esc(p.platform)}</td><td class="num">${p.views}</td><td class="num">${p.likes}</td>
                 <td class="num">${p.shares}</td><td class="num">${p.follows}</td><td class="num">${p.viral}</td>
-                <td><span class="mini-bar" style="width:80px"><i style="width:${Math.round((p.views / 128) * 100)}%"></i></span></td></tr>`).join('')}
+                <td><span class="mini-bar" style="width:80px"><i style="width:${Math.round((p.views / Math.max(...S.platformMetrics.map(x=>x.views))) * 100)}%"></i></span></td></tr>`).join('')}
             </tbody></table></div></div>
         </div>`;
     } else {

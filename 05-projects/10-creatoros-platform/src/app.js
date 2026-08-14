@@ -7,20 +7,31 @@
   C.views = C.views || {};
 
   const NAV = [
-    { group: '业务系统', items: [
+    { group: 'COMMAND CENTER', items: [
       { id: 'dashboard', icon: '🎛️', label: '指挥中心' },
-      { id: 'hotspot', icon: '📡', label: '热点雷达' },
-      { id: 'accounts', icon: '🎯', label: '对标研究' },
-      { id: 'topics', icon: '✏️', label: '选题中心' },
-      { id: 'studio', icon: '🏭', label: 'AI 内容工厂' },
-      { id: 'publish', icon: '📤', label: '发布与数据' },
-      { id: 'growth', icon: '🚀', label: '增长系统' },
     ]},
-    { group: '差异化能力', items: [
-      { id: 'chain', icon: '🧠', label: '完整思维链' },
-      { id: 'competitive', icon: '🔍', label: '竞品情报雷达' },
+    { group: 'INTELLIGENCE', items: [
+      { id: 'hotspot', icon: '📡', label: '全球热点雷达' },
+      { id: 'accounts', icon: '🎯', label: '创作者情报' },
+      { id: 'viral', icon: '🔥', label: '爆款案例库' },
+      { id: 'competitive', icon: '🔍', label: '竞品情报' },
     ]},
-    { group: '项目制交付', items: [
+    { group: 'CONTENT', items: [
+      { id: 'topics', icon: '💡', label: '选题中心' },
+      { id: 'studio', icon: '✍️', label: 'AI 内容工厂' },
+    ]},
+    { group: 'PUBLISH', items: [
+      { id: 'publish', icon: '📅', label: '发布与数据' },
+    ]},
+    { group: 'GROWTH', items: [
+      { id: 'brain', icon: '🧠', label: 'Creator Brain' },
+      { id: 'growth', icon: '📈', label: '增长系统' },
+    ]},
+    { group: 'BUSINESS', items: [
+      { id: 'business', icon: '💰', label: '商业机会中心' },
+    ]},
+    { group: 'SYSTEM', items: [
+      { id: 'chain', icon: '🧭', label: '完整思维链' },
       { id: 'prompts', icon: '📝', label: 'Prompt 优化' },
       { id: 'tests', icon: '🧪', label: '测试中心' },
       { id: 'docs', icon: '📚', label: '项目文档' },
@@ -29,19 +40,22 @@
   ];
 
   const TITLES = {
-    dashboard: ['指挥中心', '自媒体增长操作系统 · 今日 5 问一屏'],
-    hotspot: ['热点雷达', '今天什么值得做 · Hot Score 评分与内容机会'],
-    accounts: ['对标研究', '账号情报 · 暴力拆解 · 对标矩阵'],
-    topics: ['选题中心', 'AI 选题工厂 · 7 维 Topic Score'],
-    studio: ['AI 内容工厂', '文案生成 · 变体改写 · 视频脚本与分镜'],
-    publish: ['发布与数据', '内容日历 · 发布中心 · 数据中心 · AI 复盘'],
-    growth: ['增长系统', 'AI 增长顾问 · Agent 团队 · 工作流 · 知识库'],
+    dashboard: ['指挥中心', 'Creator Command Center · 全球热点 / 商业机会 / AI 建议一屏'],
+    hotspot: ['全球热点雷达', 'Real-time Trend Radar · 全球+国内 · Opportunity Score · Live/Mock 标注'],
+    accounts: ['创作者情报', 'Creator Intelligence · 账号分层 · 8 维暴力拆解'],
+    viral: ['爆款案例库', 'Viral Library · 3 大真实案例 · Cover/Copy/Script/Timeline 四视图工作台'],
+    topics: ['选题中心', 'AI 选题工厂 · 内容战略矩阵 · Commercial Potential'],
+    studio: ['AI 内容工厂', '中英双语文案 · 变体改写 · 分镜/Timeline · 多平台重构'],
+    publish: ['发布与数据', 'Omnichannel Publishing · TikTok/Instagram/抖音/小红书/B站/视频号 · 数据回收'],
+    brain: ['Creator Brain', '我的创作者大脑 · Creator DNA · 优势雷达 · 知识库'],
+    growth: ['增长系统', 'AI 增长顾问 · 12 Agent + Creator Orchestrator · 工作流'],
+    business: ['商业机会中心', 'Creator Business Intelligence · 变现地图 · 品牌合作 · 商业价值'],
     chain: ['完整思维链', '结构化输出搭建本产品的完整思维链条 · 学习型差异化'],
-    competitive: ['竞品情报雷达', '多平台 Skill/产品爬取 · 对比矩阵 · 产品总监视角'],
-    prompts: ['Prompt 优化', '原始诉求 → 自动补充优化 · 对照清单'],
+    competitive: ['竞品情报', '多平台 Skill/产品爬取 · 真实 GitHub 相似项目（含链接+时间）'],
+    prompts: ['Prompt 优化', '原始诉求 V2 → 自动补充优化 · 对照清单'],
     tests: ['测试中心', '3 个可运行测试用例 · Node 与浏览器双端'],
     docs: ['项目文档', '产品分析 · 项目管理 · 开发测试 · 商业价值 · 完成报告'],
-    settings: ['配置中心', 'Provider Adapter · Model Router · 数据信任 · 额度'],
+    settings: ['配置中心', 'Platform Adapter · Compliance 合规中心 · Model Router'],
   };
 
   /* ---------- 通用工具 ---------- */

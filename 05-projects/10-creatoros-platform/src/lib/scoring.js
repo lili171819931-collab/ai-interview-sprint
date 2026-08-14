@@ -11,9 +11,10 @@
   /* ---------- Hot Score ----------
    * 基础分 = Σ(信号×权重)（权重和=1，满分 100）
    * 惩罚 = 竞争×0.15 + 生命周期风险×0.10（竞争/风险越高，得分越保守） */
+  /* V2 Opportunity Score：新增「内容空白 contentGap」正向信号 */
   const HOT_WEIGHTS = {
-    heat: 0.20, growth: 0.20, discussion: 0.10, virality: 0.10,
-    attention: 0.10, relevance: 0.15, businessValue: 0.15,
+    heat: 0.16, growth: 0.16, discussion: 0.08, virality: 0.08,
+    attention: 0.08, relevance: 0.14, businessValue: 0.12, contentGap: 0.18,
   };
   const HOT_COMPETITION_PENALTY = 0.15;
   const HOT_RISK_PENALTY = 0.10;

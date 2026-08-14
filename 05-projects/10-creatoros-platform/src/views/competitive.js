@@ -3,7 +3,7 @@
   'use strict';
   const C = global.CreatorOS;
   const CP = C.competitors, crawl = C.crawler, comp = C.competitor, app = C.app;
-  const esc = app.esc, badge = app.badge;
+  const esc = app.esc, fmt = app.fmt, badge = app.badge;
 
   let state = { running: false, tab: 'report' };
 
@@ -60,6 +60,7 @@
 
       <div class="tabs mt-16">
         <div class="tab ${state.tab === 'report' ? 'active' : ''}" data-tab="report">📋 产品总监报告</div>
+        <div class="tab ${state.tab === 'github' ? 'active' : ''}" data-tab="github">🐙 GitHub 相似项目（真实 · ${(C.githubLive?.items || []).length}）</div>
         <div class="tab ${state.tab === 'matrix' ? 'active' : ''}" data-tab="matrix">⚔️ 对比矩阵</div>
         <div class="tab ${state.tab === 'gap' ? 'active' : ''}" data-tab="gap">🧩 差距分析</div>
         <div class="tab ${state.tab === 'list' ? 'active' : ''}" data-tab="list">🗂️ 竞品样本库（${CP.competitors.length}）</div>
@@ -70,7 +71,33 @@
     el.querySelectorAll('[data-tab]').forEach((t) => t.addEventListener('click', () => { state.tab = t.dataset.tab; render(el); }));
     const body = el.querySelector('#cp-body');
 
-    if (state.tab === 'report') {
+    if (state.tab === 'github') {
+      const gh = C.githubLive || { items: [], crawledAt: null };
+      body.innerHTML = `
+        <div class="alert success"><span class="a-ico">🐙</span><div><b>真实联网数据</b>（GitHub Search API · sort=stars）· 抓取时间 <code class="mono">${esc((gh.crawledAt || '').slice(0, 19).replace('T', ' '))} UTC</code> · 共 ${gh.items.length} 个相似项目，已按相关度+Star 排序。<br>重新抓取：<code class="mono">npm run crawl:github</code>（脚本：scripts/crawl-github-similar.mjs → 数据：data/github-similar-projects.json）</div></div>
+        <div class="grid g2">
+          ${gh.items.map((it) => `
+            <div class="card" style="margin:0">
+              <div class="card-head">
+                <div class="card-title"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.name)}</a></div>
+                ${badge(it.relevance === 'high' ? '高度相关' : '相关', it.relevance === 'high' ? 'danger' : 'info')}
+              </div>
+              <div class="card-body">
+                <div class="small text-2" style="min-height:44px">${esc(it.description || '—')}</div>
+                <div class="row mt-8 wrap gap8">
+                  <span class="chip">★ ${fmt(it.stars)}</span>
+                  <span class="chip">🍴 ${fmt(it.forks)}</span>
+                  ${it.language ? `<span class="chip">${esc(it.language)}</span>` : ''}
+                  <span class="chip">🕒 更新 ${esc((it.updatedAt || '').slice(0, 10))}</span>
+                  <span class="chip">创建 ${esc((it.createdAt || '').slice(0, 10))}</span>
+                </div>
+                <div class="small text-3 mt-8">匹配：${esc(it.match || '')}</div>
+                <div class="mt-8">${(it.cap || []).map((c) => `<span class="tag">${esc(c)}</span>`).join('')}</div>
+                <div class="small mt-8"><a href="${esc(it.url)}" target="_blank" rel="noopener">${esc(it.url)}</a></div>
+              </div>
+            </div>`).join('')}
+        </div>`;
+    } else if (state.tab === 'report') {
       body.innerHTML = `
         <div class="card">
           <div class="card-head"><div class="card-title">🧑‍💼 产品总监视角 · 战略报告</div><div class="card-sub">规则引擎生成 · 基于 ${CP.competitors.length} 个样本与 20 项能力维度</div></div>

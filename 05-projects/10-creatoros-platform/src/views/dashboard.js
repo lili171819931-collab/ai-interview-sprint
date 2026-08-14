@@ -28,19 +28,21 @@
   };
 
   function render(el) {
-    const scored = S.hotTopics
+    const all = [...S.hotTopics, ...S.globalTopics];
+    const scored = all
       .map((t) => ({ ...t, score: sc.hotScore(t), band: sc.hotBand(sc.hotScore(t)) }))
       .sort((a, b) => b.score - a.score);
     const top3 = scored.slice(0, 3);
+    const globalTop = S.globalTopics.slice(0, 4);
     const week = S.metricSeries.slice(-7);
     const weekLabels = S.metricDays.slice(-7);
 
     const kpis = [
-      { label: '今日发现热点', value: '38', delta: '+6 vs 昨日', up: true },
-      { label: '高价值机会', value: '8', delta: 'Hot Score ≥ 85', up: true },
+      { label: '今日发现热点', value: '46', delta: '国内 38 + 全球 8', up: true },
+      { label: '高价值机会', value: '10', delta: 'Opportunity ≥ 70', up: true },
       { label: '今日推荐选题', value: '3', delta: 'S/A 级', up: true },
-      { label: '待发布内容', value: '2', delta: '今日 12:00 / 18:00', up: false },
-      { label: '昨日涨粉', value: fmt(8.5e3), delta: '+18.2%', up: true },
+      { label: '待发布内容', value: '3', delta: '含 TikTok / IG', up: false },
+      { label: '今日商业机会', value: '4', delta: '+2 新发现', up: true },
       { label: '本周总播放', value: fmt(184.4e4), delta: '+23.1% 环比', up: true },
     ];
 
@@ -68,6 +70,14 @@
     el.innerHTML = `
       <div class="view-title">🎛️ 自媒体指挥中心</div>
       <div class="view-desc">一屏回答 5 个问题：今天做什么 / 对手在做什么 / 我该做什么 / 怎么快速做出来 / 效果如何。</div>
+
+      <div class="row gap8 mb-16 wrap">
+        <button class="btn primary" data-go="hotspot">🔥 Find Opportunities</button>
+        <button class="btn primary" data-go="studio">🎬 Create Content</button>
+        <button class="btn primary" data-go="business">💰 Find Business</button>
+        <span class="grow"></span>
+        <span class="chip">全球趋势：TikTok · Instagram · YouTube · Reddit</span>
+      </div>
 
       <div class="grid g6 mb-16">${kpis.map((k) => `
         <div class="kpi"><div class="k-label">${esc(k.label)}</div><div class="k-value">${esc(k.value)}</div>
@@ -105,7 +115,7 @@
               <div class="list-item">
                 <div class="grow">
                   <div class="b">${i + 1}. ${esc(t.title)}</div>
-                  <div class="mt-8">${badge(t.band.label, t.band.tone)} ${t.platforms.map((p) => `<span class="tag">${esc(p)}</span>`).join('')}</div>
+                  <div class="mt-8">${badge(t.band.label, t.band.tone)} ${(t.platforms || [t.platform]).map((p) => `<span class="tag">${esc(p)}</span>`).join('')}</div>
                   <div class="small text-3 mt-8">${esc(t.recommendActions[0])}</div>
                 </div>
                 <div class="score-ring">${t.score}</div>
@@ -123,9 +133,21 @@
           <div class="card-foot"><a href="#accounts">进入对标研究 →</a></div>
         </div>
         <div class="card">
+          <div class="card-head"><div class="card-title">🌍 全球趋势速览（Live 快照）</div></div>
+          <div class="card-body">
+            ${globalTop.map((t) => `
+              <div class="list-item">
+                <div class="grow"><div class="b" style="font-size:12px">${esc(t.title)}</div>
+                <div class="small text-3 mt-8">${esc(t.platform)} · ${badge(t.status, t.status === 'Exploding' || t.status === 'Breaking' ? 'danger' : t.status === 'Rising' || t.status === 'Fast Growth' ? 'success' : 'warn')} · ${t.updatedMinAgo}min</div></div>
+                <span class="score-ring" style="width:34px;height:34px;font-size:12px">${sc.hotScore(t)}</span>
+              </div>`).join('')}
+          </div>
+          <div class="card-foot"><a href="#hotspot">进入全球热点雷达 →</a></div>
+        </div>
+        <div class="card">
           <div class="card-head"><div class="card-title">📤 今日待发布</div></div>
           <div class="card-body">
-            ${S.schedule.filter((s) => s.status === '待发布').map((s) => `
+            ${S.schedule.filter((s) => s.status === '待发布').slice(0, 3).map((s) => `
               <div class="list-item">
                 <div class="grow"><div class="b">${esc(s.title)}</div>
                 <div class="small text-2 mt-8">${esc(s.platform)} · ${esc(s.account)} · ${esc(s.date)} ${esc(s.time)}</div></div>

@@ -5,21 +5,37 @@
   const S = C.seed, app = C.app;
   const esc = app.esc, badge = app.badge;
 
+  const AGENTS_V2 = [
+    { name: 'Trend Agent', role: '热点监测/趋势识别', status: '在线', metrics: '全球+国内 46 热点' },
+    { name: 'Competitor Agent', role: '竞品账号监控', status: '在线', metrics: '监控 8 账号' },
+    { name: 'Viral Analysis Agent', role: '爆款拆解/规律提取', status: '在线', metrics: '拆解 6 爆款' },
+    { name: 'Topic Agent', role: '选题生成/评分', status: '在线', metrics: '生成 12 选题' },
+    { name: 'Copy Agent', role: '中英文文案/Hook', status: '在线', metrics: '6 篇 + 变体 18' },
+    { name: 'Script Agent', role: '脚本/分镜', status: '在线', metrics: '脚本 3 条' },
+    { name: 'Creative Agent', role: '创意/原创度守卫', status: '在线', metrics: 'Originality Guard' },
+    { name: 'Video Agent', role: '视频/剪辑/字幕', status: 'Mock', metrics: 'Adapter 待接入' },
+    { name: 'Publishing Agent', role: '平台适配/排期/发布', status: '在线', metrics: '6 平台排期' },
+    { name: 'Analytics Agent', role: '数据回收/归因', status: '在线', metrics: '复盘 3 条' },
+    { name: 'Business Agent', role: '商业机会/品牌合作', status: '在线', metrics: '机会 4 · 合作 5' },
+    { name: 'Growth Agent', role: '增长策略/综合决策', status: '在线', metrics: '今日建议 3 条' },
+  ];
+
   function render(el) {
-    const pipeline = ['热点Agent', '研究Agent', '选题Agent', '文案Agent', '导演Agent', '视频Agent', '发布Agent', '数据Agent', '增长Agent'];
+    const pipeline = ['Trend', 'Competitor', 'Viral', 'Topic', 'Copy', 'Script', 'Creative', 'Video', 'Publishing', 'Analytics', 'Business', 'Growth'];
 
     el.innerHTML = `
-      <div class="view-title">🚀 增长系统</div>
-      <div class="view-desc">AI Agent 团队 · 工作流 · 知识库 —— 从 Tool 到 Assistant 到 Autonomous Creator 的路径。</div>
+      <div class="view-title">📈 增长系统</div>
+      <div class="view-desc">AI Agent 体系 · Creator Orchestrator 统一调度 · 工作流 —— 从 Tool 到 Assistant 到 Autonomous Creator。</div>
 
       <div class="card">
-        <div class="card-head"><div class="card-title">🤖 AI Agent 团队（9 位专家）</div><div class="card-sub">Agent 协作流水线：热点 → 研究 → 选题 → 文案 → 导演 → 视频 → 发布 → 数据 → 增长 → 反哺</div></div>
+        <div class="card-head"><div class="card-title">🤖 AI Agent 体系（12 Agent + Orchestrator）</div><div class="card-sub">Creator Orchestrator 统一调度 · 用户只需「设定目标 + 审核结果」</div></div>
         <div class="card-body">
-          <div class="steps mb-12">
+          <div class="chain-decision"><b>🎛 Creator Orchestrator：</b>输入「帮我找今天适合我的 3 个爆款选题，并直接生成其中一个的视频」→ 自动执行 热点→筛选→竞品→选题→文案→脚本→素材→视频→审核，最终只需你确认。</div>
+          <div class="steps mb-12" style="margin-top:12px">
             ${pipeline.map((p, i) => `<span class="step-pill done">${esc(p)}</span>${i < pipeline.length - 1 ? '<span class="text-3">→</span>' : ''}`).join('')}
           </div>
           <div class="grid g3">
-            ${S.agents.map((a) => `
+            ${AGENTS_V2.map((a) => `
               <div class="kpi" style="margin:0">
                 <div class="row spread"><div class="b">${esc(a.name)}</div>
                 ${badge(a.status === '在线' ? '在线' : 'Mock', a.status === '在线' ? 'success' : 'warn')}</div>

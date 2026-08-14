@@ -8,13 +8,22 @@
   function render(el) {
     const providers = [
       ['LLMProvider', 'AI 生成（文案/脚本/顾问）', '接口预留 · 规则引擎替代中', 'OpenAI / Claude / Gemini（Model Router）', 'warn'],
-      ['HotTopicProvider', '实时热点', '未接入 · 快照数据', '搜索趋势 / 平台榜单 / RSS', 'muted'],
+      ['HotTopicProvider', '实时热点（全球+国内）', '未接入 · 快照数据', '搜索趋势 / 平台榜单 / RSS / Streaming', 'muted'],
       ['DataProvider', '平台数据', '未接入', '各平台开放平台 API', 'muted'],
-      ['PublishProvider', '一键发布', '未接入 · 模拟状态', '各平台 OAuth 发布 API', 'muted'],
-      ['VideoProvider', 'AI 视频/数字人', '未接入', '腾讯智影 / 剪映开放能力 / Runway', 'muted'],
+      ['PlatformAdapter', '一键发布（6 平台）', '未接入 · 模拟状态', 'TikTok/Instagram/YouTube/抖音/小红书/视频号 OAuth', 'muted'],
+      ['VideoProvider', 'AI 视频/数字人', '未接入', '腾讯智影 / Runway / 剪映开放能力', 'muted'],
       ['ImageProvider', 'AI 图片/封面', '未接入', 'SD / DALL·E / 稿定', 'muted'],
       ['VoiceProvider', 'AI 配音', '未接入', 'TTS 服务', 'muted'],
-      ['KnowledgeProvider', '知识库 RAG', '未接入', '向量库 + Embedding', 'muted'],
+      ['KnowledgeProvider', 'Creator Brain RAG', '未接入', '向量库 + Embedding', 'muted'],
+    ];
+    const adapters = [
+      ['TikTokAdapter', 'TikTok', 'Mock', '官方 API / 合规第三方'],
+      ['InstagramAdapter', 'Instagram/Reels', 'Mock', 'Graph API'],
+      ['YouTubeAdapter', 'YouTube/Shorts', 'Mock', 'YouTube Data API v3'],
+      ['DouyinAdapter', '抖音', 'Mock', '开放平台 API'],
+      ['XiaohongshuAdapter', '小红书', 'Mock', '开放平台 API'],
+      ['WechatVideoAdapter', '视频号', 'Mock', '微信开放平台'],
+      ['BilibiliAdapter', 'B站', 'Mock', '开放平台 API'],
     ];
     const router = [
       ['标题/标签/改写', '低成本模型（如 mini）', '低', '缓存 + 批量'],
@@ -55,14 +64,25 @@
             <tbody>${router.map((r) => `<tr><td>${esc(r[0])}</td><td>${esc(r[1])}</td><td class="num">${esc(r[2])}</td><td class="small">${esc(r[3])}</td></tr>`).join('')}</tbody>
           </table></div>
         </div>
+        <div style="display:flex;flex-direction:column;gap:16px">
         <div class="card" style="margin:0">
-          <div class="card-head"><div class="card-title">🛡️ 数据信任与安全</div></div>
+          <div class="card-head"><div class="card-title">🛡️ Compliance Center · 版权与合规（一级能力）</div><div class="card-sub">高风险不直接发布 → Risk Alert</div></div>
           <div class="card-body">
-            <div class="list-item"><div class="grow"><div class="b">数据四态标注</div><div class="small text-2 mt-8">真实 / 快照 / Mock / 未接入 —— 全链路 UI 可见，禁止假装成功</div></div>${badge('已启用', 'success')}</div>
-            <div class="list-item"><div class="grow"><div class="b">内容合规预检</div><div class="small text-2 mt-8">广告法极限词 / 平台敏感词 / 版权风险（P1 实现）</div></div>${badge('规划中', 'warn')}</div>
+            <div class="list-item"><div class="grow"><div class="b">版权 / 素材授权 / 音乐版权</div><div class="small text-2 mt-8">生成素材自动记录授权来源（AssetLicense）</div></div>${badge('已启用', 'success')}</div>
+            <div class="list-item"><div class="grow"><div class="b">Content Quality Score</div><div class="small text-2 mt-8">Hook/价值/逻辑/原创度/可传播/平台适配/视觉/商业 → 发布前评分</div></div>${badge('89/100', 'primary')}</div>
+            <div class="list-item"><div class="grow"><div class="b">Pre-Publish Check</div><div class="small text-2 mt-8">标题/封面/文案/视频/字幕/音乐/版权/敏感词/平台规范/CTA 一键检查</div></div>${badge('已启用', 'success')}</div>
+            <div class="list-item"><div class="grow"><div class="b">AI 内容风险</div><div class="small text-2 mt-8">Copyright / Similarity / Brand / Platform / Sensitive · Low/Medium/High</div></div>${badge('Medium', 'warn')}</div>
             <div class="list-item"><div class="grow"><div class="b">用户数据导出/删除</div><div class="small text-2 mt-8">个保法 / GDPR 兼容设计（P1 实现）</div></div>${badge('规划中', 'warn')}</div>
             <div class="list-item"><div class="grow"><div class="b">AI 调用可追溯</div><div class="small text-2 mt-8">记录 Prompt / 模型 / 版本 / 成本（接口就绪）</div></div>${badge('接口就绪', 'primary')}</div>
           </div>
+        </div>
+        <div class="card" style="margin:0">
+          <div class="card-head"><div class="card-title">🔌 Platform Adapter（6 平台发布/数据）</div></div>
+          <div class="table-wrap"><table class="tbl">
+            <thead><tr><th>Adapter</th><th>平台</th><th>状态</th><th>接入方式</th></tr></thead>
+            <tbody>${adapters.map(([n, pl, st, way]) => `<tr><td class="mono b">${esc(n)}</td><td>${esc(pl)}</td><td>${badge(st, 'warn')}</td><td class="small text-2">${esc(way)}</td></tr>`).join('')}</tbody>
+          </table></div>
+        </div>
         </div>
       </div>
 
