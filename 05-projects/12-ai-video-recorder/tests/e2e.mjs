@@ -195,8 +195,14 @@ async function main() {
 
   // 小窗·美颜（融合功能）
   await page.locator(".tab-btn", { hasText: "小窗·美颜" }).click();
+  await page.locator(".preset-row button", { hasText: "上下分屏" }).click();
+  ok(await page.locator(".preset-row button", { hasText: "上下分屏" }).evaluate((el) => el.className.includes("active")), "切换到上下分屏模式");
+  await page.locator(".preset-row button", { hasText: "画中画" }).click();
+  ok(await page.locator(".preset-row button", { hasText: "画中画" }).evaluate((el) => el.className.includes("active")), "切回画中画模式");
   await page.locator(".preset-row button", { hasText: "圆形" }).first().click();
   ok(await page.locator(".preset-row button", { hasText: "圆形" }).first().evaluate((el) => el.className.includes("active")), "小窗切换为圆形");
+  await page.locator(".preset-row button", { hasText: "人像抠图" }).click();
+  ok(await page.locator(".preset-row button", { hasText: "人像抠图" }).evaluate((el) => el.className.includes("active")), "开启人像抠图（人像清晰+背景模糊）");
   await page.locator(".preset-row button", { hasText: "页面模糊" }).click();
   ok(await page.locator(".preset-row button", { hasText: "页面模糊" }).evaluate((el) => el.className.includes("active")), "开启页面背景模糊");
   await page.locator(".slider-row", { hasText: "磨皮" }).locator("input[type=range]").fill("0.5");
@@ -210,19 +216,27 @@ async function main() {
   await page.waitForTimeout(500);
   await page.screenshot({ path: path.join(SHOT_DIR, "02-configured.png") });
 
-  // ---------- 4. 录制 ----------
-  console.log("\n4️⃣ 录制");
+  // ---------- 4. 录制（含倒计时） ----------
+  console.log("\n4️⃣ 录制（倒计时 + 暂停/继续）");
+  await page.locator(".countdown-select").selectOption("3");
   await page.locator(".btn-record").click();
-  await page.waitForSelector(".status-chip[data-recording='true']", { timeout: 8000 });
-  ok(true, "开始录制（状态显示录制中）");
+  await page.waitForSelector(".countdown-mask", { timeout: 5000 });
+  const cdNum = await page.locator(".countdown-num").textContent();
+  ok(["3", "2", "1"].includes(cdNum?.trim() ?? ""), `倒计时数字显示: ${cdNum}`);
+  ok((await page.locator(".status-chip").getAttribute("data-recording")) !== "true", "倒计时期间尚未开始录制");
+  await page.waitForSelector(".status-chip[data-recording='true']", { timeout: 12000 });
+  ok(true, "倒计时结束自动开始录制");
   await page.waitForTimeout(500);
   const timerText1 = await page.locator(".timer").textContent();
   await page.waitForTimeout(1600);
   const timerText2 = await page.locator(".timer").textContent();
   ok(timerText1 !== timerText2, "计时器在走动");
   await page.locator(".btn-pause").click();
-  await page.waitForTimeout(600);
-  ok((await page.locator(".timer").textContent()) === timerText2, "暂停后计时停止");
+  await page.waitForTimeout(400);
+  const tPauseA = await page.locator(".timer").textContent();
+  await page.waitForTimeout(800);
+  const tPauseB = await page.locator(".timer").textContent();
+  ok(tPauseA === tPauseB, "暂停后计时停止");
   await page.locator(".btn-resume").click();
   await page.waitForTimeout(600);
   ok(true, "继续录制");

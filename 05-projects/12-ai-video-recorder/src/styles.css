@@ -267,3 +267,26 @@ body {
 .ext-body { padding: 8px 12px 10px; font-size: 11px; color: var(--muted); line-height: 1.7; }
 .ext-body ol { margin: 6px 0 0; padding-left: 18px; }
 .ext-body code { background: #0d1226; border: 1px solid var(--border); border-radius: 4px; padding: 1px 5px; font-size: 10px; color: var(--text); }
+
+/* ---------- 倒计时 ---------- */
+.countdown-select {
+  background: #0d1226; color: var(--text); border: 1px solid var(--border);
+  border-radius: 8px; padding: 8px 6px; font-size: 12px;
+}
+.countdown-mask {
+  position: fixed; inset: 0; z-index: 40; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; background: rgba(5,8,20,0.55);
+  backdrop-filter: blur(2px); pointer-events: none;
+}
+.countdown-num {
+  font-size: 180px; font-weight: 900; color: #fff; text-shadow: 0 0 60px var(--accent), 0 0 20px rgba(255,255,255,0.6);
+  animation: cdPop 1s ease-out infinite;
+}
+.countdown-label { margin-top: 12px; font-size: 18px; color: var(--accent2); letter-spacing: 4px; }
+@keyframes cdPop {
+  0% { transform: scale(1.6); opacity: 0; }
+  25% { transform: scale(1); opacity: 1; }
+  85% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.4; }
+}
+.preset-row.wrap { flex-wrap: wrap; }

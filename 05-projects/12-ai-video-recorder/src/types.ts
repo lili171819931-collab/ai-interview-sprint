@@ -67,7 +67,7 @@ export interface BeautyState {
   sharp: number;  // 清晰度
 }
 
-export type PipBlurMode = "none" | "screen" | "soft";
+export type PipBlurMode = "none" | "screen" | "soft" | "portrait";
 
 export interface ClickEffect {
   x: number; // 归一化

@@ -108,10 +108,28 @@ await page.mouse.up();
 const box2 = await page.locator("#aiRecPip").boundingBox();
 ok(Math.abs(box2.x - (box.x + 60)) < 30, "小窗可拖动改变位置");
 
-console.log("\n4️⃣ 录制当前网页");
+console.log("\n3b️⃣ 分屏模式");
+await page.locator("#aiRecSettings").click();
+await page.locator(".ai-rec-splits [data-split='split-v']").click();
+ok(await page.locator("#aiRecPip").evaluate((el) => el.style.width.includes("96%")), "切换到上下分屏（小窗变为底部横条）");
+await page.locator(".ai-rec-splits [data-split='circle']").click();
+ok(await page.locator("#aiRecPip").evaluate((el) => el.className.includes("shape-circle")), "切换到圆形浮窗");
+await page.locator(".ai-rec-splits [data-split='pip']").click();
+ok(true, "切回画中画模式");
+// 人像抠图（本地 MediaPipe）
+await page.locator(".ai-rec-blur[data-blur='portrait']").click();
+await page.waitForTimeout(4000);
+ok(true, "开启人像抠图（人像清晰+背景模糊）");
+await page.locator("#aiRecSettings").click();
+
+console.log("\n4️⃣ 录制当前网页（倒计时）");
 await page.locator("#aiRecStart").click();
+await page.waitForSelector("#aiRecCountdown.show", { timeout: 5000 });
+const cd = await page.locator("#aiRecCountNum").textContent();
+ok(["3", "2", "1"].includes(cd?.trim() ?? ""), `倒计时显示: ${cd}`);
+ok(await page.locator("#aiRecStart").isVisible(), "倒计时期间未开始录制");
 await page.waitForFunction(() => document.querySelector("#aiRecStart")?.style.display === "none", { timeout: 15000 });
-ok(true, "开始录制（工具栏切换为暂停/停止）");
+ok(true, "倒计时结束自动开始录制（工具栏切换为暂停/停止）");
 await page.waitForTimeout(1600);
 const t1 = await page.locator("#aiRecTimer").textContent();
 await page.waitForTimeout(1200);

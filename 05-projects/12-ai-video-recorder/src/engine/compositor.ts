@@ -10,6 +10,8 @@ import type {
   TemplateDef,
   ZoomState,
 } from "../types";
+import type { PortraitBlur } from "./portraitBlur";
+import { splitLayoutFor, type SplitLayout, type SplitMode } from "./splitModes";
 
 // ============ 画布合成引擎：屏幕 + 双摄像头 + 字幕 + 标注 + 裁剪/缩放 ============
 export interface CompositorSources {
@@ -63,8 +65,12 @@ export class Compositor {
   pipShape: PipShape = "rounded";
   /** 简单美颜参数 */
   beauty: BeautyState = { smooth: 0, bright: 0, rosy: 0, sharp: 0 };
-  /** 背景模糊模式 */
+  /** 背景模糊模式（none/screen/soft/portrait） */
   blurMode: PipBlurMode = "none";
+  /** 人像抠图引擎（人像清晰 + 背景模糊） */
+  portrait: PortraitBlur | null = null;
+  /** 分屏模式 */
+  splitMode: SplitMode = "pip";
   /** 点击特效（录制中显示点击位置） */
   clickEffects: ClickEffect[] = [];
   clickFxEnabled = true;
@@ -119,6 +125,26 @@ export class Compositor {
     try { slot.el.play().catch(() => {}); } catch { /* noop */ }
   }
 
+  // ---------- 分屏布局 ----------
+  private splitLayout(): SplitLayout | null {
+    return splitLayoutFor(this.splitMode);
+  }
+
+  get screenRect() {
+    return this.splitLayout()?.screen ?? this.template.screen;
+  }
+
+  private pipRectFor(key: "cam1" | "cam2", base: PipRect | undefined, override: Partial<PipRect> | undefined): PipRect | undefined {
+    if (!base) return undefined;
+    const layout = this.splitLayout();
+    if (layout && layout.pips && key in layout.pips) {
+      const sp = layout.pips[key];
+      if (sp === undefined) return undefined;
+      return { ...base, ...sp, ...override };
+    }
+    return { ...base, ...override };
+  }
+
   // ---------- 控制 ----------
   start(loop = true) {
     this.startTime = performance.now();
@@ -167,7 +193,7 @@ export class Compositor {
     this.drawBackground(ctx);
 
     // 屏幕源
-    const sRect = this.template.screen;
+    const sRect = this.screenRect;
     const sX = sRect.x * W, sY = sRect.y * H, sW = sRect.w * W, sH = sRect.h * H;
     const screenVideo = this.screenSlot.el;
     if (this.enabled.screen && screenVideo && this.screenSlot.ready && screenVideo.videoWidth > 0) {
@@ -247,10 +273,11 @@ export class Compositor {
     override: Partial<PipRect> | undefined,
   ) {
     if (!base) return;
-    const pip: PipRect = { ...base, ...override };
+    const pip = this.pipRectFor(key, base, override);
+    if (!pip) return;
     const W = this.width, H = this.height;
     const x = pip.x * W, y = pip.y * H, w = pip.w * W, h = pip.h * H;
-    const shape = this.pipShape;
+    const shape = this.splitMode === "circle" ? "circle" : this.pipShape;
     const radius = pip.radius;
 
     // 背景模糊（屏幕内容）：小窗背后显示模糊的页面内容
@@ -332,7 +359,17 @@ export class Compositor {
     if (hasColor) {
       ctx.filter = `brightness(${(1 + b.bright * 0.45).toFixed(3)}) contrast(${(1 + b.sharp * 0.4).toFixed(3)}) saturate(${(1 + b.rosy * 0.5).toFixed(3)})`;
     }
-    ctx.drawImage(video, x + cov.dx, y + cov.dy, cov.w, cov.h);
+    // 人像抠图：人像清晰 + 背景模糊（MediaPipe 本地分割）
+    let portraitFrame: HTMLCanvasElement | null = null;
+    if (this.blurMode === "portrait" && this.portrait?.isReady) {
+      portraitFrame = this.portrait.processFrame(video);
+    }
+    if (portraitFrame) {
+      const pcov = coverFit(portraitFrame.width, portraitFrame.height, w, h);
+      ctx.drawImage(portraitFrame, x + pcov.dx, y + pcov.dy, pcov.w, pcov.h);
+    } else {
+      ctx.drawImage(video, x + cov.dx, y + cov.dy, cov.w, cov.h);
+    }
     ctx.filter = "none";
     // 磨皮：叠一层轻微模糊
     if (b.smooth > 0.02) {

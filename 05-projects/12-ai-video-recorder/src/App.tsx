@@ -13,7 +13,37 @@ export default function App() {
   const status = useStudioEvent("status", "就绪 — 选择屏幕 / 摄像头开始创作");
   const recorded = useStudioEvent("recorded", null as null | { blob: Blob; url: string; duration: number });
   const [showExport, setShowExport] = useState(false);
+  const [countdownSec, setCountdownSec] = useState(3);
+  const [countdownActive, setCountdownActive] = useState<number | null>(null);
+  const countdownTimer = useRef<number | null>(null);
   const importRef = useRef<HTMLInputElement>(null);
+
+  const clearCountdown = () => {
+    if (countdownTimer.current) { clearInterval(countdownTimer.current); countdownTimer.current = null; }
+    setCountdownActive(null);
+  };
+
+  // StrictMode 安全：副作用放在 effect 中，避免 state updater 被双调用导致重复 startRecording
+  const cdFired = useRef(false);
+  useEffect(() => {
+    if (countdownActive === null) { cdFired.current = false; return; }
+    if (countdownActive > 0) { studio.beep(660, 0.12); return; }
+    if (cdFired.current) return;
+    cdFired.current = true;
+    if (countdownTimer.current) { clearInterval(countdownTimer.current); countdownTimer.current = null; }
+    studio.beep(990, 0.2);
+    studio.startRecording();
+  }, [countdownActive]);
+
+  const startRecord = () => {
+    if (state === "recording" || state === "paused") return;
+    const n = countdownSec;
+    if (n <= 0) { studio.startRecording(); return; }
+    setCountdownActive(n);
+    countdownTimer.current = window.setInterval(() => {
+      setCountdownActive((prev) => (prev === null ? prev : Math.max(0, prev - 1)));
+    }, 1000);
+  };
 
   const handleImport = (e: React.ChangeEvent<HTMLInputElement>) => {
     const f = e.target.files?.[0];
@@ -32,6 +62,13 @@ export default function App() {
 
   // 键盘快捷键：空格暂停/继续，Ctrl+R 录制/停止
   useEffect(() => {
+    if (state === "recording") clearCountdown();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [state]);
+
+  useEffect(() => () => clearCountdown(), []);
+
+  useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if ((e.target as HTMLElement)?.tagName === "INPUT" || (e.target as HTMLElement)?.tagName === "TEXTAREA") return;
       if (e.code === "Space") {
@@ -41,7 +78,7 @@ export default function App() {
       } else if (e.code === "KeyR" && (e.metaKey || e.ctrlKey)) {
         e.preventDefault();
         if (state === "recording" || state === "paused") studio.stopRecording();
-        else studio.startRecording();
+        else startRecord();
       }
     };
     window.addEventListener("keydown", onKey);
@@ -64,8 +101,14 @@ export default function App() {
         <div className="timer" data-recording={recording}>⏱ {formatDuration(elapsed)}</div>
 
         <div className="record-controls">
+          <select className="countdown-select" value={countdownSec} onChange={(e) => setCountdownSec(+e.target.value)} disabled={recording} title="开始录制前倒计时">
+            <option value="0">⏱ 无</option>
+            <option value="3">⏱ 3 秒</option>
+            <option value="5">⏱ 5 秒</option>
+            <option value="10">⏱ 10 秒</option>
+          </select>
           {!recording && state !== "exporting" && (
-            <button className="btn btn-record" onClick={() => studio.startRecording()} disabled={state === "recorded" && !studio.screenStream && !studio.cam1Stream && !studio.cam2Stream}>
+            <button className="btn btn-record" onClick={startRecord} disabled={state === "recorded" && !studio.screenStream && !studio.cam1Stream && !studio.cam2Stream}>
               {state === "recorded" ? "再录一段" : "● 开始录制"}
             </button>
           )}
@@ -93,6 +136,13 @@ export default function App() {
           </button>
         </div>
       </header>
+
+      {countdownActive !== null && (
+        <div className="countdown-mask">
+          <div className="countdown-num" key={countdownActive}>{countdownActive}</div>
+          <div className="countdown-label">即将开始录制…</div>
+        </div>
+      )}
 
       <main className="layout">
         <aside className="panel source-panel">

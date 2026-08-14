@@ -107,3 +107,33 @@
 @keyframes aiRecToastIn { from { opacity: 0; transform: translate(-50%, 12px); } }
 .ai-rec-toast a { color: #a29bfe; }
 .ai-rec-link { display: inline-block; margin-top: 6px; color: #a29bfe; font-size: 12px; }
+
+/* 倒计时 */
+.ai-rec-countdown {
+  position: fixed; inset: 0; z-index: 2147483647; display: none;
+  align-items: center; justify-content: center; flex-direction: column;
+  background: rgba(5,8,20,0.55); backdrop-filter: blur(2px); pointer-events: none;
+}
+.ai-rec-countdown.show { display: flex; }
+.ai-rec-countdown span {
+  font-size: 160px; font-weight: 900; color: #fff;
+  text-shadow: 0 0 60px #6c5ce7, 0 0 20px rgba(255,255,255,0.6);
+  animation: aiRecCdPop 1s ease-out infinite;
+  font-family: -apple-system, "PingFang SC", system-ui, sans-serif;
+}
+.ai-rec-countdown em {
+  font-style: normal; margin-top: 10px; font-size: 16px; color: #a29bfe;
+  letter-spacing: 4px; font-family: -apple-system, "PingFang SC", system-ui, sans-serif;
+}
+@keyframes aiRecCdPop {
+  0% { transform: scale(1.6); opacity: 0; }
+  25% { transform: scale(1); opacity: 1; }
+  85% { transform: scale(1); opacity: 1; }
+  100% { transform: scale(0.8); opacity: 0.4; }
+}
+.ai-rec-hint { font-size: 11px; color: #8d97c0; line-height: 1.6; margin: 6px 0 0; }
+.ai-rec-select {
+  background: #0a0f1f; color: #e6ebff; border: 1px solid #27315c; border-radius: 6px;
+  padding: 4px 8px; font-size: 12px; flex: 1;
+}
+.ai-rec-splits { display: flex; gap: 4px; flex-wrap: wrap; }

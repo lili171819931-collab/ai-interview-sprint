@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { studio } from "../engine/Studio";
 import { TEMPLATES } from "../engine/templates";
 import { BGM_TRACKS } from "../engine/bgm";
+import { SPLIT_MODES, type SplitMode } from "../engine/splitModes";
 import { analyzeAudioEnergy, buildEditPlan, renderEditedVideo } from "../engine/aiEdit";
 import { downloadBlob, toSrt } from "../engine/export";
 import type { EditPlan, SubtitleState } from "../types";
@@ -57,7 +58,9 @@ const SHAPES: { id: "rounded" | "circle" | "ellipse" | "square" | "diamond"; lab
 function PipTab() {
   const [shape, setShape] = useState<"rounded" | "circle" | "ellipse" | "square" | "diamond">("rounded");
   const [beauty, setBeauty] = useState({ smooth: 0, bright: 0, rosy: 0, sharp: 0 });
-  const [blur, setBlur] = useState<"none" | "screen" | "soft">("none");
+  const [blur, setBlur] = useState<"none" | "screen" | "soft" | "portrait">("none");
+  const [split, setSplit] = useState<SplitMode>("pip");
+  const [portraitErr, setPortraitErr] = useState<string | null>(null);
   const [pipSize, setPipSize] = useState(1);
   const [mirror, setMirror] = useState(true);
   const [clickFx, setClickFx] = useState(true);
@@ -74,6 +77,23 @@ function PipTab() {
     comp.enabled.camera1 = source1;
     comp.enabled.camera2 = source2;
   }, [shape, beauty, blur, source1, source2]);
+
+  useEffect(() => {
+    const comp = studio.compositor;
+    if (!comp) return;
+    comp.splitMode = split;
+    studio.notifyLayout();
+  }, [split]);
+
+  const chooseBlur = async (b: "none" | "screen" | "soft" | "portrait") => {
+    setBlur(b);
+    if (b === "portrait") {
+      setPortraitErr(null);
+      const ok = await studio.ensurePortrait();
+      setPortraitErr(ok ? null : "人像抠图初始化失败：浏览器需支持 WebGL，或模型加载失败");
+    }
+    if (studio.compositor) studio.compositor.blurMode = b;
+  };
 
   const applySize = (v: number) => {
     setPipSize(v);
@@ -124,17 +144,31 @@ function PipTab() {
       </div>
 
       <div className="subsection">
+        <label className="sub-label">🖥️ 分屏模式（浮窗式布局）</label>
+        <div className="preset-row wrap">
+          {SPLIT_MODES.map((m) => (
+            <button key={m.id} className={`btn small ${split === m.id ? "active" : ""}`} title={m.desc} onClick={() => setSplit(m.id)}>
+              {m.emoji} {m.label}
+            </button>
+          ))}
+        </div>
+        <p className="tab-desc">{SPLIT_MODES.find((m) => m.id === split)?.desc}（画中画模式下可直接拖动小窗位置）</p>
+      </div>
+
+      <div className="subsection">
         <label className="sub-label">🌫️ 背景模糊优化</label>
-        <div className="preset-row">
+        <div className="preset-row wrap">
           {([
             ["none", "无"],
             ["screen", "页面模糊"],
             ["soft", "人像柔焦"],
+            ["portrait", "人像抠图"],
           ] as const).map(([id, label]) => (
-            <button key={id} className={`btn small ${blur === id ? "active" : ""}`} onClick={() => setBlur(id)}>{label}</button>
+            <button key={id} className={`btn small ${blur === id ? "active" : ""}`} onClick={() => chooseBlur(id)}>{label}</button>
           ))}
         </div>
-        <p className="tab-desc">「页面模糊」= 小窗背后的网页内容模糊；「人像柔焦」= 摄像头中心清晰、边缘虚化。</p>
+        <p className="tab-desc">「页面模糊」= 小窗背后网页内容虚化；「人像柔焦」= 中心清晰边缘虚化；「人像抠图」= <b>人像保持清晰、真实背景模糊</b>（MediaPipe 本地分割，离线运行）。</p>
+        {portraitErr && <p className="source-error">{portraitErr}</p>}
       </div>
 
       <label className="check-row"><input type="checkbox" checked={mirror} onChange={(e) => setMirror(e.target.checked)} /> 摄像头镜像</label>

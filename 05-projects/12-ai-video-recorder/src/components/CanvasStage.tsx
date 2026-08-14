@@ -27,6 +27,7 @@ export function CanvasStage() {
   const [crop, setCrop] = useState<CropRect>({ x: 0, y: 0, w: 1, h: 1 });
   const [pip, setPip] = useState<Record<string, { x: number; y: number; w: number; h: number }>>({});
   const [bgImg, setBgImg] = useState<string | null>(null);
+  const [split, setSplit] = useState<string>("pip");
   const drag = useRef<{ kind: string; id?: string; startX: number; startY: number; orig: unknown; handle?: string } | null>(null);
   const recording = state === "recording" || state === "paused";
 
@@ -40,6 +41,7 @@ export function CanvasStage() {
   // 模板切换时重建
   useEffect(() => {
     const off = studio.on("sources", () => {
+      setSplit(studio.compositor?.splitMode ?? "pip");
       setPip({
         cam1: tpl.pips.cam1 ? { x: tpl.pips.cam1.x, y: tpl.pips.cam1.y, w: tpl.pips.cam1.w, h: tpl.pips.cam1.h } : undefined as never,
         cam2: tpl.pips.cam2 ? { x: tpl.pips.cam2.x, y: tpl.pips.cam2.y, w: tpl.pips.cam2.w, h: tpl.pips.cam2.h } : undefined as never,
@@ -240,8 +242,8 @@ export function CanvasStage() {
           </div>
         )}
 
-        {/* 画中画拖动（未录制时） */}
-        {!recording && (
+        {/* 画中画拖动（未录制 + 画中画分屏模式） */}
+        {!recording && split === "pip" && (
           <>
             {tpl.pips.cam1 && (
               <PipOverlay key="cam1" label="Camera 1" pip={pip.cam1 ?? tpl.pips.cam1}

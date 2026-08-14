@@ -3,6 +3,7 @@ import { AudioEngine } from "./audioEngine";
 import { Compositor } from "./compositor";
 import { templateById } from "./templates";
 import { pickMimeType } from "./aiEdit";
+import { PortraitBlur } from "./portraitBlur";
 
 // ============ 工作室中枢：源管理 / 合成 / 录制状态机 ============
 class Studio {
@@ -125,6 +126,42 @@ class Studio {
     this.cam2Stream = stream;
     this.compositor?.setCamera2(stream);
     this.emit("sources", undefined);
+  }
+
+  private portrait: PortraitBlur | null = null;
+
+  /** 初始化人像抠图引擎（懒加载，离线模型） */
+  async ensurePortrait(): Promise<boolean> {
+    if (this.compositor?.portrait?.isReady) return true;
+    if (!this.portrait) this.portrait = new PortraitBlur("/mediapipe/");
+    try {
+      await this.portrait.init();
+      if (this.compositor) this.compositor.portrait = this.portrait;
+      return true;
+    } catch (e) {
+      console.warn("人像抠图初始化失败", e);
+      return false;
+    }
+  }
+
+  /** 通知布局/源变化（分屏模式切换等） */
+  notifyLayout() { this.emit("sources", undefined); }
+
+  /** 倒计时提示音（只进扬声器，不进录制） */
+  async beep(freq = 660, dur = 0.12) {
+    try {
+      const audio = await this.ensureAudio();
+      const ctx = audio.ctx;
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.frequency.value = freq;
+      osc.type = "sine";
+      gain.gain.setValueAtTime(0.22, ctx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + dur);
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + dur);
+    } catch { /* noop */ }
   }
 
   setMicVolume(v: number) { this.audio?.setMicVolume(v); }
