@@ -36,6 +36,7 @@ npm run crawl:github  # 【联网】抓取真实 GitHub 相似项目（链接+�
 | | 爆款案例库 | 3 大真实案例 · Cover/Copy/Script/Timeline 四视图工作台 |
 | | 竞品情报 | 14 个产品对比 + **真实 GitHub 相似项目（链接+时间）** |
 | CONTENT | 选题中心 | AI 选题工厂 · 内容战略矩阵 · Commercial Potential |
+| | 个人创作 | 全流程：选题→封面→标题→文案→视频剪辑 · 支持复用爆款拆解逻辑 |
 | | AI 内容工厂 | **中英双语** · 变体 · **多平台重构** · 脚本 + Timeline |
 | PUBLISH | 发布与数据 | Omnichannel（TikTok/IG/抖音/小红书/B站/视频号） · 数据回收 |
 | GROWTH | Creator Brain | Creator DNA · 优势雷达 · 知识库 |
@@ -122,3 +123,14 @@ npm run crawl:github  # 【联网】抓取真实 GitHub 相似项目（链接+�
 | 竞品情报 | ![competitive](docs/screenshots/08-github-live.png) |
 | 完整思维链 | ![chain](docs/screenshots/02-chain.png) |
 | 测试中心 | ![tests](docs/screenshots/04-tests.png) |
+| 个人创作（全流程） | ![creation](docs/screenshots/09-creation.png) |
+| 热点明细弹窗（Top10 账号+原帖） | ![hotspot-intel](docs/screenshots/10-hotspot-intel.png) |
+| 爆款拆解封面图 | ![viral-cover](docs/screenshots/11-viral-cover.png) |
+
+
+## ✨ V2.5 新增（本次）
+
+1. **类似项目链接嵌入网页并可打开**：竞品情报 → 🐙 GitHub 相似项目（41 张卡片），项目名/URL 均为可点击链接（82 个可点链接），一键在新标签打开。
+2. **热点原始帖 + 分类明细弹窗**：全球热点每行新增「原始帖/明细」按钮 → 弹窗展示原始帖链接、最火头部账号、点赞量提升最快 Top10，以及 3 个分类主题明细，每个分类按热度提供 **10 个头部账号 + 原帖地址**。
+3. **暴力拆解升级**：新增「图文视频文案拆解」（开头/中段/结尾/情绪线/关键词/结构，不止标题）；封面以**真实图片形式**直接展示（SVG 封面生成器），爆款案例库 Cover 视图支持实时编辑「我的封面」。
+4. **个人创作界面**：全流程设计（选题 → 封面 → 标题 → 文案 → 视频剪辑），支持「自创」与「基于爆款拆解逻辑」两种模式，一键全流程生成后可直接进入发布中心。

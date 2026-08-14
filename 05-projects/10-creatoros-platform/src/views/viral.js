@@ -96,27 +96,39 @@
     const body = div.querySelector('#vb-body');
 
     if (state.tab === 'cover') {
+      const coverUrl = C.cover.url({ title: c.name, hook: c.viralPost.hook, author: c.creator + ' · ' + c.platform, tag: 'VIRAL', accent: '#4f7dff', bg: '#0e1420' });
       body.innerHTML = `
-        <div class="grid g2">
+        <div class="grid g2" style="align-items:start">
           <div>
-            <div class="b mb-8">📸 原始封面结构</div>
-            <div class="alert info" style="margin:0"><span class="a-ico">🎨</span><div>${esc(c.viralPost.cover)}</div></div>
+            <div class="b mb-8">📸 原始封面（图片）</div>
+            <img class="cover-preview" src="${coverUrl}" alt="原始封面">
             <div class="b mt-12 mb-8">标题 / Hook / 结构</div>
             <div class="chain-step"><span class="arrow">标题</span><span>${esc(c.viralPost.title)}</span></div>
             <div class="chain-step"><span class="arrow">Hook</span><span>${esc(c.viralPost.hook)}</span></div>
             <div class="chain-step"><span class="arrow">结构</span><span>${esc(c.viralPost.structure)}</span></div>
           </div>
           <div>
-            <div class="b mb-8">🖼 编辑我的封面（Generate My Cover）</div>
-            <div class="field"><label>标题</label><input class="input" value="${esc(c.viralPost.title)}"></div>
+            <div class="b mb-8">🖼 我的封面（Generate My Cover · 实时预览）</div>
+            <div class="cover-variant mb-12"><img class="cover-preview" id="my-cover" src="${coverUrl}" alt="我的封面"></div>
+            <div class="field"><label>封面标题</label><input class="input" id="cv-title" value="${esc(c.name)}"></div>
             <div class="grid g2" style="gap:8px">
-              <div class="field"><label>字体</label><select class="input"><option>${esc(c.coverEdit.font)}</option><option>无衬线加粗</option><option>手写感</option><option>衬线体</option></select></div>
-              <div class="field"><label>布局</label><select class="input"><option>${esc(c.coverEdit.layout)}</option><option>人物居中</option><option>大字居中</option></select></div>
+              <div class="field"><label>配色主题</label><select class="input" id="cv-accent"><option value="#4f7dff">品牌蓝</option><option value="#f0a33c">暖金</option><option value="#3ecf7a">生态绿</option><option value="#f45b5b">热力红</option></select></div>
+              <div class="field"><label>底色调</label><select class="input" id="cv-bg"><option value="#0e1420">深空</option><option value="#151a26">石墨</option><option value="#1a1030">紫夜</option></select></div>
             </div>
-            <div class="field"><label>配色</label><select class="input"><option>${esc(c.coverEdit.color)}</option><option>高对比黑金</option><option>低饱和莫兰迪</option></select></div>
-            <div class="row gap8"><button class="btn sm">AI 重新生成</button><button class="btn sm">替换图片</button><button class="btn primary sm">导出封面</button></div>
+            <div class="field"><label>Hook 副标题</label><input class="input" id="cv-hook" value="${esc(c.viralPost.hook)}"></div>
+            <div class="row gap8">
+              <button class="btn primary sm" id="cv-gen">AI 重新生成</button>
+              <button class="btn sm" id="cv-dl">导出封面</button>
+            </div>
           </div>
         </div>`;
+      const refresh = () => {
+        const u = C.cover.url({ title: body.querySelector('#cv-title').value || c.name, hook: body.querySelector('#cv-hook').value || c.viralPost.hook, author: '我的版本 · 基于 ' + c.creator, tag: 'MY COVER', accent: body.querySelector('#cv-accent').value, bg: body.querySelector('#cv-bg').value });
+        body.querySelector('#my-cover').src = u;
+      };
+      body.querySelectorAll('#cv-title, #cv-hook, #cv-accent, #cv-bg').forEach((i) => i.addEventListener('input', refresh));
+      body.querySelector('#cv-gen').addEventListener('click', () => { app.toast('已用 AI 重新生成封面（Demo 规则版）'); refresh(); });
+      body.querySelector('#cv-dl').addEventListener('click', () => { const a = document.createElement('a'); a.href = body.querySelector('#my-cover').src; a.download = 'my-cover.svg'; a.click(); app.toast('封面已导出'); });
     } else if (state.tab === 'copy') {
       body.innerHTML = `
         <div class="grid g2">

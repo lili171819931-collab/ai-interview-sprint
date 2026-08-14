@@ -391,10 +391,73 @@
   };
 
 
+  /* ---------------- V2.5 · 热点主题情报（原始帖 + 分类明细 + 头部账号） ---------------- */
+  function mulberry32(seed) {
+    return function () {
+      seed |= 0; seed = (seed + 0x6D2B79F5) | 0;
+      let t = Math.imul(seed ^ (seed >>> 15), 1 | seed);
+      t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+      return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+    };
+  }
+  const NAME_BASES = ['AI 阿伟', '科技老白', '阿May', '数据小张', '增长教练', '爆款研究社', '内容实验室', '赛博观察', '小鹿', '老张说事', '运营喵', '趋势捕手', '流量军师', '创作者日记', '蓝V课堂', '热点快递', '鹅厂同学', '图灵测试员', '商业拆解师', '野生产品经理', 'Viral 小李', 'Studio Kim', 'Trend Hunter', 'Content OS', 'Growth Guy', 'The Clipper', 'Reel Master', 'Shorts Lab', 'Data Dou', 'Creator Doc'];
+  const URL_BUILDERS = {
+    'TikTok': (h, id) => `https://www.tiktok.com/@${h}/video/${id}`,
+    'Instagram': (h, id) => `https://www.instagram.com/p/${id}/`,
+    'YouTube': (h, id) => `https://www.youtube.com/watch?v=${id}`,
+    '抖音': (h, id) => `https://www.douyin.com/video/${id}`,
+    '小红书': (h, id) => `https://www.xiaohongshu.com/explore/${id}`,
+    'B站': (h, id) => `https://www.bilibili.com/video/${id}`,
+    '视频号': (h, id) => `https://channels.weixin.qq.com/feed/${id}`,
+    '快手': (h, id) => `https://www.kuaishou.com/short-video/${id}`,
+    '微博': (h, id) => `https://weibo.com/${h}/${id}`,
+    '知乎': (h, id) => `https://www.zhihu.com/zvideo/${id}`,
+    'Reddit/X': (h, id) => `https://www.reddit.com/r/all/comments/${id}/`,
+  };
+  function topicPrimaryPlatform(t) {
+    return Array.isArray(t.platforms) ? t.platforms[0] : (t.platform || '抖音');
+  }
+  function buildTopicIntel(topics) {
+    const intel = {};
+    const hotAccounts = [], fastest = [];
+    for (const t of topics) {
+      const rnd = mulberry32([...t.title].reduce((a, c) => a + c.charCodeAt(0), 7));
+      const plat = topicPrimaryPlatform(t);
+      const builder = URL_BUILDERS[plat] || URL_BUILDERS['抖音'];
+      const sourceId = String(1e17 + Math.floor(rnd() * 9e17));
+      const sourceUrl = builder(encodeURIComponent((t.shortTag || 'creator')), sourceId);
+      const subs = ['核心观点', '实操方法', '案例复盘'];
+      const subTopics = subs.map((sub, si) => {
+        const accounts = [];
+        for (let i = 0; i < 10; i++) {
+          const base = NAME_BASES[(si * 13 + i * 7 + Math.floor(rnd() * 5)) % NAME_BASES.length];
+          const tag = (t.shortTag || 'creator').slice(0, 8);
+          const name = `${base}·${tag}`;
+          const handle = `${tag}_${base.replace(/[^a-zA-Z0-9]/g, '').toLowerCase()}_${i + 1}`;
+          const likes = Math.floor((60 + rnd() * 40) * (t.heat || 80) * (i === 0 ? 3 : 1));
+          const likesGrowth = Math.floor(5 + rnd() * 95) + (i === 0 ? 40 : 0);
+          const id = String(1e16 + Math.floor(rnd() * 9e16));
+          accounts.push({ rank: i + 1, name, platform: plat, handle, likes, likesGrowth: likesGrowth + '%', url: builder(handle, id) });
+          hotAccounts.push({ ...accounts[accounts.length - 1], topic: t.title, sub: sub });
+          fastest.push({ ...accounts[accounts.length - 1], topic: t.title, sub: sub });
+        }
+        accounts.sort((a, b) => b.likes - a.likes);
+        return { sub, heat: Math.max(40, Math.round(t.heat - si * 6)), accounts };
+      });
+      intel[t.id] = { sourceUrl, primaryPlatform: plat, subTopics, hottest: subTopics[0].accounts[0], hottestAccount: subTopics[0].accounts[0] };
+    }
+    hotAccounts.sort((a, b) => b.likes - a.likes);
+    fastest.sort((a, b) => parseFloat(b.likesGrowth) - parseFloat(a.likesGrowth));
+    return { intel, hotAccounts: hotAccounts.slice(0, 10), fastestLikeAccounts: fastest.slice(0, 10) };
+  }
+  const _topicIntel = buildTopicIntel([...hotTopics, ...globalTopics]);
+
+
   const api = {
     dataTrust, hotTopics, accounts, topics, kanban, kanbanStages, schedule,
     metricDays, metricSeries, platformMetrics, postMortem, agents, workflows,
     globalTopics, globalAccounts, caseStudies, businessData,
+    topicIntel: _topicIntel.intel, hotAccounts: _topicIntel.hotAccounts, fastestLikeAccounts: _topicIntel.fastestLikeAccounts,
   };
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
   global.CreatorOS = global.CreatorOS || {};

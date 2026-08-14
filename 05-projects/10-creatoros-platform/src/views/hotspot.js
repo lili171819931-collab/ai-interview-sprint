@@ -53,7 +53,7 @@
                 <td><div class="row"><span class="score-ring" style="width:38px;height:38px;font-size:13px;">${t.score}</span></div></td>
                 <td class="mono small">${esc(t.vel1h || '—')}<br>${esc(t.vel6h || '—')}<br>${esc(t.vel24h || '—')}</td>
                 <td>${badge(t.band.label, t.band.tone)}<div class="mt-8">${t.badges.map((b) => badge(b.label, b.tone)).join(' ')}</div></td>
-                <td><button class="btn sm" data-detail="${t.id}">分析</button></td>
+                <td><div class="row gap8"><button class="btn sm" data-detail="${t.id}">分析</button><button class="btn sm primary" data-intel="${t.id}">原始帖/明细</button></div></td>
               </tr>`).join('')}
           </tbody>
         </table></div>
@@ -68,11 +68,42 @@
       state.detail = state.detail === b.dataset.detail ? null : b.dataset.detail;
       render(el);
     }));
+    el.querySelectorAll('[data-intel]').forEach((b) => b.addEventListener('click', () => openIntel(el, b.dataset.intel)));
     if (state.detail) {
       const t = all.find((x) => x.id === state.detail);
       if (t) renderDetail(el, t);
       else state.detail = null;
     }
+  }
+
+  function openIntel(el, id) {
+    const t = [...S.hotTopics.map((x) => ({ ...x, region: 'CN' })), ...S.globalTopics.map((x) => ({ ...x, region: 'Global' }))].find((x) => x.id === id);
+    const info = S.topicIntel[id];
+    if (!t || !info) { app.toast('暂无该主题明细'); return; }
+    const fastest = S.fastestLikeAccounts.slice(0, 10);
+    const hot = S.hotAccounts.slice(0, 10);
+    C.modal.open(`
+      <div class="b" style="font-size:15px">${esc(t.title)}</div>
+      <div class="small text-3 mt-8">主题明细 · ${info.subTopics.length} 个分类 · 每个分类按热度提供 10 个头部账号及原帖地址</div>
+      <div class="alert info mt-12"><span class="a-ico">🔗</span><div><b>原始帖链接：</b><a href="${esc(info.sourceUrl)}" target="_blank" rel="noopener">${esc(info.sourceUrl)}</a>（${esc(info.primaryPlatform)} · Demo 快照链接，真实抓取见 HotTopicProvider）</div></div>
+      <div class="grid g2 mt-12" style="gap:10px">
+        <div class="kpi" style="margin:0"><div class="k-label">🔥 最火头部账号</div><div class="b">${esc(info.hottestAccount.name)}</div>
+          <div class="small text-3 mt-8">👍 ${fmt(info.hottestAccount.likes)} · 增速 ${esc(info.hottestAccount.likesGrowth)}</div>
+          <div class="small mt-8"><a href="${esc(info.hottestAccount.url)}" target="_blank" rel="noopener">原帖地址 →</a></div></div>
+        <div class="kpi" style="margin:0"><div class="k-label">⚡ 点赞量提升最快 Top10</div>
+          <div class="small mt-8">${fastest.map((a, i) => `${i + 1}. <a href="${esc(a.url)}" target="_blank" rel="noopener">${esc(a.name)}</a> <span class="text-3">${esc(a.likesGrowth)}</span>`).join(' · ')}</div></div>
+      </div>
+      ${info.subTopics.map((st) => `
+        <div class="mt-16"><div class="row spread"><div class="b">📂 ${esc(st.sub)}</div>${badge('热度 ' + st.heat, st.heat >= 85 ? 'danger' : st.heat >= 70 ? 'success' : 'info')}</div>
+        <div class="table-wrap mt-8"><table class="tbl">
+          <thead><tr><th>#</th><th>账号</th><th>平台</th><th>点赞量</th><th>点赞增速</th><th>原帖地址</th></tr></thead>
+          <tbody>${st.accounts.map((a) => `
+            <tr><td class="num">${a.rank}</td><td class="b">${esc(a.name)}</td><td>${esc(a.platform)}</td>
+            <td class="num">${fmt(a.likes)}</td><td class="num up">${esc(a.likesGrowth)}</td>
+            <td><a href="${esc(a.url)}" target="_blank" rel="noopener">打开原帖 ↗</a></td></tr>`).join('')}
+        </tbody></table></div></div>`).join('')}
+      <div class="chain-decision mt-12"><b>💡 建议：</b>优先跟进「${esc(info.subTopics[0].sub)}」分类（热度 ${info.subTopics[0].heat}），参考 ${esc(info.subTopics[0].accounts[0].name)} 的选题角度做差异化切入。</div>
+    `, { title: '🔍 热点主题明细 · 头部账号 + 原帖', width: 1000 });
   }
 
   function renderDetail(el, t) {

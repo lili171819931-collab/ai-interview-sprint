@@ -108,6 +108,21 @@
         <div class="card-head"><div class="card-title">🔪 Viral Creator Deep Dive · 8 维拆解 · ${esc(acc.name)}</div>
           <div class="grow"></div>${badge(acc.tier || 'Mid', TIER_TONE[acc.tier] || 'info')}<button class="btn sm" data-close style="margin-left:8px">收起</button></div>
         <div class="card-body">
+          <div class="grid g3 mb-12" style="gap:14px;align-items:start">
+            <div style="grid-column: span 1; max-width:230px">
+              <div class="b small mb-8">🖼 封面（图片预览）</div>
+              <img class="cover-preview" src="${C.cover.url({ title: acc.name + ' 爆款拆解', hook: acc.viralFormula, author: acc.platform + ' · ' + acc.track, tag: 'DEEP DIVE', accent: '#4f7dff', bg: '#0e1420' })}" alt="封面预览">
+            </div>
+            <div style="grid-column: span 2">
+              <div class="b mb-8">📝 图文视频文案拆解（完整 · 不止标题）</div>
+              <div class="chain-step"><span class="arrow">开头</span><span>${esc(acc.copyBreakdown ? acc.copyBreakdown.opening : '以「' + acc.titleFormulas[0] + '」式反常识/身份共鸣开场，0-3 秒抛出' + acc.viralFormula.split('×')[0] + '核心钩子')}</span></div>
+              <div class="chain-step"><span class="arrow">中段</span><span>${esc(acc.copyBreakdown ? acc.copyBreakdown.middle : '用 ' + (acc.videoStructure.split('→')[1] || '').trim() + ' 承接，先给结论再给证据，保持信息密度与情绪推进')}</span></div>
+              <div class="chain-step"><span class="arrow">结尾</span><span>${esc(acc.copyBreakdown ? acc.copyBreakdown.closing : '以金句/行动指令收尾，配合 ' + acc.titleFormulas.slice(-1)[0] + ' 式引导评论与关注')}</span></div>
+              <div class="chain-step"><span class="arrow">情绪线</span><span>${esc(acc.copyBreakdown ? acc.copyBreakdown.emotion : '好奇 → 认同 → 惊讶 → 行动（情绪节奏与镜头切换同步）')}</span></div>
+              <div class="chain-step"><span class="arrow">关键词</span><span>${(acc.copyBreakdown ? acc.copyBreakdown.keywords : ['选题', 'Hook', '信息密度', '人设', '节奏', 'CTA']).map((k) => `<span class="tag">${esc(k)}</span>`).join('')}</span></div>
+              <div class="chain-step"><span class="arrow">结构</span><span>${esc(acc.videoStructure)}</span></div>
+            </div>
+          </div>
           <div class="grid g2">
             <div>
               <div class="b mb-8">01 人设 · 02 定位</div>

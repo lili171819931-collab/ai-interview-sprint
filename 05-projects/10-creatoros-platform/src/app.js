@@ -18,6 +18,7 @@
     ]},
     { group: 'CONTENT', items: [
       { id: 'topics', icon: '💡', label: '选题中心' },
+      { id: 'creation', icon: '🎬', label: '个人创作' },
       { id: 'studio', icon: '✍️', label: 'AI 内容工厂' },
     ]},
     { group: 'PUBLISH', items: [
@@ -45,6 +46,7 @@
     accounts: ['创作者情报', 'Creator Intelligence · 账号分层 · 8 维暴力拆解'],
     viral: ['爆款案例库', 'Viral Library · 3 大真实案例 · Cover/Copy/Script/Timeline 四视图工作台'],
     topics: ['选题中心', 'AI 选题工厂 · 内容战略矩阵 · Commercial Potential'],
+    creation: ['个人创作', '全流程设计：选题 → 封面 → 标题 → 文案 → 视频剪辑 · 支持复用爆款拆解逻辑'],
     studio: ['AI 内容工厂', '中英双语文案 · 变体改写 · 分镜/Timeline · 多平台重构'],
     publish: ['发布与数据', 'Omnichannel Publishing · TikTok/Instagram/抖音/小红书/B站/视频号 · 数据回收'],
     brain: ['Creator Brain', '我的创作者大脑 · Creator DNA · 优势雷达 · 知识库'],
@@ -76,6 +78,61 @@
     t.innerHTML = html.trim();
     return t.content.firstElementChild;
   }
+
+  /* ---------- 弹窗 Modal ---------- */
+  C.modal = {
+    open(html, opts = {}) {
+      C.modal.close();
+      const mask = h(`<div class="modal-mask"><div class="modal" style="width:${opts.width || 980}px">
+        <div class="modal-head"><div class="modal-title">${opts.title || ''}</div>
+        <button class="modal-close">✕</button></div>
+        <div class="modal-body"></div></div></div>`);
+      mask.querySelector('.modal-body').innerHTML = html;
+      mask.querySelector('.modal-close').addEventListener('click', () => mask.remove());
+      mask.addEventListener('click', (e) => { if (e.target === mask) mask.remove(); });
+      document.body.appendChild(mask);
+      C.modal._mask = mask;
+    },
+    close() { if (C.modal._mask) { C.modal._mask.remove(); C.modal._mask = null; } },
+  };
+
+  /* ---------- 封面生成器（SVG → 真实图片 dataURL） ---------- */
+  C.cover = {
+    _wrap(str, n) {
+      const out = []; let buf = '';
+      for (const ch of String(str || '')) {
+        buf += ch;
+        const w = [...buf].reduce((s2, c) => s2 + (c.charCodeAt(0) > 255 ? 2 : 1), 0);
+        if (w >= n) { out.push(buf); buf = ''; }
+      }
+      if (buf) out.push(buf);
+      return out.slice(0, 4);
+    },
+    url(opts) {
+      const { title, hook, author, tag, bg = '#0e1420', fg = '#ffffff', accent = '#4f7dff', layout = 'poster' } = opts || {};
+      const lines = C.cover._wrap(title, 13);
+      const W = 540, H = 720;
+      const fs = lines.length > 2 ? 40 : 52;
+      let txt = '';
+      lines.forEach((ln, i) => {
+        txt += `<text x="36" y="${300 + i * (fs + 10)}" font-size="${fs}" font-weight="800" fill="${fg}" font-family="PingFang SC, Microsoft YaHei, sans-serif">${esc(ln)}</text>`;
+      });
+      const svg = `<svg xmlns="http://www.w3.org/2000/svg" width="${W}" height="${H}" viewBox="0 0 ${W} ${H}">
+  <defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1">
+    <stop offset="0" stop-color="${bg}"/><stop offset="1" stop-color="${accent}44"/></linearGradient></defs>
+  <rect width="${W}" height="${H}" fill="url(#g)"/>
+  <circle cx="${W - 80}" cy="90" r="150" fill="${accent}22"/>
+  <circle cx="60" cy="${H - 60}" r="110" fill="${accent}18"/>
+  <rect x="24" y="24" width="118" height="34" rx="8" fill="${accent}" opacity=".92"/>
+  <text x="40" y="47" font-size="15" font-weight="800" fill="#fff" font-family="sans-serif">${esc(tag || 'CREATOROS')}</text>
+  <text x="36" y="${H - 96}" font-size="20" font-weight="800" fill="${accent}" font-family="sans-serif">${esc(author || '创作者')}</text>
+  <text x="36" y="${H - 68}" font-size="15" opacity=".85" fill="${fg}" font-family="PingFang SC, Microsoft YaHei, sans-serif">${esc(hook || '')}</text>
+  <rect x="36" y="${H - 52}" width="150" height="34" rx="17" fill="${accent}"/>
+  <text x="52" y="${H - 29}" font-size="14" font-weight="700" fill="#fff" font-family="sans-serif">${layout === 'poster' ? '立即观看 →' : '保存封面'}</text>
+  ${txt}</svg>`;
+      return 'data:image/svg+xml;charset=utf-8,' + encodeURIComponent(svg);
+    },
+  };
 
   /* ---------- 路由 ---------- */
   function currentView() {
