@@ -110,6 +110,19 @@ async function main() {
   ok(await page.locator(".stage-canvas").isVisible(), "合成画布可见");
   ok(await page.locator(".device-select option", { hasText: "自动（默认摄像头）" }).count() === 2, "摄像头默认「自动」选项存在");
   ok(await page.locator("button", { hasText: "🔄 重新检测" }).isVisible(), "重新检测设备按钮存在");
+
+  // 设备自检
+  await page.locator("button", { hasText: "🔬 自检" }).click();
+  await page.waitForSelector(".diag-body .diag-line", { timeout: 30000 });
+  await page.waitForFunction(() => {
+    const t = document.querySelector(".diag-body")?.textContent ?? "";
+    return t.includes("结论") && (t.includes("有画面输出") || t.includes("无法输出画面"));
+  }, { timeout: 30000 });
+  ok(await page.locator(".diag-body .diag-line").count() > 5, "设备自检报告已生成（多行检测结果）");
+  const diagText = await page.locator(".diag-body").textContent();
+  ok(diagText.includes("mediaDevices.getUserMedia 可用") && diagText.includes("结论"), "自检包含摄像头实测结论");
+  await page.screenshot({ path: path.join(SHOT_DIR, "01b-diagnostics.png") });
+  await page.locator(".diag-modal .modal-close").click();
   await page.screenshot({ path: path.join(SHOT_DIR, "01-loaded.png") });
 
   // ---------- 2. 源连接 ----------

@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { studio } from "../engine/Studio";
 import { useForceUpdate, useStudioState } from "../hooks";
+import { DeviceDiagnostics } from "./DeviceDiagnostics";
 
 interface DeviceInfo {
   deviceId: string;
@@ -18,7 +19,7 @@ async function listDevices(): Promise<{ cams: DeviceInfo[]; mics: DeviceInfo[] }
 function describeError(e: unknown): string {
   const err = e as DOMException;
   const map: Record<string, string> = {
-    NotAllowedError: "权限被拒绝——请在浏览器地址栏左侧允许使用摄像头，然后重试",
+    NotAllowedError: "权限被拒绝——请在浏览器地址栏左侧允许摄像头；若仍失败，检查 macOS 系统设置 → 隐私与安全性 → 摄像头 → 允许 Chrome（改后需重启 Chrome）",
     NotFoundError: "未找到可用摄像头——请检查摄像头是否被其他应用占用或已断开",
     NotReadableError: "摄像头正被其他应用/页面占用——请关闭占用后重试",
     OverconstrainedError: "无法满足所选设备要求——请尝试「自动（默认摄像头）」",
@@ -42,6 +43,8 @@ export function SourcePanel() {
   const [cam1Error, setCam1Error] = useState<string | null>(null);
   const [cam2Error, setCam2Error] = useState<string | null>(null);
   const [busy, setBusy] = useState<"cam1" | "cam2" | null>(null);
+  const [showDiag, setShowDiag] = useState(false);
+  const [devChecked, setDevChecked] = useState(false);
   const cam1Preview = useRef<HTMLVideoElement>(null);
   const cam2Preview = useRef<HTMLVideoElement>(null);
 
@@ -53,6 +56,7 @@ export function SourcePanel() {
       const { cams, mics } = await listDevices();
       setCams(cams);
       setMics(mics);
+      setDevChecked(true);
       // 默认选中第一个设备（保持用户已选的不变）
       setCam1Id((prev) => prev || cams[0]?.deviceId || "");
       setCam2Id((prev) => prev || cams[0]?.deviceId || "");
@@ -155,13 +159,24 @@ export function SourcePanel() {
     <div className="source-panel-inner">
       <div className="panel-title-row">
         <h2 className="panel-title">🎛️ 音视频源</h2>
-        <button className="btn small ghost" onClick={refreshDevices} title="重新检测设备">🔄 重新检测</button>
+        <div className="panel-title-actions">
+          <button className="btn small ghost" onClick={() => setShowDiag(true)} title="运行设备自检">🔬 自检</button>
+          <button className="btn small ghost" onClick={refreshDevices} title="重新检测设备">🔄 重新检测</button>
+        </div>
       </div>
 
       {!mediaSupported && (
         <div className="source-warning">
           ⚠️ 当前浏览器不支持摄像头 / 麦克风（需要 getUserMedia）。<br />
           请使用 <b>Chrome / Edge</b>，并通过 <b>http://127.0.0.1</b> 或 HTTPS 访问本应用。
+        </div>
+      )}
+
+      {mediaSupported && devChecked && cams.length === 0 && (
+        <div className="source-warning">
+          ⚠️ <b>未检测到任何摄像头设备。</b><br />
+          可能原因：macOS 系统权限未开启 / 摄像头被其他应用占用 / 无摄像头。<br />
+          <button className="btn small" onClick={() => setShowDiag(true)} style={{ marginTop: 6 }}>🔬 一键自检定位原因</button>
         </div>
       )}
 
@@ -255,10 +270,12 @@ export function SourcePanel() {
 
       <div className="tips">
         💡 提示：录制前先连接好源。<br />
-        · 打不开摄像头？点「🔄 重新检测」，或在浏览器地址栏左侧允许摄像头权限<br />
+        · 打不开摄像头？先点「🔬 自检」查看详细原因（含系统权限/设备占用），再点「🔄 重新检测」<br />
         · 只有 1 个摄像头时，Camera 2 会自动复用 Camera 1 画面<br />
         空格键暂停 / 继续 · ⌘R 开始 / 停止
       </div>
+
+      {showDiag && <DeviceDiagnostics onClose={() => setShowDiag(false)} />}
     </div>
   );
 }
