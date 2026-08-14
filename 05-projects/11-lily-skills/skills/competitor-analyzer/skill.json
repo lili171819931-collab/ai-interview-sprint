@@ -1,0 +1,22 @@
+{
+  "name": "Competitor Analyzer",
+  "version": "1.0.0",
+  "description": "对竞品列表进行结构化分析：定位、优势、差距与机会点",
+  "category": "Marketing",
+  "tags": ["competitor", "竞品", "分析", "marketing", "战略"],
+  "icon": "🔎",
+  "execution_type": "local",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "competitors": { "type": "array", "items": { "type": "string" }, "description": "竞品名称列表", "required": true },
+      "industry": { "type": "string", "description": "行业", "required": false }
+    },
+    "required": ["competitors"]
+  },
+  "ai_description": "输入竞品名称列表，输出每个竞品的定位假设、核心优势、差异化缺口与本产品的机会点。",
+  "use_cases": ["竞品研究", "市场进入", "差异化定位"],
+  "examples": ["分析 OpenAI / Anthropic / Google 的竞争格局"]
+}

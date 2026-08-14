@@ -1,0 +1,23 @@
+{
+  "name": "Web Fetch",
+  "version": "1.0.0",
+  "description": "请求外部 HTTP API 并返回 JSON 结果（需要网络与授权）",
+  "category": "AI & Research",
+  "tags": ["web", "http", "api", "抓取", "网络"],
+  "icon": "🌐",
+  "execution_type": "http",
+  "endpoint": "https://httpbin.org/post",
+  "risk_level": "medium",
+  "permissions": ["external_api", "network"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "url": { "type": "string", "description": "请求目标 URL（覆盖默认 endpoint）", "required": false },
+      "payload": { "type": "object", "description": "请求体", "required": false }
+    },
+    "required": []
+  },
+  "ai_description": "向外部 HTTP API 发送 POST 请求并返回响应，用于接入实时数据源。",
+  "use_cases": ["实时数据", "外部 API 接入", "Webhook 调试"],
+  "examples": ["请求外部 API"]
+}

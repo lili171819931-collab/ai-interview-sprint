@@ -1,0 +1,21 @@
+{
+  "name": "Calculator",
+  "version": "1.0.0",
+  "description": "安全计算数学表达式（四则运算、括号、幂）",
+  "category": "Productivity",
+  "tags": ["math", "计算", "calculator", "公式"],
+  "icon": "🧮",
+  "execution_type": "local",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "expression": { "type": "string", "description": "数学表达式，如 (12+3)*4", "required": true }
+    },
+    "required": ["expression"]
+  },
+  "ai_description": "安全地计算数学表达式，只支持数字、四则运算、括号与幂，拒绝任意代码执行。",
+  "use_cases": ["快速计算", "公式验证", "Agent 数值步骤"],
+  "examples": ["计算 (12+3)*4 的结果"]
+}

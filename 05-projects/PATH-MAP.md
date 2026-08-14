@@ -50,6 +50,17 @@
 
 **规范 URL（07）**：https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard
 
+## Lily-Skills（11 · 个人 AI Skill 操作系统）
+
+| 含义 | 路径 |
+|------|------|
+| 完整可运行源码 + 文档 | `05-projects/11-lily-skills/`（Next.js 15 + TS + SQLite） |
+| 专家补充点 | `…/docs/00-expert-supplement.md` |
+| 架构 / API / 部署 / 开发者指南 | `…/docs/01-architecture.md` `…/02-api.md` `…/03-deployment.md` `…/04-developer-guide.md` |
+| DoD 验收报告 | `…/docs/05-acceptance.md` |
+
+**规范 URL（11）**：https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/11-lily-skills
+
 ## 关系图
 
 ```

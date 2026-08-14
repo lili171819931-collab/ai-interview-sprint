@@ -1,0 +1,22 @@
+{
+  "name": "Content Brief Writer",
+  "version": "1.0.0",
+  "description": "根据选题生成结构化内容大纲与创作简报（标题、结构、要点、CTA）",
+  "category": "Content Creation",
+  "tags": ["content", "brief", "大纲", "文案", "脚本", "写作"],
+  "icon": "📝",
+  "execution_type": "local",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "title": { "type": "string", "description": "内容标题或选题", "required": true },
+      "format": { "type": "string", "enum": ["article", "video_script", "social_post", "email"], "description": "内容形式", "required": false }
+    },
+    "required": ["title"]
+  },
+  "ai_description": "把单个选题扩展为可直接创作的内容简报：标题方案、内容结构、核心要点、目标人群与行动号召。",
+  "use_cases": ["公众号文章", "短视频脚本", "社交媒体文案", "邮件营销"],
+  "examples": ["为「AI Agent 入门」写一个内容简报", "生成短视频脚本大纲"]
+}

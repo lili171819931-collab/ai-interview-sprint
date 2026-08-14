@@ -1,0 +1,23 @@
+{
+  "name": "System Info",
+  "version": "1.0.0",
+  "description": "读取本机系统信息（时间、平台、内核）",
+  "category": "Automation",
+  "tags": ["system", "系统", "info", "cli", "运维"],
+  "icon": "🖥️",
+  "execution_type": "cli",
+  "command": "echo \"date={{date}} platform={{platform}}\" && date +%Y-%m-%dT%H:%M:%S%z && uname -srm",
+  "risk_level": "low",
+  "permissions": ["read", "file"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "date": { "type": "string", "description": "任意日期文本", "required": false },
+      "platform": { "type": "string", "description": "平台名", "required": false }
+    },
+    "required": []
+  },
+  "ai_description": "通过 CLI 读取系统时间与内核信息，用于环境检查与自动化前置。",
+  "use_cases": ["环境检查", "运维", "自动化调试"],
+  "examples": ["运行 System Info"]
+}

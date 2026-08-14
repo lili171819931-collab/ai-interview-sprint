@@ -1,0 +1,29 @@
+{
+  "name": "Weekly Trend Report",
+  "version": "1.0.0",
+  "description": "组合 Skill：扫描热点 → 生成选题 → 汇总为周报（复合 Skill 示例）",
+  "category": "Automation",
+  "tags": ["workflow", "composite", "周报", "trend", "报告", "自动化"],
+  "icon": "🗞️",
+  "execution_type": "composite",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "platform": { "type": "string", "description": "平台", "required": true },
+      "topic": { "type": "string", "description": "主题", "required": true },
+      "count": { "type": "number", "description": "趋势数量", "required": false }
+    },
+    "required": ["platform", "topic"]
+  },
+  "config": {
+    "steps": [
+      { "skill_id": "trend-scanner", "input_map": { "platform": "{{input.platform}}", "topic": "{{input.topic}}", "count": "{{input.count}}" } },
+      { "skill_id": "topic-generator", "input_map": { "topic": "{{input.topic}}", "keywords": "{{step0.summary}}", "count": "{{input.count}}" } }
+    ]
+  },
+  "ai_description": "一个复合 Skill 示例：自动串联「热点扫描 → 选题生成」，把多步能力打包成单一可调用单元，演示 Skill 组合与编排。",
+  "use_cases": ["周报生成", "选题流水线", "自动化演示"],
+  "examples": ["每周一生成 AI 热点周报"]
+}

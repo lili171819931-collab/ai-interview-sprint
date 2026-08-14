@@ -1,0 +1,23 @@
+{
+  "name": "Topic Generator",
+  "version": "1.0.0",
+  "description": "根据主题与关键词批量生成内容选题（含标题、角度与目标受众）",
+  "category": "Content Creation",
+  "tags": ["content", "选题", "topic", "标题", "创作", "strategy"],
+  "icon": "💡",
+  "execution_type": "local",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "topic": { "type": "string", "description": "内容主题", "required": true },
+      "keywords": { "type": "string", "description": "逗号分隔的关键词", "required": false },
+      "count": { "type": "number", "description": "选题数量", "min": 1, "max": 20 }
+    },
+    "required": ["topic"]
+  },
+  "ai_description": "围绕指定主题生成可发布的内容选题，每个选题包含标题、创作角度、目标受众与标签，用于内容排期与账号运营。",
+  "use_cases": ["内容排期", "账号选题", "短视频脚本前置", "图文创作"],
+  "examples": ["生成 10 个 AI 相关选题", "为我的知识付费账号生成内容方向"]
+}

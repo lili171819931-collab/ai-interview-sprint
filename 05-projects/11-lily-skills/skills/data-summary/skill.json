@@ -1,0 +1,22 @@
+{
+  "name": "Data Summary",
+  "version": "1.0.0",
+  "description": "对输入数据数组做统计摘要（均值/最值/计数/分布），输出可读报告",
+  "category": "Data Analysis",
+  "tags": ["data", "分析", "统计", "summary", "摘要", "报告"],
+  "icon": "📊",
+  "execution_type": "local",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "numbers": { "type": "array", "items": { "type": "number" }, "description": "数值数组", "required": true },
+      "label": { "type": "string", "description": "数据标签", "required": false }
+    },
+    "required": ["numbers"]
+  },
+  "ai_description": "对数值数组进行统计摘要：均值、中位数、最值、标准差与分桶分布，返回结构化统计报告。",
+  "use_cases": ["数据分析", "周报数据", "实验指标", "财务数字"],
+  "examples": ["分析我这周的数据", "统计销售额分布"]
+}

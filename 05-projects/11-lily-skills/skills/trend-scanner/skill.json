@@ -1,0 +1,30 @@
+{
+  "name": "Trend Scanner",
+  "version": "1.0.0",
+  "description": "扫描指定平台与主题下的热点趋势，输出趋势列表、热度评分与内容洞察",
+  "category": "AI & Research",
+  "tags": ["trend", "热点", "research", "tiktok", "情报", "扫描"],
+  "icon": "📡",
+  "execution_type": "local",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "platform": { "type": "string", "description": "目标平台（tiktok / youtube / instagram / 通用）", "required": true },
+      "topic": { "type": "string", "description": "研究主题，如 AI Agent", "required": true },
+      "count": { "type": "number", "description": "返回趋势数量", "min": 1, "max": 20 }
+    },
+    "required": ["platform", "topic"]
+  },
+  "output_schema": {
+    "type": "object",
+    "properties": {
+      "topics": { "type": "array", "description": "趋势主题列表" },
+      "summary": { "type": "string", "description": "趋势摘要" }
+    }
+  },
+  "ai_description": "扫描指定平台（TikTok/YouTube/Instagram 等）在指定主题下的热点趋势，返回热度评分、关键词与内容洞察，适合做内容选题与竞品情报的前置步骤。",
+  "use_cases": ["内容选题", "竞品情报", "市场热点监控", "海外趋势研究"],
+  "examples": ["帮我扫描 TikTok 上 AI Agent 的热点", "分析 Instagram 上内容创作趋势"]
+}

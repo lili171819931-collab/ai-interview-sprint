@@ -1,0 +1,76 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bg: #0a0a0c;
+  --color-surface: #121216;
+  --color-surface2: #18181d;
+  --color-border: #232329;
+  --color-border2: #2e2e36;
+  --color-fg: #ededef;
+  --color-muted: #8b8b96;
+  --color-subtle: #5c5c66;
+  --color-accent: #7c6cf0;
+  --color-accent2: #00c9a7;
+  --color-warn: #f5b93b;
+  --color-danger: #f05d6c;
+  --color-info: #4da3ff;
+  --font-sans: ui-sans-serif, system-ui, -apple-system, "PingFang SC", "Microsoft YaHei", sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, monospace;
+}
+
+* {
+  border-color: var(--color-border);
+}
+
+html, body {
+  background: var(--color-bg);
+  color: var(--color-fg);
+  font-family: var(--font-sans);
+  font-size: 14px;
+  -webkit-font-smoothing: antialiased;
+}
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+::-webkit-scrollbar-thumb {
+  background: #26262c;
+  border-radius: 8px;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* utility */
+.card {
+  @apply rounded-xl border bg-surface;
+  border-color: var(--color-border);
+}
+.card-hover {
+  transition: border-color 0.15s ease, transform 0.15s ease, background 0.15s ease;
+}
+.card-hover:hover {
+  border-color: var(--color-border2);
+  background: var(--color-surface2);
+}
+.glow {
+  box-shadow: 0 0 0 1px rgba(124, 108, 240, 0.25), 0 8px 40px -12px rgba(124, 108, 240, 0.35);
+}
+.gradient-text {
+  background: linear-gradient(120deg, #a99aff 0%, #7c6cf0 45%, #00c9a7 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+.code {
+  font-family: var(--font-mono);
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.35; }
+}
+.pulse-dot {
+  animation: pulse-dot 1.2s ease-in-out infinite;
+}

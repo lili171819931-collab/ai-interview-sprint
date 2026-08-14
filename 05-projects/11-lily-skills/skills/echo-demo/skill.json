@@ -1,0 +1,21 @@
+{
+  "name": "Echo Demo",
+  "version": "1.0.0",
+  "description": "回显输入参数，用于测试与演示执行链路",
+  "category": "Development",
+  "tags": ["echo", "测试", "demo", "调试"],
+  "icon": "🔁",
+  "execution_type": "echo",
+  "risk_level": "low",
+  "permissions": ["read"],
+  "input_schema": {
+    "type": "object",
+    "properties": {
+      "message": { "type": "string", "description": "任意消息", "required": true }
+    },
+    "required": ["message"]
+  },
+  "ai_description": "回显输入参数，用于验证 Skill 注册、搜索与执行链路是否通畅。",
+  "use_cases": ["链路测试", "新人上手", "调试"],
+  "examples": ["运行 Echo Demo，消息 hello"]
+}
