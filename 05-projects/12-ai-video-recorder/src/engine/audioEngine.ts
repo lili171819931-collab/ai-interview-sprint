@@ -8,7 +8,11 @@ export class AudioEngine {
   private micGain: GainNode;
   private sysGain: GainNode;
   private bgmGain: GainNode;
-  private analyser: AnalyserNode;
+  private masterGain: GainNode;
+  private micAnalyser: AnalyserNode;
+  private sysAnalyser: AnalyserNode;
+  private bgmAnalyser: AnalyserNode;
+  private masterAnalyser: AnalyserNode;
   private destination: MediaStreamAudioDestinationNode;
   private bgmSource: AudioBufferSourceNode | null = null;
   private bgmBuffer: AudioBuffer | null = null;
@@ -28,17 +32,28 @@ export class AudioEngine {
     this.sysGain.gain.value = 1;
     this.bgmGain = this.ctx.createGain();
     this.bgmGain.gain.value = this._bgmVolume;
-    this.analyser = this.ctx.createAnalyser();
-    this.analyser.fftSize = 1024;
+    this.masterGain = this.ctx.createGain();
+    this.masterGain.gain.value = 1;
     this.destination = this.ctx.createMediaStreamDestination();
-    // 信号链：mic/sys/bgm -> analyser(mic) -> destination
-    this.micGain.connect(this.destination);
-    this.sysGain.connect(this.destination);
-    this.bgmGain.connect(this.destination);
-    this.micGain.connect(this.analyser);
+    this.micAnalyser = this.ctx.createAnalyser();
+    this.sysAnalyser = this.ctx.createAnalyser();
+    this.bgmAnalyser = this.ctx.createAnalyser();
+    this.masterAnalyser = this.ctx.createAnalyser();
+    for (const a of [this.micAnalyser, this.sysAnalyser, this.bgmAnalyser, this.masterAnalyser]) a.fftSize = 512;
+    // OBS 混音器信号链：各源 -> 各自表头 -> 主音量 -> 输出
+    this.micGain.connect(this.micAnalyser);
+    this.micAnalyser.connect(this.masterGain);
+    this.sysGain.connect(this.sysAnalyser);
+    this.sysAnalyser.connect(this.masterGain);
+    this.bgmGain.connect(this.bgmAnalyser);
+    this.bgmAnalyser.connect(this.masterGain);
+    this.masterGain.connect(this.destination);
+    this.masterGain.connect(this.masterAnalyser);
   }
 
   get currentBgmId(): string | null { return this._currentBgmId; }
+
+  get bgmVolume(): number { return this._bgmVolume; }
 
   get stream(): MediaStream {
     return this.destination.stream;
@@ -82,6 +97,27 @@ export class AudioEngine {
     this.sysGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.02);
   }
 
+  setMasterVolume(v: number) {
+    this.masterGain.gain.setTargetAtTime(v, this.ctx.currentTime, 0.02);
+  }
+
+  /** OBS 混音器电平表（0..1 RMS） */
+  getLevels(): { mic: number; sys: number; bgm: number; master: number } {
+    const rms = (a: AnalyserNode) => {
+      const buf = new Float32Array(a.fftSize);
+      a.getFloatTimeDomainData(buf);
+      let sum = 0;
+      for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
+      return Math.min(1, Math.sqrt(sum / buf.length) * 3);
+    };
+    return {
+      mic: rms(this.micAnalyser),
+      sys: rms(this.sysAnalyser),
+      bgm: rms(this.bgmAnalyser),
+      master: rms(this.masterAnalyser),
+    };
+  }
+
   /** 设置背景音乐：trackId 为 null 则停止 */
   setBgm(trackId: string | null, volume = this._bgmVolume) {
     this._bgmVolume = volume;
@@ -112,9 +148,9 @@ export class AudioEngine {
       this.bgmGain.gain.setTargetAtTime(this._bgmVolume, this.ctx.currentTime, 0.1);
       return;
     }
-    const buf = new Float32Array(this.analyser.fftSize);
+    const buf = new Float32Array(this.micAnalyser.fftSize);
     const level = () => {
-      this.analyser.getFloatTimeDomainData(buf);
+      this.micAnalyser.getFloatTimeDomainData(buf);
       let sum = 0;
       for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
       const rms = Math.sqrt(sum / buf.length);
@@ -136,9 +172,9 @@ export class AudioEngine {
 
   startEnergySampling() {
     this.energyHistory = [];
-    const buf = new Float32Array(this.analyser.fftSize);
+    const buf = new Float32Array(this.masterAnalyser.fftSize);
     this.energyTimer = window.setInterval(() => {
-      this.analyser.getFloatTimeDomainData(buf);
+      this.masterAnalyser.getFloatTimeDomainData(buf);
       let sum = 0;
       for (let i = 0; i < buf.length; i++) sum += buf[i] * buf[i];
       const rms = Math.sqrt(sum / buf.length);

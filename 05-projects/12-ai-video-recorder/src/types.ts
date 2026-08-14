@@ -49,6 +49,8 @@ export interface SubtitleState {
 
 export type PipShape = "rounded" | "circle" | "ellipse" | "square" | "diamond";
 
+export type SplitMode = "pip" | "split-v" | "split-h" | "dual" | "circle";
+
 export interface PipRect {
   x: number; // 归一化 0..1
   y: number;
@@ -68,6 +70,54 @@ export interface BeautyState {
 }
 
 export type PipBlurMode = "none" | "screen" | "soft" | "portrait";
+
+/** OBS 风格摄像头颜色滤镜 */
+export type ColorFilter = "none" | "warm" | "cool" | "bw" | "retro";
+
+/** 文字来源（OBS Text Source） */
+export interface TextOverlay {
+  id: string;
+  text: string;
+  x: number; // 归一化 0..1
+  y: number;
+  size: number; // 相对画布高度百分比*1000
+  color: string;
+}
+
+/** 图片来源（OBS Image Source） */
+export interface ImageOverlay {
+  id: string;
+  src: string; // dataURL / URL
+  x: number;
+  y: number;
+  w: number; // 归一化宽度
+  h: number; // 归一化高度（0 则按图片比例）
+}
+
+/** 转场效果 */
+export type TransitionKind = "cut" | "fade" | "wipe";
+
+/** OBS 场景快照：保存整套工作区配置（不含流本身） */
+export interface SceneSnapshot {
+  id: string;
+  name: string;
+  createdAt: number;
+  templateId: string;
+  splitMode: SplitMode;
+  pipShape: PipShape;
+  beauty: BeautyState;
+  blurMode: PipBlurMode;
+  filter: ColorFilter;
+  crop: CropRect;
+  zoom: ZoomState;
+  subtitle: SubtitleState;
+  bgmId: string | null;
+  bgmVol: number;
+  watermark: string;
+  enabled: { screen: boolean; camera1: boolean; camera2: boolean };
+  textSources: TextOverlay[];
+  imageSources: ImageOverlay[];
+}
 
 export interface ClickEffect {
   x: number; // 归一化
@@ -137,6 +187,7 @@ export interface StudioEventMap {
   exportDone: { blob: Blob; url: string; filename: string; mime: string };
   transcript: { text: string; final: boolean };
   devices: void;
+  scenes: void;
 }
 
 export type StudioListener<K extends keyof StudioEventMap> = (payload: StudioEventMap[K]) => void;

@@ -1,4 +1,17 @@
-import type { RecordState, StudioEventMap, StudioListener, TemplateDef } from "../types";
+import type {
+  ColorFilter,
+  ImageOverlay,
+  PipShape,
+  RecordState,
+  SceneSnapshot,
+  SplitMode,
+  StudioEventMap,
+  StudioListener,
+  SubtitleState,
+  TemplateDef,
+  TextOverlay,
+  TransitionKind,
+} from "../types";
 import { AudioEngine } from "./audioEngine";
 import { Compositor } from "./compositor";
 import { templateById } from "./templates";
@@ -33,6 +46,12 @@ class Studio {
   recordedDuration = 0;
 
   templateId = "youtube";
+
+  // ---------- OBS 场景 ----------
+  private scenes: SceneSnapshot[] = [];
+  private currentSceneId = "";
+  transitionKind: TransitionKind = "fade";
+  private readonly STORAGE_KEY = "ai-recorder-obs-scenes-v1";
 
   // ---------- 事件 ----------
   on<K extends keyof StudioEventMap>(ev: K, fn: StudioListener<K>) {
@@ -169,6 +188,187 @@ class Studio {
   setBgm(trackId: string | null, volume?: number) { this.audio?.setBgm(trackId, volume); }
   setBgmVolume(v: number) { this.audio?.setBgmVolume(v); }
   setDucking(enabled: boolean) { this.audio?.setDucking(enabled); }
+  setMasterVolume(v: number) { this.audio?.setMasterVolume(v); }
+  getMixerLevels() { return this.audio?.getLevels() ?? { mic: 0, sys: 0, bgm: 0, master: 0 }; }
+
+  // ---------- OBS 场景 ----------
+  private uid() { return Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4); }
+
+  private persistScenes() {
+    try {
+      localStorage.setItem(this.STORAGE_KEY, JSON.stringify({ scenes: this.scenes, current: this.currentSceneId }));
+    } catch { /* noop */ }
+  }
+
+  initScenes() {
+    let loaded: { scenes?: SceneSnapshot[]; current?: string } | null = null;
+    try {
+      const raw = localStorage.getItem(this.STORAGE_KEY);
+      if (raw) loaded = JSON.parse(raw);
+    } catch { /* noop */ }
+    if (loaded?.scenes?.length) {
+      this.scenes = loaded.scenes;
+      this.currentSceneId = loaded.current && this.scenes.some((sc) => sc.id === loaded.current)
+        ? loaded.current
+        : this.scenes[0].id;
+      const snap = this.scenes.find((sc) => sc.id === this.currentSceneId);
+      if (snap) this.applySceneSnapshot(snap, false);
+    } else {
+      const snap = this.captureSnapshot("场景 1");
+      if (snap) { this.scenes = [snap]; this.currentSceneId = snap.id; }
+    }
+    this.persistScenes();
+    this.emit("scenes", undefined);
+  }
+
+  /** 捕获当前工作区配置为场景快照 */
+  captureSnapshot(name?: string): SceneSnapshot | null {
+    const c = this.compositor;
+    if (!c) return null;
+    return {
+      id: this.uid(),
+      name: name ?? `场景 ${this.scenes.length + 1}`,
+      createdAt: Date.now(),
+      templateId: this.templateId,
+      splitMode: c.splitMode,
+      pipShape: c.pipShape,
+      beauty: { ...c.beauty },
+      blurMode: c.blurMode,
+      filter: c.filter,
+      crop: { ...c.crop },
+      zoom: { ...c.zoom },
+      subtitle: { ...c.subtitle, liveText: "", timedEntries: [] },
+      bgmId: this.audio?.currentBgmId ?? null,
+      bgmVol: this.audio?.bgmVolume ?? 0.5,
+      watermark: c.watermark,
+      enabled: { ...c.enabled },
+      textSources: c.textSources.map((t) => ({ ...t })),
+      imageSources: c.imageSources.map((i) => ({ ...i })),
+    };
+  }
+
+  /** 应用场景快照（切换场景时把配置写入合成器） */
+  applySceneSnapshot(snap: SceneSnapshot, withTransition: boolean) {
+    this.setTemplate(snap.templateId);
+    const c = this.compositor;
+    if (!c) return;
+    c.splitMode = snap.splitMode;
+    c.pipShape = snap.pipShape;
+    c.beauty = { ...snap.beauty };
+    c.blurMode = snap.blurMode;
+    c.filter = snap.filter;
+    c.crop = { ...snap.crop };
+    c.zoom = { ...snap.zoom };
+    c.subtitle = { ...snap.subtitle };
+    c.watermark = snap.watermark;
+    c.enabled = { ...snap.enabled };
+    c.textSources = snap.textSources.map((t) => ({ ...t }));
+    c.imageSources = snap.imageSources.map((i) => ({ ...i }));
+    for (const im of c.imageSources) c.setImageOverlay(im.id, im.src);
+    if (this.portrait) c.portrait = this.portrait;
+    this.audio?.setBgm(snap.bgmId, snap.bgmVol);
+    this.templateId = snap.templateId;
+    if (withTransition && this.transitionKind !== "cut") c.playTransition(this.transitionKind);
+    this.emit("sources", undefined);
+  }
+
+  getScenes(): SceneSnapshot[] { return [...this.scenes]; }
+  getCurrentSceneId(): string { return this.currentSceneId; }
+
+  /** 把当前实时配置写回当前场景（供切换前保存） */
+  private syncCurrentToSnapshot() {
+    const snap = this.captureSnapshot(this.scenes.find((sc) => sc.id === this.currentSceneId)?.name);
+    if (!snap) return;
+    const idx = this.scenes.findIndex((sc) => sc.id === this.currentSceneId);
+    if (idx >= 0) {
+      snap.id = this.currentSceneId;
+      snap.createdAt = this.scenes[idx].createdAt;
+      this.scenes[idx] = snap;
+    }
+  }
+
+  switchScene(id: string, withTransition = true) {
+    const target = this.scenes.find((sc) => sc.id === id);
+    if (!target || id === this.currentSceneId) return;
+    this.syncCurrentToSnapshot();
+    this.currentSceneId = id;
+    this.applySceneSnapshot(target, withTransition);
+    this.persistScenes();
+    this.emit("scenes", undefined);
+  }
+
+  newScene() {
+    this.syncCurrentToSnapshot();
+    const snap = this.captureSnapshot();
+    if (!snap) return;
+    this.scenes.push(snap);
+    this.currentSceneId = snap.id;
+    this.persistScenes();
+    this.emit("scenes", undefined);
+  }
+
+  duplicateScene(id: string) {
+    const src = this.scenes.find((sc) => sc.id === id);
+    if (!src) return;
+    const copy: SceneSnapshot = { ...src, id: this.uid(), name: `${src.name} 副本`, createdAt: Date.now() };
+    this.scenes.push(copy);
+    this.persistScenes();
+    this.emit("scenes", undefined);
+  }
+
+  renameScene(id: string, name: string) {
+    const sc = this.scenes.find((s) => s.id === id);
+    if (sc) { sc.name = name || sc.name; this.persistScenes(); this.emit("scenes", undefined); }
+  }
+
+  deleteScene(id: string) {
+    if (this.scenes.length <= 1) return;
+    const idx = this.scenes.findIndex((sc) => sc.id === id);
+    if (idx < 0) return;
+    this.scenes.splice(idx, 1);
+    if (this.currentSceneId === id) {
+      const next = this.scenes[Math.min(idx, this.scenes.length - 1)];
+      this.currentSceneId = next.id;
+      this.applySceneSnapshot(next, false);
+    }
+    this.persistScenes();
+    this.emit("scenes", undefined);
+  }
+
+  setTransitionKind(k: TransitionKind) { this.transitionKind = k; }
+
+  // ---------- OBS 来源：文字 / 图片 ----------
+  addTextSource(text: string): TextOverlay {
+    const t: TextOverlay = { id: this.uid(), text, x: 0.08, y: 0.06, size: 42, color: "#ffffff" };
+    this.compositor?.textSources.push(t);
+    this.emit("sources", undefined);
+    return t;
+  }
+  updateTextSource(id: string, patch: Partial<TextOverlay>) {
+    const t = this.compositor?.textSources.find((x) => x.id === id);
+    if (t) Object.assign(t, patch);
+    this.emit("sources", undefined);
+  }
+  removeTextSource(id: string) {
+    if (this.compositor) this.compositor.textSources = this.compositor.textSources.filter((t) => t.id !== id);
+    this.emit("sources", undefined);
+  }
+  addImageSource(src: string): ImageOverlay | null {
+    if (!this.compositor) return null;
+    const im: ImageOverlay = { id: this.uid(), src, x: 0.06, y: 0.06, w: 0.18, h: 0 };
+    this.compositor.imageSources.push(im);
+    this.compositor.setImageOverlay(im.id, src);
+    this.emit("sources", undefined);
+    return im;
+  }
+  removeImageSource(id: string) {
+    this.compositor?.removeImageOverlay(id);
+    this.emit("sources", undefined);
+  }
+  setColorFilter(f: ColorFilter) {
+    if (this.compositor) this.compositor.filter = f;
+    this.emit("sources", undefined);
+  }
 
   // ---------- 录制 ----------
   async startRecording() {

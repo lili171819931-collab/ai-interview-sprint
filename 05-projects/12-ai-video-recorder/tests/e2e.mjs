@@ -70,7 +70,10 @@ async function main() {
   const page = await context.newPage();
   page.on("console", (m) => { if (m.type() === "error" || m.type() === "warning") console.log("[console]", m.type(), m.text().slice(0, 300)); });
   page.on("pageerror", (e) => console.log("[pageerror]", e.message.slice(0, 300)));
-  page.on("dialog", async (d) => { console.log("[dialog]", d.type(), d.message().slice(0, 200)); await d.dismiss(); });
+  page.on("dialog", async (d) => {
+    if (d.type() === "prompt") { await d.accept("测试文字来源"); return; }
+    await d.dismiss();
+  });
 
   // 注入假屏幕源：动态渐变画布
   await page.addInitScript(() => {
@@ -162,6 +165,41 @@ async function main() {
   }, { timeout: 15000 });
   ok(true, "屏幕源已连接");
   await page.waitForTimeout(800);
+
+  // ---------- 2.5. OBS 控制台 ----------
+  console.log("\n2.5️⃣ OBS 控制台（场景 / 来源 / 混音器 / 滤镜 / 转场）");
+  ok(await page.locator(".obs-console").count() === 1, "OBS 控制台显示");
+  ok(await page.locator(".obs-section").count() === 3, "场景 / 来源 / 混音器三栏");
+  ok(await page.locator(".scene-chip").count() >= 1, "默认场景存在");
+  ok(await page.locator(".mixer-channel").count() === 4, "混音器 4 通道（麦克风 / 系统声 / BGM / 主输出）");
+  ok(await page.locator(".obs-select").count() === 1, "转场方式选择存在");
+
+  // 场景：新建 + 切换（快照恢复）
+  await page.locator(".obs-section").first().locator("button", { hasText: "➕ 新建" }).click();
+  await page.waitForTimeout(300);
+  ok(await page.locator(".scene-chip").count() === 2, "新建场景成功");
+  let sceneChips = page.locator(".scene-chip");
+  await sceneChips.nth(0).click(); // 切到场景 1
+  await page.waitForTimeout(300);
+  await page.locator(".tab-btn", { hasText: "模板" }).click();
+  await page.locator(".template-card", { hasText: "抖音 / TikTok" }).click();
+  await page.waitForTimeout(400);
+  await sceneChips.nth(1).click(); // 场景 2（应为 YouTube）
+  await page.waitForTimeout(700);
+  ok((await page.locator(".template-badge").textContent()).includes("YouTube"), "切换到场景 2 → YouTube 模板");
+  await sceneChips.nth(0).click(); // 场景 1（应为抖音）
+  await page.waitForTimeout(700);
+  ok((await page.locator(".template-badge").textContent()).includes("抖音"), "切回场景 1 → 抖音模板");
+
+  // 文字来源
+  await page.locator(".obs-section").nth(1).locator("button", { hasText: "➕ 文字" }).click();
+  await page.waitForTimeout(500);
+  ok(await page.locator(".src-item", { hasText: "测试文字来源" }).count() === 1, "添加文字来源成功");
+
+  // 摄像头滤镜
+  await page.locator(".tab-btn", { hasText: "小窗·美颜" }).click();
+  await page.locator(".preset-row button", { hasText: "暖阳" }).click();
+  ok(await page.locator(".preset-row button", { hasText: "暖阳" }).evaluate((el) => el.className.includes("active")), "摄像头滤镜「暖阳」已应用");
 
   // ---------- 3. 引擎功能设置 ----------
   console.log("\n3️⃣ 视频引擎（裁剪/缩放/字幕/模板/BGM）");

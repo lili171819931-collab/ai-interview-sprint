@@ -6,6 +6,7 @@ import { SourcePanel } from "./components/SourcePanel";
 import { CanvasStage } from "./components/CanvasStage";
 import { EnginePanel } from "./components/EnginePanel";
 import { ExportDialog } from "./components/ExportDialog";
+import { OBSConsole } from "./components/OBSConsole";
 
 export default function App() {
   const state = useStudioState();
@@ -59,6 +60,12 @@ export default function App() {
   };
 
   const recording = state === "recording" || state === "paused";
+
+  // 初始化 OBS 场景（恢复上次会话）
+  useEffect(() => {
+    studio.initScenes();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // 键盘快捷键：空格暂停/继续，Ctrl+R 录制/停止
   useEffect(() => {
@@ -157,6 +164,8 @@ export default function App() {
           <EnginePanel />
         </aside>
       </main>
+
+      <OBSConsole />
 
       {showExport && <ExportDialog onClose={() => setShowExport(false)} />}
     </div>

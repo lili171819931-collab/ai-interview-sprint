@@ -1,7 +1,6 @@
-import type { PipRect, PipShape, TemplateDef } from "../types";
+import type { PipRect, PipShape, SplitMode, TemplateDef } from "../types";
 
 // ============ 分屏模式（浮窗式录制布局预设） ============
-export type SplitMode = "pip" | "split-v" | "split-h" | "dual" | "circle";
 
 export interface SplitLayout {
   screen: { x: number; y: number; w: number; h: number };

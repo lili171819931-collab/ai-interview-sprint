@@ -2,18 +2,30 @@ import type {
   Annotation,
   BeautyState,
   ClickEffect,
+  ColorFilter,
   CropRect,
+  ImageOverlay,
   PipBlurMode,
   PipRect,
   PipShape,
+  SplitMode,
   SubtitleState,
   TemplateDef,
+  TextOverlay,
+  TransitionKind,
   ZoomState,
 } from "../types";
 import type { PortraitBlur } from "./portraitBlur";
-import { splitLayoutFor, type SplitLayout, type SplitMode } from "./splitModes";
+import { splitLayoutFor, type SplitLayout } from "./splitModes";
 
 // ============ 画布合成引擎：屏幕 + 双摄像头 + 字幕 + 标注 + 裁剪/缩放 ============
+const FILTER_PRESETS: Record<ColorFilter, string | null> = {
+  none: null,
+  warm: "sepia(0.22) saturate(1.3) brightness(1.05)",
+  cool: "hue-rotate(155deg) saturate(0.9) brightness(1.03)",
+  bw: "grayscale(1) contrast(1.12)",
+  retro: "sepia(0.5) contrast(1.05) brightness(0.94) saturate(0.75)",
+};
 export interface CompositorSources {
   screen?: MediaStream;
   camera1?: MediaStream;
@@ -75,6 +87,15 @@ export class Compositor {
   clickEffects: ClickEffect[] = [];
   clickFxEnabled = true;
   autoZoomOnClick = false;
+
+  /** OBS 来源：文字 / 图片叠加层 */
+  textSources: TextOverlay[] = [];
+  imageSources: ImageOverlay[] = [];
+  private imageEls = new Map<string, HTMLImageElement>();
+  /** OBS 摄像头颜色滤镜 */
+  filter: ColorFilter = "none";
+  /** 场景转场效果 */
+  transition: { kind: TransitionKind; start: number; dur: number } | null = null;
   private blurCanvas: HTMLCanvasElement | null = null;
   private maskCanvas: HTMLCanvasElement | null = null;
 
@@ -238,11 +259,17 @@ export class Compositor {
     // 标注
     this.drawAnnotations(ctx);
 
+    // OBS 文字/图片来源
+    this.drawOverlaySources(ctx);
+
     // 字幕
     this.drawSubtitle(ctx);
 
     // 水印/时间戳
     this.drawOverlays(ctx);
+
+    // 场景转场
+    this.drawTransition(ctx);
 
     ctx.restore();
     this.lastT = performance.now();
@@ -355,10 +382,13 @@ export class Compositor {
       ctx.scale(-1, 1);
       ctx.translate(-(x + w / 2), 0);
     }
-    const hasColor = b.bright > 0 || b.rosy > 0 || b.sharp > 0;
-    if (hasColor) {
-      ctx.filter = `brightness(${(1 + b.bright * 0.45).toFixed(3)}) contrast(${(1 + b.sharp * 0.4).toFixed(3)}) saturate(${(1 + b.rosy * 0.5).toFixed(3)})`;
+    const parts: string[] = [];
+    const preset = FILTER_PRESETS[this.filter];
+    if (preset) parts.push(preset);
+    if (b.bright > 0 || b.rosy > 0 || b.sharp > 0) {
+      parts.push(`brightness(${(1 + b.bright * 0.45).toFixed(3)}) contrast(${(1 + b.sharp * 0.4).toFixed(3)}) saturate(${(1 + b.rosy * 0.5).toFixed(3)})`);
     }
+    if (parts.length > 0) ctx.filter = parts.join(" ");
     // 人像抠图：人像清晰 + 背景模糊（MediaPipe 本地分割）
     let portraitFrame: HTMLCanvasElement | null = null;
     if (this.blurMode === "portrait" && this.portrait?.isReady) {
@@ -491,6 +521,65 @@ export class Compositor {
       ctx.arc(x, y, 3 + p * 5, 0, Math.PI * 2);
       ctx.fill();
       ctx.restore();
+    }
+  }
+
+  /** OBS 文字 / 图片来源 */
+  private drawOverlaySources(ctx: CanvasRenderingContext2D) {
+    const W = this.width, H = this.height;
+    for (const t of this.textSources) {
+      const size = Math.max(12, Math.round((t.size * H) / 1000));
+      ctx.save();
+      ctx.font = `700 ${size}px system-ui, "PingFang SC", sans-serif`;
+      ctx.textAlign = "left";
+      ctx.textBaseline = "top";
+      ctx.lineWidth = Math.max(2, size / 8);
+      ctx.strokeStyle = "rgba(0,0,0,0.75)";
+      ctx.lineJoin = "round";
+      ctx.strokeText(t.text, t.x * W, t.y * H);
+      ctx.fillStyle = t.color;
+      ctx.fillText(t.text, t.x * W, t.y * H);
+      ctx.restore();
+    }
+    for (const im of this.imageSources) {
+      const img = this.imageEls.get(im.id);
+      if (!img || !img.complete || img.naturalWidth === 0) continue;
+      const iw = im.w * W;
+      const ih = im.h > 0 ? im.h * H : iw * (img.naturalHeight / img.naturalWidth);
+      ctx.drawImage(img, im.x * W, im.y * H, iw, ih);
+    }
+  }
+
+  /** 加载图片来源 */
+  setImageOverlay(id: string, src: string) {
+    const img = new Image();
+    img.onload = () => { this.imageEls.set(id, img); };
+    img.src = src;
+    this.imageEls.set(id, img);
+  }
+
+  removeImageOverlay(id: string) {
+    this.imageEls.delete(id);
+    this.imageSources = this.imageSources.filter((s) => s.id !== id);
+  }
+
+  /** 场景转场 */
+  playTransition(kind: TransitionKind, dur = 450) {
+    this.transition = { kind, start: performance.now(), dur };
+  }
+
+  private drawTransition(ctx: CanvasRenderingContext2D) {
+    if (!this.transition) return;
+    const p = (performance.now() - this.transition.start) / this.transition.dur;
+    if (p >= 1) { this.transition = null; return; }
+    const W = this.width, H = this.height;
+    if (this.transition.kind === "fade") {
+      const alpha = Math.sin(p * Math.PI) * 0.9;
+      ctx.fillStyle = `rgba(0,0,0,${alpha.toFixed(3)})`;
+      ctx.fillRect(0, 0, W, H);
+    } else if (this.transition.kind === "wipe") {
+      ctx.fillStyle = "rgba(0,0,0,0.92)";
+      ctx.fillRect(0, 0, W * p, H);
     }
   }
 

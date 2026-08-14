@@ -2,7 +2,8 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { studio } from "../engine/Studio";
 import { TEMPLATES } from "../engine/templates";
 import { BGM_TRACKS } from "../engine/bgm";
-import { SPLIT_MODES, type SplitMode } from "../engine/splitModes";
+import { SPLIT_MODES } from "../engine/splitModes";
+import type { SplitMode } from "../types";
 import { analyzeAudioEnergy, buildEditPlan, renderEditedVideo } from "../engine/aiEdit";
 import { downloadBlob, toSrt } from "../engine/export";
 import type { EditPlan, SubtitleState } from "../types";
@@ -60,6 +61,7 @@ function PipTab() {
   const [beauty, setBeauty] = useState({ smooth: 0, bright: 0, rosy: 0, sharp: 0 });
   const [blur, setBlur] = useState<"none" | "screen" | "soft" | "portrait">("none");
   const [split, setSplit] = useState<SplitMode>("pip");
+  const [filter, setFilter] = useState<"none" | "warm" | "cool" | "bw" | "retro">("none");
   const [portraitErr, setPortraitErr] = useState<string | null>(null);
   const [pipSize, setPipSize] = useState(1);
   const [mirror, setMirror] = useState(true);
@@ -169,6 +171,22 @@ function PipTab() {
         </div>
         <p className="tab-desc">「页面模糊」= 小窗背后网页内容虚化；「人像柔焦」= 中心清晰边缘虚化；「人像抠图」= <b>人像保持清晰、真实背景模糊</b>（MediaPipe 本地分割，离线运行）。</p>
         {portraitErr && <p className="source-error">{portraitErr}</p>}
+      </div>
+
+      <div className="subsection">
+        <label className="sub-label">🎞️ 摄像头滤镜（OBS 风格）</label>
+        <div className="preset-row wrap">
+          {([
+            ["none", "原图"],
+            ["warm", "暖阳"],
+            ["cool", "冷调"],
+            ["bw", "黑白"],
+            ["retro", "复古"],
+          ] as const).map(([id, label]) => (
+            <button key={id} className={`btn small ${filter === id ? "active" : ""}`}
+              onClick={() => { setFilter(id); studio.setColorFilter(id); }}>{label}</button>
+          ))}
+        </div>
       </div>
 
       <label className="check-row"><input type="checkbox" checked={mirror} onChange={(e) => setMirror(e.target.checked)} /> 摄像头镜像</label>
