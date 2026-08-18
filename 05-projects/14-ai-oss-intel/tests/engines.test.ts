@@ -139,3 +139,18 @@ assert(report[0].title === "Executive Summary" && report[39].title === "Final Sc
 const my = buildMyProjectReport(sample);
 assert(my.whyStarred.length > 0 && my.focusLearn.length >= 3, "reverse: my project report");
 assert(secondaryScenariosOf(sample).length >= 1, "reverse: secondary scenarios");
+
+/* ── Live data layer tests (pure helpers) ─────────────────────────────── */
+import { liveStatus, starsPerDay, categoryQueries, type LiveRepo } from "../src/lib/live";
+
+const liveRepo = (created: string, updated: string, stars: number): LiveRepo => ({
+  fullName: "a/b", name: "b", owner: "a", stars, forks: 0, openIssues: 0, language: "Python",
+  description: "d", topics: [], createdAt: created, updatedAt: updated, homepage: null, license: null,
+});
+assert(liveStatus(liveRepo("2026-01-01", "2026-08-01", 100)) === "2026NEW", "live: 2026 created → New");
+assert(liveStatus(liveRepo("2024-01-01", "2026-08-01", 100)) === "2026ACTIVE", "live: updated 2026 → Active");
+assert(liveStatus(liveRepo("2024-01-01", "2024-05-01", 100)) === "2026RELEVANT", "live: stale → Relevant");
+const spd = starsPerDay(liveRepo("2025-08-18", "2026-08-18", 365));
+assert(spd > 0.9 && spd < 1.1, "live: stars per day ~1 (365 stars in ~365 days)");
+assert(categoryQueries("agent").length >= 1 && categoryQueries("agent")[0].includes("topic:ai-agent"), "live: category queries");
+assert(categoryQueries("bogus" as any).length >= 1, "live: fallback query");

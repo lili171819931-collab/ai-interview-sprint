@@ -95,7 +95,7 @@ export function Sidebar() {
         ))}
       </nav>
       <div className="px-4 py-4 border-t border-[#141e33] text-[11px] text-[#5b6885]">
-        <div className="flex items-center gap-1.5"><FolderKanban size={13} /> 138 个项目 · 30 类 · 实时雷达</div>
+        <div className="flex items-center gap-1.5"><FolderKanban size={13} /> 166 个项目 · 30 类 · 实时雷达</div>
       </div>
     </div>
   );
