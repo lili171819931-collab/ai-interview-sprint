@@ -46,7 +46,7 @@ export function AiPmScoreCard() {
             ))}
           </div>
           <div className="mt-3 pt-3 border-t border-[#16213a] text-[12px] text-[#5b6885]">
-            短板：<b className="text-[#f87171]">{gap.weakness}</b> · <Link href="/learn" className="text-[#7dd3fc] hover:underline">去补齐</Link>
+            短板：<b className="text-[#f87171]">{gap.weakness}</b> · <Link href={`/rankings/category/${gap.recommended[0]?.category ?? "agent"}`} className="text-[#7dd3fc] hover:underline">去分类 TOP 榜补齐</Link>
           </div>
         </>
       )}

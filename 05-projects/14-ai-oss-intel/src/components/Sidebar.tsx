@@ -3,8 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  LayoutDashboard, Compass, Star, TrendingUp, Flame, Sparkles, Scale, Radar,
-  Menu, X, FolderKanban, GraduationCap, UserRound, MessagesSquare, GitFork,
+  LayoutDashboard, Compass, Sparkles, Scale, Radar, Menu, X, FolderKanban,
+  GraduationCap, UserRound, MessagesSquare, GitFork,
 } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 
@@ -20,9 +20,6 @@ const NAV = [
   {
     section: "Rankings",
     items: [
-      { href: "/rankings/stars", label: "Star Top 50", icon: Star },
-      { href: "/rankings/growth", label: "Fastest Growth", icon: TrendingUp },
-      { href: "/rankings/hot", label: "Hot 热点 TOP 100", icon: Flame },
       { href: "/rankings/categories", label: "分类 TOP 榜", icon: FolderKanban },
     ],
   },

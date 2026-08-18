@@ -62,16 +62,19 @@ export function Sparkline({ points, width = 120, height = 36, stroke = "#4f8cff"
   );
 }
 
-export function CategoryChips({ project, limit = 4 }: { project: Project; limit?: number }) {
+export function CategoryChips({ project, limit = 4, link = false }: { project: Project; limit?: number; link?: boolean }) {
   return (
     <div className="flex flex-wrap gap-1">
       {project.categories.slice(0, limit).map((c) => {
         const cat = categoryOf(c);
-        return (
+        const chip = (
           <span key={c} className="chip chip-accent">
             {cat.emoji} {cat.name}
           </span>
         );
+        return link ? (
+          <Link key={c} href={`/rankings/category/${c}`} className="hover:opacity-80">{chip}</Link>
+        ) : chip;
       })}
     </div>
   );

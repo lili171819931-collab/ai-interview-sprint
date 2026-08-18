@@ -18,10 +18,10 @@ const ABILITY_KEYS: (keyof AbilityScores)[] = [
 ];
 
 const WEEK_PLAN = [
-  { week: "Week 01", title: "Understand AI Products", focus: "每天分析 3 个项目 · 用户 / 痛点 / 场景 / 功能", link: "/rankings/stars" },
-  { week: "Week 02", title: "Understand AI", focus: "LLM / RAG / Agent / MCP / Workflow / Tool Calling", link: "/discover?category=agent" },
-  { week: "Week 03", title: "Product Design", focus: "PRD / User Flow / MVP / Feature Prioritization / UX", link: "/rankings/opportunity" },
-  { week: "Week 04", title: "Business", focus: "SaaS / Monetization / Growth / GTM / Competitive Analysis", link: "/rankings/money" },
+  { week: "Week 01", title: "Understand AI Products", focus: "每天分析 3 个项目 · 用户 / 痛点 / 场景 / 功能", link: "/rankings/category/agent" },
+  { week: "Week 02", title: "Understand AI", focus: "LLM / RAG / Agent / MCP / Workflow / Tool Calling", link: "/rankings/category/llm" },
+  { week: "Week 03", title: "Product Design", focus: "PRD / User Flow / MVP / Feature Prioritization / UX", link: "/rankings/category/saas" },
+  { week: "Week 04", title: "Business", focus: "SaaS / Monetization / Growth / GTM / Competitive Analysis", link: "/rankings/category/saas" },
 ];
 
 export default function LearnPage() {
@@ -49,13 +49,13 @@ export default function LearnPage() {
   const dayInWeek = journey.day % 7 === 0 ? 7 : journey.day % 7;
 
   const mission = [
-    { n: 1, text: `分析 1 个 ${week >= 3 ? "SaaS/商业" : week === 2 ? "Agent" : "AI"} 项目`, link: `/rankings/${week >= 3 ? "money" : week === 2 ? "skills" : "opportunity"}` },
+    { n: 1, text: `分析 1 个 ${week >= 3 ? "SaaS/商业" : week === 2 ? "Agent" : "AI"} 项目`, link: `/rankings/category/${week >= 3 ? "saas" : week === 2 ? "agent" : "agent"}` },
     { n: 2, text: "找出 3 个用户痛点", link: "/projects/ollama" },
     { n: 3, text: "找出 5 个核心功能", link: "/discover" },
     { n: 4, text: "判断为什么需要 AI", link: "/insights" },
-    { n: 5, text: "找出一个商业化机会", link: "/rankings/opportunity" },
+    { n: 5, text: "找出一个商业化机会", link: "/rankings/category/saas" },
     { n: 6, text: "写出你的 PM 判断", link: "/portfolio" },
-    { n: 7, text: "生成一篇自媒体内容", link: "/rankings/content" },
+    { n: 7, text: "生成一篇自媒体内容", link: "/rankings/category/content" },
   ];
 
   const learningRank = PROJECTS.map((p) => ({ p, done: getProjectCompletion(p.slug) }))
@@ -89,7 +89,7 @@ export default function LearnPage() {
           {!started ? (
             <div className="text-center py-10 text-[13px] text-[#5b6885]">
               还没有学习记录。去任意项目页进入「AI PM 学习模式」，完成 Challenge 与拆解，能力雷达就会开始生长。
-              <div className="mt-3"><Link href="/rankings/opportunity" className="chip chip-accent">开始第一个 Challenge →</Link></div>
+              <div className="mt-3"><Link href="/rankings/categories" className="chip chip-accent">开始第一个 Challenge →</Link></div>
             </div>
           ) : (
             <>
@@ -127,7 +127,7 @@ export default function LearnPage() {
                 </div>
                 <div className="space-y-2 mt-3">
                   {gap.recommended.map((r) => (
-                    <Link key={r.title} href={`/rankings/${r.kind}`} className="flex items-center justify-between rounded-xl bg-[#0c1322] border border-[#16213a] p-3.5 hover:border-[#2c4370]">
+                    <Link key={r.title} href={`/rankings/category/${r.category}`} className="flex items-center justify-between rounded-xl bg-[#0c1322] border border-[#16213a] p-3.5 hover:border-[#2c4370]">
                       <div>
                         <div className="text-[13px] font-semibold text-[#cfe0ff]">{r.title}</div>
                         <div className="text-[11.5px] text-[#5b6885]">{r.reason}</div>
@@ -171,10 +171,10 @@ export default function LearnPage() {
         ) : (
           <div className="grid gap-3 md:grid-cols-4">
             {[
-              { week: "本周 · 补短板", focus: gap.weakness, action: gap.recommended.map((r) => r.title).join(" / "), link: `/rankings/${gap.recommended[0]?.kind ?? "opportunity"}` },
-              { week: "第 2 周 · 需求", focus: "需求分析 + 用户研究", action: "每天完成 1 个项目的 Hidden Needs + JTBD", link: "/rankings/opportunity" },
-              { week: "第 3 周 · 设计", focus: "产品设计 + AI UX", action: "完成 If I Were The PM + 五层拆解", link: "/rankings/skills" },
-              { week: "第 4 周 · 商业", focus: "商业模式 + 增长", action: "输出 1 篇自媒体内容 + 1 个 Portfolio Case", link: "/rankings/money" },
+              { week: "本周 · 补短板", focus: gap.weakness, action: gap.recommended.map((r) => r.title).join(" / "), link: `/rankings/category/${gap.recommended[0]?.category ?? "agent"}` },
+              { week: "第 2 周 · 需求", focus: "需求分析 + 用户研究", action: "每天完成 1 个项目的 Hidden Needs + JTBD", link: "/rankings/category/agent" },
+              { week: "第 3 周 · 设计", focus: "产品设计 + AI UX", action: "完成 If I Were The PM + 五层拆解", link: "/rankings/category/saas" },
+              { week: "第 4 周 · 商业", focus: "商业模式 + 增长", action: "输出 1 篇自媒体内容 + 1 个 Portfolio Case", link: "/rankings/category/saas" },
             ].map((c) => (
               <Link key={c.week} href={c.link} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3.5 hover:border-[#2c4370]">
                 <div className="text-[11px] font-bold text-[#7dd3fc]">{c.week}</div>

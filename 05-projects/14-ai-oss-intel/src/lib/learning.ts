@@ -645,22 +645,22 @@ export function averageAbility(a: AbilityScores): number {
   return Math.round(vals.reduce((x, y) => x + y, 0) / vals.length);
 }
 
-export function abilityGapRecommendation(a: AbilityScores): { weakness: string; score: number; recommended: { kind: string; title: string; reason: string }[] } {
+export function abilityGapRecommendation(a: AbilityScores): { weakness: string; score: number; recommended: { category: string; title: string; reason: string }[] } {
   const entries = Object.entries(a) as [keyof AbilityScores, number][];
   const weakest = entries.sort((x, y) => x[1] - y[1])[0];
-  const map: Record<string, { kind: string; title: string; reason: string }[]> = {
-    agentUnderstanding: [{ kind: "opportunity", title: "AI Opportunity Top 10", reason: "补齐 Agent Product Design 能力" }],
-    aiUnderstanding: [{ kind: "skills", title: "Skill 项目 Top 10", reason: "理解 AI 能力如何被封装复用" }],
-    businessModel: [{ kind: "money", title: "Money / SaaS Top 10", reason: "补齐商业分析与变现判断" }],
-    growth: [{ kind: "growth", title: "Fastest Growth Top 10", reason: "研究增长引擎与飞轮" }],
-    productThinking: [{ kind: "opportunity", title: "Opportunity Top 10", reason: "训练产品判断与机会识别" }],
-    ux: [{ kind: "sidehustle", title: "Side Hustle Top 10", reason: "研究真实用户需求场景与体验设计" }],
-    requirementAnalysis: [{ kind: "opportunity", title: "Opportunity Top 10", reason: "训练需求挖掘（Hidden Needs）" }],
-    technical: [{ kind: "stars", title: "Star Top 10", reason: "研究成熟产品的技术实现与功能取舍" }],
-    dataAnalysis: [{ kind: "growth", title: "Growth Top 10", reason: "训练指标与数据分析" }],
-    communication: [{ kind: "content", title: "Self Media Top 10", reason: "通过输出内容训练表达" }],
+  const map: Record<string, { category: string; title: string; reason: string }[]> = {
+    productThinking: [{ category: "agent", title: "Agent 分类 TOP 榜", reason: "训练产品判断与机会识别" }],
+    requirementAnalysis: [{ category: "agent", title: "Agent 分类 TOP 榜", reason: "训练需求挖掘（Hidden Needs）" }],
+    aiUnderstanding: [{ category: "llm", title: "LLM 分类 TOP 榜", reason: "理解 AI 能力与模型底座" }],
+    agentUnderstanding: [{ category: "agent", title: "Agent 分类 TOP 榜", reason: "补齐 Agent Product Design 能力" }],
+    ux: [{ category: "saas", title: "SaaS 分类 TOP 榜", reason: "研究真实用户场景与体验设计" }],
+    businessModel: [{ category: "saas", title: "SaaS 分类 TOP 榜", reason: "补齐商业分析与变现判断" }],
+    growth: [{ category: "productivity", title: "Productivity 分类 TOP 榜", reason: "研究增长引擎与飞轮" }],
+    dataAnalysis: [{ category: "data", title: "Data 分类 TOP 榜", reason: "训练指标与数据分析" }],
+    technical: [{ category: "infra", title: "Infra 分类 TOP 榜", reason: "研究技术实现与功能取舍" }],
+    communication: [{ category: "content", title: "Content 分类 TOP 榜", reason: "通过输出内容训练表达" }],
   };
-  const recs = map[weakest[0]] ?? [];
+  const recs = map[weakest[0]] ?? [{ category: "agent", title: "Agent 分类 TOP 榜", reason: "训练产品思维" }];
   return {
     weakness: abilityLabel(weakest[0]),
     score: weakest[1],

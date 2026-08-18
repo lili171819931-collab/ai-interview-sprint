@@ -42,7 +42,7 @@ export function ProjectCard({ project, rank }: { project: Project; rank?: number
         <span className="flex items-center gap-1 text-emerald-300">↗ {formatSigned(project.growth30d)} ({formatPct(r30)})</span>
       </div>
 
-      <CategoryChips project={project} limit={3} />
+      <CategoryChips project={project} limit={3} link />
 
       <div className="pt-2 border-t border-[#16213a]">
         <ScorePills scores={s} />

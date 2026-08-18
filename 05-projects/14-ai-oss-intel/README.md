@@ -17,7 +17,7 @@
 |------|------|
 | 📡 项目发现 | 166 个精选 AI 开源项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
 | 📊 Growth Intelligence Engine | 计算每个项目 7 / 30 / 90 天 Star 增长与增长率，生成趋势图 |
-| 🏆 排行榜 | Star Top 50 · **Fastest Growth TOP 100** · **Hot 热点 TOP 100**（每项目可展开查看实现路径/底层逻辑/技术架构/产品架构）· 30 个分类 TOP 榜 |
+| 🏆 分类 TOP 榜（唯一榜单体系） | 30 个一级分类 × 3 榜：机会 TOP / 收藏榜 / 收藏增长最快榜（2026 · 实时拉取 GitHub · 上限 100）· 每项目带 分析 / 逆向拆解 / 产品框图 |
 | 🎯 AI Project Score | 8 维加权评分（Popularity 10% + Growth 15% + Innovation 15% + Product 15% + Demand 10% + Commercial 15% + Ecosystem 10% + PersonalDev 10%） |
 | 🧠 10-Agent 共识报告 | 每项目生成 25 节 Project Intelligence Report + Should-I-Build Verdict |
 | 💡 产品机会生成器 | 每项目自动生成 ≥5 个新产品方向（名称/用户/痛点/MVP/商业模式/壁垒/难度/周期/潜力） |
@@ -38,6 +38,8 @@
 | 🔬 逆向工程 Lab | 完整用户路径（15 步）+ 核心功能实现路径 + 源码架构逆向 + 代码→功能映射 + 技术选型解释 + 产品设计→技术设计映射 + MVP 逆向 + 产品决策分析 + 40 节情报报告 |
 | 🧪 Evidence Mode | 每个技术实现判断标注 Confirmed / Inferred / Hypothesis / Unknown，禁止把推测写成事实 |
 | 📂 分类 TOP 榜 | 30 个一级分类各自独立 TOP 榜 + 二级场景拆解（30 页） |
+| 🔗 全站关联分类 TOP 榜 | 全部项目（Discover）与智能洞察（Insights）数据全部关联分类 TOP 榜，项目卡片分类标签可直达对应榜单 |
+| 🎛️ 分类榜项目操作 | 每个项目支持 分析（项目页）/ 逆向拆解（实现路径·底层逻辑·技术·产品架构）/ 产品框图（Product DNA 14 节点） |
 | 🏠 2026 Radar 首页 | 2026 HOT / RISING / FASTEST GROWING / HIDDEN GEMS + 右侧 MY AI PM SCORE |
 | 📑 My Project Report | 每个收藏项目自动生成个人报告：为什么收藏/重点学什么/是否值得自媒体·Portfolio·二开 |
 | 📖 Personal AI PM Curriculum | 根据能力短板自动编排 4 周个性化课程 |
@@ -50,7 +52,7 @@
 |------|------|
 | `/` | Dashboard：Hero + Trending + 排行榜预览 + 分类 |
 | `/discover` | Explore：搜索 / 分类 / 语言 / 排序筛选全部项目 |
-| `/rankings` | 排行榜体系总览（Star / Fastest Growth / Hot 热点） |
+| `/rankings` | 重定向到分类 TOP 榜 |
 | `/rankings/[stars|growth|opportunity|money|sidehustle|skills|resume|content|new]` | 9 大榜单 |
 | `/projects/[slug]` | 项目情报页：Overview / Architecture / Features / Product / Business / Growth / Opportunities / AI Report |
 | `/compare` | 项目对比 + AI 最终推荐 |
@@ -63,7 +65,7 @@
 | `/projects/[slug]` | 项目页新增 4 大模式：AI PM 学习 / 产品拆解 / 自媒体 / 求职 Portfolio |
 | `/projects/[slug]#build` | 产品底层逻辑架构分析：DNA 14 节点 + 15 维拆解 + 如何搭建 + Why AI + AI Native Test |
 | `/my-github` | 同步 GitHub Stars：2026 收藏雷达 / Rising / Hidden Gems / Radar vs Global / 兴趣图谱 |
-| `/rankings/categories` | 30 个一级分类独立 TOP 榜索引（`/rankings/category/[id]`） |
+| `/rankings/categories` | 30 个一级分类独立 TOP 榜索引 · `/rankings/category/[id]` 含 机会/收藏/收藏增长 三榜（实时） |
 | `/projects/[slug]#reverse` | 逆向工程 Lab：40 节报告 / 用户路径 / 实现路径 / 源码映射 / Evidence Mode |
 
 ## 🚀 快速开始

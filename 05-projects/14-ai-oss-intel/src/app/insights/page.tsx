@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Sparkles, TrendingUp, Flame, Lightbulb, BarChart3, ArrowRight } from "lucide-react";
+import { Sparkles, TrendingUp, Flame, Lightbulb, BarChart3, ArrowRight, FolderKanban } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
 import { computeScores, formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { categoryCounts } from "@/lib/store";
@@ -21,7 +21,7 @@ export default function InsightsPage() {
     <div className="space-y-8">
       <div className="panel p-6">
         <div className="flex items-center gap-2 mb-2"><Sparkles size={17} className="text-[#7dd3fc]" /><h1 className="text-xl font-bold text-white">AI Insights · 每日智能洞察</h1></div>
-        <p className="text-[13px] text-[#8b98b3]">AI Open Source Daily · {today} · 自动生成的市场快照与行动雷达</p>
+        <p className="text-[13px] text-[#8b98b3]">AI Open Source Daily · {today} · 自动生成的市场快照与行动雷达 · 全部洞察数据已关联「分类 TOP 榜」</p>
       </div>
 
       {/* Market summary */}
@@ -79,6 +79,38 @@ export default function InsightsPage() {
               </div>
             </Link>
           ))}
+        </div>
+      </section>
+
+      {/* 分类洞察 · 关联分类 TOP 榜 */}
+      <section>
+        <div className="flex items-center gap-2 mb-3"><FolderKanban size={17} className="text-[#7dd3fc]" /><h2 className="text-[16px] font-bold text-white">分类洞察 · 关联分类 TOP 榜</h2></div>
+        <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+          {cats.slice(0, 8).map((c) => {
+            const cat = categoryOf(c.id);
+            const top = PROJECTS.filter((p) => p.categories.includes(c.id))
+              .map((p) => ({ p, s: computeScores(p) }))
+              .sort((a, b) => b.s.opportunity - a.s.opportunity)
+              .slice(0, 3);
+            return (
+              <Link key={c.id} href={`/rankings/category/${c.id}`} className="panel card-hover p-4">
+                <div className="flex items-center justify-between">
+                  <span className="text-[13px] font-bold text-white">{cat.emoji} {cat.name}</span>
+                  <span className="chip">{c.count} 个</span>
+                </div>
+                <div className="mt-2.5 space-y-1.5">
+                  {top.map(({ p, s }, i) => (
+                    <div key={p.slug} className="flex items-center gap-2 text-[12px]">
+                      <span className="w-4 text-center font-bold num text-[#7dd3fc]">{i + 1}</span>
+                      <span className="flex-1 truncate text-[#cfe0ff]">{p.name}</span>
+                      <span className="num text-[#5b6885]">Opp {s.opportunity}</span>
+                    </div>
+                  ))}
+                </div>
+                <div className="mt-2 text-[11px] text-[#7dd3fc]">进入收藏榜/增长榜 →</div>
+              </Link>
+            );
+          })}
         </div>
       </section>
 

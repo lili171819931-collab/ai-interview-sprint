@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Search, Sparkles, TrendingUp, Star, Flame, Zap, Layers, LineChart } from "lucide-react";
+import { ArrowRight, Search, Sparkles, Zap, Layers, LineChart, FolderKanban } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
 import { allCategories, categoryCounts, topBy, projectBySlug } from "@/lib/store";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
@@ -71,7 +71,7 @@ export default function HomePage() {
 
       {/* Trending */}
       <section>
-        <SectionHead icon={Zap} title="🔥 Trending AI Projects" sub="近 7 天 Star 增长最快的项目" href="/rankings/growth" />
+        <SectionHead icon={Zap} title="🔥 Trending AI Projects" sub="近 7 天 Star 增长最快的项目（进入项目页查看完整拆解）" />
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {trending.map((p, i) => (
             <Link key={p.slug} href={`/projects/${p.slug}`} className="panel card-hover p-4 flex flex-col gap-2.5">
@@ -88,12 +88,8 @@ export default function HomePage() {
         </div>
       </section>
 
-      {/* Rank previews */}
-      <section className="space-y-8">
-        <RankPreview kind="stars" icon={Star} color="#fbbf24" title="Star Top 10" sub="Stars 总量排名" href="/rankings/stars" />
-        <RankPreview kind="growth" icon={TrendingUp} color="#34d399" title="Fastest Growth Top 10" sub="近 30 天绝对增长 · 100 项目" href="/rankings/growth" />
-        <RankPreview kind="hot" icon={Flame} color="#f87171" title="Hot 热点 Top 10" sub="近 7 天热度 · 100 项目" href="/rankings/hot" />
-      </section>
+      {/* 分类 TOP 榜 preview */}
+      <CategoryTopPreview />
 
       {/* Categories */}
       <section>
@@ -157,40 +153,6 @@ function SectionHead({ icon: Icon, title, sub, href }: { icon: any; title: strin
   );
 }
 
-function RankPreview({ kind, icon: Icon, color, title, sub, href }: {
-  kind: "stars" | "growth" | "hot";
-  icon: any; color: string; title: string; sub: string; href: string;
-}) {
-  const items = topBy(kind, 10);
-  return (
-    <section>
-      <SectionHead icon={Icon} title={title} sub={sub} href={href} />
-      <div className="grid gap-3 md:grid-cols-2">
-        {items.slice(0, 10).map(({ project, scores, rank, delta }) => (
-          <Link key={project.slug} href={`/projects/${project.slug}`} className="panel card-hover px-4 py-3 flex items-center gap-3">
-            <div className="w-8 text-center font-bold num" style={{ color }}>{String(rank).padStart(2, "0")}</div>
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-2">
-                <span className="font-semibold text-[13.5px] text-white truncate">{project.name}</span>
-                {delta > 0 && <span className="text-[10.5px] text-emerald-400 num">▲{delta}</span>}
-                {delta < 0 && <span className="text-[10.5px] text-rose-400 num">▼{Math.abs(delta)}</span>}
-              </div>
-              <div className="text-[11.5px] text-[#5b6885] truncate mt-0.5">
-                ⭐{formatStars(project.stars)} · ↗ {formatSigned(project.growth30d)} ({formatPct((project.growth30d / (project.stars - project.growth30d)) * 100)})
-              </div>
-            </div>
-            <div className="text-right shrink-0">
-              <div className="text-[10.5px] text-[#5b6885]">Score</div>
-              <div className="font-bold num text-[15px]" style={{ color }}>
-                {kind === "stars" ? formatStars(project.stars) : kind === "growth" ? formatSigned(project.growth30d) : kind === "hot" ? formatSigned(project.growth7d) : scores[kind]}
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-    </section>
-  );
-}
 
 
 function StudyToday() {
@@ -301,6 +263,41 @@ function HomeRadarSection() {
             <div className="text-[11.5px] text-[#5b6885]">每个一级分类独立榜单 + 二级场景</div>
           </Link>
         </div>
+      </div>
+    </section>
+  );
+}
+
+
+function CategoryTopPreview() {
+  const cats = categoryCounts().slice(0, 8);
+  return (
+    <section>
+      <SectionHead icon={FolderKanban} title="分类 TOP 榜" sub="全部项目 / 智能洞察数据已关联 30 个分类榜单 · 实时拉取 GitHub" href="/rankings/categories" />
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+        {cats.map((c) => {
+          const cat = allCategories().find((x) => x.id === c.id)!;
+          const inCat = PROJECTS.filter((p) => p.categories.includes(c.id)).map((p) => ({ p, s: computeScores(p) })).sort((a, b) => b.s.opportunity - a.s.opportunity);
+          const top = inCat[0];
+          return (
+            <Link key={c.id} href={`/rankings/category/${c.id}`} className="panel card-hover p-4">
+              <div className="flex items-center justify-between">
+                <span className="text-[13px] font-bold text-white">{cat.emoji} {cat.name}</span>
+                <span className="chip">{inCat.length} 个</span>
+              </div>
+              {top ? (
+                <div className="mt-2.5 rounded-xl bg-[#0c1322] border border-[#16213a] p-2.5">
+                  <div className="text-[11px] text-[#5b6885]">#1 · Opp {top.s.opportunity}</div>
+                  <div className="text-[13px] font-semibold text-[#cfe0ff] truncate">{top.p.name}</div>
+                  <div className="text-[11px] text-[#5b6885] truncate">{top.p.tagline}</div>
+                </div>
+              ) : (
+                <div className="text-[12px] text-[#5b6885] mt-2">暂无数据</div>
+              )}
+              <div className="mt-2 text-[11px] text-[#7dd3fc]">进入榜单 →</div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

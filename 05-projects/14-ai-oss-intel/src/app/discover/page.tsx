@@ -76,6 +76,11 @@ export default async function DiscoverPage({
         <LangSelect value={lang} languages={languages()} q={q} category={category} sort={sort} />
       </div>
 
+      <div className="panel px-4 py-2.5 flex flex-wrap items-center gap-2 text-[12px] text-[#8b98b3]">
+        <span>📂 全部项目已按 30 个分类接入「分类 TOP 榜」（收藏榜 / 收藏增长最快榜 · 2026 · 实时拉取）</span>
+        <Link href="/rankings/categories" className="chip chip-accent ml-auto">去分类 TOP 榜 →</Link>
+      </div>
+
       <div className="flex flex-wrap gap-1.5">
         <Link href={qs({ category: "all" })} className={`chip ${category === "all" ? "chip-accent" : ""}`}>全部</Link>
         {allCategories().map((c) => (
