@@ -163,6 +163,29 @@ export default function LearnPage() {
         </div>
       </div>
 
+      {/* Personal AI PM Curriculum */}
+      <div className="panel p-6">
+        <div className="text-[14px] font-bold text-white mb-3 flex items-center gap-2"><BookOpenCheck size={15} className="text-[#7dd3fc]" /> PERSONAL AI PM CURRICULUM · 你的个性化课程</div>
+        {!started ? (
+          <div className="text-[12.5px] text-[#5b6885]">开始学习后，系统会根据你的能力短板自动编排课程。</div>
+        ) : (
+          <div className="grid gap-3 md:grid-cols-4">
+            {[
+              { week: "本周 · 补短板", focus: gap.weakness, action: gap.recommended.map((r) => r.title).join(" / "), link: `/rankings/${gap.recommended[0]?.kind ?? "opportunity"}` },
+              { week: "第 2 周 · 需求", focus: "需求分析 + 用户研究", action: "每天完成 1 个项目的 Hidden Needs + JTBD", link: "/rankings/opportunity" },
+              { week: "第 3 周 · 设计", focus: "产品设计 + AI UX", action: "完成 If I Were The PM + 五层拆解", link: "/rankings/skills" },
+              { week: "第 4 周 · 商业", focus: "商业模式 + 增长", action: "输出 1 篇自媒体内容 + 1 个 Portfolio Case", link: "/rankings/money" },
+            ].map((c) => (
+              <Link key={c.week} href={c.link} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3.5 hover:border-[#2c4370]">
+                <div className="text-[11px] font-bold text-[#7dd3fc]">{c.week}</div>
+                <div className="text-[13px] font-semibold text-white mt-0.5">{c.focus}</div>
+                <div className="text-[11px] text-[#5b6885] mt-1">{c.action}</div>
+              </Link>
+            ))}
+          </div>
+        )}
+      </div>
+
       {/* 30 Days Challenge */}
       <div className="panel p-6">
         <div className="text-[14px] font-bold text-white mb-3 flex items-center gap-2"><Target size={15} className="text-[#f472b6]" /> 30 Days AI PM Challenge · 当前第 {journey.day} 天</div>

@@ -35,6 +35,12 @@
 | 👤 My GitHub | 同步 GitHub Stars → 2026 Favorites / Rising / Hidden Gems / My Project Radar + Radar vs Global + 兴趣图谱 |
 | 🏠 WHAT SHOULD I STUDY TODAY | 首页每日学习推荐（🔥 研究 / 🧠 补能力 / 💰 商业 / 🎬 内容 / 💼 Portfolio） |
 | 🗂️ 一项目 → 七种资产 | 每项目自动生成 报告 / 学习 Case / Challenge / 观点 / 内容 / Portfolio / Interview |
+| 🔬 逆向工程 Lab | 完整用户路径（15 步）+ 核心功能实现路径 + 源码架构逆向 + 代码→功能映射 + 技术选型解释 + 产品设计→技术设计映射 + MVP 逆向 + 产品决策分析 + 40 节情报报告 |
+| 🧪 Evidence Mode | 每个技术实现判断标注 Confirmed / Inferred / Hypothesis / Unknown，禁止把推测写成事实 |
+| 📂 分类 TOP 榜 | 30 个一级分类各自独立 TOP 榜 + 二级场景拆解（30 页） |
+| 🏠 2026 Radar 首页 | 2026 HOT / RISING / FASTEST GROWING / HIDDEN GEMS + 右侧 MY AI PM SCORE |
+| 📑 My Project Report | 每个收藏项目自动生成个人报告：为什么收藏/重点学什么/是否值得自媒体·Portfolio·二开 |
+| 📖 Personal AI PM Curriculum | 根据能力短板自动编排 4 周个性化课程 |
 | ⚖️ Compare | 2-4 项目多指标对比 + AI 最终推荐 |
 | 📡 My AI Radar | Watchlist 收藏 + 智能提醒（增长/排名/商业化信号） |
 
@@ -57,6 +63,8 @@
 | `/projects/[slug]` | 项目页新增 4 大模式：AI PM 学习 / 产品拆解 / 自媒体 / 求职 Portfolio |
 | `/projects/[slug]#build` | 产品底层逻辑架构分析：DNA 14 节点 + 15 维拆解 + 如何搭建 + Why AI + AI Native Test |
 | `/my-github` | 同步 GitHub Stars：2026 收藏雷达 / Rising / Hidden Gems / Radar vs Global / 兴趣图谱 |
+| `/rankings/categories` | 30 个一级分类独立 TOP 榜索引（`/rankings/category/[id]`） |
+| `/projects/[slug]#reverse` | 逆向工程 Lab：40 节报告 / 用户路径 / 实现路径 / 源码映射 / Evidence Mode |
 
 ## 🚀 快速开始
 
@@ -137,6 +145,7 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 - [`docs/05-deployment.md`](docs/05-deployment.md) — 部署策略（本地 / Docker / 服务器）
 - [`docs/06-ai-pm-learning-os.md`](docs/06-ai-pm-learning-os.md) — AI PM 学习与内容情报 OS（战略补充）
 - [`docs/07-2026-radar-build-os.md`](docs/07-2026-radar-build-os.md) — 2026 Radar · 产品底层逻辑架构分析 · 如何搭建
+- [`docs/08-reverse-engineering-os.md`](docs/08-reverse-engineering-os.md) — AI 产品逆向工程 OS · 40 节情报报告 · Evidence Mode
 
 ## 🎯 产品定位
 

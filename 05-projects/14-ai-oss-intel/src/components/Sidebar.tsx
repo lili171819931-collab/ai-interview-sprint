@@ -29,6 +29,7 @@ const NAV = [
       { href: "/rankings/skills", label: "Skill 项目榜", icon: Puzzle },
       { href: "/rankings/resume", label: "Resume 简历榜", icon: FileText },
       { href: "/rankings/content", label: "Self Media 自媒体榜", icon: Megaphone },
+      { href: "/rankings/categories", label: "分类 TOP 榜", icon: FolderKanban },
     ],
   },
   {

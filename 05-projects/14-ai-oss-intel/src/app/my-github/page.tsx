@@ -7,6 +7,7 @@ import { PROJECTS } from "@/data/projects";
 import { topBy } from "@/lib/store";
 import { computeScores, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { timeStatusOf, TIME_STATUS_META, scenariosOf } from "@/lib/scenarios";
+import { buildMyProjectReport } from "@/lib/reverse";
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
@@ -179,6 +180,11 @@ export default function MyGitHubPage() {
         {hiddenGems.map((p) => <MiniRow key={p.slug} p={p} />)}
       </Section>
 
+      {/* My Project Report */}
+      <Section title="我的项目报告 · MY PROJECT REPORT" emoji="📑" desc="每个收藏/同步项目的个人逆向报告：为什么收藏、重点学什么、是否值得自媒体/Portfolio/重新开发">
+        {activePool.length === 0 ? <Empty /> : activePool.map((p) => <MyReportRow key={p.slug} p={p} />)}
+      </Section>
+
       {/* Interest graph + Radar vs Global */}
       <div className="grid gap-4 md:grid-cols-2">
         <div className="panel p-5">
@@ -275,4 +281,37 @@ function MiniRow({ p }: { p: Project }) {
 
 function Empty() {
   return <div className="text-[12.5px] text-[#5b6885] py-2">暂无数据 — 收藏项目或同步 GitHub Stars 后自动生成。</div>;
+}
+
+
+function MyReportRow({ p }: { p: Project }) {
+  const [open, setOpen] = useState(false);
+  const r = buildMyProjectReport(p);
+  return (
+    <div className="rounded-xl bg-[#0c1322] border border-[#16213a] overflow-hidden">
+      <button onClick={() => setOpen(!open)} className="w-full flex items-center gap-2.5 px-3.5 py-3 text-left">
+        <span className="flex-1">
+          <span className="font-semibold text-[13.5px] text-white">{p.name}</span>
+          <span className="text-[11px] text-[#5b6885] ml-2">{p.tagline}</span>
+        </span>
+        <span className="chip shrink-0">{open ? "收起" : "展开报告"}</span>
+      </button>
+      {open && (
+        <div className="px-3.5 pb-4 space-y-2 text-[12.5px] text-[#aab6cd]">
+          <div className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5"><b className="text-[#7dd3fc]">为什么我收藏：</b>{r.whyStarred}</div>
+          <div className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5"><b className="text-[#7dd3fc]">它为什么值得研究：</b>{r.worthStudying}</div>
+          <div className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5">
+            <b className="text-[#34d399]">我应该重点学习：</b>
+            <div className="mt-1 space-y-0.5">{r.focusLearn.map((x, i) => <div key={i}>· {x}</div>)}</div>
+          </div>
+          <div className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5"><b className="text-[#fbbf24]">对 AI PM 转型的帮助：</b>{r.careerHelp}</div>
+          <div className="flex flex-wrap gap-2 text-[11.5px]">
+            <span className={`chip ${r.mediaWorth ? "!text-[#f472b6]" : ""}`}>{r.mediaWorth ? "📱 值得做自媒体：" + r.mediaTitle : "📱 自媒体价值一般"}</span>
+            <span className={`chip ${r.portfolioWorth ? "!text-[#a78bfa]" : ""}`}>{r.portfolioWorth ? "💼 值得做 Portfolio" : "💼 Portfolio 价值一般"}</span>
+            <span className={`chip ${r.rebuildWorth ? "!text-emerald-300" : ""}`}>{r.rebuildWorth ? "🔧 值得重新开发/副业" : "🔧 二开价值一般"}</span>
+          </div>
+        </div>
+      )}
+    </div>
+  );
 }

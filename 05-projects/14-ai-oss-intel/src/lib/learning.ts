@@ -36,23 +36,23 @@ export function buildProductDna(p: Project): DnaChainNode[] {
 function scenarioLabel(p: Project): string {
   return p.categories.slice(0, 3).map((c) => categoryOf(c).name).join(" / ");
 }
-function painPointOf(p: Project): string {
+export function painPointOf(p: Project): string {
   return "用户在当前方案下感到「" + problemOf(p) + "」带来的低效/高成本/焦虑";
 }
-function dataOf(p: Project): string {
+export function dataOf(p: Project): string {
   if (p.categories.includes("rag") || p.categories.includes("pkm")) return "文档/知识库 → 向量化 → 检索日志 → 用户反馈";
   if (p.categories.includes("agent")) return "任务输入 → 工具结果 → 记忆/状态 → 质量日志";
   if (p.categories.includes("coding")) return "代码库 → 索引 → 编辑记录 → 测试反馈";
   return "用户输入 + 生成记录 + 使用行为（用于质量与个性化迭代）";
 }
-function uxOf(p: Project): string {
+export function uxOf(p: Project): string {
   return "一句话输入 → 可视化进度 → 结果可审核/可导出 → 错误可解释可重试";
 }
-function growthOf(p: Project): string {
+export function growthOf(p: Project): string {
   const r = growthRate(p, 30);
   return `30 天 ${formatSigned(p.growth30d)}（${formatPct(r)}）· ${r > 10 ? "口碑 + 内容传播飞轮" : "工具链嵌入 + 社区生态"}`;
 }
-function moatOf(p: Project): string {
+export function moatOf(p: Project): string {
   const pr = P(p);
   if (pr.ecosystem >= 8) return "生态/社区网络效应 + 插件与集成资产";
   if (pr.commercialPotential >= 8) return "垂直场景 + 数据资产 + 商业化先发";
@@ -708,12 +708,12 @@ export function problemOf(p: Project): string {
   return map[p.slug] ?? "AI 能力与真实业务场景之间缺少可落地的产品化桥梁";
 }
 
-function needOf(p: Project): string {
+export function needOf(p: Project): string {
   const users = targetUsersOf(p).split("、")[0];
   return `${users} 需要「${coreFeatureOf(p)}」`;
 }
 
-function deepNeedOf(p: Project): string {
+export function deepNeedOf(p: Project): string {
   const map: Record<string, string> = {
     "money-printer": "低成本持续获得内容与流量",
     comfyui: "稳定高效地批量产出专业视觉内容",
@@ -731,7 +731,7 @@ function deepNeedOf(p: Project): string {
   return map[p.slug] ?? "显著降低完成核心 Job 的时间与门槛，并沉淀可复用资产";
 }
 
-function sceneOf(p: Project): string {
+export function sceneOf(p: Project): string {
   const cat = p.categories[0] ?? "agent";
   const map: Record<string, string> = {
     "money-printer": "日更短视频的运营场景",
@@ -747,7 +747,7 @@ function sceneOf(p: Project): string {
   return map[cat] ?? `与「${categoryOf(cat).name}」相关的日常业务场景`;
 }
 
-function coreFeatureOf(p: Project): string {
+export function coreFeatureOf(p: Project): string {
   if (p.categories.includes("coding")) return "用自然语言生成/修改代码";
   if (p.categories.includes("video")) return "自动生成短视频";
   if (p.categories.includes("image")) return "可视化工作流生成图像";
@@ -760,7 +760,7 @@ function coreFeatureOf(p: Project): string {
   return p.tagline;
 }
 
-function aiCapabilityOf(p: Project): string {
+export function aiCapabilityOf(p: Project): string {
   if (p.categories.includes("agent")) return "LLM 任务规划 + 工具调用 + 记忆与校验";
   if (p.categories.includes("coding")) return "代码理解、生成、编辑与测试闭环";
   if (p.categories.includes("rag")) return "文档解析 + 向量检索 + 生成引用";
@@ -770,7 +770,7 @@ function aiCapabilityOf(p: Project): string {
   return "LLM 驱动的意图理解与内容生成";
 }
 
-function workflowOf(p: Project): string {
+export function workflowOf(p: Project): string {
   if (p.categories.includes("agent")) return "意图理解 → 任务规划 → 工具调用 → 结果校验 → 迭代";
   if (p.categories.includes("coding")) return "需求理解 → 代码索引 → 计划生成 → 编辑执行 → 测试修复";
   if (p.categories.includes("rag")) return "文档入库 → 切分向量化 → 检索召回 → 生成引用 → 用户反馈";
@@ -780,7 +780,7 @@ function workflowOf(p: Project): string {
   return "输入 → 处理 → 输出 → 反馈迭代";
 }
 
-function outcomeOf(p: Project): string {
+export function outcomeOf(p: Project): string {
   if (p.categories.includes("coding")) return "可运行的代码与更快的交付速度";
   if (p.categories.includes("video")) return "可直接发布的成品视频";
   if (p.categories.includes("image")) return "专业级图像与可复用工作流";
@@ -789,18 +789,18 @@ function outcomeOf(p: Project): string {
   return "高质量结果与可复用资产";
 }
 
-function valueOf(p: Project): string {
+export function valueOf(p: Project): string {
   return `为「${targetUsersOf(p).split("、")[0]}」节省时间/提升产出/降低门槛，沉淀「${deepNeedOf(p)}」的长期价值`;
 }
 
-function businessOf(p: Project): string {
+export function businessOf(p: Project): string {
   const c = P(p).commercialPotential;
   if (c >= 8) return "开源核心 + 托管云/企业版 + 服务生态";
   if (c >= 6) return "开源获客 + 服务/咨询/培训变现";
   return "社区与影响力为主，商业化探索期";
 }
 
-function latentNeedOf(p: Project): string {
+export function latentNeedOf(p: Project): string {
   const map: Record<string, string> = {
     "money-printer": "内容模板市场与批量代运营服务",
     comfyui: "工作流模板交易市场",

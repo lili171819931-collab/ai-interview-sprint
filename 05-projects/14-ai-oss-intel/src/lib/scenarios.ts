@@ -103,3 +103,87 @@ export const TIME_STATUS_META: Record<TimeStatus, { label: string; color: string
   "2026ACTIVE": { label: "2026 ACTIVE", color: "#fbbf24", desc: "2026 年持续活跃开发" },
   "2026RELEVANT": { label: "2026 RELEVANT", color: "#a78bfa", desc: "2026 年仍具产品/生态价值" },
 };
+
+/* 二级场景拆解 — 每个一级分类拆成二级场景（§5） */
+export const SECONDARY_SCENARIOS: Record<string, { code: string; name: string }[]> = {
+  agent: [
+    { code: "A01.1", name: "通用任务 Agent" },
+    { code: "A01.2", name: "多智能体协作" },
+    { code: "A01.3", name: "浏览器 Agent" },
+    { code: "A01.4", name: "编码 Agent" },
+    { code: "A01.5", name: "语音 Agent" },
+  ],
+  skill: [
+    { code: "D01.1", name: "Claude Code Skill" },
+    { code: "D01.2", name: "通用 Agent Skill" },
+    { code: "D01.3", name: "工作流封装 Skill" },
+  ],
+  mcp: [
+    { code: "D02.1", name: "官方 MCP Server" },
+    { code: "D02.2", name: "MCP 生态清单" },
+    { code: "D02.3", name: "MCP SDK/框架" },
+  ],
+  coding: [
+    { code: "C01.1", name: "终端编码 Agent" },
+    { code: "C01.2", name: "IDE 代码助手" },
+    { code: "C01.3", name: "代码生成模型" },
+  ],
+  saas: [
+    { code: "L01.1", name: "AI 应用平台" },
+    { code: "L01.2", name: "企业知识 SaaS" },
+    { code: "L01.3", name: "自动化 SaaS" },
+  ],
+  rag: [
+    { code: "I01.1", name: "向量数据库" },
+    { code: "I01.2", name: "文档理解 RAG" },
+    { code: "I01.3", name: "知识库问答" },
+  ],
+  image: [
+    { code: "G01.1", name: "图像生成工作流" },
+    { code: "G01.2", name: "图像编辑/分割" },
+  ],
+  video: [
+    { code: "F01.1", name: "视频生成模型" },
+    { code: "F01.2", name: "短视频自动生产" },
+    { code: "F01.3", name: "程序化视频" },
+  ],
+  audio: [
+    { code: "H01.1", name: "语音识别" },
+    { code: "H01.2", name: "语音合成/克隆" },
+    { code: "H01.3", name: "音乐生成" },
+  ],
+  content: [
+    { code: "E01.1", name: "图文内容生产" },
+    { code: "E01.2", name: "视频内容生产" },
+  ],
+  automation: [
+    { code: "A04.1", name: "浏览器自动化" },
+    { code: "A04.2", name: "工作流编排" },
+    { code: "A04.3", name: "RPA 替代" },
+  ],
+  pkm: [
+    { code: "I01.4", name: "第二大脑" },
+    { code: "I01.5", name: "笔记 AI 助手" },
+  ],
+  research: [
+    { code: "J01.1", name: "深度研究 Agent" },
+    { code: "J01.2", name: "学术写作" },
+  ],
+  ecommerce: [
+    { code: "O01.1", name: "无头电商" },
+    { code: "O01.2", name: "AI 客服/营销" },
+  ],
+  education: [
+    { code: "P01.1", name: "LLM 教学" },
+    { code: "P01.2", name: "机器人学习" },
+  ],
+};
+
+export function secondaryScenariosOf(p: Project): { code: string; name: string }[] {
+  const out: { code: string; name: string }[] = [];
+  for (const c of p.categories) {
+    const list = SECONDARY_SCENARIOS[c];
+    if (list) out.push(list[p.slug.length % list.length]);
+  }
+  return out.slice(0, 3);
+}

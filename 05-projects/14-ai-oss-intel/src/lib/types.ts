@@ -378,3 +378,134 @@ export interface BuildPlan {
   cost: string;
   checklist: string[];
 }
+
+/* ── Reverse Engineering OS ──────────────────────────────────────────── */
+
+export type EvidenceLevel = "Confirmed" | "Inferred" | "Hypothesis" | "Unknown";
+
+export interface JourneyStep {
+  step: string;
+  what: string;
+  why: string;
+  module: string;
+  input: string;
+  output: string;
+  aiRole: "AI" | "Agent" | "RAG" | "MCP" | "Workflow" | "None";
+}
+
+export interface ImplStep {
+  step: string;
+  layer: string;
+  detail: string;
+  evidence: EvidenceLevel;
+}
+
+export interface TechChoice {
+  tech: string;
+  why: string;
+  alternative: string;
+  impact: string;
+}
+
+export interface ProductToTechMap {
+  productRequirement: string;
+  feature: string;
+  ux: string;
+  workflow: string;
+  ai: string;
+  infrastructure: string;
+  output: string;
+}
+
+export interface IfWerePm {
+  keep: string[];
+  remove: string[];
+  add: string[];
+  redesign: string[];
+  priority: string[];
+  notDo: string[];
+}
+
+export interface MvpReverse {
+  mvp: string[];
+  v1: string[];
+  v2: string[];
+  scale: string[];
+}
+
+export interface ProductDecision {
+  decision: string;
+  reason: string;
+  tradeoff: string;
+  alternative: string;
+}
+
+export interface IndustryApp {
+  industry: string;
+  scenario: string;
+  value: string;
+  difficulty: "低" | "中" | "高";
+  potential: number;
+}
+
+export interface Competitor {
+  type: string;
+  name: string;
+  note: string;
+}
+
+export interface ValueScore {
+  label: string;
+  value: number;
+  color: string;
+}
+
+export interface AiArchComponent {
+  component: string;
+  role: string;
+}
+
+export interface MediaValue {
+  worth: boolean;
+  hook: string;
+  topic: string;
+  angle: string;
+  controversy: string;
+  pmInsight: string;
+  title: string;
+  script: string;
+  thumbnail: string;
+}
+
+export interface ReverseEngineering {
+  productDnaFlow: string[];
+  userJourney: JourneyStep[];
+  implementationPath: ImplStep[];
+  sourceArchitecture: { tree: string[]; coreModules: { module: string; role: string; evidence: EvidenceLevel }[] };
+  featureToCode: { feature: string; chain: string[] }[];
+  techStackExplained: TechChoice[];
+  productToTech: ProductToTechMap;
+  ifWerePm: IfWerePm;
+  mvpReverse: MvpReverse;
+  productDecisions: ProductDecision[];
+  businessModelDetail: { streams: string[]; moneyPoint: string };
+  businessOpportunities: { type: string; opportunity: string }[];
+  industries: IndustryApp[];
+  competitors: Competitor[];
+  comparison: string[];
+  valueScores: ValueScore[];
+  aiArchitecture: AiArchComponent[];
+  learningValue: string[];
+  mediaValue: MediaValue;
+}
+
+export interface MyProjectReport {
+  whyStarred: string;
+  worthStudying: string;
+  focusLearn: string[];
+  careerHelp: string;
+  mediaWorth: boolean;
+  mediaTitle: string;
+  portfolioWorth: boolean;
+  rebuildWorth: boolean;
+}

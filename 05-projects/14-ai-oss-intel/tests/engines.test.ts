@@ -107,3 +107,35 @@ assert(plan.checklist.length >= 5 && plan.techStack.length >= 3, "build plan che
 assert(["2026NEW", "2026RISING", "2026ACTIVE", "2026RELEVANT"].includes(timeStatusOf(sample)), "time status");
 assert(scenariosOf(sample).length >= 1, "scenarios");
 assert(buildChallenges(sample, "beginner").every((c) => c.projectFacts && c.bestPractice && c.expertReview.good), "challenge enrichment");
+
+/* ── Reverse Engineering OS tests ─────────────────────────────────────── */
+import { buildReverseEngineering, buildIntelligenceReport, buildMyProjectReport } from "../src/lib/reverse";
+import { secondaryScenariosOf } from "../src/lib/scenarios";
+
+const re = buildReverseEngineering(sample);
+assert(re.productDnaFlow.length >= 12, "reverse: product DNA flow");
+assert(re.userJourney.length === 15, "reverse: user journey 15 steps");
+assert(re.implementationPath.length >= 12, "reverse: impl path steps");
+assert(re.implementationPath.every((x) => ["Confirmed", "Inferred", "Hypothesis", "Unknown"].includes(x.evidence)), "reverse: evidence mode");
+assert(re.sourceArchitecture.coreModules.length >= 4, "reverse: core modules");
+assert(re.featureToCode.length >= 4, "reverse: feature→code map");
+assert(re.techStackExplained.length >= 5, "reverse: tech choices explained");
+assert(re.productToTech.feature.length > 0, "reverse: product→tech map");
+assert(re.ifWerePm.keep.length >= 2 && re.ifWerePm.notDo.length >= 1, "reverse: if were pm");
+assert(re.mvpReverse.mvp.length >= 3 && re.mvpReverse.scale.length >= 1, "reverse: mvp reverse");
+assert(re.productDecisions.length >= 4, "reverse: decisions");
+assert(re.businessOpportunities.length === 10, "reverse: 10 opportunities");
+assert(re.industries.length === 10, "reverse: 10 industries");
+assert(re.competitors.length === 4, "reverse: 4 competitor types");
+assert(re.valueScores.length === 10, "reverse: 10 value scores");
+assert(re.aiArchitecture.length >= 12, "reverse: ai architecture components");
+assert(re.learningValue.length >= 5, "reverse: learning value");
+assert(re.mediaValue.title.length > 0, "reverse: media value");
+
+const report = buildIntelligenceReport(sample);
+assert(report.length === 40, "reverse: 40-section report");
+assert(report[0].title === "Executive Summary" && report[39].title === "Final Score", "reverse: report 01 & 40");
+
+const my = buildMyProjectReport(sample);
+assert(my.whyStarred.length > 0 && my.focusLearn.length >= 3, "reverse: my project report");
+assert(secondaryScenariosOf(sample).length >= 1, "reverse: secondary scenarios");

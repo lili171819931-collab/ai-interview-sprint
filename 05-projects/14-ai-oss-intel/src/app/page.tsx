@@ -3,6 +3,7 @@ import { ArrowRight, Search, Sparkles, TrendingUp, Star, Target, Coins, Zap, Lay
 import { PROJECTS } from "@/data/projects";
 import { allCategories, categoryCounts, topBy, projectBySlug } from "@/lib/store";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
+import { AiPmScoreCard } from "@/components/AiPmScoreCard";
 import { computeScores, formatPct, formatSigned, formatStars } from "@/lib/engines";
 import { ProjectCard } from "@/components/ProjectCard";
 import { CategoryChips, Sparkline } from "@/components/ui";
@@ -65,6 +66,8 @@ export default function HomePage() {
 
       {/* WHAT SHOULD I STUDY TODAY? */}
       <StudyToday />
+
+      <HomeRadarSection />
 
       {/* Trending */}
       <section>
@@ -240,6 +243,65 @@ function StudyToday() {
             </Link>
           );
         })}
+      </div>
+    </section>
+  );
+}
+
+
+function HomeRadarSection() {
+  const all = PROJECTS;
+  const hot = all
+    .filter((p) => ["2026NEW", "2026RISING"].includes(timeStatusOf(p)))
+    .sort((a, b) => computeScores(b).opportunity - computeScores(a).opportunity)
+    .slice(0, 5);
+  const rising = all
+    .filter((p) => timeStatusOf(p) === "2026RISING")
+    .sort((a, b) => b.growth30d - a.growth30d)
+    .slice(0, 5);
+  const fastest = [...all].sort((a, b) => b.growth7d - a.growth7d).slice(0, 5);
+  const gems = all
+    .filter((p) => p.stars < 30000 && computeScores(p).opportunity >= 70)
+    .sort((a, b) => computeScores(b).opportunity - computeScores(a).opportunity)
+    .slice(0, 5);
+  const lists = [
+    { title: "🔥 2026 HOT", color: "#f87171", items: hot },
+    { title: "🚀 2026 RISING", color: "#7dd3fc", items: rising },
+    { title: "⚡ FASTEST GROWING", color: "#34d399", items: fastest },
+    { title: "💎 HIDDEN GEMS", color: "#f472b6", items: gems },
+  ];
+  return (
+    <section>
+      <div className="grid gap-4 xl:grid-cols-[minmax(0,1fr)_300px]">
+        <div className="grid gap-4 md:grid-cols-2">
+          {lists.map((l) => (
+            <div key={l.title} className="panel p-4">
+              <div className="text-[13px] font-bold mb-3" style={{ color: l.color }}>{l.title}</div>
+              <div className="space-y-1.5">
+                {l.items.map((p, i) => {
+                  const s = computeScores(p);
+                  const ts = timeStatusOf(p);
+                  return (
+                    <Link key={p.slug} href={`/projects/${p.slug}`} className="flex items-center gap-2 rounded-lg px-2 py-1.5 hover:bg-[#101a2e]">
+                      <span className="w-4 text-center text-[11px] font-bold num text-[#4d5a75]">{i + 1}</span>
+                      <span className="flex-1 truncate text-[12.5px] text-[#cfe0ff]">{p.name}</span>
+                      <span className="text-[11px] num text-emerald-300">↗{formatSigned(p.growth30d)}</span>
+                      <span className="text-[11px] num text-[#7dd3fc]">Opp {s.opportunity}</span>
+                      <span className="chip !text-[9.5px]" style={{ color: TIME_STATUS_META[ts].color, borderColor: TIME_STATUS_META[ts].color + "55" }}>{TIME_STATUS_META[ts].label}</span>
+                    </Link>
+                  );
+                })}
+              </div>
+            </div>
+          ))}
+        </div>
+        <div>
+          <AiPmScoreCard />
+          <Link href="/rankings/categories" className="panel card-hover p-4 mt-4 block">
+            <div className="text-[13px] font-bold text-white mb-1">📂 分类 TOP 榜</div>
+            <div className="text-[11.5px] text-[#5b6885]">每个一级分类独立榜单 + 二级场景</div>
+          </Link>
+        </div>
       </div>
     </section>
   );

@@ -16,7 +16,9 @@ import {
   buildProductDna, buildFiveLayers, buildPmVsUser, buildOpinionFrame,
   buildPmDeepAnalysis, buildWhyAi, buildAiNativeTest, buildBuildPlan,
 } from "@/lib/learning";
-import { scenariosOf, timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
+import { scenariosOf, timeStatusOf, TIME_STATUS_META, secondaryScenariosOf } from "@/lib/scenarios";
+import { ReverseSection } from "@/components/ReverseSection";
+import { buildReverseEngineering } from "@/lib/reverse";
 import type { Project } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -36,12 +38,13 @@ const TABS = [
   { id: "content", label: "自媒体", icon: Megaphone },
   { id: "portfolio", label: "求职 Portfolio", icon: Briefcase },
   { id: "build", label: "如何搭建", icon: Hammer },
+  { id: "reverse", label: "逆向工程", icon: Microscope },
   { id: "growth", label: "Growth", icon: TrendingUpIcon },
   { id: "opportunities", label: "Opportunities", icon: Target },
   { id: "ai-report", label: "AI Report", icon: BrainCircuit },
 ];
 
-import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal, Hammer } from "lucide-react";
+import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal, Hammer, Microscope } from "lucide-react";
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -74,6 +77,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             <div className="mt-2 flex flex-wrap gap-1.5">
               {scenariosOf(project).map((sc) => (
                 <span key={sc.id} className="chip chip-accent">{sc.emoji} {sc.group} · {sc.name}</span>
+              ))}
+              {secondaryScenariosOf(project).map((sc) => (
+                <span key={sc.code} className="chip">{sc.code} · {sc.name}</span>
               ))}
             </div>
             <p className="mt-2 text-[14.5px] text-[#cfe0ff]">{project.tagline}</p>
@@ -114,6 +120,8 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
       </section>
 
+      <div className="xl:grid xl:grid-cols-[minmax(0,1fr)_290px] xl:gap-6">
+      <div className="min-w-0 space-y-6">
       {/* Mode switcher */}
       <div className="panel px-4 py-3 flex flex-wrap items-center gap-2">
         <span className="text-[11.5px] text-[#5b6885]">模式：</span>
@@ -124,6 +132,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           { href: "#content", label: "📱 自媒体模式" },
           { href: "#portfolio", label: "💼 求职 Portfolio 模式" },
           { href: "#build", label: "🏗️ 如何搭建" },
+          { href: "#reverse", label: "🔬 逆向工程" },
         ].map((m) => (
           <a key={m.href} href={m.href} className="chip hover:!text-[#7dd3fc] hover:!border-[#2c4370]">{m.label}</a>
         ))}
@@ -370,6 +379,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <PortfolioMode project={project} />
       </Section>
 
+      {/* 逆向工程 */}
+      <Section id="reverse" title="AI 产品逆向工程 · Reverse Engineering Lab" icon={Microscope}>
+        <ReverseSection project={project} />
+      </Section>
+
       {/* 产品底层逻辑架构分析 · 如何搭建 */}
       <Section id="build" title="产品底层逻辑架构分析 · 如何搭建这个产品" icon={Hammer}>
         <BuildSection project={project} />
@@ -391,6 +405,13 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           })}
         </div>
       </section>
+      </div>
+
+      {/* Right rail · AI PM Insight */}
+      <aside className="hidden xl:block">
+        <AiPmInsightRail project={project} />
+      </aside>
+      </div>
     </div>
   );
 }
@@ -634,6 +655,40 @@ function BuildSection({ project }: { project: Project }) {
             <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#7dd3fc]">AI Enhanced：</b>{native.enhanced}</div>
             <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#34d399]">AI Native：</b>{native.native}</div>
           </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+function AiPmInsightRail({ project }: { project: Project }) {
+  const s = computeScores(project);
+  const r = buildReverseEngineering(project);
+  const cat = categoryOf(project.categories[0] ?? "agent");
+  return (
+    <div className="sticky top-20 space-y-4">
+      <div className="panel p-5">
+        <div className="text-[12px] font-semibold text-[#7dd3fc] mb-3">AI PM INSIGHT</div>
+        <div className="space-y-2">
+          <div className="flex justify-between text-[12.5px]"><span className="text-[#8b98b3]">AI PM 学习价值</span><span className="num font-bold text-[#c084fc]">{r.valueScores[6].value}</span></div>
+          <div className="flex justify-between text-[12.5px]"><span className="text-[#8b98b3]">职业价值</span><span className="num font-bold text-[#a78bfa]">{r.valueScores[7].value}</span></div>
+          <div className="flex justify-between text-[12.5px]"><span className="text-[#8b98b3]">内容价值</span><span className="num font-bold text-[#f472b6]">{r.valueScores[8].value}</span></div>
+          <div className="flex justify-between text-[12.5px]"><span className="text-[#8b98b3]">成长潜力</span><span className="num font-bold text-[#fb923c]">{r.valueScores[9].value}</span></div>
+        </div>
+        <div className="mt-3 pt-3 border-t border-[#16213a] text-[12px] text-[#5b6885]">{cat.emoji} {cat.name} · 机会分 <b className="text-[#7dd3fc]">{s.opportunity}</b>/100 · 一句话：{r.productToTech.productRequirement}</div>
+      </div>
+      <div className="panel p-5">
+        <div className="text-[12px] font-semibold text-[#7dd3fc] mb-3">AI PM 值得学什么</div>
+        <div className="space-y-1.5">
+          {r.learningValue.slice(0, 4).map((v, i) => (
+            <div key={i} className="text-[12px] text-[#aab6cd] leading-snug">· {v}</div>
+          ))}
+        </div>
+        <div className="mt-3 pt-3 border-t border-[#16213a] space-y-1.5">
+          <Link href="#pm-learning" className="block text-[12px] text-[#7dd3fc] hover:underline">🎓 去 AI PM 学习模式挑战</Link>
+          <Link href="#content" className="block text-[12px] text-[#f472b6] hover:underline">📱 生成自媒体内容</Link>
+          <Link href="#portfolio" className="block text-[12px] text-[#a78bfa] hover:underline">💼 沉淀 Portfolio Case</Link>
+          <Link href="#reverse" className="block text-[12px] text-[#34d399] hover:underline">🔬 查看逆向工程报告</Link>
         </div>
       </div>
     </div>
