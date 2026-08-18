@@ -3,6 +3,11 @@ import AppKit
 import AVFoundation
 import CoreGraphics
 
+public extension Notification.Name {
+    /// Posted when any of the recorder's TCC permission statuses change.
+    static let permissionsChanged = Notification.Name("AITRPermissionsChanged")
+}
+
 public enum PermissionStatus: Equatable {
     case notDetermined
     case granted

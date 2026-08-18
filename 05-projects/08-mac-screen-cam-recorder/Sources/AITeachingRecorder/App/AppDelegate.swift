@@ -13,6 +13,8 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var countdownPanel: NSPanel?
     private var countdownLabel: NSTextField?
     private var countdownTimer: Timer?
+    private var permissionMonitorTimer: Timer?
+    private var lastReadiness: PermissionsManager.Readiness?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
@@ -20,6 +22,21 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         // for newly-granted Screen Recording to take effect.
         UserDefaults.standard.set(PermissionsManager.shared.screenRecordingStatus == .granted,
                                   forKey: "aitr.screenGrantedAtLaunch")
+        startPermissionMonitor()
+    }
+
+    /// Polls TCC status so the UI updates the moment the user grants permissions in System Settings
+    /// (fixes the "permissions always show as not enabled" bug).
+    private func startPermissionMonitor() {
+        permissionMonitorTimer?.invalidate()
+        permissionMonitorTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+            let readiness = PermissionsManager.shared.readiness()
+            if readiness != self?.lastReadiness {
+                self?.lastReadiness = readiness
+                NotificationCenter.default.post(name: .permissionsChanged, object: nil)
+            }
+        }
+        RunLoop.main.add(permissionMonitorTimer!, forMode: .common)
     }
 
     func applicationShouldTerminateAfterLastWindowClosed(_ sender: NSApplication) -> Bool {

@@ -58,6 +58,17 @@ final class RegionPickerContentView: NSView {
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
 
     private func setupCloseButton() {
+        let minimize = NSButton(title: "", target: self, action: #selector(minimizePicker))
+        minimize.bezelStyle = .inline
+        minimize.isBordered = false
+        minimize.toolTip = "Minimize"
+        minimize.wantsLayer = true
+        minimize.layer?.backgroundColor = NSColor.black.withAlphaComponent(0.5).cgColor
+        minimize.layer?.cornerRadius = 14
+        minimize.image = NSImage(systemSymbolName: "minus", accessibilityDescription: "Minimize")
+        minimize.imagePosition = .imageOnly
+        minimize.contentTintColor = .white
+
         let close = NSButton(title: "", target: self, action: #selector(cancelSelection))
         close.bezelStyle = .inline
         close.isBordered = false
@@ -69,11 +80,18 @@ final class RegionPickerContentView: NSView {
         close.imagePosition = .imageOnly
         close.contentTintColor = .white
 
+        minimize.translatesAutoresizingMaskIntoConstraints = false
         close.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(minimize)
         addSubview(close)
         NSLayoutConstraint.activate([
+            minimize.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            minimize.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            minimize.widthAnchor.constraint(equalToConstant: 28),
+            minimize.heightAnchor.constraint(equalToConstant: 28),
+
             close.topAnchor.constraint(equalTo: topAnchor, constant: 16),
-            close.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            close.trailingAnchor.constraint(equalTo: minimize.leadingAnchor, constant: -8),
             close.widthAnchor.constraint(equalToConstant: 28),
             close.heightAnchor.constraint(equalToConstant: 28)
         ])
@@ -81,6 +99,10 @@ final class RegionPickerContentView: NSView {
 
     @objc private func cancelSelection() {
         onSelection?(CGRect(x: -1, y: -1, width: 0, height: 0))
+    }
+
+    @objc private func minimizePicker() {
+        window?.miniaturize(nil)
     }
 
     override func mouseDown(with event: NSEvent) {

@@ -22,6 +22,13 @@ struct DrawingToolbarView: View {
             Divider().frame(height: 28)
             Slider(value: $controller.lineWidth, in: 2...16, step: 1).frame(width: 70)
             Button {
+                minimizeToolbar()
+            } label: {
+                Image(systemName: "minus")
+            }
+            .buttonStyle(.plain)
+            .help("Minimize")
+            Button {
                 controller.clear()
             } label: {
                 Image(systemName: "trash")
@@ -40,6 +47,12 @@ struct DrawingToolbarView: View {
         .padding(.horizontal, 12)
         .padding(.vertical, 8)
         .background(barBackground)
+    }
+
+    private func minimizeToolbar() {
+        if let window = NSApp.windows.first(where: { $0.title == AnnotationController.toolbarTitle }) {
+            window.miniaturize(nil)
+        }
     }
 
     private var barBackground: some View {

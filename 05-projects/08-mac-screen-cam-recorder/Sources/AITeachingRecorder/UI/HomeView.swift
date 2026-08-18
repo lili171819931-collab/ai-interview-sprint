@@ -44,6 +44,9 @@ struct HomeView: View {
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(nsColor: .windowBackgroundColor))
         .onAppear { refresh() }
+        .onReceive(NotificationCenter.default.publisher(for: .permissionsChanged)) { _ in
+            refreshPermissions()
+        }
         .sheet(isPresented: $showSettings) { SettingsView() }
     }
 
@@ -59,6 +62,19 @@ struct HomeView: View {
                     .foregroundColor(.secondary)
             }
             Spacer()
+            if !controller.phase.isActive && !controller.phase.isBusy {
+                Button {
+                    startRecording()
+                } label: {
+                    Label("Start Recording", systemImage: "record.circle")
+                        .font(.callout.weight(.semibold))
+                        .padding(.horizontal, 4)
+                }
+                .controlSize(.large)
+                .tint(.red)
+                .disabled(!canStart)
+                .help("Start recording (⌘⇧R)")
+            }
             Button {
                 showSettings = true
             } label: {
@@ -101,6 +117,13 @@ struct HomeView: View {
                         PermissionsManager.shared.openMicrophoneSettings()
                         refreshPermissions()
                     }
+                }
+                HStack {
+                    Spacer()
+                    Button("Re-check permissions") {
+                        refreshPermissions()
+                    }
+                    .controlSize(.small)
                 }
             }
         }
@@ -227,14 +250,7 @@ struct HomeView: View {
             }
 
             if selectedMode == .window {
-                Picker("Window", selection: $selectedWindowID) {
-                    Text("Select a window…").tag(CGWindowID?.none)
-                    ForEach(windows) { w in
-                        Text(w.displayName).tag(Optional(w.id))
-                    }
-                }
-                .pickerStyle(.menu)
-                .frame(maxWidth: .infinity)
+                WindowPickerView(windows: windows, selection: $selectedWindowID)
             }
 
             if selectedMode == .region {
