@@ -23,6 +23,12 @@
 | 💡 产品机会生成器 | 每项目自动生成 ≥5 个新产品方向（名称/用户/痛点/MVP/商业模式/壁垒/难度/周期/潜力） |
 | 🚀 One Person Startup | 一人创业可行性：开发要求、MVP 周期、成本、变现难度、综合评分 |
 | 🔍 AI Open Source Analyst | 自然语言问答，直接查询平台数据与报告，例如「最近30天增长最快适合做副业的AI项目」 |
+| 🔍 AI Open Source Analyst | 自然语言问答，直接查询平台数据与报告，例如「最近30天增长最快适合做副业的AI项目」 |
+| 🎓 AI PM 学习模式 | Socratic 挑战（Beginner→Expert）+ Hidden Needs + 需求树 + JTBD + 证据驱动 + AI Before/After/Native |
+| 🧩 产品拆解模式 | Product DNA 底层逻辑图 + AI 产品五层拆解模型 + PM vs 用户视角 |
+| 📱 自媒体模式 | 一键生成 8 平台内容（小红书/公众号/B站/YouTube/X/LinkedIn/抖音/视频号）+ 视频脚本 + 观点注入 + Content Score |
+| 💼 求职 Portfolio 模式 | Portfolio Case + Interview Me + AI PM 面试题库 + Rebuild→PRD + If I Were The PM + 产品决策日志 |
+| 📈 AI PM 学习中心 | 能力雷达图 + AI PM Score + 能力缺口→项目推荐 + 30 Days AI PM Challenge + 每日任务 |
 | ⚖️ Compare | 2-4 项目多指标对比 + AI 最终推荐 |
 | 📡 My AI Radar | Watchlist 收藏 + 智能提醒（增长/排名/商业化信号） |
 
@@ -39,6 +45,10 @@
 | `/ask` | AI Open Source Analyst 自然语言分析 |
 | `/watchlist` | My AI Radar 收藏与提醒 |
 | `/insights` | 每日 AI 洞察与行动雷达 |
+| `/learn` | AI PM 学习中心：能力雷达 + 30 天挑战 + 每日任务 + 能力缺口推荐 |
+| `/interview` | AI PM 面试模式 + 全项目面试题库（8 类 × 72 项目） |
+| `/portfolio` | My AI PM Portfolio：案例 / 决策日志 / 观点 / 内容 / 导出 |
+| `/projects/[slug]` | 项目页新增 4 大模式：AI PM 学习 / 产品拆解 / 自媒体 / 求职 Portfolio |
 
 ## 🚀 快速开始
 
@@ -89,6 +99,13 @@ AI Layer (src/lib/reports.ts + src/lib/query.ts)
    ├─ Opportunity Generator (≥5 新产品方向)
    └─ NL Query Engine (自然语言 → 结构化意图)
    ↓
+AI PM Learning OS (src/lib/learning.ts + src/components/learn/)
+   ├─ Product DNA / 五层拆解 / Hidden Needs / 需求树 / JTBD / 证据
+   ├─ Socratic Challenge (Beginner→Expert) / Interview Me / 面试题库
+   ├─ 自媒体内容生成（8 平台）+ 视频脚本 + 观点注入 + Content Score
+   ├─ Rebuild→PRD / If I Were The PM / 产品决策日志
+   └─ 能力评估（雷达图 / AI PM Score / 缺口→项目推荐）+ localStorage 学习状态
+   ↓
 Next.js App Router UI (Server Components + 少量 Client Components)
    ├─ Dashboard / Discover / Rankings / Project Detail
    ├─ Compare / Watchlist / Insights / Ask AI
@@ -110,6 +127,7 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 - [`docs/03-database-schema.md`](docs/03-database-schema.md) — 数据模型与 Schema
 - [`docs/04-roadmap.md`](docs/04-roadmap.md) — 版本路线图（V1 / V1.5 / V2 / V3）
 - [`docs/05-deployment.md`](docs/05-deployment.md) — 部署策略（本地 / Docker / 服务器）
+- [`docs/06-ai-pm-learning-os.md`](docs/06-ai-pm-learning-os.md) — AI PM 学习与内容情报 OS（战略补充）
 
 ## 🎯 产品定位
 

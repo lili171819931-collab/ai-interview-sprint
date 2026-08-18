@@ -69,3 +69,30 @@ assert(r.opportunities.length >= 5, "5+ opportunities");
 assert(r.copyPath.length >= 4 && r.dna.length >= 4, "copy path & dna");
 
 console.log(process.exitCode ? "\nSOME TESTS FAILED ❌" : "\nALL TESTS PASSED ✅");
+
+/* ── AI PM Learning OS tests ─────────────────────────────────────────── */
+import { buildProductDna, buildFiveLayers, buildHiddenNeeds, buildJTBD, buildEvidence, buildAiNative, buildPmVsUser, buildChallenges, buildInterviewQuestions, buildOpinionFrame, buildContentPack, buildVideoScript, buildPrd, buildCaseStudy, abilityGapRecommendation, emptyAbilities } from "../src/lib/learning";
+
+const sample = PROJECTS.find((p) => p.slug === "dify")!;
+
+assert(buildProductDna(sample).length === 11, "DNA chain 11 nodes");
+assert(buildFiveLayers(sample).userProblem.includes("Layer 01"), "five layers L1");
+assert(Object.keys(buildHiddenNeeds(sample)).length === 4, "hidden needs 4 levels");
+assert(buildJTBD(sample).when.startsWith("When"), "JTBD when");
+assert(buildEvidence(sample).length === 4, "evidence 4 items");
+assert(buildAiNative(sample).before.includes("AI Before"), "AI before");
+assert(buildPmVsUser(sample).pmView.includes("产品经理"), "PM view");
+for (const level of ["beginner", "intermediate", "advanced", "expert"] as const) {
+  assert(buildChallenges(sample, level).length === 4, `${level} has 4 challenges`);
+  assert(buildChallenges(sample, level).every((c) => c.options.length === 4), `${level} options 4`);
+}
+assert(buildInterviewQuestions(sample).length === 8, "interview 8 questions");
+assert(buildOpinionFrame(sample).ifPmSteps.length >= 3, "opinion steps");
+const pack = buildContentPack(sample);
+assert(pack.platforms.length === 8, "content 8 platforms");
+assert(pack.score.total > 0 && pack.score.total <= 100, "content score range");
+assert(buildVideoScript(sample).segments.length >= 8, "video script segments");
+assert(buildPrd(sample).features.length >= 3, "prd features");
+assert(buildCaseStudy(sample).projectId === "dify", "case study");
+const gap = abilityGapRecommendation(emptyAbilities());
+assert(gap.recommended.length >= 1, "gap recommendation");

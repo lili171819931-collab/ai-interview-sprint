@@ -148,3 +148,176 @@ export interface RankedItem {
   rank: number;
   delta: number; // rank movement vs previous (positive = up)
 }
+
+/* ── AI PM Learning & Content Intelligence OS ─────────────────────────── */
+
+export type LearningLevel = "beginner" | "intermediate" | "advanced" | "expert";
+
+export interface HiddenNeeds {
+  surface: string;
+  functional: string;
+  deep: string;
+  latent: string;
+}
+
+export interface RequirementNode {
+  question: string;
+  answer: string;
+  children: RequirementNode[];
+}
+
+export interface JTBD {
+  when: string;
+  want: string;
+  soThat: string;
+  functional: string;
+  emotional: string;
+  social: string;
+}
+
+export interface EvidenceItem {
+  type: "Evidence" | "Inference" | "Hypothesis";
+  source: string;
+  claim: string;
+}
+
+export interface FiveLayers {
+  userProblem: string;
+  productExperience: string;
+  aiCapability: string;
+  agentWorkflow: string;
+  businessModel: string;
+}
+
+export interface AiNativeAnalysis {
+  before: string;
+  after: string;
+  native: string;
+}
+
+export interface DnaChainNode {
+  label: string;
+  value: string;
+}
+
+export interface PmVsUser {
+  userView: string;
+  pmView: string;
+}
+
+export interface ChallengeOption {
+  id: string;
+  text: string;
+  best: boolean;
+}
+
+export interface Challenge {
+  id: string;
+  level: LearningLevel;
+  question: string;
+  hint: string;
+  skill: string;
+  options: ChallengeOption[];
+  expertReview: { bestAnswer: string; why: string; keyInsight: string };
+}
+
+export interface InterviewQuestion {
+  id: string;
+  category: "Product Sense" | "User Research" | "AI Product" | "Metrics" | "Growth" | "Business" | "Technical" | "Strategy";
+  question: string;
+  modelAnswer: string;
+}
+
+export interface OpinionFrame {
+  biggestInnovation: string;
+  biggestFlaw: string;
+  ifPmSteps: string[];
+  futureOpportunity: string;
+}
+
+export interface ContentScore {
+  hook: number;
+  information: number;
+  originality: number;
+  productInsight: number;
+  practicalValue: number;
+  shareability: number;
+  total: number;
+}
+
+export interface ContentPlatform {
+  platform: string;
+  title: string;
+  body: string;
+  hashtags: string[];
+}
+
+export interface VideoScriptSegment {
+  label: string;
+  text: string;
+}
+
+export interface VideoScript {
+  title: string;
+  segments: VideoScriptSegment[];
+  cta: string;
+}
+
+export interface PrdDraft {
+  productBrief: string;
+  problem: string;
+  users: string;
+  prd: string;
+  userFlow: string[];
+  features: string[];
+  mvp: string;
+  aiArchitecture: string;
+  dataArchitecture: string;
+  metrics: string[];
+  gtm: string;
+}
+
+export interface CaseStudy {
+  id: string;
+  projectId: string;
+  projectName: string;
+  category: string;
+  title: string;
+  problem: string;
+  user: string;
+  productLogic: string;
+  aiArchitecture: string;
+  businessModel: string;
+  myDecision: string;
+  improvement: string;
+}
+
+export interface AbilityScores {
+  productThinking: number;
+  aiUnderstanding: number;
+  userResearch: number;
+  requirementAnalysis: number;
+  featureDesign: number;
+  aiAgent: number;
+  businessModel: number;
+  growth: number;
+  dataAnalysis: number;
+  communication: number;
+}
+
+export interface LearningStep {
+  id: string;
+  label: string;
+}
+
+export const LEARNING_STEPS: LearningStep[] = [
+  { id: "overview", label: "Overview" },
+  { id: "user", label: "User" },
+  { id: "problem", label: "Problem" },
+  { id: "feature", label: "Feature" },
+  { id: "aiLogic", label: "AI Logic" },
+  { id: "architecture", label: "Architecture" },
+  { id: "business", label: "Business" },
+  { id: "opinion", label: "Opinion" },
+  { id: "challenge", label: "Challenge" },
+];

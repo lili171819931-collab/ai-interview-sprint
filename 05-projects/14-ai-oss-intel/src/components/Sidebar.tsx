@@ -5,6 +5,7 @@ import { useState } from "react";
 import {
   LayoutDashboard, Compass, Star, TrendingUp, Target, Coins, Briefcase,
   Puzzle, FileText, Megaphone, Sparkles, Scale, Radar, Menu, X, FolderKanban,
+  GraduationCap, UserRound, MessagesSquare,
 } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 
@@ -35,6 +36,14 @@ const NAV = [
     items: [
       { href: "/compare", label: "Compare 对比", icon: Scale },
       { href: "/watchlist", label: "My AI Radar", icon: Radar },
+    ],
+  },
+  {
+    section: "AI PM Learning OS",
+    items: [
+      { href: "/learn", label: "AI PM 学习中心", icon: GraduationCap },
+      { href: "/interview", label: "Interview 面试模式", icon: MessagesSquare },
+      { href: "/portfolio", label: "My AI PM Portfolio", icon: UserRound },
     ],
   },
   {

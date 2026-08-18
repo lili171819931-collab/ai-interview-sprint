@@ -9,6 +9,11 @@ import { generateReport } from "@/lib/reports";
 import { CategoryChips, ScoreBar, ScorePills, Sparkline, Stars } from "@/components/ui";
 import { categoryOf } from "@/lib/categories";
 import { SaveButtonBig } from "@/components/ClientBits";
+import { LearningMode } from "@/components/learn/LearningMode";
+import { ContentMode } from "@/components/learn/ContentMode";
+import { PortfolioMode } from "@/components/learn/PortfolioMode";
+import { buildProductDna, buildFiveLayers, buildPmVsUser, buildOpinionFrame } from "@/lib/learning";
+import type { Project } from "@/lib/types";
 
 export const dynamic = "force-static";
 
@@ -22,16 +27,16 @@ function getProjectIds() {
 
 const TABS = [
   { id: "overview", label: "Overview", icon: BarChart3 },
-  { id: "architecture", label: "Architecture", icon: Layers },
-  { id: "features", label: "Features", icon: Boxes },
-  { id: "product", label: "Product", icon: Rocket },
-  { id: "business", label: "Business", icon: Target },
+  { id: "pm-learning", label: "AI PM 学习", icon: GraduationCap },
+  { id: "deconstruct", label: "产品拆解", icon: Layers },
+  { id: "content", label: "自媒体", icon: Megaphone },
+  { id: "portfolio", label: "求职 Portfolio", icon: Briefcase },
   { id: "growth", label: "Growth", icon: TrendingUpIcon },
-  { id: "opportunities", label: "Opportunities", icon: Briefcase },
+  { id: "opportunities", label: "Opportunities", icon: Target },
   { id: "ai-report", label: "AI Report", icon: BrainCircuit },
 ];
 
-import { TrendingUp as TrendingUpIcon } from "lucide-react";
+import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal } from "lucide-react";
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -93,6 +98,20 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <SaveButtonBig slug={project.slug} />
         </div>
       </section>
+
+      {/* Mode switcher */}
+      <div className="panel px-4 py-3 flex flex-wrap items-center gap-2">
+        <span className="text-[11.5px] text-[#5b6885]">模式：</span>
+        {[
+          { href: "#overview", label: "普通浏览模式" },
+          { href: "#pm-learning", label: "🎓 AI PM 学习模式" },
+          { href: "#deconstruct", label: "🧩 产品拆解模式" },
+          { href: "#content", label: "📱 自媒体模式" },
+          { href: "#portfolio", label: "💼 求职 Portfolio 模式" },
+        ].map((m) => (
+          <a key={m.href} href={m.href} className="chip hover:!text-[#7dd3fc] hover:!border-[#2c4370]">{m.label}</a>
+        ))}
+      </div>
 
       {/* Sticky sub-nav */}
       <nav className="sticky top-16 z-20 -mx-1 px-1 py-2 flex gap-1.5 overflow-x-auto bg-[#060a13]/85 backdrop-blur">
@@ -315,6 +334,26 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         </div>
       </Section>
 
+      {/* AI PM 学习模式 */}
+      <Section id="pm-learning" title="AI PM 学习模式 · Socratic Product Learning" icon={GraduationCap}>
+        <LearningMode project={project} />
+      </Section>
+
+      {/* 产品拆解模式 */}
+      <Section id="deconstruct" title="产品拆解模式 · Product DNA & 五层拆解" icon={Layers}>
+        <DnaSection project={project} />
+      </Section>
+
+      {/* 自媒体模式 */}
+      <Section id="content" title="自媒体模式 · Content Intelligence" icon={Megaphone}>
+        <ContentMode project={project} />
+      </Section>
+
+      {/* 求职 Portfolio 模式 */}
+      <Section id="portfolio" title="求职 Portfolio 模式 · AI PM Career" icon={Briefcase}>
+        <PortfolioMode project={project} />
+      </Section>
+
       {/* Related */}
       <section>
         <div className="text-[15px] font-bold text-white mb-3">相关项目</div>
@@ -395,3 +434,43 @@ function stageText(p: { releases: number; growth30d: number; stars: number }): s
   return "早期 / 稳定期";
 }
 
+
+
+function DnaSection({ project }: { project: Project }) {
+  const dna = buildProductDna(project);
+  const layers = buildFiveLayers(project);
+  const pmVsUser = buildPmVsUser(project);
+  const frame = buildOpinionFrame(project);
+  return (
+    <div className="space-y-4">
+      <div className="panel p-5">
+        <div className="text-[13px] font-semibold text-white mb-4">Project DNA · 产品底层逻辑图</div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {dna.map((n, i) => (
+            <div key={n.label} className="flex items-center gap-1.5">
+              <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] px-3 py-2 text-center min-w-[72px]">
+                <div className="text-[10px] text-[#5b6885] uppercase">{n.label}</div>
+                <div className="text-[11.5px] text-[#cfe0ff] leading-snug mt-0.5 max-w-[120px]">{n.value}</div>
+              </div>
+              {i < dna.length - 1 && <GitCommitHorizontal size={14} className="text-[#4f8cff] shrink-0" />}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="panel p-5 space-y-2.5">
+          <div className="text-[13px] font-semibold text-white">AI 产品五层拆解模型</div>
+          {Object.values(layers).map((l, i) => (
+            <div key={i} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#aab6cd]">{l}</div>
+          ))}
+        </div>
+        <div className="panel p-5 space-y-3">
+          <div className="text-[13px] font-semibold text-white">PM 视角 vs 普通用户视角</div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#8b98b3]">{pmVsUser.userView}</div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#cfe0ff]">{pmVsUser.pmView}</div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#aab6cd]"><b className="text-[#fbbf24]">如果我是 PM：</b>{frame.ifPmSteps.join(" ")}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
