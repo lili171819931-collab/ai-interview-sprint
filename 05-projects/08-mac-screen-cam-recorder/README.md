@@ -194,7 +194,22 @@ swift run AITRCLI record --out /tmp/test.mp4 --seconds 5
 - **P0（已完成）**：屏幕录制、摄像头、摄像头合成、麦克风、悬浮控制条、开始/暂停/继续/停止、MP4 导出、权限处理、基础设置、系统声音、快捷键、录制历史、自检
 - **P1（已完成）**：摄像头 5 形状 / 8 布局 / 滤镜 / 美颜、教学标注（画笔/箭头/矩形/椭圆/文字/橡皮）、录制倒计时、鼠标点击特效
 - **P2**：单轨混音、AAC 单轨输出、录制恢复（crash recovery）、AI 字幕、自动去停顿、AI 剪辑、自动生成标题/章节、OCR、教学总结
-- **P2**：AI 字幕、自动去停顿、AI 剪辑、自动生成标题/章节、OCR、教学总结、自动生成课程笔记/短视频
+- **V0.2（教学增强）**：键盘显示 OSD、提词器、鼠标聚光灯、录制元数据旁录、帧级时间线（详见蓝图 PART 10）
+- **V0.3（AI 剪辑）**：本地 ASR 字幕、去停顿/去口头禅、章节/摘要（详见蓝图 PART 8.2）
+- **V1.0（AI 导演）**：自动镜头、短视频生成、多平台导出、云分享链接（详见蓝图 PART 8.3）
+
+
+## 📘 研究蓝图与研究文档
+
+完整的产品研究、竞品拆解（OBS / ScreenToGif / Screenity / Reframed / QuickRecorder / Cap / OpenScreen / Coherence 等 Top 30）、技术架构逆向、License / 商业模式 / AI 产品机会分析与 30 天开发蓝图，见：
+
+> **📄 [docs/AI-TEACHING-STUDIO-BLUEPRINT.md](./docs/AI-TEACHING-STUDIO-BLUEPRINT.md)**
+
+关键结论（详细见文档）：
+- 技术路线：**Native macOS（Swift + ScreenCaptureKit）** 为 MVP 最优路线，后续补 Electron/Tauri 跨平台壳与 Web 轻量版
+- AI 引擎：本地 **faster-whisper / whisperX**（字幕·去停顿·章节），导出走 **FFmpeg**（子进程）
+- 教学层：**键盘显示 OSD / 提词器 / 聚光灯 / 帧级时间线** 为 V0.2 下一步范围
+- 差异化：**AI 导演（光标轨迹→自动镜头）+ 教学语义化（课程→知识点短视频）** 是空白机会点
 
 ## 📄 License
 
