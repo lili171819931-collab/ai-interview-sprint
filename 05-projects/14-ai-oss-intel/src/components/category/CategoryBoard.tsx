@@ -6,7 +6,7 @@ import { PROJECTS } from "@/data/projects";
 import { computeScores, formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
-import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveAnalysis, LiveFeatureDiagram, LiveDirectorView } from "@/components/analysis/AnalysisView";
+import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel } from "@/components/analysis/AnalysisView";
 import { loadLive, liveStatus, starsPerDay, type LiveRepo, type LiveState } from "@/lib/live";
 import { GithubIcon } from "@/components/icons";
 import type { CategoryId, Project } from "@/lib/types";
@@ -252,7 +252,7 @@ function ExpandPanel({ seed, repo, panelTab, onTab }: {
       {seed ? (
         panelTab === "analysis" ? <MasterAnalysis project={seed} /> : panelTab === "diagram" ? <FeaturePathDiagram project={seed} /> : <DirectorView project={seed} />
       ) : (
-        panelTab === "analysis" ? <LiveAnalysis repo={repo!} /> : panelTab === "diagram" ? <LiveFeatureDiagram repo={repo!} /> : <LiveDirectorView repo={repo!} />
+        <LiveSourcePanel repo={repo!} mode={panelTab} />
       )}
     </div>
   );

@@ -176,3 +176,28 @@ const dv = buildDirectorView(sample);
 assert(dv.boundary.inScope.length >= 2 && dv.boundary.outScope.length >= 1, "master: director boundary");
 assert(dv.pain.deep.length > 0, "master: director pain");
 assert(dv.cases.length >= 3, "master: director cases");
+
+/* ── Source-code intelligence tests (pure parts) ──────────────────────── */
+import { buildSourceIntel } from "../src/lib/source";
+import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView } from "../src/lib/sourceMaster";
+
+const fakeRepo = { fullName: "acme/awesome-ai", owner: "acme", name: "awesome-ai", description: "AI 助手", language: "TypeScript", topics: ["ai", "llm"], stars: 1234, forks: 56, openIssues: 7, createdAt: "2026-01-15", updatedAt: "2026-08-01", homepage: null, license: "MIT" };
+const fakeReadme = `# Awesome AI\n\n一个 AI 助手工具\n\n## Features\n- 智能问答\n- RAG 检索\n- Agent 规划\n`;
+const fakeManifest = { file: "package.json", text: '{"dependencies":{"openai":"^1.0.0","langchain":"^0.2","chromadb":"^1.0"}}' };
+const fakeTree = ["src/app/page.tsx", "src/components/Chat.tsx", "api/route.ts", "agents/planner.ts", "retrieval/rag.ts", "data/db.ts", "tests/chat.test.ts"];
+
+const srcIntel = buildSourceIntel(fakeRepo, { readme: fakeReadme, manifest: fakeManifest, tree: fakeTree });
+assert(srcIntel.tagline.includes("Awesome AI"), "source: tagline from README");
+assert(srcIntel.features.length >= 2, "source: features from README");
+assert(srcIntel.techStack.includes("TypeScript"), "source: language in stack");
+assert(srcIntel.aiComponents.some((a) => /LLM|Agent|向量/.test(a)), "source: AI components detected");
+assert(srcIntel.moduleMap.length >= 3, "source: module map");
+assert(srcIntel.featureToCode.length >= 2, "source: feature→code");
+assert(srcIntel.treeSource === "tree", "source: tree source");
+
+const srcMaster = buildSourceMasterReport(fakeRepo, srcIntel);
+assert(srcMaster.length === 40, "source: 40-section master report");
+assert(srcMaster[20].title.includes("Feature → Code"), "source: feature→code section");
+assert(buildSourcePanorama(fakeRepo, srcIntel).length >= 14, "source: panorama");
+const srcDir = buildSourceDirectorView(fakeRepo, srcIntel);
+assert(srcDir.boundary.inScope.length >= 2 && srcDir.cases.length >= 3, "source: director view");

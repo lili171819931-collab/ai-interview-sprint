@@ -1,3 +1,5 @@
+"use client";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FileText, Boxes, UserRoundCheck, GitCommitHorizontal, ExternalLink } from "lucide-react";
 import {
@@ -7,9 +9,10 @@ import {
 } from "@/lib/master";
 import { formatPct, formatSigned, formatStars } from "@/lib/engines";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
-import { liveStatus } from "@/lib/live";
+import { liveStatus, type LiveRepo } from "@/lib/live";
+import { fetchRepoSource, getCachedSource, type SourceIntel } from "@/lib/source";
+import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceFactSheet } from "@/lib/sourceMaster";
 import type { Project } from "@/lib/types";
-import type { LiveRepo } from "@/lib/live";
 
 /* ── 分析（Master Reverse Engineering，含以上所有需求） ─────────── */
 export function MasterAnalysis({ project }: { project: Project }) {
@@ -267,47 +270,167 @@ export function DirectorView({ project }: { project: Project }) {
   );
 }
 
-/* ── Live（实时项目）轻量版 ──────────────────────────────────── */
-export function LiveAnalysis({ repo }: { repo: LiveRepo }) {
+/* ── Live（实时项目）源码深度分析 ─────────────────────────────── */
+export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" }) {
+  const [intel, setIntel] = useState<SourceIntel | null>(() => getCachedSource(repo.fullName));
+  const [loading, setLoading] = useState(false);
+  const [step, setStep] = useState("");
+  const [degraded, setDegraded] = useState<string | undefined>();
+  const [error, setError] = useState("");
+
+  useEffect(() => {
+    if (!intel) run();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const run = async () => {
+    setLoading(true);
+    setError("");
+    setStep("正在抓取源码：README → 依赖清单 → 目录树…");
+    try {
+      const { intel: i, degraded: d } = await fetchRepoSource(repo.fullName);
+      setStep("正在生成逆向工程报告与产品全景图…");
+      await new Promise((r) => setTimeout(r, 250));
+      setIntel(i);
+      setDegraded(d);
+    } catch (e) {
+      setError((e as Error).message || "源码抓取失败");
+    } finally {
+      setLoading(false);
+      setStep("");
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="space-y-3">
+        <div className="flex items-center gap-2 text-[12.5px] text-[#7dd3fc]">
+          <span className="inline-block w-4 h-4 border-2 border-[#4f8cff] border-t-transparent rounded-full animate-spin" />
+          {step || "源码分析中…"}
+        </div>
+        <div className="text-[11.5px] text-[#5b6885]">（raw.githubusercontent.com 抓取 README/依赖；git/trees 抓取目录树，受 GitHub API 限流影响时会降级）</div>
+      </div>
+    );
+  }
+
+  if (!intel) {
+    return (
+      <div className="space-y-2">
+        <div className="text-[12.5px] text-[#f87171]">{error || "源码抓取失败"}</div>
+        <button onClick={run} className="chip cursor-pointer hover:!text-[#7dd3fc]">重试抓取源码</button>
+      </div>
+    );
+  }
+
+  if (mode === "analysis") return <LiveSourceAnalysis repo={repo} intel={intel} degraded={degraded} onRefresh={run} />;
+  if (mode === "diagram") return <LiveSourceDiagram repo={repo} intel={intel} />;
+  return <LiveSourceDirector repo={repo} intel={intel} />;
+}
+
+function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRepo; intel: SourceIntel; degraded?: string; onRefresh: () => void }) {
+  const report = buildSourceMasterReport(repo, intel);
+  const panorama = buildSourcePanorama(repo, intel);
+  const fact = buildSourceFactSheet(repo, intel);
   const status = liveStatus(repo);
   const meta = TIME_STATUS_META[status];
   return (
-    <div className="space-y-3">
+    <div className="space-y-4">
+      {degraded && <div className="rounded-xl bg-[#101a2e] border border-amber-400/30 p-2.5 text-[11.5px] text-[#fbbf24]">⚠️ {degraded}</div>}
+      {/* 产品全景图（源码驱动） */}
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
-        <div className="text-[12.5px] font-bold text-white mb-2">PROJECT FACT SHEET · GitHub 实时</div>
-        <div className="grid gap-1.5 md:grid-cols-2 text-[11.5px]">
-          {[
-            ["仓库", repo.fullName], ["定位", repo.description ?? "—"], ["语言", repo.language ?? "—"],
-            ["License", repo.license ?? "—"], ["Stars/Forks", `${formatStars(repo.stars)} / ${formatStars(repo.forks)}`],
-            ["发布时间", repo.createdAt], ["更新时间", repo.updatedAt], ["2026 状态", meta.label],
-            ["主题", repo.topics.slice(0, 6).join(" · ") || "—"],
-          ].map(([k, v]) => (
-            <div key={k as string} className="flex gap-2">
-              <span className="w-20 shrink-0 text-[#5b6885]">{k}</span><span className="text-[#cfe0ff] break-all">{v}</span>
+        <div className="flex items-center gap-2 mb-3">
+          <span className="text-[12px] font-bold text-[#7dd3fc]">产品全景图 · PRODUCT PANORAMA（源码驱动）</span>
+          <span className="chip !text-[10px]">源码 {intel.treeSource === "tree" ? "✓ 目录树" : "README/依赖"}</span>
+        </div>
+        <div className="flex flex-wrap items-center gap-1">
+          {panorama.map((n, i) => (
+            <div key={n.node} className="flex items-center gap-1">
+              <div className="rounded-lg bg-[#101a2e] border border-[#2c4370] px-2 py-1.5 text-center">
+                <div className="text-[9.5px] font-bold text-white tracking-wide">{n.node}</div>
+                {n.sub && <div className="text-[9px] text-[#8b98b3] max-w-[130px] truncate">{n.sub[0]}</div>}
+              </div>
+              {i < panorama.length - 1 && <GitCommitHorizontal size={11} className="text-[#4f8cff]" />}
             </div>
           ))}
         </div>
-        <a href={`https://github.com/${repo.fullName}`} target="_blank" className="chip chip-accent mt-2"><ExternalLink size={11} /> 打开 GitHub（可获取源码后深度分析）</a>
       </div>
-      <div className="text-[11.5px] text-[#5b6885] leading-relaxed">
-        💡 实时项目暂未抓取源码，无法生成完整的 40 节逆向工程报告与产品全景图。将其加入收藏/快照后即可获得全量分析；当前可先通过 GitHub 查看 README 与源码。
+
+      {/* Fact sheet（源码） */}
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+        <div className="text-[12px] font-bold text-[#34d399] mb-2">PROJECT FACT SHEET · 源码实抓</div>
+        <div className="grid gap-1.5 md:grid-cols-2 text-[11.5px]">
+          {fact.map((x) => (
+            <div key={x.k} className="flex gap-2"><span className="w-24 shrink-0 text-[#5b6885]">{x.k}</span><span className="text-[#cfe0ff] break-all">{x.v}</span></div>
+          ))}
+        </div>
+        <div className="mt-2 flex flex-wrap gap-1.5">
+          <span className="chip" style={{ color: meta.color, borderColor: meta.color + "55" }}>{meta.label}</span>
+          <span className="chip">🕐 发布时间 {repo.createdAt}</span>
+          <span className="chip">⭐ {formatStars(repo.stars)}</span>
+          <span className="chip">🧠 AI：{intel.aiComponents.join("/") || "未检出"}</span>
+          <button onClick={onRefresh} className="chip cursor-pointer hover:!text-[#7dd3fc]">重新抓取</button>
+        </div>
       </div>
+
+      {/* 源码证据 */}
+      <div className="grid gap-3 md:grid-cols-2">
+        <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+          <div className="text-[12px] font-bold text-[#7dd3fc] mb-2">源码模块 → 产品角色（[CONFIRMED via tree]）</div>
+          <div className="space-y-1 text-[11.5px] text-[#aab6cd]">
+            {intel.moduleMap.map((m) => <div key={m.module}>· <b className="text-[#cfe0ff] font-mono">{m.module}</b> → {m.role} ({m.evidence})</div>)}
+          </div>
+        </div>
+        <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+          <div className="text-[12px] font-bold text-[#f472b6] mb-2">功能 → 代码映射</div>
+          <div className="space-y-2">
+            {intel.featureToCode.map((x) => (
+              <div key={x.feature} className="text-[11.5px]">
+                <b className="text-[#cfe0ff]">{x.feature}</b>
+                <div className="text-[10.5px] text-[#8b98b3]">{x.chain.join(" → ")}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      {/* README 片段 */}
+      {intel.readme && (
+        <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+          <div className="text-[12px] font-bold text-[#fbbf24] mb-2">README 证据片段</div>
+          <pre className="whitespace-pre-wrap font-sans text-[11px] text-[#8b98b3] leading-relaxed max-h-40 overflow-y-auto">{intel.readme}</pre>
+        </div>
+      )}
+
+      {/* 40 节报告 */}
+      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+        <summary className="cursor-pointer px-4 py-3 text-[12.5px] font-bold text-white flex items-center gap-2">
+          <FileText size={13} className="text-[#7dd3fc]" /> PROJECT REVERSE ENGINEERING REPORT · 40 节（源码驱动）
+        </summary>
+        <div className="px-4 pb-4 space-y-1.5 max-h-[420px] overflow-y-auto">
+          {report.map((sec) => (
+            <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5">
+              <div className="text-[11px] font-bold text-[#7dd3fc]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+              <div className="text-[11.5px] text-[#aab6cd] mt-0.5 leading-relaxed">{sec.body}</div>
+            </div>
+          ))}
+        </div>
+      </details>
     </div>
   );
 }
 
-export function LiveFeatureDiagram({ repo }: { repo: LiveRepo }) {
+function LiveSourceDiagram({ repo, intel }: { repo: LiveRepo; intel: SourceIntel }) {
   return (
     <div>
-      <div className="text-[12px] font-bold text-[#7dd3fc] mb-3">功能实现路径框图 · 实时项目（元数据）</div>
+      <div className="text-[12px] font-bold text-[#7dd3fc] mb-3">功能实现路径框图 · 源码驱动</div>
       <div className="grid gap-1.5 md:grid-cols-3">
         {[
-          ["User Input", "用户需求/问题", repo.description ?? "—"],
-          ["Frontend / Entry", "产品入口", repo.language ? `${repo.language} 实现` : "—"],
-          ["Core Logic", "核心流程", "以 README/源码为准（未抓取）"],
-          ["AI / Model", "AI 能力", "以仓库主题/描述推断（[HYPOTHESIS]）"],
-          ["Tools / Data", "工具与数据", repo.topics.slice(0, 4).join(" · ") || "—"],
-          ["Output", "输出与发布", `发布于 ${repo.createdAt} · 最近更新 ${repo.updatedAt}`],
+          ["User Input", "用户需求", intel.tagline],
+          ["Frontend", "产品入口", intel.moduleMap.find((m) => /Frontend|前端/.test(m.role))?.module ?? "src/"],
+          ["API", "服务端接口", intel.moduleMap.find((m) => /Backend|API/.test(m.role))?.module ?? "api/"],
+          ["AI / Agent", "AI 能力", intel.aiComponents.join(" / ") || "待源码确认"],
+          ["Tools / Data", "工具与数据", intel.moduleMap.find((m) => /工具|数据/.test(m.role))?.module ?? "tools/ · data/"],
+          ["Output", "结果输出", intel.features.slice(0, 2).join(" · ") || "核心功能"],
         ].map((s, i) => (
           <div key={i} className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-2.5">
             <div className="text-[10px] text-[#5b6885] num">STEP {String(i + 1).padStart(2, "0")}</div>
@@ -321,17 +444,40 @@ export function LiveFeatureDiagram({ repo }: { repo: LiveRepo }) {
   );
 }
 
-export function LiveDirectorView({ repo }: { repo: LiveRepo }) {
-  const status = liveStatus(repo);
-  const meta = TIME_STATUS_META[status];
+function LiveSourceDirector({ repo, intel }: { repo: LiveRepo; intel: SourceIntel }) {
+  const d = buildSourceDirectorView(repo, intel);
   return (
     <div className="space-y-3">
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
-        <div className="text-[12.5px] font-bold text-white mb-2">产品总监视角 · 实时项目</div>
+        <div className="flex items-center gap-2 mb-2"><UserRoundCheck size={14} className="text-[#a78bfa]" /><span className="text-[12.5px] font-bold text-white">边界考虑 · Boundary（源码驱动）</span></div>
+        <div className="grid gap-2 md:grid-cols-3 text-[11.5px]">
+          <div className="rounded-lg bg-[#101a2e] border border-emerald-400/25 p-2.5"><div className="text-[11px] font-bold text-emerald-300 mb-1">✅ 范围内</div>{d.boundary.inScope.map((x, i) => <div key={i}>· {x}</div>)}</div>
+          <div className="rounded-lg bg-[#101a2e] border border-rose-400/25 p-2.5"><div className="text-[11px] font-bold text-rose-300 mb-1">⛔ 范围外</div>{d.boundary.outScope.map((x, i) => <div key={i}>· {x}</div>)}</div>
+          <div className="rounded-lg bg-[#101a2e] border border-amber-400/25 p-2.5"><div className="text-[11px] font-bold text-amber-300 mb-1">⚠️ 约束</div>{d.boundary.constraints.map((x, i) => <div key={i}>· {x}</div>)}</div>
+        </div>
+        <div className="mt-2 text-[11.5px] text-[#aab6cd]"><b className="text-[#7dd3fc]">边界结论：</b>{d.boundary.verdict}</div>
+      </div>
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+        <div className="flex items-center gap-2 mb-2"><UserRoundCheck size={14} className="text-[#f87171]" /><span className="text-[12.5px] font-bold text-white">痛点分析 · Pain Point</span></div>
         <div className="space-y-1.5 text-[11.5px] text-[#aab6cd]">
-          <div><b className="text-[#a78bfa]">边界考虑：</b>当前边界以「{repo.description ?? repo.fullName}」为核心；建议先做窄而深，再资产化。</div>
-          <div><b className="text-[#f87171]">痛点分析：</b>实时项目需结合 README/Issues 分析；当前信号：⭐ {formatStars(repo.stars)} · Issues {repo.openIssues.toLocaleString()} · {repo.language ?? "—"}。</div>
-          <div><b className="text-[#34d399]">真实案例预测：</b>进入 GitHub 查看 Star 用户/Issues 讨论可获得真实案例证据；当前状态 {meta.label}（{TIME_STATUS_META[status].desc}）。</div>
+          <div><b className="text-[#f87171]">深层痛点：</b>{d.pain.deep}</div>
+          <div><b className="text-[#fbbf24]">路径摩擦：</b>{d.pain.journeyFriction}</div>
+          <div><b className="text-[#34d399]">未被满足：</b>{d.pain.unmet}</div>
+        </div>
+      </div>
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+        <div className="flex items-center gap-2 mb-2"><UserRoundCheck size={14} className="text-[#34d399]" /><span className="text-[12.5px] font-bold text-white">真实案例预测 · Case Prediction</span></div>
+        <div className="grid gap-2 md:grid-cols-3">
+          {d.cases.map((c) => (
+            <div key={c.name} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-3">
+              <div className="text-[11.5px] font-bold text-[#7dd3fc] mb-1">{c.name}</div>
+              <div className="space-y-1 text-[10.5px] text-[#aab6cd]">
+                <div><b>用户：</b>{c.user}</div><div><b>场景：</b>{c.scenario}</div>
+                <div><b>之前：</b>{c.before}</div><div><b>之后：</b>{c.after}</div>
+                <div><b>预期：</b>{c.outcome}</div><div><b>指标：</b>{c.metric}</div>
+              </div>
+            </div>
+          ))}
         </div>
       </div>
     </div>
