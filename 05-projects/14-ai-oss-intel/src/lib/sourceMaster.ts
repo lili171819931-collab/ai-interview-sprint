@@ -7,6 +7,7 @@
  */
 import type { LiveRepo } from "@/lib/live";
 import type { SourceIntel } from "@/lib/source";
+import type { MapNode } from "@/lib/master";
 import { formatStars, growthRate } from "@/lib/engines";
 
 export function buildSourceFactSheet(repo: LiveRepo, intel: SourceIntel) {
@@ -81,24 +82,55 @@ export function buildSourceMasterReport(repo: LiveRepo, intel: SourceIntel): { n
   ];
 }
 
-export function buildSourcePanorama(repo: LiveRepo, intel: SourceIntel): { node: string; sub?: string[] }[] {
+export function buildSourcePanorama(repo: LiveRepo, intel: SourceIntel): MapNode[] {
+  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode => ({ node, detail, explain, questions, evidence });
   return [
-    { node: "USER", sub: [intel.tagline] },
-    { node: "PROBLEM", sub: [repo.description ?? "—"] },
-    { node: "REQUIREMENT", sub: [intel.features[0] ?? intel.tagline] },
-    { node: "FEATURE", sub: [intel.features.slice(0, 2).join(" · ") || "核心功能"] },
-    { node: "UX FLOW", sub: ["输入 → 结果 → 审核"] },
-    { node: "WORKFLOW", sub: ["Input → Intent → Process → Output"] },
-    { node: "LLM / RAG / AGENT", sub: [intel.aiComponents.join(" · ") || "待源码确认"] },
-    { node: "TOOLS", sub: [intel.moduleMap.find((m) => /工具/.test(m.role))?.module ?? "tools/"] },
-    { node: "DATA", sub: [intel.moduleMap.find((m) => /数据/.test(m.role))?.module ?? "data/"] },
-    { node: "BACKEND / API", sub: [intel.moduleMap.find((m) => /Backend|API/.test(m.role))?.module ?? "api/"] },
-    { node: "FRONTEND", sub: [intel.moduleMap.find((m) => /Frontend|前端/.test(m.role))?.module ?? "src/"] },
-    { node: "CODE", sub: [repo.fullName] },
-    { node: "DEPLOYMENT", sub: [intel.techStack.includes("Docker") ? "Docker/CI" : "Cloud"] },
-    { node: "BUSINESS", sub: ["开源获客 + 托管/API"] },
-    { node: "GROWTH", sub: [`⭐${formatStars(repo.stars)} · 分享/模板`] },
-    { node: "MOAT", sub: ["数据/社区/工作流"] },
+    N("USER", intel.tagline, ["README 定位：目标用户（[INFERENCE]）", "待 Issues/社区确认真实画像", "种子用户 = 需求最痛者"], ["谁最先用？", "谁最先付费？"]),
+    N("PROBLEM", repo.description ?? "—", ["定位描述的痛点", "旧方案低效（[HYPOTHESIS]）", "结合 README/Issues 深挖"], ["用户现在怎么解决？", "痛点多痛？"]),
+    N("REQUIREMENT", intel.features[0] ?? intel.tagline, ["README 需求信号", "表层 vs 深层需求（[INFERENCE]）", "潜在需求待挖掘"], ["用户嘴上要什么？", "真正要什么？"]),
+    N("FEATURE", intel.features.join(" · ") || "核心功能", [intel.features.join(" · ") || "（README 未列出）", "Feature → 代码映射见源码模块", "核心功能 = 最小闭环"], ["删掉它产品还成立吗？", "哪个是杀手功能？"]),
+    N("UX FLOW", "输入 → 结果 → 审核", ["上手路径（[HYPOTHESIS]）", "结果可审核/可解释", "错误恢复"], ["首次体验多快？", "出错有救吗？"]),
+    N("WORKFLOW", ["Input", "Intent", "Processing", "LLM", "Output", "Feedback"].join(" → "), ["核心处理链（[INFERENCE]）", "AI 组件参与位置", "失败降级"], ["哪一步决定质量？", "哪一步最贵？"]),
+    N("LLM / RAG / AGENT", intel.aiComponents.join(" · ") || "待源码确认", [intel.aiComponents.join(" · ") || "未检出（[HYPOTHESIS]）", "依赖清单证据（[CONFIRMED via manifest]）", "AI 承担的角色"], ["为什么需要 AI？", "没有 AI 会怎样？"]),
+    N("TOOLS", intel.moduleMap.find((m) => /工具/.test(m.role))?.module ?? "tools/", ["工具模块（[CONFIRMED via tree]）", "工具失败降级", "权限安全"], ["哪些工具核心？", "失败怎么办？"]),
+    N("DATA", intel.moduleMap.find((m) => /数据/.test(m.role))?.module ?? "data/", ["数据层模块（[CONFIRMED via tree]）", "数据来源/存储/进 Context", "是否形成资产"], ["数据从哪来？", "是否持久化？"]),
+    N("BACKEND", intel.moduleMap.find((m) => /Backend|API/.test(m.role))?.module ?? "api/", ["后端/API 模块（[CONFIRMED via tree]）", "核心引擎", "并发/限流"], ["核心服务在哪？", "并发怎么处理？"]),
+    N("FRONTEND", intel.moduleMap.find((m) => /Frontend|前端/.test(m.role))?.module ?? "src/", ["前端/入口模块（[CONFIRMED via tree]）", "输入体验", "流式反馈"], ["入口形态对吗？", "首屏快吗？"]),
+    N("CODE", repo.fullName, [repo.fullName, intel.treeSource === "tree" ? "已抓取目录树（[CONFIRMED]）" : "目录树未获取", "源码是唯一事实源"], ["目录对应产品模块吗？", "核心逻辑在哪？"]),
+    N("DEPLOYMENT", intel.techStack.includes("Docker") ? "Docker/CI" : "Cloud/自托管", ["部署方式（[INFERENCE]）", "自托管 = 企业信任", "托管/私有化变现"], ["自托管还是 SaaS？", "部署成本？"]),
+    N("BUSINESS", `开源获客（License=${repo.license ?? "—"}）`, ["开源获客 → 托管/API/企业版（[INFERENCE]）", "License 决定商业边界", "真正的赚钱点待验证"], ["谁愿意付费？", "赚钱点在哪？"]),
+    N("GROWTH", `Stars ${formatStars(repo.stars)} · Forks ${formatStars(repo.forks)}`, ["Star/Forks 增长信号（[CONFIRMED]）", "增长引擎：口碑/内容/工具链", "更新时间反映活跃度"], ["为什么能增长？", "飞轮起点？"]),
+    N("MOAT", "数据/社区/工作流", ["护城河候选（[HYPOTHESIS]）", "数据 × 场景 × 分发", "工作流锁定"], ["为什么持续存在？", "大厂做了怎么办？"]),
+  ];
+}
+
+export function buildSourceTechRouteMainline(repo: LiveRepo, intel: SourceIntel): MapNode[] {
+  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode => ({ node, detail, explain, questions, evidence });
+  return [
+    N("用户", intel.tagline, ["README 定位（[INFERENCE]）", "待社区确认", "种子用户"], ["谁最先用？"]),
+    N("为什么需要", repo.description ?? "—", ["定位痛点", "旧方案低效（[HYPOTHESIS]）"], ["为什么现在？"]),
+    N("用户痛点", intel.tagline, ["定位相关痛点", "结合 Issues 深挖"], ["多痛？"]),
+    N("用户需求", intel.features[0] ?? intel.tagline, ["README 需求信号", "表层 vs 深层"], ["要什么？"]),
+    N("产品解决方案", intel.tagline, ["一句话模型", "最小闭环"], ["为什么换？"]),
+    N("功能设计", intel.features.join(" · ") || "核心功能", ["Feature Map", "杀手功能"], ["删掉成立吗？"]),
+    N("UX / UI", "输入 → 结果 → 审核", ["上手路径", "结果可审核"], ["首体验多快？"]),
+    N("用户操作流程", ["进入", "输入", "执行", "结果", "复用"].join(" → "), ["流失点", "5 分钟出结果"], ["哪里流失？"]),
+    N("产品 Workflow", ["Input", "Intent", "Processing", "LLM", "Output", "Feedback"].join(" → "), ["处理链", "AI 参与点"], ["哪步决定质量？"]),
+    N("LLM", intel.aiComponents.join(" / ") || "待确认", ["模型角色（[INFERENCE]）", "成本质量"], ["为什么需要？"]),
+    N("RAG", intel.aiComponents.some((a) => /RAG|向量/.test(a)) ? "检出检索组件" : "未检出", ["检索链路（[INFERENCE]）", "数据源"], ["是核心价值吗？"]),
+    N("Agent", intel.aiComponents.some((a) => /Agent/.test(a)) ? "检出 Agent 组件" : "未检出", ["编排", "可靠性"], ["为什么 Agent？"]),
+    N("Tools", intel.moduleMap.find((m) => /工具/.test(m.role))?.module ?? "tools/", ["工具模块（[CONFIRMED via tree]）", "降级"], ["哪些工具？"]),
+    N("MCP", intel.aiComponents.some((a) => /MCP/.test(a)) ? "检出 MCP" : "可选", ["协议", "生态"], ["价值？"]),
+    N("Data", intel.moduleMap.find((m) => /数据/.test(m.role))?.module ?? "data/", ["数据层（[CONFIRMED via tree]）", "资产"], ["从哪来？"]),
+    N("API", intel.moduleMap.find((m) => /Backend|API/.test(m.role))?.module ?? "api/", ["接口（[CONFIRMED via tree]）", "开放变现"], ["哪些最重要？"]),
+    N("Backend", "服务端", ["核心引擎", "并发"], ["核心在哪？"]),
+    N("Database", "存储/向量/缓存", ["数据模型", "资产"], ["存什么？"]),
+    N("Frontend", intel.moduleMap.find((m) => /Frontend|前端/.test(m.role))?.module ?? "src/", ["入口（[CONFIRMED via tree]）", "体验"], ["形态对吗？"]),
+    N("Source Code", repo.fullName, ["仓库", "目录树证据"], ["核心逻辑在哪？"]),
+    N("Deployment", intel.techStack.includes("Docker") ? "Docker/CI" : "Cloud", ["部署", "自托管"], ["成本？"]),
+    N("Business", `开源 · ${repo.license ?? "—"}`, ["开源获客 → 托管/API", "License 边界"], ["赚钱点？"]),
+    N("Growth", `Stars ${formatStars(repo.stars)}`, ["增长信号", "飞轮"], ["为什么涨？"]),
+    N("Moat", "数据/社区/工作流", ["护城河候选", "工作流锁定"], ["持续存在？"]),
   ];
 }
 

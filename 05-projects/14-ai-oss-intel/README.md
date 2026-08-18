@@ -158,3 +158,16 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 > **不是发现最多的项目，而是发现最值得用户采取行动的项目。**
 > 最终进化目标：AI Open Source Opportunity OS
 > `GitHub → Discover → Rank → Analyze → Understand → Compare → Find Opportunity → Generate Product → Generate PRD → Generate MVP → Build → Monetize`
+
+
+## 📸 演示截图（Demo）
+
+点击「分析」/「完整报告页」中的技术路线主线与产品全景图节点，可展开详细分析解释：
+
+| 截图 | 说明 |
+|------|------|
+| [`docs/demo/01-report-chain.png`](docs/demo/01-report-chain.png) | 完整报告页 · 完整链路（用户问题→可复制性） |
+| [`docs/demo/02-mainline-expanded.png`](docs/demo/02-mainline-expanded.png) | 技术路线主线 · 「用户」节点展开详细分析 |
+| [`docs/demo/03-mainline-workflow.png`](docs/demo/03-mainline-workflow.png) | 技术路线主线 · 「WORKFLOW」节点展开 |
+| [`docs/demo/04-panorama-expanded.png`](docs/demo/04-panorama-expanded.png) | 产品全景图 · 「USER」节点展开 |
+| [`docs/demo/05-panorama-workflow.png`](docs/demo/05-panorama-workflow.png) | 产品全景图 · 「WORKFLOW」节点展开 |

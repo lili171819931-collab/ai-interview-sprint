@@ -138,27 +138,39 @@ export function buildThreeConclusions(p: Project) {
   };
 }
 
-export function buildPanorama(p: Project): { node: string; sub?: string[] }[] {
-  const r = buildReverseEngineering(p);
-  return [
-    { node: "USER", sub: [r.productToTech.productRequirement] },
-    { node: "PROBLEM", sub: [problemOf(p)] },
-    { node: "REQUIREMENT", sub: [r.productToTech.productRequirement] },
-    { node: "FEATURE", sub: [r.productToTech.feature] },
-    { node: "UX FLOW", sub: [r.productToTech.ux] },
-    { node: "WORKFLOW", sub: [r.productToTech.workflow] },
-    { node: "LLM / RAG / AGENT", sub: [r.productToTech.ai] },
-    { node: "TOOLS", sub: [p.categories.includes("mcp") ? "MCP 工具链" : "工具/外部服务"] },
-    { node: "DATA", sub: [r.productToTech.infrastructure] },
-    { node: "BACKEND / API", sub: ["服务端 + API + 队列"] },
-    { node: "FRONTEND", sub: [p.language + " 前端/入口"] },
-    { node: "CODE", sub: [p.fullName] },
-    { node: "DEPLOYMENT", sub: ["Cloud / 自托管"] },
-    { node: "BUSINESS", sub: [r.businessModelDetail.streams.slice(0, 3).join(" / ")] },
-    { node: "GROWTH", sub: [r.productToTech.output + " → 分享 → 获客"] },
-    { node: "MOAT", sub: [r.businessModelDetail.moneyPoint] },
-  ];
+export interface MapNode {
+  node: string;
+  detail: string;
+  explain: string[];
+  questions: string[];
+  evidence: string;
 }
+
+export function buildPanorama(p: Project): MapNode[] {
+  const r = buildReverseEngineering(p);
+  const killer = buildKillerFeature(p);
+  const ba = buildBeforeAfter(p);
+  const nodes: MapNode[] = [
+    { node: "USER", detail: targetUsersOf(p), explain: [targetUsersOf(p), "种子用户 = 需求最痛、最早传播的那群人", `付费意愿：${P(p).commercialPotential >= 7 ? "中高（愿意为效率付费）" : "中（先免费获客）"}`], questions: ["谁最先付费？", "谁最先传播？"], evidence: "Inferred" },
+    { node: "PROBLEM", detail: problemOf(p), explain: [problemOf(p), "用户在旧方案下的痛点：低效、高成本、高门槛", ba.reduce], questions: ["这个痛点有多痛？", "用户现在怎么解决的？"], evidence: "Inferred" },
+    { node: "REQUIREMENT", detail: r.productToTech.productRequirement, explain: ["核心需求 = 用户真正的 Job", "表层需求是功能，深层需求是 Job", `未被满足：${latentNeedOf(p)}`], questions: ["用户嘴上要什么？", "用户真正要什么？"], evidence: "Inferred" },
+    { node: "FEATURE", detail: r.productToTech.feature, explain: [`核心功能：${r.productToTech.feature}`, killer.why, `Feature Map：${r.featureToCode.map((f) => f.feature).join(" · ")}`], questions: ["删掉它产品还成立吗？", "它支撑哪些下游结果？"], evidence: "Inferred" },
+    { node: "UX FLOW", detail: r.productToTech.ux, explain: [r.productToTech.ux, "3 秒看懂是什么、30 秒判断是否值得用", "结果可审核/可解释/可重试"], questions: ["上手要几步？", "出错时用户怎么办？"], evidence: "Inferred" },
+    { node: "WORKFLOW", detail: r.productDnaFlow.join(" → "), explain: [r.productDnaFlow.join(" → "), "Workflow 是产品化的核心，决定结果质量与成本", "每一步都有输入/输出/失败处理"], questions: ["哪一步最可能失败？", "哪一步决定质量？"], evidence: "Inferred" },
+    { node: "LLM / RAG / AGENT", detail: r.productToTech.ai, explain: [r.productToTech.ai, `AI 组件：${r.aiArchitecture.slice(0, 6).map((a) => a.component).join(" · ")}`, p.categories.includes("agent") ? "Agent 承担多步编排，AI 是执行者" : "AI 单步增强"], questions: ["为什么需要 AI？", "没有 AI 会怎样？"], evidence: "Inferred" },
+    { node: "TOOLS", detail: "工具/外部服务（搜索/代码/浏览器/文件）", explain: ["工具扩展模型能力边界", "工具调用失败需要降级/重试", "权限与安全是工具层关键"], questions: ["哪些工具是核心？", "工具失败怎么办？"], evidence: "Inferred" },
+    { node: "DATA", detail: r.productToTech.infrastructure, explain: [dataOf(p), "数据是 RAG/个性化的燃料，也是护城河", "数据资产决定长期价值"], questions: ["数据从哪来？", "是否形成资产？"], evidence: "Inferred" },
+    { node: "BACKEND", detail: "服务端 + API + 队列", explain: ["Backend 编排核心流程与任务", "API 是前后端与第三方的契约", "可观测与限流保障稳定性"], questions: ["哪个服务最核心？", "并发怎么处理？"], evidence: "Inferred" },
+    { node: "FRONTEND", detail: `${p.language} 前端/入口`, explain: ["前端承载 3 秒体验与流式反馈", "输入体验决定转化", "移动端/Web/CLI 形态选择"], questions: ["入口形态对吗？", "首次体验够快吗？"], evidence: "Inferred" },
+    { node: "CODE", detail: p.fullName, explain: [`仓库：${p.fullName}`, r.sourceArchitecture.tree.slice(0, 4).join(" / "), "源码是唯一事实源，README 只是入口"], questions: ["代码目录能对应到产品模块吗？", "核心逻辑在哪？"], evidence: "Confirmed" },
+    { node: "DEPLOYMENT", detail: "Cloud / 自托管", explain: ["部署决定成本与数据可控性", "开源可自托管 = 企业信任", "托管/私有化双轨是常见变现路径"], questions: ["自托管还是 SaaS？", "部署成本多高？"], evidence: "Inferred" },
+    { node: "BUSINESS", detail: r.businessModelDetail.streams.slice(0, 3).join(" / "), explain: [r.businessModelDetail.moneyPoint, "开源获客 → 托管/企业版/API 变现", "商业模式决定可持续性"], questions: ["真正的赚钱点在哪？", "谁愿意付费？"], evidence: "Inferred" },
+    { node: "GROWTH", detail: growthOf(p), explain: [growthOf(p), "增长引擎：口碑/内容/工具链嵌入", "增长飞轮 = 使用 → 资产 → 传播"], questions: ["为什么能持续增长？", "哪个环节是飞轮起点？"], evidence: "Inferred" },
+    { node: "MOAT", detail: moatOf(p), explain: [moatOf(p), "护城河 = 数据 × 场景 × 分发", "生态/工作流锁定让用户难以离开"], questions: ["它为什么能持续存在？", "大厂做了怎么办？"], evidence: "Inferred" },
+  ];
+  return nodes;
+}
+
 
 /* 40-section PROJECT REVERSE ENGINEERING REPORT (master §41) */
 export function buildMasterReport(p: Project): { n: number; title: string; body: string }[] {
@@ -318,33 +330,36 @@ export function buildCompleteChain(p: Project): ChainStage[] {
 }
 
 /** 技术路线主线：用户 → … → Moat（22 节点深层链路） */
-export function buildTechRouteMainline(p: Project): { node: string; detail: string }[] {
+export function buildTechRouteMainline(p: Project): MapNode[] {
   const r = buildReverseEngineering(p);
   const needs = buildHiddenNeeds(p);
+  const jtbd = buildJTBD(p);
+  const killer = buildKillerFeature(p);
+  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode => ({ node, detail, explain, questions, evidence });
   return [
-    { node: "用户", detail: targetUsersOf(p) },
-    { node: "为什么需要", detail: problemOf(p) },
-    { node: "用户痛点", detail: painPointOf(p) },
-    { node: "用户需求", detail: needs.core },
-    { node: "产品解决方案", detail: `${p.name}＝${p.tagline}` },
-    { node: "功能设计", detail: r.productToTech.feature },
-    { node: "UX / UI", detail: r.productToTech.ux },
-    { node: "用户操作流程", detail: r.userJourney.slice(0, 6).map((u) => u.step).join(" → ") },
-    { node: "产品 Workflow", detail: r.productDnaFlow.join(" → ") },
-    { node: "LLM", detail: "模型生成/规划/推理" },
-    { node: "RAG", detail: p.categories.includes("rag") || p.categories.includes("pkm") ? "知识检索增强" : "按需接入" },
-    { node: "Agent", detail: p.categories.includes("agent") ? "任务编排/工具调用" : "单步增强" },
-    { node: "Tools", detail: "工具/外部服务" },
-    { node: "MCP", detail: p.categories.includes("mcp") ? "标准工具协议" : "可选" },
-    { node: "Data", detail: dataOf(p) },
-    { node: "API", detail: "服务端接口" },
-    { node: "Backend", detail: "核心引擎/服务" },
-    { node: "Database", detail: "存储/向量库/缓存" },
-    { node: "Frontend", detail: `${p.language} 前端/入口` },
-    { node: "Source Code", detail: p.fullName },
-    { node: "Deployment", detail: "Cloud / 自托管" },
-    { node: "Business", detail: r.businessModelDetail.streams.slice(0, 3).join(" / ") },
-    { node: "Growth", detail: growthOf(p) },
-    { node: "Moat", detail: moatOf(p) },
+    N("用户", targetUsersOf(p), [targetUsersOf(p), "先做细分人群的深度价值，再扩展泛人群", "种子用户 = 需求最痛、最早传播的人"], ["谁最先付费？", "谁最先传播？"]),
+    N("为什么需要", problemOf(p), ["市场背景：AI 能力成熟 + 用户痛点真实", `现有方案低效：${problemOf(p)}`, "时机：2026 窗口 + 新 AI 能力可落地"], ["为什么是现在出现？", "以前为什么做不了？"]),
+    N("用户痛点", painPointOf(p), [painPointOf(p), "旧方案成本：时间/人力/学习/错误率", "痛点越痛，产品越容易冷启动"], ["用户现在怎么解决？", "解决得有多差？"]),
+    N("用户需求", needs.core, [needs.core, "表层需求是功能，深层需求是 Job", `潜在需求：${needs.latent}`], ["用户嘴上要什么？", "用户真正要什么？"]),
+    N("产品解决方案", `${p.name}＝${p.tagline}`, [`一句话模型：${r.productToTech.productRequirement}`, "方案 = 用户 Job 的最小闭环", "价值主张：更快/更稳/更省"], ["这个方案为什么比旧方案好 10 倍？", "用户为什么愿意换？"]),
+    N("功能设计", r.productToTech.feature, [`核心功能：${r.productToTech.feature}`, killer.why, `Feature Map：${r.featureToCode.map((f) => f.feature).join(" · ")}`], ["删掉它产品还成立吗？", "哪些是增长/商业化功能？"]),
+    N("UX / UI", r.productToTech.ux, [r.productToTech.ux, "3 秒看懂 / 30 秒判断 / 3 分钟会用", "结果可审核、错误可解释、可重试"], ["首次体验够快吗？", "出错时用户有救吗？"]),
+    N("用户操作流程", r.userJourney.slice(0, 6).map((u) => u.step).join(" → "), ["进入 → 注册 → 选任务 → 输入 → 理解 → 执行 → 结果 → 修改 → 复用", "每一步都有用户目标与系统响应", "流程中哪一步流失最多？"], ["哪里最容易流失？", "能否 5 分钟出第一个结果？"]),
+    N("产品 Workflow", r.productDnaFlow.join(" → "), [r.productDnaFlow.join(" → "), "Workflow 是产品化的核心资产", "每步：为什么存在/谁负责/输入输出/失败处理"], ["哪一步决定质量？", "哪一步最贵？"]),
+    N("LLM", "模型生成/规划/推理", ["承担意图理解、生成与推理", "模型选择影响成本与质量", "Prompt/结构化输出控制结果"], ["为什么需要 LLM？", "换模型会怎样？"], "Inferred"),
+    N("RAG", p.categories.includes("rag") || p.categories.includes("pkm") ? "知识检索增强" : "按需接入", ["把外部知识注入 Context", "检索质量决定回答质量", "切分/嵌入/重排是关键技术"], ["RAG 是核心价值吗？", "数据从哪来？"], "Inferred"),
+    N("Agent", p.categories.includes("agent") ? "任务编排/工具调用" : "单步增强", ["多步任务需要规划+工具+记忆", "Agent 让用户从操作者变审核者", "可靠性靠校验/重试/人在回路"], ["为什么用 Agent 而不是 Chatbot？", "失败如何恢复？"], "Inferred"),
+    N("Tools", "工具/外部服务", ["工具扩展模型能力边界（搜索/代码/浏览器）", "工具失败需要降级/重试", "权限与安全是工具层关键"], ["哪些工具是核心？", "工具失败怎么办？"], "Inferred"),
+    N("MCP", p.categories.includes("mcp") ? "标准工具协议" : "可选", ["MCP 标准化工具接入，生态互操作", "降低接入成本，扩大工具网络", "当前为可选（[HYPOTHESIS]）"], ["接入 MCP 的价值？", "工具生态怎么长？"], "Hypothesis"),
+    N("Data", dataOf(p), [dataOf(p), "数据是 RAG/个性化/护城河的燃料", "每次使用沉淀资产 = 留存与复利"], ["数据从哪来？", "是否形成资产？"], "Inferred"),
+    N("API", "服务端接口", ["API 是前后端与第三方契约", "鉴权/限流/可观测保障稳定", "开放 API = 生态与变现"], ["哪些 API 最重要？", "开放还是封闭？"], "Inferred"),
+    N("Backend", "核心引擎/服务", ["编排核心流程与任务", "队列/缓存/状态管理", "可观测与限流保障稳定性"], ["哪个服务最核心？", "并发怎么处理？"], "Inferred"),
+    N("Database", "存储/向量库/缓存", ["关系数据 + 向量库 + 缓存", "数据模型决定扩展性", "数据资产沉淀"], ["存什么？", "多久留？"], "Inferred"),
+    N("Frontend", `${p.language} 前端/入口`, ["前端承载 3 秒体验与流式反馈", "输入体验决定转化", "Web/CLI/移动形态选择"], ["入口形态对吗？", "首屏够快吗？"], "Inferred"),
+    N("Source Code", p.fullName, [`仓库：${p.fullName}`, r.sourceArchitecture.tree.slice(0, 5).join(" / "), "源码是唯一事实源，README 只是入口"], ["目录能对应产品模块吗？", "核心逻辑在哪？"], "Confirmed"),
+    N("Deployment", "Cloud / 自托管", ["部署决定成本与数据可控性", "开源可自托管 = 企业信任", "托管/私有化双轨是常见变现"], ["自托管还是 SaaS？", "部署成本多高？"], "Inferred"),
+    N("Business", r.businessModelDetail.streams.slice(0, 3).join(" / "), [r.businessModelDetail.moneyPoint, "开源获客 → 托管/企业版/API 变现", "商业模式决定可持续性"], ["真正的赚钱点在哪？", "谁愿意付费？"], "Inferred"),
+    N("Growth", growthOf(p), [growthOf(p), "增长引擎：口碑/内容/工具链嵌入", "飞轮 = 使用 → 资产 → 传播"], ["为什么能持续增长？", "飞轮起点在哪？"], "Inferred"),
+    N("Moat", moatOf(p), [moatOf(p), "护城河 = 数据 × 场景 × 分发", "生态/工作流锁定让用户难以离开"], ["它为什么能持续存在？", "大厂做了怎么办？"], "Inferred"),
   ];
 }

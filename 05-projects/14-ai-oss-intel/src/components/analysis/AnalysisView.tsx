@@ -13,9 +13,10 @@ import { liveStatus, type LiveRepo } from "@/lib/live";
 import { fetchRepoSource, getCachedSource, type SourceIntel } from "@/lib/source";
 import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceFactSheet } from "@/lib/sourceMaster";
 import { buildCompleteChain, buildTechRouteMainline } from "@/lib/master";
-import { buildSourceCompleteChain } from "@/lib/sourceMaster";
+import { buildSourceCompleteChain, buildSourceTechRouteMainline } from "@/lib/sourceMaster";
 import { buildProjectReportMarkdown, buildSourceReportMarkdown } from "@/lib/report";
 import { ReportActions } from "@/components/ReportActions";
+import { InteractiveMap } from "@/components/InteractiveMap";
 import type { Project } from "@/lib/types";
 
 /* ── 分析（Master Reverse Engineering，含以上所有需求） ─────────── */
@@ -58,18 +59,7 @@ export function MasterAnalysis({ project }: { project: Project }) {
 
       {/* 产品全景图 */}
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
-        <div className="text-[12px] font-bold text-[#7dd3fc] mb-3">产品全景图 · PRODUCT PANORAMA</div>
-        <div className="flex flex-wrap items-center gap-1">
-          {panorama.map((n, i) => (
-            <div key={n.node} className="flex items-center gap-1">
-              <div className="rounded-lg bg-[#101a2e] border border-[#2c4370] px-2.5 py-1.5 text-center">
-                <div className="text-[9.5px] font-bold text-white tracking-wide">{n.node}</div>
-                {n.sub && <div className="text-[9px] text-[#8b98b3] max-w-[130px] truncate">{n.sub[0]}</div>}
-              </div>
-              {i < panorama.length - 1 && <GitCommitHorizontal size={11} className="text-[#4f8cff]" />}
-            </div>
-          ))}
-        </div>
+        <InteractiveMap title="产品全景图 · PRODUCT PANORAMA（点击节点查看详细分析）" nodes={panorama} />
       </div>
 
       {/* Fact sheet + Killer */}
@@ -357,21 +347,7 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
       <SourceCompleteChain repo={repo} intel={intel} />
       {/* 产品全景图（源码驱动） */}
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
-        <div className="flex items-center gap-2 mb-3">
-          <span className="text-[12px] font-bold text-[#7dd3fc]">产品全景图 · PRODUCT PANORAMA（源码驱动）</span>
-          <span className="chip !text-[10px]">源码 {intel.treeSource === "tree" ? "✓ 目录树" : "README/依赖"}</span>
-        </div>
-        <div className="flex flex-wrap items-center gap-1">
-          {panorama.map((n, i) => (
-            <div key={n.node} className="flex items-center gap-1">
-              <div className="rounded-lg bg-[#101a2e] border border-[#2c4370] px-2 py-1.5 text-center">
-                <div className="text-[9.5px] font-bold text-white tracking-wide">{n.node}</div>
-                {n.sub && <div className="text-[9px] text-[#8b98b3] max-w-[130px] truncate">{n.sub[0]}</div>}
-              </div>
-              {i < panorama.length - 1 && <GitCommitHorizontal size={11} className="text-[#4f8cff]" />}
-            </div>
-          ))}
-        </div>
+        <InteractiveMap title={`产品全景图 · PRODUCT PANORAMA（源码驱动 · 源码 ${intel.treeSource === "tree" ? "✓ 目录树" : "README/依赖"}）`} nodes={panorama} />
       </div>
 
       {/* Fact sheet（源码） */}
@@ -536,19 +512,9 @@ export function CompleteChain({ project }: { project: Project }) {
       </div>
       <details className="mt-3" open={false}>
         <summary className="cursor-pointer text-[12px] font-bold text-[#7dd3fc] flex items-center gap-1.5">
-          <GitCommitHorizontal size={13} /> 展开技术路线主线（{mainline.length} 节点深层链路）
+          <GitCommitHorizontal size={13} /> 展开技术路线主线（{mainline.length} 节点 · 可点击查看详细分析）
         </summary>
-        <div className="mt-3 flex flex-wrap items-center gap-1">
-          {mainline.map((n, i) => (
-            <div key={n.node} className="flex items-center gap-1">
-              <div className="rounded-lg bg-[#0e1626] border border-[#2c4370] px-2 py-1.5 text-center">
-                <div className="text-[9.5px] font-bold text-white">{n.node}</div>
-                <div className="text-[9px] text-[#8b98b3] max-w-[120px] truncate">{n.detail}</div>
-              </div>
-              {i < mainline.length - 1 && <GitCommitHorizontal size={10} className="text-[#4f8cff]" />}
-            </div>
-          ))}
-        </div>
+        <div className="mt-3"><InteractiveMap nodes={mainline} /></div>
       </details>
     </div>
   );
@@ -575,6 +541,9 @@ export function SourceCompleteChain({ repo, intel }: { repo: LiveRepo; intel: So
             </div>
           </div>
         ))}
+      </div>
+      <div className="mt-3 rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+        <InteractiveMap title="技术路线主线 · 源码驱动" nodes={buildSourceTechRouteMainline(repo, intel)} />
       </div>
     </div>
   );

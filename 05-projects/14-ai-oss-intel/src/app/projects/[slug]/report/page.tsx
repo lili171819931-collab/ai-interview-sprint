@@ -13,6 +13,7 @@ import {
 import { buildProjectReportMarkdown } from "@/lib/report";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { ReportActions } from "@/components/ReportActions";
+import { InteractiveMap } from "@/components/InteractiveMap";
 import type { Project } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -86,18 +87,8 @@ export default async function ProjectReportPage({ params }: { params: Promise<{ 
 
       {/* 技术路线主线 */}
       <section className="panel p-6">
-        <h2 className="text-[16px] font-bold text-white mb-4">🗺️ 技术路线主线</h2>
-        <div className="flex flex-wrap items-center gap-1">
-          {mainline.map((n, i) => (
-            <div key={n.node} className="flex items-center gap-1">
-              <div className="rounded-lg bg-[#0c1322] border border-[#2c4370] px-2.5 py-1.5 text-center">
-                <div className="text-[10px] font-bold text-white">{n.node}</div>
-                <div className="text-[9px] text-[#8b98b3] max-w-[120px] truncate">{n.detail}</div>
-              </div>
-              {i < mainline.length - 1 && <span className="text-[#4f8cff] text-[10px]">→</span>}
-            </div>
-          ))}
-        </div>
+        <h2 className="text-[16px] font-bold text-white mb-4">🗺️ 技术路线主线（点击节点查看详细分析）</h2>
+        <InteractiveMap nodes={mainline} />
       </section>
 
       {/* 三结论 + 全景图 */}
@@ -111,17 +102,7 @@ export default async function ProjectReportPage({ params }: { params: Promise<{ 
             </div>
           ))}
         </div>
-        <div className="flex flex-wrap items-center gap-1">
-          {panorama.map((n, i) => (
-            <div key={n.node} className="flex items-center gap-1">
-              <div className="rounded-lg bg-[#101a2e] border border-[#2c4370] px-2 py-1.5 text-center">
-                <div className="text-[9.5px] font-bold text-white">{n.node}</div>
-                {n.sub && <div className="text-[9px] text-[#8b98b3] max-w-[130px] truncate">{n.sub[0]}</div>}
-              </div>
-              {i < panorama.length - 1 && <span className="text-[#4f8cff] text-[10px]">→</span>}
-            </div>
-          ))}
-        </div>
+        <InteractiveMap title="产品全景图（点击节点查看详细分析）" nodes={panorama} />
       </section>
 
       {/* Fact + Killer + Before/After + AI Map */}
