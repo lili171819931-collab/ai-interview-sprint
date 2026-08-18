@@ -56,3 +56,9 @@ A-Q 17 组 × 25 个场景（AI Agent / Personal AI Assistant / Workflow Automat
 
 ### 9. 能力评估 10 维升级
 Product Thinking / Requirement Analysis / AI Understanding / Agent Understanding / UX / Business / Growth / Data / Technical / Communication（对应雷达图与能力缺口推荐）。
+
+## 10. 统一数据库 + 实时同步（v2）
+- 全平台共享一个客户端数据库（`src/lib/db.ts`）：本地快照（166 项目）+ GitHub 实时数据按 fullName 合并去重
+- 顶栏「实时同步」一键拉取全库实时数据（9 组精选查询、限速 750ms、缓存 30 分钟），每次打开自动同步（缓存过期时）
+- Discover / Insights / 分类 TOP 榜 / My GitHub / Watchlist 均读取该统一数据库
+- My GitHub：实时同步 Star/收藏 → **按一级分类分组展示**，每项目可 分析 / 逆向拆解 / 产品框图

@@ -2,8 +2,9 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { Search } from "lucide-react";
+import { Search, RefreshCw, Radio, Database } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
+import { useDb } from "@/lib/db";
 
 const SUGGESTIONS = [
   "最近30天增长最快的Agent项目",
@@ -53,6 +54,7 @@ export function Topbar() {
           </div>
         )}
       </form>
+      <SyncControl />
       <Link
         href="https://github.com"
         target="_blank"
@@ -61,5 +63,29 @@ export function Topbar() {
         <GithubIcon size={14} /> GitHub
       </Link>
     </header>
+  );
+}
+
+
+function SyncControl() {
+  const { state, syncing, refresh } = useDb();
+  const live = state.repos.length > 0;
+  return (
+    <div className="flex items-center gap-1.5 shrink-0">
+      {syncing ? (
+        <span className="flex items-center gap-1.5 text-[11.5px] text-[#7dd3fc]"><RefreshCw size={12} className="animate-spin" /> 全库同步中…</span>
+      ) : live ? (
+        <span className="hidden md:flex items-center gap-1 text-[11px] text-[#8b98b3] num">
+          <Radio size={12} className="text-emerald-400" />
+          {state.source === "live" ? "实时" : "缓存"} · {state.repos.length} 项目
+          {state.fetchedAt > 0 && <> · {new Date(state.fetchedAt).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}</>}
+        </span>
+      ) : (
+        <span className="hidden md:flex items-center gap-1 text-[11px] text-[#5b6885]"><Database size={12} /> 本地快照</span>
+      )}
+      <button onClick={refresh} disabled={syncing} title="同步全平台实时数据（GitHub）" className="chip cursor-pointer hover:!text-[#7dd3fc] disabled:opacity-50 !py-1">
+        <RefreshCw size={11} className={syncing ? "animate-spin" : ""} /> 实时同步
+      </button>
+    </div>
   );
 }

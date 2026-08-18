@@ -85,7 +85,7 @@ function writeCache(id: string, repos: LiveRepo[]) {
   } catch {}
 }
 
-function normalize(it: any): LiveRepo | null {
+export function normalize(it: any): LiveRepo | null {
   if (!it?.full_name) return null;
   return {
     fullName: it.full_name,

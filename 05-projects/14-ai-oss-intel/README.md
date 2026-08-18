@@ -30,6 +30,8 @@
 | 💼 求职 Portfolio 模式 | Portfolio Case + Interview Me + AI PM 面试题库 + Rebuild→PRD + If I Were The PM + 产品决策日志 |
 | 📈 AI PM 学习中心 | 能力雷达图 + AI PM Score + 能力缺口→项目推荐 + 30 Days AI PM Challenge + 每日任务 |
 | 🗓️ 2026 Radar | Project Time Status（🆕 New / 🔥 Rising / 🚀 Active 多因子判定，不用单一时间条件）+ 场景分类系统（A-Q 17 组） |
+| 🗄️ 统一数据库 + 实时同步 | 全平台（Discover / Insights / 分类 TOP 榜 / My GitHub / Watchlist）共享一个数据库：本地快照 + GitHub 实时数据按 fullName 合并去重，顶栏「实时同步」一键拉取（缓存 30 分钟），每次打开自动同步 |
+| 👤 My GitHub 按分类展示 | 实时同步你的 Star/收藏，按一级分类分组展示，每个项目可 分析 / 逆向拆解 / 产品框图 |
 | 🏗️ 产品底层逻辑架构分析 | Project DNA 14 节点 + PM Deep Analysis 15 维 + 如何搭建（五层架构/技术栈/数据流/7·14·30 天路线/复制与不复制/成本/自检清单） |
 | ❓ Why AI / AI Native Test | 为什么需要 AI、降低什么成本、创造什么体验；Current / AI Enhanced / AI Native 三态重设计 |
 | 👤 My GitHub | 同步 GitHub Stars → 2026 Favorites / Rising / Hidden Gems / My Project Radar + Radar vs Global + 兴趣图谱 |
@@ -64,7 +66,7 @@
 | `/portfolio` | My AI PM Portfolio：案例 / 决策日志 / 观点 / 内容 / 导出 |
 | `/projects/[slug]` | 项目页新增 4 大模式：AI PM 学习 / 产品拆解 / 自媒体 / 求职 Portfolio |
 | `/projects/[slug]#build` | 产品底层逻辑架构分析：DNA 14 节点 + 15 维拆解 + 如何搭建 + Why AI + AI Native Test |
-| `/my-github` | 同步 GitHub Stars：2026 收藏雷达 / Rising / Hidden Gems / Radar vs Global / 兴趣图谱 |
+| `/my-github` | 实时同步 GitHub Stars + 按分类分组展示（分析/逆向拆解/产品框图）+ 2026 雷达 / 兴趣图谱 / 个人报告 |
 | `/rankings/categories` | 30 个一级分类独立 TOP 榜索引 · `/rankings/category/[id]` 含 机会/收藏/收藏增长 三榜（实时） |
 | `/projects/[slug]#reverse` | 逆向工程 Lab：40 节报告 / 用户路径 / 实现路径 / 源码映射 / Evidence Mode |
 

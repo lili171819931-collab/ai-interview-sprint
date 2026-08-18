@@ -7,7 +7,8 @@ import { PROJECTS } from "@/data/projects";
 import { topBy } from "@/lib/store";
 import { computeScores, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { timeStatusOf, TIME_STATUS_META, scenariosOf } from "@/lib/scenarios";
-import { buildMyProjectReport } from "@/lib/reverse";
+import { buildMyProjectReport, buildReverseEngineering } from "@/lib/reverse";
+import { buildProductDna } from "@/lib/learning";
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
@@ -25,9 +26,19 @@ export default function MyGitHubPage() {
     try {
       const raw = localStorage.getItem("aioss.watchlist") ?? "[]";
       setSaved(JSON.parse(raw));
-      setUser(localStorage.getItem("aioss.github.user") ?? "");
+      const u = localStorage.getItem("aioss.github.user") ?? "";
+      setUser(u);
       const st = localStorage.getItem("aioss.github.starred");
       if (st) setStarred(JSON.parse(st));
+      // 实时同步：已保存用户名且无缓存时自动拉取 Star
+      if (u && !st) {
+        setSyncing(true);
+        fetchStars(u).then((all) => {
+          setStarred(all);
+          try { localStorage.setItem("aioss.github.starred", JSON.stringify(all)); } catch {}
+          setSyncNote(`✓ 已自动同步 ${all.length} 个 Star 项目（${u}）`);
+        }).catch((e) => setSyncNote(`✗ 自动同步失败：${(e as Error).message}`)).finally(() => setSyncing(false));
+      }
     } catch {}
     setReady(true);
   }, []);
@@ -50,17 +61,7 @@ export default function MyGitHubPage() {
     setSyncing(true);
     setSyncNote("");
     try {
-      const all: StarredRepo[] = [];
-      for (let page = 1; page <= 3; page++) {
-        const res = await fetch(`https://api.github.com/users/${encodeURIComponent(user.trim())}/starred?per_page=100&page=${page}`, {
-          headers: { Accept: "application/vnd.github+json" },
-        });
-        if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-        const items = (await res.json()) as { full_name: string; stargazers_count: number; html_url: string }[];
-        if (items.length === 0) break;
-        for (const it of items) all.push({ fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0], stars: it.stargazers_count, url: it.html_url });
-        if (items.length < 100) break;
-      }
+      const all = await fetchStars(user.trim());
       setStarred(all);
       try {
         localStorage.setItem("aioss.github.user", user.trim());
@@ -178,6 +179,11 @@ export default function MyGitHubPage() {
       </div>
       <Section title="My Hidden Gems" emoji="💎" desc="与你兴趣高度相关、但你还没收藏的项目">
         {hiddenGems.map((p) => <MiniRow key={p.slug} p={p} />)}
+      </Section>
+
+      {/* 按分类展示 */}
+      <Section title="按分类展示 · 我的收藏雷达（实时同步）" emoji="🗂️" desc="实时同步的 Star/收藏项目按一级分类分组展示，每个项目可 分析 / 逆向拆解 / 产品框图">
+        {activePool.length === 0 ? <Empty /> : <GroupedByCategory pool={activePool} />}
       </Section>
 
       {/* My Project Report */}
@@ -312,6 +318,143 @@ function MyReportRow({ p }: { p: Project }) {
           </div>
         </div>
       )}
+    </div>
+  );
+}
+
+
+async function fetchStars(username: string): Promise<StarredRepo[]> {
+  const all: StarredRepo[] = [];
+  for (let page = 1; page <= 3; page++) {
+    const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/starred?per_page=100&page=${page}`, {
+      headers: { Accept: "application/vnd.github+json" },
+    });
+    if (!res.ok) throw new Error(`GitHub API ${res.status}`);
+    const items = (await res.json()) as { full_name: string; stargazers_count: number; html_url: string }[];
+    if (items.length === 0) break;
+    for (const it of items) all.push({ fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0], stars: it.stargazers_count, url: it.html_url });
+    if (items.length < 100) break;
+  }
+  return all;
+}
+
+function GroupedByCategory({ pool }: { pool: Project[] }) {
+  const [expanded, setExpanded] = useState<string | null>(null);
+  const [panel, setPanel] = useState<"reverse" | "dna">("reverse");
+  const groups = useMemo(() => {
+    const map = new Map<string, Project[]>();
+    for (const p of pool) {
+      const cat = p.categories[0] ?? "agent";
+      const arr = map.get(cat) ?? [];
+      arr.push(p);
+      map.set(cat, arr);
+    }
+    return [...map.entries()]
+      .map(([id, list]) => ({ id: id as Project["categories"][number], list: list.sort((a, b) => b.stars - a.stars) }))
+      .sort((a, b) => b.list.length - a.list.length);
+  }, [pool]);
+
+  const toggle = (key: string, pt: "reverse" | "dna") => {
+    if (expanded === key && panel === pt) { setExpanded(null); return; }
+    setExpanded(key); setPanel(pt);
+  };
+
+  return (
+    <div className="space-y-4">
+      {groups.map((g) => {
+        const cat = categoryOf(g.id);
+        return (
+          <div key={g.id} className="rounded-xl bg-[#0c1322] border border-[#16213a] overflow-hidden">
+            <div className="flex items-center gap-2 px-3.5 py-2.5 bg-[#101a2e] border-b border-[#16213a]">
+              <span className="text-[14px]">{cat.emoji}</span>
+              <span className="font-bold text-white text-[13.5px]">{cat.name}</span>
+              <span className="chip ml-auto">{g.list.length} 个</span>
+              <Link href={`/rankings/category/${g.id}`} className="chip chip-accent">分类 TOP 榜 →</Link>
+            </div>
+            <div className="divide-y divide-[#101a2e]">
+              {g.list.map((p) => {
+                const key = `seed:${p.slug}`;
+                const open = expanded === key;
+                const ts = timeStatusOf(p);
+                const meta = TIME_STATUS_META[ts];
+                const s = computeScores(p);
+                return (
+                  <div key={p.slug}>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2.5 hover:bg-[#0e1626]">
+                      <div className="min-w-0 flex-1">
+                        <Link href={`/projects/${p.slug}`} className="font-semibold text-white text-[13px] hover:text-[#7dd3fc]">{p.name}</Link>
+                        <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10.5px] text-[#5b6885]">
+                          <span>🕐 发布于 {p.createdAt}</span>
+                          <span className="chip !text-[9px]" style={{ color: meta.color, borderColor: meta.color + "55" }}>{meta.label}</span>
+                          <span className="num">⭐{formatStars(p.stars)}</span>
+                          <span className="text-emerald-300 num">↗{formatSigned(p.growth30d)}</span>
+                          <span className="num">Opp {s.opportunity}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <Link href={`/projects/${p.slug}`} className="chip chip-accent !text-[10.5px]">分析</Link>
+                        <button onClick={() => toggle(key, "reverse")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "reverse" ? "chip-accent" : ""}`}>逆向拆解</button>
+                        <button onClick={() => toggle(key, "dna")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "dna" ? "chip-accent" : ""}`}>产品框图</button>
+                      </div>
+                    </div>
+                    {open && (
+                      <div className="px-4 py-3 bg-[#0a101d] border-t border-[#16213a]">
+                        {panel === "reverse" ? (
+                          <MiniReverse p={p} />
+                        ) : (
+                          <MiniDna p={p} />
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function MiniReverse({ p }: { p: Project }) {
+  const r = buildReverseEngineering(p);
+  return (
+    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+        <div className="text-[11px] font-bold text-[#34d399] mb-1.5">⚙️ 产品功能实现路径</div>
+        <div className="text-[11px] text-[#aab6cd] leading-relaxed">{r.implementationPath.slice(0, 8).map((x) => `${x.step}`).join(" → ")}…</div>
+      </div>
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+        <div className="text-[11px] font-bold text-[#7dd3fc] mb-1.5">🧬 底层逻辑</div>
+        <div className="text-[11px] text-[#aab6cd] leading-relaxed">{r.productDnaFlow.slice(0, 6).join(" → ")}…</div>
+      </div>
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+        <div className="text-[11px] font-bold text-[#a78bfa] mb-1.5">🏗️ 技术架构</div>
+        <div className="text-[11px] text-[#aab6cd]">{r.techStackExplained.slice(0, 4).map((t) => t.tech).join(" / ")}</div>
+      </div>
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+        <div className="text-[11px] font-bold text-[#f472b6] mb-1.5">📐 产品架构</div>
+        <div className="text-[11px] text-[#aab6cd]">{r.productToTech.feature} → {r.productToTech.workflow.split("→")[0]}</div>
+        <Link href={`/projects/${p.slug}#reverse`} className="chip chip-accent mt-1.5 !text-[10px]">完整报告 →</Link>
+      </div>
+    </div>
+  );
+}
+
+function MiniDna({ p }: { p: Project }) {
+  const dna = buildProductDna(p);
+  return (
+    <div className="flex flex-wrap items-center gap-1.5">
+      {dna.map((n, i) => (
+        <div key={n.label} className="flex items-center gap-1.5">
+          <div className="rounded-lg bg-[#0c1322] border border-[#2c4370] px-2 py-1.5 text-center min-w-[64px]">
+            <div className="text-[9px] font-bold text-[#7dd3fc] uppercase">{n.label}</div>
+            <div className="text-[10px] text-[#cfe0ff] leading-snug max-w-[110px]">{n.value}</div>
+          </div>
+          {i < dna.length - 1 && <span className="text-[#4f8cff] text-[10px]">→</span>}
+        </div>
+      ))}
     </div>
   );
 }
