@@ -31,8 +31,11 @@ final class DrawingCanvasView: NSView {
     var onChanged: (() -> Void)?
 
     private var textField: NSTextField?
+    private let lock = NSLock()
 
     var canvasImage: CIImage? {
+        lock.lock()
+        defer { lock.unlock() }
         guard let buffer = canvasBuffer else { return nil }
         return CIImage(cvPixelBuffer: buffer)
     }
@@ -81,6 +84,8 @@ final class DrawingCanvasView: NSView {
     // MARK: Rendering
 
     private func redraw() {
+        lock.lock()
+        defer { lock.unlock() }
         guard let buffer = canvasBuffer, let ctx = canvasContext else { return }
         CVPixelBufferLockBaseAddress(buffer, [])
         ctx.clear(CGRect(x: 0, y: 0, width: ctx.width, height: ctx.height))
