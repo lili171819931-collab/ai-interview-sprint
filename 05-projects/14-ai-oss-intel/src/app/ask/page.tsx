@@ -96,6 +96,7 @@ function AskInner() {
               <span className="text-[12px] text-[#5b6885]">分析结果 · {answer.filtersNote}</span>
             </div>
             <p className="text-[14px] text-[#cfe0ff] leading-relaxed">{answer.summary}</p>
+            <div className="mt-3 rounded-xl bg-[#101a2e] border border-[#2c4370] p-3 text-[12.5px] text-[#cfe0ff] leading-relaxed">{answer.directorSummary}</div>
             <div className="mt-4 space-y-4">
               {answer.recommendations.map((rec, i) => (
                 <div key={i} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
@@ -108,7 +109,7 @@ function AskInner() {
           <div>
             <div className="text-[13px] font-semibold text-white mb-3">Top 项目卡片</div>
             <div className="grid gap-3 md:grid-cols-2">
-              {answer.projects.map(({ project }) => (
+              {answer.projects.map(({ project, director }) => (
                 <Link key={project.slug} href={`/projects/${project.slug}`} className="panel card-hover p-4">
                   <div className="flex items-center justify-between gap-2">
                     <span className="font-semibold text-[14px] text-white truncate">{project.name}</span>
@@ -120,7 +121,35 @@ function AskInner() {
                     <span className="text-[#7dd3fc]">Opp {answer.projects.find((x) => x.project.slug === project.slug)!.scores.opportunity}</span>
                   </div>
                   <div className="mt-2"><CategoryChips project={project} limit={2} /></div>
+                  <div className="mt-2 flex items-center gap-1.5">
+                    <VerdictChip verdict={director.verdict} />
+                    <span className="chip">Score {director.overall}</span>
+                    <span className="chip">押注 {director.bet}</span>
+                  </div>
                 </Link>
+              ))}
+            </div>
+          </div>
+
+          {/* 总监视角详情 */}
+          <div className="panel p-5">
+            <div className="text-[13px] font-bold text-white mb-3 flex items-center gap-2"><span className="text-[15px]">👔</span> AI 产品总监视角 · 逐项目判定</div>
+            <div className="space-y-2.5">
+              {answer.projects.map(({ project, director }) => (
+                <div key={project.slug} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <Link href={`/projects/${project.slug}`} className="font-semibold text-white text-[13px] hover:text-[#7dd3fc]">{project.name}</Link>
+                    <VerdictChip verdict={director.verdict} />
+                    <span className="chip">Score {director.overall}/100</span>
+                    <span className="chip">押注 {director.bet}</span>
+                  </div>
+                  <div className="mt-1.5 space-y-0.5 text-[12px] text-[#aab6cd]">
+                    <div><b className="text-[#34d399]">Why It Wins：</b>{director.whyWins}</div>
+                    <div><b className="text-[#f87171]">Why It Fails：</b>{director.whyFails}</div>
+                    <div><b className="text-[#a78bfa]">Real Moat：</b>{director.realMoat}</div>
+                    <div><b className="text-[#fbbf24]">Bet Why：</b>{director.betWhy}</div>
+                  </div>
+                </div>
               ))}
             </div>
           </div>
@@ -145,4 +174,10 @@ function renderBold(text: string) {
       <span key={i}>{p}</span>
     )
   );
+}
+
+
+function VerdictChip({ verdict }: { verdict: string }) {
+  const color = verdict === "Strong Buy" || verdict === "Invest" ? "#34d399" : verdict === "Watch" ? "#fbbf24" : verdict === "Pivot" ? "#fb923c" : "#f87171";
+  return <span className="chip !text-[10px]" style={{ color, borderColor: color + "66", background: color + "14" }}>👔 {verdict}</span>;
 }

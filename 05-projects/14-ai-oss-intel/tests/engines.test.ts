@@ -248,3 +248,9 @@ assert(Object.keys(dr.conclusions).length >= 7, "director: conclusions");
 assert(dr.panorama.length >= 20, "director: panorama nodes");
 const sdr = buildSourceDirectorReport(fakeRepo, srcIntel);
 assert(sdr.verdict.length > 0 && sdr.scores.length === 13 && sdr.panorama.length >= 14, "director: source report");
+
+/* ── Ask AI + Director wiring tests ───────────────────────────────────── */
+const askDir = answerQuery("找出最近30天增长最快、适合做副业、最好能SaaS化的AI项目");
+assert(askDir.projects.length > 0 && askDir.projects.every((x) => x.director && ["Strong Buy", "Invest", "Watch", "Pivot", "Do Not Invest"].includes(x.director.verdict)), "ask: director verdict on every project");
+assert(askDir.directorSummary.includes("AI 产品总监视角"), "ask: director summary present");
+assert(askDir.recommendations[0].includes("总监判定"), "ask: rec includes director verdict");

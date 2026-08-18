@@ -7,6 +7,7 @@ import { computeScores, formatPct, formatSigned, formatStars, growthRate, rankPr
 import { PROJECTS } from "@/data/projects";
 import { CATEGORY_MAP } from "@/lib/categories";
 import type { CategoryId, Project, ProjectScores, RankKind } from "@/lib/types";
+import { buildDirectorReport } from "@/lib/director";
 
 export interface QueryIntent {
   kind: RankKind;
@@ -95,12 +96,23 @@ export function parseQuery(text: string): QueryIntent {
   return { kind, days, category, goal, limit, raw: text };
 }
 
+export interface DirectorBrief {
+  verdict: string;
+  overall: number;
+  bet: string;
+  whyWins: string;
+  whyFails: string;
+  realMoat: string;
+  betWhy: string;
+}
+
 export interface QueryAnswer {
   intent: QueryIntent;
-  projects: { project: Project; scores: ProjectScores; rank: number; growth30Rate: number }[];
+  projects: { project: Project; scores: ProjectScores; rank: number; growth30Rate: number; director: DirectorBrief }[];
   summary: string;
   recommendations: string[];
   filtersNote: string;
+  directorSummary: string;
 }
 
 export function answerQuery(text: string): QueryAnswer {
@@ -111,12 +123,24 @@ export function answerQuery(text: string): QueryAnswer {
   if (intent.category) pool = pool.filter((p) => p.categories.includes(intent.category!));
 
   const ranked = rankProjects(pool, intent.kind, 50);
-  const picked = ranked.slice(0, intent.limit).map((r) => ({
-    project: r.project,
-    scores: r.scores,
-    rank: r.rank,
-    growth30Rate: growthRate(r.project, 30),
-  }));
+  const picked = ranked.slice(0, intent.limit).map((r) => {
+    const dr = buildDirectorReport(r.project);
+    return {
+      project: r.project,
+      scores: r.scores,
+      rank: r.rank,
+      growth30Rate: growthRate(r.project, 30),
+      director: {
+        verdict: dr.verdict,
+        overall: dr.overall,
+        bet: dr.conclusions.bet,
+        whyWins: dr.conclusions.whyWins,
+        whyFails: dr.conclusions.whyFails,
+        realMoat: dr.conclusions.realMoat,
+        betWhy: dr.conclusions.betWhy,
+      },
+    };
+  });
 
   const kindLabel: Record<RankKind, string> = {
     stars: "Stars 总量", growth: "30 天增长", hot: "7 天热度", opportunity: "AI 机会分",
@@ -135,10 +159,13 @@ export function answerQuery(text: string): QueryAnswer {
   const recommendations = picked.map((r, i) => {
     const p = r.project;
     const why = whyLine(p, r.scores, intent);
-    return `${i + 1}. **${p.name}**（${p.fullName}）— ⭐${formatStars(p.stars)} · 30天 ${formatSigned(p.growth30d)} (${formatPct(r.growth30Rate)}) · Opportunity ${r.scores.opportunity} · Money ${r.scores.money} · SideHustle ${r.scores.sideHustle} · Skill ${r.scores.skill} · Resume ${r.scores.resume}\n   ${why}`;
+    const d = r.director;
+    return `${i + 1}. **${p.name}**（${p.fullName}）— ⭐${formatStars(p.stars)} · 30天 ${formatSigned(p.growth30d)} (${formatPct(r.growth30Rate)}) · Opportunity ${r.scores.opportunity} · Money ${r.scores.money} · SideHustle ${r.scores.sideHustle} · Skill ${r.scores.skill} · Resume ${r.scores.resume}\n   ${why}\n   👔 总监判定：**${d.verdict}**（Score ${d.overall}/100）· 押注：${d.bet} · ${d.whyWins}`;
   });
 
-  return { intent, projects: picked, summary, recommendations, filtersNote };
+  const directorSummary = `👔 AI 产品总监视角：Top ${picked.length} 中，${picked.filter((x) => ["Strong Buy", "Invest"].includes(x.director.verdict)).length} 个可投（Strong Buy/Invest）、${picked.filter((x) => x.director.verdict === "Watch").length} 个观察（Watch）；若只能押一个，首选 ${picked[0] ? picked[0].project.name : "—"}（${picked[0]?.director.verdict ?? "—"}，Score ${picked[0]?.director.overall ?? "—"}）。`;
+
+  return { intent, projects: picked, summary, recommendations, filtersNote, directorSummary };
 }
 
 function whyLine(p: Project, s: ProjectScores, intent: QueryIntent): string {
