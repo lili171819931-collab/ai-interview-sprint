@@ -28,9 +28,11 @@
 ├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
 ├── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
 ├── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包 · GTI）
+├── 08-mac-screen-cam-recorder/   ← AI Teaching Recorder（macOS 原生录屏+摄像头小窗）
 ├── 09-goal-compiler/             ← Goal Compiler（目标编译）
 ├── 10-creatoros-platform/        ← CreatorOS 平台
 ├── 11-lily-skills/               ← Lily-Skills（个人 AI Skill 操作系统）
+├── 12-ai-video-recorder/         ← AI Video Recorder（Web 录屏+多摄合成+剪辑）
 ├── 13-ai-pm-career-os/           ← AI PM 职业 OS
 └── 14-ai-oss-intel/             ← AI OSS Intel（GitHub AI 开源情报平台）
 ```
@@ -49,6 +51,8 @@
 | **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更+GTI 事件聚类+Agent/MCP+简报推送 | ✅ |
 | **11** | 个人 AI Skill 操作系统 | [`11-lily-skills/`](11-lily-skills/) | Skill 注册/检索/Agent/Workflow/权限/分析全闭环 | ✅ |
 | **14** | GitHub AI 开源情报平台 | [`14-ai-oss-intel/`](14-ai-oss-intel/) | 9 大榜单+10-Agent 共识报告+机会生成器+AI 分析师 | ✅ |
+| **08** | macOS 原生录课工具 | [`08-mac-screen-cam-recorder/`](08-mac-screen-cam-recorder/) | ScreenCaptureKit 录屏+摄像头小窗合成+悬浮控制条+MP4 | ✅ |
+| **12** | Web 录屏工作室 | [`12-ai-video-recorder/`](12-ai-video-recorder/) | 录屏+双摄+合成+字幕+BGM+AI 剪辑+多平台导出 | ✅ |
 
 ## 推荐阅读顺序（60 分钟）
 

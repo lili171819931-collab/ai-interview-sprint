@@ -1,0 +1,22 @@
+#!/bin/bash
+# Builds the release .app bundle: dist/AI Teaching Recorder.app
+set -euo pipefail
+cd "$(dirname "$0")/.."
+
+echo "==> Building release binaries…"
+swift build -c release
+
+BIN_DIR="$(swift build -c release --show-bin-path)"
+APP="dist/AI Teaching Recorder.app"
+echo "==> Assembling $APP"
+rm -rf "$APP"
+mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
+cp "$BIN_DIR/AITeachingRecorder" "$APP/Contents/MacOS/AITeachingRecorder"
+cp Resources/Info.plist "$APP/Contents/Info.plist"
+
+# Ad-hoc code signature so TCC (Screen Recording / Camera / Mic) can attribute permissions.
+echo "==> Code signing (ad-hoc)…"
+codesign --force --deep --sign - "$APP" >/dev/null 2>&1
+
+echo "==> Done: $APP"
+ls -la "$APP/Contents/MacOS"

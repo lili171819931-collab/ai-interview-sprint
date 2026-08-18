@@ -1,0 +1,13 @@
+# SwiftPM
+.build/
+.swiftpm/
+
+# Built app bundle
+dist/
+
+# macOS
+.DS_Store
+
+# Scratch
+*.mp4
+!Tests/**/*.mp4
