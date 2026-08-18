@@ -6,13 +6,14 @@ import { GithubIcon } from "@/components/icons";
 import { PROJECTS } from "@/data/projects";
 import { topBy } from "@/lib/store";
 import { computeScores, formatSigned, formatStars, growthRate } from "@/lib/engines";
-import { timeStatusOf, TIME_STATUS_META, scenariosOf } from "@/lib/scenarios";
+import { timeStatusOf, TIME_STATUS_META, scenariosOf, secondaryScenariosOf } from "@/lib/scenarios";
 import { buildMyProjectReport } from "@/lib/reverse";
-import { MasterAnalysis, FeaturePathDiagram, DirectorView } from "@/components/analysis/AnalysisView";
+import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel } from "@/components/analysis/AnalysisView";
+import type { LiveRepo } from "@/lib/live";
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
-interface StarredRepo { fullName: string; name: string; owner: string; stars: number; url: string; createdAt?: string; language?: string; description?: string; topics?: string[] }
+interface StarredRepo { fullName: string; name: string; owner: string; stars: number; url: string; createdAt?: string; language?: string; description?: string; topics?: string[]; forks?: number; openIssues?: number; updatedAt?: string; license?: string }
 
 export default function MyGitHubPage() {
   const [saved, setSaved] = useState<string[]>([]);
@@ -338,9 +339,9 @@ async function fetchStars(username: string): Promise<StarredRepo[]> {
       headers: { Accept: "application/vnd.github+json" },
     });
     if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-    const items = (await res.json()) as { full_name: string; stargazers_count: number; html_url: string; created_at?: string; language?: string | null; description?: string | null; topics?: string[] }[];
+    const items = (await res.json()) as { full_name: string; stargazers_count: number; html_url: string; created_at?: string; language?: string | null; description?: string | null; topics?: string[]; forks_count?: number; open_issues_count?: number; updated_at?: string; license?: { spdx_id?: string } | null }[];
     if (items.length === 0) break;
-    for (const it of items) all.push({ fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0], stars: it.stargazers_count, url: it.html_url, createdAt: (it.created_at ?? "").slice(0, 10), language: it.language ?? undefined, description: it.description ?? undefined, topics: it.topics ?? [] });
+    for (const it of items) all.push({ fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0], stars: it.stargazers_count, url: it.html_url, createdAt: (it.created_at ?? "").slice(0, 10), language: it.language ?? undefined, description: it.description ?? undefined, topics: it.topics ?? [], forks: it.forks_count ?? 0, openIssues: it.open_issues_count ?? 0, updatedAt: (it.updated_at ?? "").slice(0, 10), license: it.license?.spdx_id });
     if (items.length < 100) break;
   }
   return all;
@@ -349,18 +350,41 @@ async function fetchStars(username: string): Promise<StarredRepo[]> {
 function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePool: StarredRepo[] }) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [panel, setPanel] = useState<"analysis" | "diagram" | "director">("analysis");
+  const [mode, setMode] = useState<"primary" | "secondary">("primary");
   const groups = useMemo(() => {
-    const map = new Map<string, { seeds: Project[]; lives: StarredRepo[] }>();
-    const ensure = (cat: string) => {
-      if (!map.has(cat)) map.set(cat, { seeds: [], lives: [] });
-      return map.get(cat)!;
+    const map = new Map<string, { label: string; emoji: string; catId?: string; seeds: Project[]; lives: StarredRepo[] }>();
+    const ensure = (key: string, label: string, emoji: string, catId?: string) => {
+      if (!map.has(key)) map.set(key, { label, emoji, catId, seeds: [], lives: [] });
+      return map.get(key)!;
     };
-    for (const p of seedPool) ensure(p.categories[0] ?? "other").seeds.push(p);
-    for (const r of livePool) ensure(guessCategory(r)).lives.push(r);
+    if (mode === "primary") {
+      for (const p of seedPool) {
+        const id = p.categories[0];
+        const cat = categoryOf(id);
+        ensure(id, cat.name, cat.emoji, id).seeds.push(p);
+      }
+      for (const r of livePool) {
+        const g = guessCategory(r);
+        const cat = g === "other" ? null : categoryOf(g as Project["categories"][number]);
+        ensure(g, cat?.name ?? "其他 / 未分类", cat?.emoji ?? "🗂️", g).lives.push(r);
+      }
+    } else {
+      for (const p of seedPool) {
+        const sec = secondaryScenariosOf(p)[0];
+        const key = `sec:${sec?.code ?? "other"}`;
+        const id = p.categories[0];
+        ensure(key, sec?.name ?? "其他", categoryOf(id).emoji, id).seeds.push(p);
+      }
+      for (const r of livePool) {
+        const g = guessCategory(r);
+        const cat = g === "other" ? null : categoryOf(g as Project["categories"][number]);
+        ensure(`live:${g}`, `实时 · ${cat?.name ?? "未分类"}`, cat?.emoji ?? "📡", g).lives.push(r);
+      }
+    }
     return [...map.entries()]
-      .map(([id, g]) => ({ id, seeds: g.seeds.sort((a, b) => b.stars - a.stars), lives: g.lives.sort((a, b) => b.stars - a.stars) }))
+      .map(([key, g]) => ({ key, ...g, seeds: g.seeds.sort((a, b) => b.stars - a.stars), lives: g.lives.sort((a, b) => b.stars - a.stars) }))
       .sort((a, b) => b.seeds.length + b.lives.length - (a.seeds.length + a.lives.length));
-  }, [seedPool, livePool]);
+  }, [seedPool, livePool, mode]);
 
   const toggle = (key: string, pt: "analysis" | "diagram" | "director") => {
     if (expanded === key && panel === pt) { setExpanded(null); return; }
@@ -369,16 +393,21 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-1.5">
+        <span className="text-[11.5px] text-[#5b6885]">分组维度：</span>
+        <button onClick={() => { setMode("primary"); setExpanded(null); }} className={`chip cursor-pointer ${mode === "primary" ? "chip-accent" : ""}`}>一级分类</button>
+        <button onClick={() => { setMode("secondary"); setExpanded(null); }} className={`chip cursor-pointer ${mode === "secondary" ? "chip-accent" : ""}`}>二级场景</button>
+        <span className="text-[11.5px] text-[#5b6885] ml-auto">全部 {seedPool.length + livePool.length} 个 Star 项目</span>
+      </div>
       {groups.map((g) => {
-        const cat = g.id === "other" ? null : categoryOf(g.id as Project["categories"][number]);
         const total = g.seeds.length + g.lives.length;
         return (
-          <div key={g.id} className="rounded-xl bg-[#0c1322] border border-[#16213a] overflow-hidden">
+          <div key={g.key} className="rounded-xl bg-[#0c1322] border border-[#16213a] overflow-hidden">
             <div className="flex items-center gap-2 px-3.5 py-2.5 bg-[#101a2e] border-b border-[#16213a]">
-              <span className="text-[14px]">{cat?.emoji ?? "🗂️"}</span>
-              <span className="font-bold text-white text-[13.5px]">{cat?.name ?? "其他 / 未分类"}</span>
+              <span className="text-[14px]">{g.emoji}</span>
+              <span className="font-bold text-white text-[13.5px]">{g.label}</span>
               <span className="chip ml-auto">{total} 个</span>
-              {cat && <Link href={`/rankings/category/${g.id}`} className="chip chip-accent">分类 TOP 榜 →</Link>}
+              {g.catId && <Link href={`/rankings/category/${g.catId}`} className="chip chip-accent">分类 TOP 榜 →</Link>}
             </div>
             <div className="divide-y divide-[#101a2e]">
               {g.seeds.map((p) => {
@@ -387,6 +416,7 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                 const ts = timeStatusOf(p);
                 const meta = TIME_STATUS_META[ts];
                 const sc = computeScores(p);
+                const sec = secondaryScenariosOf(p)[0];
                 return (
                   <div key={p.slug}>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2.5 hover:bg-[#0e1626]">
@@ -396,6 +426,7 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                           <span>🕐 发布于 {p.createdAt}</span>
                           <span className="chip !text-[9px]" style={{ color: meta.color, borderColor: meta.color + "55" }}>{meta.label}</span>
                           {p.license && <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 {p.license}</span>}
+                          {mode === "secondary" && sec && <span className="chip !text-[9px]">{sec.code} {sec.name}</span>}
                           <span className="num">⭐{formatStars(p.stars)}</span>
                           <span className="text-emerald-300 num">↗{formatSigned(p.growth30d)}</span>
                           <span className="num">Opp {sc.opportunity}</span>
@@ -420,27 +451,59 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                   </div>
                 );
               })}
-              {g.lives.map((r) => (
-                <div key={r.fullName} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2.5 hover:bg-[#0e1626]">
-                  <div className="min-w-0 flex-1">
-                    <a href={r.url} target="_blank" className="font-semibold text-white text-[13px] hover:text-[#7dd3fc]">{r.name} <ExternalLink size={11} className="inline text-[#4d5a75]" /></a>
-                    <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10.5px] text-[#5b6885]">
-                      <span>🕐 发布于 {r.createdAt ?? "—"}</span>
-                      <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 开源</span>
-                      <span className="num">⭐{formatStars(r.stars)}</span>
-                      {r.language && <span className="chip !text-[9px]">{r.language}</span>}
+              {g.lives.map((r) => {
+                const key = `live:${r.fullName}`;
+                const open = expanded === key;
+                return (
+                  <div key={r.fullName}>
+                    <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2.5 hover:bg-[#0e1626]">
+                      <div className="min-w-0 flex-1">
+                        <a href={r.url} target="_blank" className="font-semibold text-white text-[13px] hover:text-[#7dd3fc]">{r.name} <ExternalLink size={11} className="inline text-[#4d5a75]" /></a>
+                        <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10.5px] text-[#5b6885]">
+                          <span>🕐 发布于 {r.createdAt ?? "—"}</span>
+                          <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 {r.license ?? "开源"}</span>
+                          <span className="num">⭐{formatStars(r.stars)}</span>
+                          {r.language && <span className="chip !text-[9px]">{r.language}</span>}
+                          {mode === "secondary" && <span className="chip !text-[9px]">📡 实时</span>}
+                        </div>
+                        {r.description && <div className="text-[11px] text-[#5b6885] truncate max-w-[520px] mt-0.5">{r.description}</div>}
+                      </div>
+                      <div className="flex items-center gap-1.5">
+                        <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
+                        <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
+                        <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        <a href={r.url} target="_blank" className="chip !text-[10.5px]">GitHub</a>
+                      </div>
                     </div>
-                    {r.description && <div className="text-[11px] text-[#5b6885] truncate max-w-[560px] mt-0.5">{r.description}</div>}
+                    {open && (
+                      <div className="px-4 py-3 bg-[#0a101d] border-t border-[#16213a]">
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer ${panel === "analysis" ? "chip-accent" : ""}`}>分析（源码抓取）</button>
+                          <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
+                          <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        </div>
+                        <LiveSourcePanel repo={toLiveRepo(r)} mode={panel} />
+                      </div>
+                    )}
                   </div>
-                  <a href={r.url} target="_blank" className="chip !text-[10.5px]">GitHub</a>
-                </div>
-              ))}
+                );
+              })}
             </div>
           </div>
         );
       })}
     </div>
   );
+}
+
+/** StarredRepo → LiveRepo（供 LiveSourcePanel 源码抓取分析） */
+function toLiveRepo(r: StarredRepo): LiveRepo {
+  return {
+    fullName: r.fullName, name: r.name, owner: r.owner, stars: r.stars, forks: r.forks ?? 0,
+    openIssues: r.openIssues ?? 0, language: r.language ?? null, description: r.description ?? null,
+    topics: r.topics ?? [], createdAt: r.createdAt ?? "", updatedAt: r.updatedAt ?? r.createdAt ?? "",
+    homepage: null, license: r.license ?? null,
+  };
 }
 
 /** 实时未收录项目的分类猜测（best-effort） */
