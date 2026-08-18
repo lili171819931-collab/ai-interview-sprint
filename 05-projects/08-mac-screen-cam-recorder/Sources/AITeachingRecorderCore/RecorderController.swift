@@ -45,6 +45,7 @@ public final class RecorderController: ObservableObject {
     private var latestCameraBuffer: CMSampleBuffer?
 
     private var timer: Timer?
+    private var lastMicLevelAt: TimeInterval = 0
     private var stateMachine = RecorderStateMachine()
     private var lastFramePTS: CMTime?
     private var pausedElapsed: TimeInterval = 0
@@ -62,6 +63,10 @@ public final class RecorderController: ObservableObject {
         micEngine.onLevel = { [weak self] level in
             guard let self else { return }
             let normalized = max(level, -60)
+            let now = Date().timeIntervalSince1970
+            // Throttle to ~10 Hz so the UI meter updates don't re-layout the whole home view.
+            if now - self.lastMicLevelAt < 0.1 { return }
+            self.lastMicLevelAt = now
             DispatchQueue.main.async { self.micLevel = normalized }
         }
         micEngine.onSample = { [weak self] buffer in

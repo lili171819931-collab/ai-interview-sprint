@@ -322,7 +322,7 @@ struct HomeView: View {
                                 .pickerStyle(.menu)
                                 .labelsHidden()
                             }
-                            MicLevelMeter(level: controller.micLevel)
+                            MicLevelMeter(controller: controller)
                         }
                         ToggleRow(icon: "speaker.wave.2.fill", title: "System Audio",
                                   subtitle: "Record computer sound", isOn: $controller.systemAudioEnabled)
@@ -409,12 +409,10 @@ struct HomeView: View {
                     .controlSize(.small)
                 }
 
-                TextEditor(text: teleprompterScriptBinding)
-                    .font(.system(size: 13, design: .monospaced))
+                MultilineTextView(text: teleprompterScriptBinding)
                     .frame(minHeight: 120)
-                    .padding(6)
-                    .background(RoundedRectangle(cornerRadius: 8).fill(Color(nsColor: .textBackgroundColor)))
-                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.1)))
+                    .clipShape(RoundedRectangle(cornerRadius: 8, style: .continuous))
+                    .overlay(RoundedRectangle(cornerRadius: 8, style: .continuous).stroke(Color.white.opacity(0.12)))
 
                 HStack(spacing: 12) {
                     Text("Speed").font(.caption).foregroundColor(.secondary)
@@ -665,10 +663,10 @@ struct HomeView: View {
 // MARK: - Mic level meter
 
 struct MicLevelMeter: View {
-    let level: Float
+    @ObservedObject var controller: RecorderController
 
     private var fraction: CGFloat {
-        let clamped = min(max(level + 60, 0) / 60.0, 1.0)
+        let clamped = min(max(controller.micLevel + 60, 0) / 60.0, 1.0)
         return CGFloat(clamped)
     }
 

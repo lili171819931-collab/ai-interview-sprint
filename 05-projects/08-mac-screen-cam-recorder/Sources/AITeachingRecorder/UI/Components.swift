@@ -34,6 +34,64 @@ struct CameraPreviewView: NSViewRepresentable {
     }
 }
 
+// MARK: - Multiline text editor (NSTextView wrapper)
+//
+// TextEditor inside a ScrollView triggers an infinite layout loop on macOS;
+// use a lightweight NSTextView-based editor instead.
+
+struct MultilineTextView: NSViewRepresentable {
+    @Binding var text: String
+    var font: NSFont = NSFont.monospacedSystemFont(ofSize: 13, weight: .regular)
+
+    func makeNSView(context: Context) -> NSScrollView {
+        let scroll = NSScrollView()
+        scroll.hasVerticalScroller = true
+        scroll.autohidesScrollers = true
+        scroll.borderType = .noBorder
+        scroll.drawsBackground = true
+        scroll.backgroundColor = NSColor.textBackgroundColor
+
+        let tv = NSTextView()
+        tv.isRichText = false
+        tv.allowsUndo = true
+        tv.font = font
+        tv.isAutomaticQuoteSubstitutionEnabled = false
+        tv.isAutomaticDashSubstitutionEnabled = false
+        tv.isAutomaticSpellingCorrectionEnabled = false
+        tv.delegate = context.coordinator
+        tv.minSize = NSSize(width: 0, height: 0)
+        tv.maxSize = NSSize(width: CGFloat.greatestFiniteMagnitude, height: CGFloat.greatestFiniteMagnitude)
+        tv.isVerticallyResizable = true
+        tv.isHorizontallyResizable = false
+        tv.autoresizingMask = [.width]
+        tv.textContainer?.containerSize = NSSize(width: scroll.contentSize.width,
+                                                 height: .greatestFiniteMagnitude)
+        tv.textContainer?.widthTracksTextView = true
+        scroll.documentView = tv
+        return scroll
+    }
+
+    func updateNSView(_ nsView: NSScrollView, context: Context) {
+        guard let tv = nsView.documentView as? NSTextView else { return }
+        if tv.string != text {
+            tv.string = text
+        }
+        tv.font = font
+    }
+
+    func makeCoordinator() -> Coordinator { Coordinator(self) }
+
+    final class Coordinator: NSObject, NSTextViewDelegate {
+        var parent: MultilineTextView
+        init(_ parent: MultilineTextView) { self.parent = parent }
+        func textDidChange(_ notification: Notification) {
+            if let tv = notification.object as? NSTextView {
+                parent.text = tv.string
+            }
+        }
+    }
+}
+
 // MARK: - Glass card
 
 struct GlassCard<Content: View>: View {
