@@ -208,3 +208,16 @@ assert(isOpenSourceLicense("MIT") && isOpenSourceLicense("Apache-2.0") && isOpen
 assert(isOpenSourceLicense("mit") && isOpenSourceLicense("apache-2.0"), "license: lowercase ok");
 assert(!isOpenSourceLicense("Proprietary") && !isOpenSourceLicense("Meta Community") && !isOpenSourceLicense("Fair Code") && !isOpenSourceLicense("Stability AI Community"), "license: closed excluded");
 assert(!isOpenSourceLicense(undefined) && !isOpenSourceLicense(""), "license: unknown excluded");
+
+/* ── 完整链路 tests ───────────────────────────────────────────────────── */
+import { buildCompleteChain, buildTechRouteMainline } from "../src/lib/master";
+import { buildSourceCompleteChain } from "../src/lib/sourceMaster";
+
+const chain = buildCompleteChain(sample);
+assert(chain.length === 14, "chain: 14 stages");
+assert(chain[0].label === "用户问题" && chain[13].label === "可复制性", "chain: first/last");
+assert(chain.every((c) => c.content.length > 0), "chain: all stages have content");
+const mainline = buildTechRouteMainline(sample);
+assert(mainline.length >= 20 && mainline[0].node === "用户" && mainline[mainline.length - 1].node === "Moat", "chain: mainline");
+const srcChain = buildSourceCompleteChain(fakeRepo, srcIntel);
+assert(srcChain.length === 14 && srcChain[0].label === "用户问题", "chain: source chain 14");

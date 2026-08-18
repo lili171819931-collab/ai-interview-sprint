@@ -128,3 +128,25 @@ export function sourceTaglineFromReadme(intel: SourceIntel): string {
 }
 
 export { growthRate };
+
+/* ── 完整链路（源码驱动）：用户问题 → … → 可复制性 ────────────── */
+export function buildSourceCompleteChain(repo: LiveRepo, intel: SourceIntel): { stage: number; label: string; key: string; content: string }[] {
+  const modules = intel.moduleMap.map((m) => `${m.module}(${m.evidence})`).join(" / ") || "（目录树未获取）";
+  const stack = intel.techStack.join(" / ") || "（待源码确认）";
+  return [
+    { stage: 1, label: "用户问题", key: "question", content: `用户问：「${intel.tagline}」怎么办？——${intel.description}[INFERENCE]` },
+    { stage: 2, label: "需求", key: "requirement", content: `README 需求信号：${intel.features.slice(0, 3).join("、") || "（待补充）"}[INFERENCE]` },
+    { stage: 3, label: "产品方案", key: "solution", content: `${repo.name}＝「${intel.tagline}」（README 定位 [CONFIRMED]）` },
+    { stage: 4, label: "功能", key: "feature", content: `Feature Map：${intel.features.join(" · ") || "（README 未列出）"}` },
+    { stage: 5, label: "UX", key: "ux", content: "输入 → 结果 → 审核（[HYPOTHESIS]）" },
+    { stage: 6, label: "Workflow", key: "workflow", content: ["User Input", "Intent", "Processing", ...(intel.aiComponents.some((a) => /Agent/.test(a)) ? ["Agent", "Tool"] : []), ...(intel.aiComponents.some((a) => /RAG|向量/.test(a)) ? ["Retrieval"] : []), "LLM", "Output", "Feedback"].join(" → ") },
+    { stage: 7, label: "AI能力", key: "ai", content: intel.aiComponents.join(" / ") || "（未检出，[HYPOTHESIS]）" },
+    { stage: 8, label: "数据流", key: "data", content: `Input → Storage → Retrieval → AI → Output；数据层：${modules}` },
+    { stage: 9, label: "技术架构", key: "architecture", content: `选型：${stack}；模块：${modules}` },
+    { stage: 10, label: "源码模块", key: "code", content: modules },
+    { stage: 11, label: "部署", key: "deploy", content: `${intel.techStack.includes("Docker") ? "Docker/CI" : "Cloud/自托管"}[INFERENCE]` },
+    { stage: 12, label: "商业模式", key: "business", content: `开源获客（License=${repo.license ?? "—"}）→ 托管/API/企业版[INFERENCE]` },
+    { stage: 13, label: "增长", key: "growth", content: `Stars ${formatStars(repo.stars)} · Forks ${formatStars(repo.forks)} · 更新 ${repo.updatedAt}；增长引擎 [INFERENCE]` },
+    { stage: 14, label: "可复制性", key: "replicable", content: `基于检出栈 ${stack} 可 7-30 天复制 MVP；风险：模型成本/竞争[INFERENCE]` },
+  ];
+}

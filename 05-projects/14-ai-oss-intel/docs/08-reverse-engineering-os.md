@@ -63,3 +63,10 @@
 - **产品框图**：更新为「功能实现路径框图」——Step01 User Input → Frontend → API → Backend → Intent → Prompt → LLM → Tool → Data → Reasoning → Structured Output → Render → Feedback（每步带 Evidence 标签）
 - **产品总监视角**（新增）：边界考虑（In/Out Scope + 约束 + 边界结论）、痛点分析（深层痛点/路径摩擦/未被满足需求）、真实案例预测（个人/团队/副业三类案例：用户·场景·Before/After·预期·指标）
 - 已删除「逆向拆解」按钮（内容并入「分析」）
+
+## 9. 完整链路（分析功能核心 · v4）
+每个项目「分析」顶部新增 **🔗 完整链路**：一条贯通全产品的 14 环节主线
+`用户问题 → 需求 → 产品方案 → 功能 → UX → Workflow → AI能力 → 数据流 → 技术架构 → 源码模块 → 部署 → 商业模式 → 增长 → 可复制性`
+- 每环节给出该环节的内容（问题/JTBD、需求分层、一句话模型、Feature Map、UX、Workflow、AI 组件、数据流、架构与选型、源码模块、部署与成本、商业模式、增长引擎、MVP/护城河/复制点）
+- 可展开「技术路线主线」：用户 → 为什么需要 → 痛点 → 需求 → 方案 → 功能 → UX → 操作流程 → Workflow → LLM/RAG/Agent → Tools → MCP → Data → API → Backend → Database → Frontend → Source Code → Deployment → Business → Growth → Moat（24 节点深层链路）
+- 实时（源码驱动）项目同样生成 14 环节完整链路；快照项目详情页「如何搭建」板块顶部也展示完整链路

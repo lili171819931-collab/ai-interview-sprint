@@ -12,6 +12,8 @@ import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { liveStatus, type LiveRepo } from "@/lib/live";
 import { fetchRepoSource, getCachedSource, type SourceIntel } from "@/lib/source";
 import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceFactSheet } from "@/lib/sourceMaster";
+import { buildCompleteChain, buildTechRouteMainline } from "@/lib/master";
+import { buildSourceCompleteChain } from "@/lib/sourceMaster";
 import type { Project } from "@/lib/types";
 
 /* ── 分析（Master Reverse Engineering，含以上所有需求） ─────────── */
@@ -33,6 +35,9 @@ export function MasterAnalysis({ project }: { project: Project }) {
 
   return (
     <div className="space-y-4">
+      {/* 完整链路（平台灵魂） */}
+      <CompleteChain project={project} />
+
       {/* 三结论 */}
       <div className="grid gap-2 md:grid-cols-3">
         {[["WHY IT WORKS", three.why, "#34d399"], ["HOW IT WORKS", three.how, "#7dd3fc"], ["WHERE IT GOES", three.where, "#fbbf24"]].map(([k, v, c]) => (
@@ -336,6 +341,8 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
   return (
     <div className="space-y-4">
       {degraded && <div className="rounded-xl bg-[#101a2e] border border-amber-400/30 p-2.5 text-[11.5px] text-[#fbbf24]">⚠️ {degraded}</div>}
+      {/* 完整链路（源码驱动） */}
+      <SourceCompleteChain repo={repo} intel={intel} />
       {/* 产品全景图（源码驱动） */}
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
         <div className="flex items-center gap-2 mb-3">
@@ -488,4 +495,75 @@ function requireReverse(p: Project) {
   // local re-import to avoid circular import concerns in client bundle
   const { buildReverseEngineering } = require("@/lib/reverse") as typeof import("@/lib/reverse");
   return buildReverseEngineering(p);
+}
+
+
+/* ── 完整链路组件：用户问题 → 需求 → 方案 → 功能 → UX → Workflow → AI → 数据流 → 技术架构 → 源码模块 → 部署 → 商业 → 增长 → 可复制性 ── */
+export function CompleteChain({ project }: { project: Project }) {
+  const chain = buildCompleteChain(project);
+  const mainline = buildTechRouteMainline(project);
+  return (
+    <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-[13px] font-bold text-white">🔗 完整链路 · 用户问题 → 可复制性</span>
+        <span className="chip chip-accent ml-auto">{chain.length} 个环节</span>
+      </div>
+      <div className="space-y-1">
+        {chain.map((st) => (
+          <div key={st.key} className="flex items-start gap-2">
+            <div className="flex flex-col items-center shrink-0">
+              <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#2f6bff] to-[#7c5cff] flex items-center justify-center text-[11px] font-bold num text-white">{st.stage}</span>
+              {st.stage < chain.length && <span className="w-px flex-1 min-h-[14px] bg-[#2c4370]" />}
+            </div>
+            <div className="flex-1 rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5 mb-1">
+              <div className="text-[11px] font-bold text-[#7dd3fc]">{st.label}</div>
+              <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{st.content}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+      <details className="mt-3" open={false}>
+        <summary className="cursor-pointer text-[12px] font-bold text-[#7dd3fc] flex items-center gap-1.5">
+          <GitCommitHorizontal size={13} /> 展开技术路线主线（{mainline.length} 节点深层链路）
+        </summary>
+        <div className="mt-3 flex flex-wrap items-center gap-1">
+          {mainline.map((n, i) => (
+            <div key={n.node} className="flex items-center gap-1">
+              <div className="rounded-lg bg-[#0e1626] border border-[#2c4370] px-2 py-1.5 text-center">
+                <div className="text-[9.5px] font-bold text-white">{n.node}</div>
+                <div className="text-[9px] text-[#8b98b3] max-w-[120px] truncate">{n.detail}</div>
+              </div>
+              {i < mainline.length - 1 && <GitCommitHorizontal size={10} className="text-[#4f8cff]" />}
+            </div>
+          ))}
+        </div>
+      </details>
+    </div>
+  );
+}
+
+export function SourceCompleteChain({ repo, intel }: { repo: LiveRepo; intel: SourceIntel }) {
+  const chain = buildSourceCompleteChain(repo, intel);
+  return (
+    <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-4">
+      <div className="flex items-center gap-2 mb-3">
+        <span className="text-[13px] font-bold text-white">🔗 完整链路 · 用户问题 → 可复制性（源码驱动）</span>
+        <span className="chip chip-accent ml-auto">{chain.length} 个环节</span>
+      </div>
+      <div className="space-y-1">
+        {chain.map((st) => (
+          <div key={st.key} className="flex items-start gap-2">
+            <div className="flex flex-col items-center shrink-0">
+              <span className="w-6 h-6 rounded-lg bg-gradient-to-br from-[#2f6bff] to-[#7c5cff] flex items-center justify-center text-[11px] font-bold num text-white">{st.stage}</span>
+              {st.stage < chain.length && <span className="w-px flex-1 min-h-[14px] bg-[#2c4370]" />}
+            </div>
+            <div className="flex-1 rounded-lg bg-[#101a2e] border border-[#16213a] p-2.5 mb-1">
+              <div className="text-[11px] font-bold text-[#7dd3fc]">{st.label}</div>
+              <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{st.content}</div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
 }

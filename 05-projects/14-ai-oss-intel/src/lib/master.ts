@@ -7,7 +7,7 @@
  */
 import { computeScores, formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { buildReverseEngineering } from "@/lib/reverse";
-import { buildProductDna, buildHiddenNeeds, buildJTBD, buildAiNativeTest, buildWhyAi, buildFiveLayers } from "@/lib/learning";
+import { buildProductDna, buildHiddenNeeds, buildJTBD, buildAiNativeTest, buildWhyAi, buildFiveLayers, targetUsersOf, problemOf, sceneOf, painPointOf, aiCapabilityOf, deepNeedOf, latentNeedOf, dataOf, growthOf, moatOf, coreFeatureOf } from "@/lib/learning";
 import { scenariosOf, timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
 import type { Project } from "@/lib/types";
@@ -280,5 +280,71 @@ export function buildDirectorView(p: Project) {
 }
 
 function P(p: Project) { return p.profile; }
-function targetUsersOf(p: Project) { return rTarget(p); }
-import { targetUsersOf as rTarget, problemOf, sceneOf, coreFeatureOf, aiCapabilityOf, deepNeedOf, latentNeedOf, dataOf, growthOf, moatOf, painPointOf } from "@/lib/learning";
+
+
+/* ── 完整链路：用户问题 → … → 可复制性（平台灵魂） ─────────────── */
+export interface ChainStage {
+  stage: number;
+  label: string;
+  key: string;
+  content: string;
+  evidence?: string;
+}
+
+export function buildCompleteChain(p: Project): ChainStage[] {
+  const r = buildReverseEngineering(p);
+  const needs = buildHiddenNeeds(p);
+  const jtbd = buildJTBD(p);
+  const clone = buildCloningPlan(p);
+  const killer = buildKillerFeature(p);
+  const stack = r.techStackExplained.map((t) => t.tech).join(" / ");
+  const deploy = [r.sourceArchitecture.tree[r.sourceArchitecture.tree.length - 1] ?? "Cloud", ...(stack.includes("Docker") ? ["Docker"] : []), "自托管/云"].join(" · ");
+  return [
+    { stage: 1, label: "用户问题", key: "question", content: `用户问：「${r.productToTech.productRequirement}」怎么办？${jtbd.when}` },
+    { stage: 2, label: "需求", key: "requirement", content: `表层：${needs.surface}；核心：${needs.core}；深层：${needs.deep}；潜在：${needs.latent}` },
+    { stage: 3, label: "产品方案", key: "solution", content: `${p.name}＝「${p.tagline}」；一句话模型：${r.productToTech.productRequirement}` },
+    { stage: 4, label: "功能", key: "feature", content: `核心功能：${r.productToTech.feature}；Feature Map：${r.featureToCode.map((f) => f.feature).join(" · ")}` },
+    { stage: 5, label: "UX", key: "ux", content: r.productToTech.ux },
+    { stage: 6, label: "Workflow", key: "workflow", content: r.productDnaFlow.join(" → ") },
+    { stage: 7, label: "AI能力", key: "ai", content: `${r.productToTech.ai}；AI 组件：${r.aiArchitecture.slice(0, 8).map((a) => a.component).join(" · ")}` },
+    { stage: 8, label: "数据流", key: "data", content: `${r.productToTech.infrastructure}；${dataOf(p)}` },
+    { stage: 9, label: "技术架构", key: "architecture", content: `${r.sourceArchitecture.tree.slice(0, 6).join(" / ")}；选型：${stack}` },
+    { stage: 10, label: "源码模块", key: "code", content: r.sourceArchitecture.coreModules.map((m) => `${m.module}(${m.evidence})`).join(" / ") },
+    { stage: 11, label: "部署", key: "deploy", content: `${deploy}；成本：${clone.cost}` },
+    { stage: 12, label: "商业模式", key: "business", content: `${r.businessModelDetail.streams.join(" / ")}；${r.businessModelDetail.moneyPoint}` },
+    { stage: 13, label: "增长", key: "growth", content: growthOf(p) },
+    { stage: 14, label: "可复制性", key: "replicable", content: `MVP=${clone.mvp}；周期=${clone.timeline}；团队=${clone.team}；风险=${clone.risk}；护城河=${moatOf(p)}；复制点：${killer.copyable}` },
+  ];
+}
+
+/** 技术路线主线：用户 → … → Moat（22 节点深层链路） */
+export function buildTechRouteMainline(p: Project): { node: string; detail: string }[] {
+  const r = buildReverseEngineering(p);
+  const needs = buildHiddenNeeds(p);
+  return [
+    { node: "用户", detail: targetUsersOf(p) },
+    { node: "为什么需要", detail: problemOf(p) },
+    { node: "用户痛点", detail: painPointOf(p) },
+    { node: "用户需求", detail: needs.core },
+    { node: "产品解决方案", detail: `${p.name}＝${p.tagline}` },
+    { node: "功能设计", detail: r.productToTech.feature },
+    { node: "UX / UI", detail: r.productToTech.ux },
+    { node: "用户操作流程", detail: r.userJourney.slice(0, 6).map((u) => u.step).join(" → ") },
+    { node: "产品 Workflow", detail: r.productDnaFlow.join(" → ") },
+    { node: "LLM", detail: "模型生成/规划/推理" },
+    { node: "RAG", detail: p.categories.includes("rag") || p.categories.includes("pkm") ? "知识检索增强" : "按需接入" },
+    { node: "Agent", detail: p.categories.includes("agent") ? "任务编排/工具调用" : "单步增强" },
+    { node: "Tools", detail: "工具/外部服务" },
+    { node: "MCP", detail: p.categories.includes("mcp") ? "标准工具协议" : "可选" },
+    { node: "Data", detail: dataOf(p) },
+    { node: "API", detail: "服务端接口" },
+    { node: "Backend", detail: "核心引擎/服务" },
+    { node: "Database", detail: "存储/向量库/缓存" },
+    { node: "Frontend", detail: `${p.language} 前端/入口` },
+    { node: "Source Code", detail: p.fullName },
+    { node: "Deployment", detail: "Cloud / 自托管" },
+    { node: "Business", detail: r.businessModelDetail.streams.slice(0, 3).join(" / ") },
+    { node: "Growth", detail: growthOf(p) },
+    { node: "Moat", detail: moatOf(p) },
+  ];
+}

@@ -17,7 +17,7 @@ import {
   buildPmDeepAnalysis, buildWhyAi, buildAiNativeTest, buildBuildPlan,
 } from "@/lib/learning";
 import { buildMasterReport } from "@/lib/master";
-import { FeaturePathDiagram, DirectorView } from "@/components/analysis/AnalysisView";
+import { FeaturePathDiagram, DirectorView, CompleteChain } from "@/components/analysis/AnalysisView";
 import { scenariosOf, timeStatusOf, TIME_STATUS_META, secondaryScenariosOf } from "@/lib/scenarios";
 import { ReverseSection } from "@/components/ReverseSection";
 import { buildReverseEngineering } from "@/lib/reverse";
@@ -584,6 +584,7 @@ function BuildSection({ project }: { project: Project }) {
       <div className="panel p-5">
         <div className="text-[13px] font-semibold text-white mb-1">如何搭建这个产品 · Build Plan</div>
         <div className="text-[12.5px] text-[#8b98b3] mb-4">{plan.summary}</div>
+        <div className="mb-5"><CompleteChain project={project} /></div>
         <div className="space-y-3">
           <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
             <div className="text-[12px] font-bold text-[#7dd3fc] mb-2">五层架构</div>
