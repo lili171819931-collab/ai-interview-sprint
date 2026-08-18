@@ -50,6 +50,12 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             content.onGeometryChange = { [weak self] frame in
                 self?.updateOverlayFromCameraPanel(frame: frame)
             }
+            content.onClose = { [weak self] in
+                self?.hideCameraPanel()
+                var overlay = SettingsStore.shared.cameraOverlay
+                overlay.enabled = false
+                SettingsStore.shared.cameraOverlay = overlay
+            }
             let panel = makeFloatingPanel(title: Self.cameraPanelTitle,
                                           content: content,
                                           size: CGSize(width: 240, height: 180),
@@ -58,6 +64,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             cameraPanel = panel
             updateOverlayFromCameraPanel(frame: panel.frame)
         }
+        // Re-enable the overlay in the video whenever the panel is shown again.
+        var overlay = SettingsStore.shared.cameraOverlay
+        overlay.enabled = true
+        SettingsStore.shared.cameraOverlay = overlay
         cameraPanel?.orderFrontRegardless()
     }
 

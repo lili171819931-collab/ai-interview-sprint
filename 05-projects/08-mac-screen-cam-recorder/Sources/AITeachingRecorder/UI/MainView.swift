@@ -25,6 +25,7 @@ struct MainView: View {
             }
         }
         .frame(minWidth: 960, minHeight: 680)
+        .navigationTitle("AI Teaching Recorder")
         .onChange(of: controller.phase) { _, newPhase in
             if !newPhase.isActive, let delegate = NSApp.delegate as? AppDelegate {
                 delegate.hideControlBar()

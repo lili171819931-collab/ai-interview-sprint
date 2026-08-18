@@ -7,6 +7,7 @@ import AITeachingRecorderCore
 struct FloatingControlBarView: View {
     @ObservedObject var controller = RecorderController.shared
     @State private var compact = false
+    @State private var forceCompact = false
     @State private var mouseTimer: Timer?
 
     var body: some View {
@@ -23,7 +24,14 @@ struct FloatingControlBarView: View {
             }
             .padding(.leading, 4)
 
-            if !compact {
+            if compact {
+                ControlBarButton(systemName: "plus",
+                                 active: false,
+                                 help: "Expand") {
+                    forceCompact = false
+                    compact = false
+                }
+            } else {
                 Divider().frame(height: 22).overlay(Color.white.opacity(0.25))
 
                 ControlBarButton(systemName: controller.micRunning ? "mic.fill" : "mic.slash.fill",
@@ -50,6 +58,22 @@ struct FloatingControlBarView: View {
                                  help: "Stop & Save (⌘⇧S)") {
                     controller.stop()
                 }
+
+                Divider().frame(height: 22).overlay(Color.white.opacity(0.25))
+
+                ControlBarButton(systemName: "minus",
+                                 active: false,
+                                 help: "Minimize") {
+                    forceCompact = true
+                    compact = true
+                }
+
+                ControlBarButton(systemName: "xmark",
+                                 active: false,
+                                 destructive: true,
+                                 help: "Close") {
+                    hideControlBar()
+                }
             }
         }
         .padding(.horizontal, 14)
@@ -63,10 +87,17 @@ struct FloatingControlBarView: View {
                 )
                 .shadow(color: .black.opacity(0.25), radius: 12, y: 4)
         )
-        .frame(width: compact ? 150 : 340)
+        .frame(width: compact ? 176 : 400)
         .animation(.easeInOut(duration: 0.2), value: compact)
         .onAppear { startMouseTimer() }
         .onDisappear { mouseTimer?.invalidate() }
+    }
+
+    private func hideControlBar() {
+        forceCompact = false
+        if let window = NSApp.windows.first(where: { $0.title == AppDelegate.controlBarTitle }) {
+            window.orderOut(nil)
+        }
     }
 
     private func startMouseTimer() {
@@ -81,7 +112,7 @@ struct FloatingControlBarView: View {
             let padded = windowFrame.insetBy(dx: -30, dy: -30)
             let near = padded.contains(mouse)
             withAnimation(.easeInOut(duration: 0.2)) {
-                compact = !near
+                compact = forceCompact ? true : !near
             }
         }
         RunLoop.main.add(mouseTimer!, forMode: .common)

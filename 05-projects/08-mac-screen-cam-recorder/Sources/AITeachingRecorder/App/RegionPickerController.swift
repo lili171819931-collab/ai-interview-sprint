@@ -50,6 +50,39 @@ final class RegionPickerContentView: NSView {
     private var dragStart: CGPoint?
     private var currentRect: CGRect?
 
+    override init(frame frameRect: NSRect) {
+        super.init(frame: frameRect)
+        setupCloseButton()
+    }
+
+    required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    private func setupCloseButton() {
+        let close = NSButton(title: "", target: self, action: #selector(cancelSelection))
+        close.bezelStyle = .inline
+        close.isBordered = false
+        close.toolTip = "Cancel (Esc)"
+        close.wantsLayer = true
+        close.layer?.backgroundColor = NSColor.black.withAlphaComponent(0.5).cgColor
+        close.layer?.cornerRadius = 14
+        close.image = NSImage(systemSymbolName: "xmark", accessibilityDescription: "Cancel")
+        close.imagePosition = .imageOnly
+        close.contentTintColor = .white
+
+        close.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(close)
+        NSLayoutConstraint.activate([
+            close.topAnchor.constraint(equalTo: topAnchor, constant: 16),
+            close.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -16),
+            close.widthAnchor.constraint(equalToConstant: 28),
+            close.heightAnchor.constraint(equalToConstant: 28)
+        ])
+    }
+
+    @objc private func cancelSelection() {
+        onSelection?(CGRect(x: -1, y: -1, width: 0, height: 0))
+    }
+
     override func mouseDown(with event: NSEvent) {
         let p = convert(event.locationInWindow, from: nil)
         dragStart = p
@@ -99,7 +132,7 @@ final class RegionPickerContentView: NSView {
             ]
             (sizeText as NSString).draw(at: NSPoint(x: rect.maxX + 8, y: rect.maxY + 8), withAttributes: attrs)
         } else {
-            let hint = "Drag to select a recording region"
+            let hint = "Drag to select a recording region   ·   Esc to cancel"
             let attrs: [NSAttributedString.Key: Any] = [
                 .font: NSFont.systemFont(ofSize: 16, weight: .medium),
                 .foregroundColor: NSColor.white

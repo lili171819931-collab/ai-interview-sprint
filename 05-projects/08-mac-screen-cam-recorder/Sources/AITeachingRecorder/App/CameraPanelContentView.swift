@@ -5,6 +5,7 @@ import AVFoundation
 final class CameraPanelContentView: NSView {
     let previewLayer: AVCaptureVideoPreviewLayer
     var onGeometryChange: ((NSRect) -> Void)?
+    var onClose: (() -> Void)?
 
     private var isResizing = false
     private var initialFrame: NSRect = .zero
@@ -20,9 +21,56 @@ final class CameraPanelContentView: NSView {
         previewLayer.frame = bounds
         previewLayer.videoGravity = .resizeAspectFill
         layer?.addSublayer(previewLayer)
+        setupWindowControls()
     }
 
     required init?(coder: NSCoder) { fatalError("init(coder:) has not been implemented") }
+
+    private func setupWindowControls() {
+        let minimize = makeControlButton(symbol: "minus", help: "Minimize", action: #selector(minimizeWindow))
+        let close = makeControlButton(symbol: "xmark", help: "Close", action: #selector(closeWindow))
+        close.wantsLayer = true
+        close.layer?.backgroundColor = NSColor.red.withAlphaComponent(0.85).cgColor
+
+        minimize.translatesAutoresizingMaskIntoConstraints = false
+        close.translatesAutoresizingMaskIntoConstraints = false
+        addSubview(minimize)
+        addSubview(close)
+
+        NSLayoutConstraint.activate([
+            minimize.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            minimize.trailingAnchor.constraint(equalTo: trailingAnchor, constant: -6),
+            minimize.widthAnchor.constraint(equalToConstant: 20),
+            minimize.heightAnchor.constraint(equalToConstant: 20),
+
+            close.topAnchor.constraint(equalTo: topAnchor, constant: 6),
+            close.trailingAnchor.constraint(equalTo: minimize.leadingAnchor, constant: -6),
+            close.widthAnchor.constraint(equalToConstant: 20),
+            close.heightAnchor.constraint(equalToConstant: 20)
+        ])
+    }
+
+    private func makeControlButton(symbol: String, help: String, action: Selector) -> NSButton {
+        let button = NSButton(title: "", target: self, action: action)
+        button.bezelStyle = .inline
+        button.isBordered = false
+        button.toolTip = help
+        button.wantsLayer = true
+        button.layer?.backgroundColor = NSColor.black.withAlphaComponent(0.45).cgColor
+        button.layer?.cornerRadius = 10
+        button.image = NSImage(systemSymbolName: symbol, accessibilityDescription: help)
+        button.imagePosition = .imageOnly
+        button.contentTintColor = .white
+        return button
+    }
+
+    @objc private func minimizeWindow() {
+        window?.miniaturize(nil)
+    }
+
+    @objc private func closeWindow() {
+        onClose?()
+    }
 
     override func layout() {
         super.layout()

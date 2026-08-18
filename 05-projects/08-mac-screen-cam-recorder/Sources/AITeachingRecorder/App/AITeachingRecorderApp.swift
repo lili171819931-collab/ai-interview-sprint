@@ -12,8 +12,8 @@ struct AITeachingRecorderApp: App {
             MainView(selection: $selection)
                 .environmentObject(controller)
                 .frame(minWidth: 960, minHeight: 680)
+                .navigationTitle("AI Teaching Recorder")
         }
-        .windowStyle(.hiddenTitleBar)
         .commands {
             CommandGroup(replacing: .newItem) {}
             CommandMenu("Record") {
@@ -33,6 +33,25 @@ struct AITeachingRecorderApp: App {
                     controller.toggleMicrophone()
                 }
                 .keyboardShortcut("m", modifiers: [.command, .shift])
+            }
+            CommandMenu("Window") {
+                Button("Show Control Bar") {
+                    (NSApp.delegate as? AppDelegate)?.showControlBar()
+                }
+                .keyboardShortcut("0", modifiers: [.command, .option])
+                Button("Show Camera Window") {
+                    (NSApp.delegate as? AppDelegate)?.showCameraPanel()
+                }
+                .keyboardShortcut("1", modifiers: [.command, .option])
+                Divider()
+                Button("Minimize") {
+                    NSApp.keyWindow?.miniaturize(nil)
+                }
+                .keyboardShortcut("m", modifiers: [.command])
+                Button("Close Window") {
+                    NSApp.keyWindow?.performClose(nil)
+                }
+                .keyboardShortcut("w", modifiers: [.command])
             }
         }
     }
