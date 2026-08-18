@@ -80,6 +80,14 @@ public final class PermissionsManager {
         }
     }
 
+    // MARK: Accessibility (required by the keyboard OSD event tap)
+
+    public func openAccessibilitySettings() {
+        if let url = URL(string: "x-apple.systempreferences:com.apple.preference.security?Privacy_Accessibility") {
+            NSWorkspace.shared.open(url)
+        }
+    }
+
     // MARK: Overall readiness
 
     public struct Readiness: Equatable {

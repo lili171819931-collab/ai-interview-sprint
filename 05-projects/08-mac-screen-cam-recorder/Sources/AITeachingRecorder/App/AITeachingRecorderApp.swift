@@ -81,7 +81,7 @@ struct AITeachingRecorderApp: App {
 }
 
 enum MainSection: String, CaseIterable, Identifiable {
-    case home, recordings, settings, selftest
+    case home, recordings, timeline, settings, selftest
     var id: String { rawValue }
     var title: String {
         switch self {
@@ -89,6 +89,7 @@ enum MainSection: String, CaseIterable, Identifiable {
         case .recordings: return "Recordings"
         case .settings: return "Settings"
         case .selftest: return "Self Test"
+        case .timeline: return "Timeline"
         }
     }
     var icon: String {
@@ -97,6 +98,7 @@ enum MainSection: String, CaseIterable, Identifiable {
         case .recordings: return "film.stack.fill"
         case .settings: return "gearshape.fill"
         case .selftest: return "checkmark.seal.fill"
+        case .timeline: return "scissors"
         }
     }
 }

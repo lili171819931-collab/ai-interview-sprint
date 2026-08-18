@@ -10,6 +10,8 @@ struct FloatingControlBarView: View {
     @State private var forceCompact = false
     @State private var mouseTimer: Timer?
     @State private var drawingOn = false
+    @State private var teleprompterOn = false
+    @State private var spotlightOn = SettingsStore.shared.spotlightEnabled
 
     var body: some View {
         HStack(spacing: 10) {
@@ -53,6 +55,20 @@ struct FloatingControlBarView: View {
                     if controller.isPaused { controller.resume() } else { controller.pause() }
                 }
 
+                ControlBarButton(systemName: "text.quote",
+                                 active: teleprompterOn,
+                                 help: "Toggle teleprompter") {
+                    (NSApp.delegate as? AppDelegate)?.toggleTeleprompter()
+                }
+
+                ControlBarButton(systemName: "circle.dashed",
+                                 active: spotlightOn,
+                                 help: "Toggle mouse spotlight") {
+                    let settings = SettingsStore.shared
+                    settings.spotlightEnabled.toggle()
+                    spotlightOn = settings.spotlightEnabled
+                }
+
                 ControlBarButton(systemName: "pencil.tip",
                                  active: drawingOn,
                                  help: "Toggle drawing annotations") {
@@ -94,7 +110,7 @@ struct FloatingControlBarView: View {
                 )
                 .shadow(color: .black.opacity(0.25), radius: 12, y: 4)
         )
-        .frame(width: compact ? 176 : 400)
+        .frame(width: compact ? 176 : 470)
         .animation(.easeInOut(duration: 0.2), value: compact)
         .onAppear { startMouseTimer() }
         .onDisappear { mouseTimer?.invalidate() }
@@ -121,11 +137,15 @@ struct FloatingControlBarView: View {
             withAnimation(.easeInOut(duration: 0.2)) {
                 compact = forceCompact ? true : !near
             }
-            // Sync the draw toggle with the actual annotation canvas state.
+            // Sync toggles with actual state.
             if let delegate = NSApp.delegate as? AppDelegate {
                 let on = delegate.annotationController.canvas.isDrawingEnabled
                 if drawingOn != on { drawingOn = on }
+                let telOn = delegate.isTeleprompterVisible
+                if teleprompterOn != telOn { teleprompterOn = telOn }
             }
+            let spot = SettingsStore.shared.spotlightEnabled
+            if spotlightOn != spot { spotlightOn = spot }
         }
         RunLoop.main.add(mouseTimer!, forMode: .common)
     }

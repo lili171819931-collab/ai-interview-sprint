@@ -340,7 +340,7 @@ public struct WindowInfo: Identifiable, Equatable {
 
 // MARK: - Recording summary
 
-public struct RecordingSummary: Identifiable, Equatable {
+public struct RecordingSummary: Identifiable, Equatable, Hashable {
     public let id: UUID
     public let url: URL
     public let duration: TimeInterval

@@ -20,6 +20,7 @@ struct MainView: View {
             switch selection {
             case .home: HomeView()
             case .recordings: RecordingsView()
+            case .timeline: TimelineView()
             case .settings: SettingsView()
             case .selftest: SelfTestView()
             }

@@ -35,6 +35,8 @@ public final class RecorderController: ObservableObject {
     private let cameraEngine = CameraEngine()
     private let micEngine = MicEngine()
     private let compositor = CompositionRenderer()
+    public let keyboardMonitor = KeyboardEventMonitor()
+    public let metadataRecorder = RecordingMetadataRecorder()
     private var writer: MP4Writer?
     private var sourceInfo: ScreenCaptureEngine.SourceInfo?
     private var outputSizePixels: CGSize = .zero
@@ -165,7 +167,16 @@ public final class RecorderController: ObservableObject {
         }
         writer = newWriter
 
-        // 6. Wire callbacks
+        // 6. V0.2: keyboard OSD monitor + metadata side-channel
+        if SettingsStore.shared.keyboardOSDEnabled {
+            keyboardMonitor.start()
+        }
+        if SettingsStore.shared.metadataRecordingEnabled {
+            let metaURL = url.deletingPathExtension().appendingPathExtension("metadata.json")
+            metadataRecorder.start(outputURL: metaURL)
+        }
+
+        // 7. Wire callbacks
         screenEngine.onVideoSample = { [weak self] buffer in
             self?.handleScreenVideo(buffer)
         }
@@ -244,6 +255,8 @@ public final class RecorderController: ObservableObject {
         isPaused = false
 
         stopEnginesQuietly()
+        keyboardMonitor.stop()
+        metadataRecorder.stop()
 
         guard let writer else {
             fail(.unknown("No active recording writer"))
@@ -269,6 +282,8 @@ public final class RecorderController: ObservableObject {
         stopTimer()
         isPaused = false
         stopEnginesQuietly()
+        keyboardMonitor.stop()
+        metadataRecorder.stop()
         writer?.cancel()
         writer = nil
         currentFileURL = nil
@@ -324,13 +339,15 @@ public final class RecorderController: ObservableObject {
 
         let overlay = cameraEnabled ? self.overlay : nil
         let drawing = drawingImageProvider?()
+        let teaching = makeTeachingOverlayState()
         guard let sourceInfo,
               let composed = compositor.composite(screenBuffer: buffer,
                                                   cameraBuffer: camera,
                                                   overlay: overlay,
                                                   sourceInfo: sourceInfo,
                                                   mirrorCamera: overlay?.mirror ?? true,
-                                                  drawingImage: drawing) else { return }
+                                                  drawingImage: drawing,
+                                                  teaching: teaching) else { return }
         writer.appendVideo(composed)
     }
 
@@ -342,6 +359,26 @@ public final class RecorderController: ObservableObject {
     private func appendMicSample(_ buffer: CMSampleBuffer) {
         guard !isPaused, phase == .recording, let writer else { return }
         writer.appendMicrophoneAudio(buffer)
+    }
+
+    private func makeTeachingOverlayState() -> TeachingOverlayState? {
+        let settings = SettingsStore.shared
+        var state: TeachingOverlayState?
+        if settings.spotlightEnabled {
+            var s = TeachingOverlayState()
+            s.spotlightEnabled = true
+            s.spotlightRadius = CGFloat(settings.spotlightRadius)
+            s.spotlightOpacity = CGFloat(settings.spotlightOpacity)
+            s.mouseLocation = CGEvent(source: nil)?.location ?? .zero
+            state = s
+        }
+        if settings.keyboardOSDEnabled {
+            var s = state ?? TeachingOverlayState()
+            s.keyboardCombo = keyboardMonitor.currentCombo
+            s.keyboardVisible = keyboardMonitor.isShowingCombo
+            state = s
+        }
+        return state
     }
 
     // MARK: - Helpers

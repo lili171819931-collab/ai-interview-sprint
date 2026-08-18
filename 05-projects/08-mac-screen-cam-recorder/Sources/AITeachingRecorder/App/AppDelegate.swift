@@ -67,6 +67,9 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         false
     }
 
+    static let teleprompterTitle = "AITR-Teleprompter"
+    private var teleprompterPanel: NSPanel?
+
     // MARK: - Floating control bar
 
     func showControlBar() {
@@ -140,7 +143,48 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         if let annotationID = annotationController.overlayWindowID {
             ids.append(annotationID)
         }
+        // Teleprompter is excluded unless the user explicitly wants it in the video (入画).
+        if !SettingsStore.shared.teleprompterVisibleInRecording,
+           let teleprompterID = teleprompterPanel?.windowNumber {
+            ids.append(CGWindowID(teleprompterID))
+        }
         return ids
+    }
+
+    // MARK: - Teleprompter
+
+    func showTeleprompter() {
+        if teleprompterPanel == nil {
+            let hosting = NSHostingView(rootView: TeleprompterView(onClose: { [weak self] in
+                self?.hideTeleprompter()
+            }))
+            let panel = makeFloatingPanel(title: Self.teleprompterTitle,
+                                          content: hosting,
+                                          size: CGSize(width: 560, height: 360),
+                                          movable: true)
+            if let screen = NSScreen.main {
+                panel.setFrameOrigin(NSPoint(x: screen.visibleFrame.midX - 280,
+                                             y: screen.visibleFrame.minY + 40))
+            }
+            teleprompterPanel = panel
+        }
+        teleprompterPanel?.orderFrontRegardless()
+    }
+
+    func hideTeleprompter() {
+        teleprompterPanel?.orderOut(nil)
+    }
+
+    var isTeleprompterVisible: Bool {
+        teleprompterPanel?.isVisible ?? false
+    }
+
+    func toggleTeleprompter() {
+        if let panel = teleprompterPanel, panel.isVisible {
+            hideTeleprompter()
+        } else {
+            showTeleprompter()
+        }
     }
 
     // MARK: - Teaching annotations

@@ -4,12 +4,16 @@ import CoreImage
 import CoreVideo
 import CoreMedia
 import CoreGraphics
+import CoreText
 
 /// Composites the camera overlay and teaching annotations onto each screen frame using
 /// CoreImage + CoreGraphics, so both are baked into the final video (not just the UI preview).
 final class CompositionRenderer: @unchecked Sendable {
     private let ciContext: CIContext
     private var outputSizePixels: CGSize = .zero
+    private var overlayBuffer: CVPixelBuffer?
+    private var overlayContext: CGContext?
+    private var lastOverlayKey: String?
 
     init() {
         ciContext = CIContext(options: [
@@ -20,6 +24,34 @@ final class CompositionRenderer: @unchecked Sendable {
 
     func prepare(outputSize: CGSize) {
         outputSizePixels = outputSize
+        let w = Int(outputSize.width.rounded())
+        let h = Int(outputSize.height.rounded())
+        guard w > 0, h > 0 else { return }
+        var buffer: CVPixelBuffer?
+        let attrs: [CFString: Any] = [
+            kCVPixelBufferCGImageCompatibilityKey: true,
+            kCVPixelBufferCGBitmapContextCompatibilityKey: true,
+            kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_32ARGB,
+            kCVPixelBufferWidthKey: w,
+            kCVPixelBufferHeightKey: h
+        ]
+        guard CVPixelBufferCreate(kCFAllocatorDefault, w, h,
+                                  kCVPixelFormatType_32ARGB, attrs as CFDictionary, &buffer) == kCVReturnSuccess,
+              let buffer else { return }
+        CVPixelBufferLockBaseAddress(buffer, [])
+        if let ctx = CGContext(data: CVPixelBufferGetBaseAddress(buffer),
+                               width: w,
+                               height: h,
+                               bitsPerComponent: 8,
+                               bytesPerRow: CVPixelBufferGetBytesPerRow(buffer),
+                               space: CGColorSpaceCreateDeviceRGB(),
+                               bitmapInfo: CGImageAlphaInfo.premultipliedFirst.rawValue) {
+            ctx.clear(CGRect(x: 0, y: 0, width: w, height: h))
+            overlayContext = ctx
+        }
+        CVPixelBufferUnlockBaseAddress(buffer, [])
+        overlayBuffer = buffer
+        lastOverlayKey = nil
     }
 
     /// Renders `screenBuffer` (with optional region crop, camera overlay + annotations)
@@ -29,7 +61,8 @@ final class CompositionRenderer: @unchecked Sendable {
                    overlay: CameraOverlaySettings?,
                    sourceInfo: ScreenCaptureEngine.SourceInfo,
                    mirrorCamera: Bool,
-                   drawingImage: CIImage?) -> CMSampleBuffer? {
+                   drawingImage: CIImage?,
+                   teaching: TeachingOverlayState? = nil) -> CMSampleBuffer? {
         guard let screenImageBuffer = screenBuffer.imageBuffer else { return nil }
         let screenImage = CIImage(cvPixelBuffer: screenImageBuffer)
 
@@ -59,6 +92,12 @@ final class CompositionRenderer: @unchecked Sendable {
         // Teaching annotations on top of everything.
         if let drawingImage {
             base = drawingImage.composited(over: base)
+        }
+
+        // V0.2 teaching overlays: keyboard OSD badge + mouse spotlight.
+        if let teaching, teaching.hasAnyOverlay,
+           let overlayImage = makeTeachingOverlayImage(teaching: teaching, sourceInfo: sourceInfo) {
+            base = overlayImage.composited(over: base)
         }
 
         let outSize = outputSizePixels
@@ -289,7 +328,106 @@ final class CompositionRenderer: @unchecked Sendable {
             return path
         }
     }
+
+    // MARK: - V0.2 teaching overlays (keyboard OSD + mouse spotlight)
+
+    /// Draws the keyboard badge and mouse spotlight into the persistent overlay
+    /// buffer (only when something changed) and returns it as a CIImage.
+    /// The overlay is drawn in the same convention as the annotation canvas:
+    /// CGContext is y-up; a top-left video pixel (px, py) maps to CG (px, H - py).
+    private func makeTeachingOverlayImage(teaching: TeachingOverlayState,
+                                          sourceInfo: ScreenCaptureEngine.SourceInfo) -> CIImage? {
+        guard let buffer = overlayBuffer, let ctx = overlayContext else { return nil }
+        let outSize = outputSizePixels
+        let scale = sourceInfo.scale
+        let content = sourceInfo.contentRectPoints
+
+        // Map the global mouse point to output pixel coordinates (clamped).
+        var mousePx: CGPoint = .zero
+        if teaching.spotlightEnabled {
+            let mx = (teaching.mouseLocation.x - content.minX) * scale
+            let my = (teaching.mouseLocation.y - content.minY) * scale
+            mousePx = CGPoint(x: min(max(mx, 0), outSize.width),
+                              y: min(max(my, 0), outSize.height))
+        }
+
+        let radiusPx = teaching.spotlightRadius * scale
+                let comboKey = teaching.keyboardCombo ?? "nil"
+        let key = "k=\(comboKey)|v=\(teaching.keyboardVisible)|s=\(teaching.spotlightEnabled)|r=\(Int(radiusPx.rounded()))|o=\(Int(teaching.spotlightOpacity * 100))|m=\(Int(mousePx.x))-\(Int(mousePx.y))"
+        if lastOverlayKey == key {
+            return CIImage(cvPixelBuffer: buffer)
+        }
+        lastOverlayKey = key
+
+        CVPixelBufferLockBaseAddress(buffer, [])
+        ctx.clear(CGRect(x: 0, y: 0, width: ctx.width, height: ctx.height))
+
+        if teaching.spotlightEnabled {
+            drawSpotlight(into: ctx, centerPx: mousePx, radiusPx: radiusPx, opacity: teaching.spotlightOpacity)
+        }
+        if teaching.keyboardVisible, let combo = teaching.keyboardCombo, !combo.isEmpty {
+            drawKeyboardBadge(into: ctx, text: combo, outputSize: outSize, scale: scale)
+        }
+        CVPixelBufferUnlockBaseAddress(buffer, [])
+
+        return CIImage(cvPixelBuffer: buffer)
+    }
+
+    private func drawSpotlight(into ctx: CGContext, centerPx: CGPoint, radiusPx: CGFloat, opacity: CGFloat) {
+        let size = Int((radiusPx * 2 + 8).rounded())
+        guard size > 4 else { return }
+        let color = NSColor.white
+        let colors = [color.withAlphaComponent(opacity).cgColor,
+                      color.withAlphaComponent(0).cgColor] as CFArray
+        guard let gradient = CGGradient(colorsSpace: CGColorSpaceCreateDeviceRGB(),
+                                        colors: colors,
+                                        locations: [0, 1]) else { return }
+        let center = CGPoint(x: centerPx.x, y: outputSizePixels.height - centerPx.y)
+        ctx.saveGState()
+        ctx.setBlendMode(.screen)
+        ctx.drawRadialGradient(gradient,
+                               startCenter: center,
+                               startRadius: 0,
+                               endCenter: center,
+                               endRadius: radiusPx,
+                               options: [])
+        ctx.restoreGState()
+    }
+
+    private func drawKeyboardBadge(into ctx: CGContext, text: String, outputSize: CGSize, scale: CGFloat) {
+        let font = NSFont.monospacedSystemFont(ofSize: 13 * scale, weight: .semibold)
+        let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: NSColor.white]
+        let attrString = NSAttributedString(string: text, attributes: attrs)
+        let line = CTLineCreateWithAttributedString(attrString)
+        var ascent: CGFloat = 0
+        var descent: CGFloat = 0
+        var leading: CGFloat = 0
+        let textWidth = CGFloat(CTLineGetTypographicBounds(line, &ascent, &descent, &leading))
+        let padX = 10 * scale
+        let padY = 6 * scale
+        let w = ceil(textWidth + padX * 2)
+        let h = ceil(ascent + descent + padY * 2)
+
+        // Place at the video bottom-right: in CG (y-up) coords that is y = margin.
+        let margin = 16 * scale
+        let rect = CGRect(x: outputSize.width - w - margin, y: margin, width: w, height: h)
+
+        let path = CGPath(roundedRect: rect, cornerWidth: 8 * scale, cornerHeight: 8 * scale, transform: nil)
+        ctx.setFillColor(NSColor.black.withAlphaComponent(0.55).cgColor)
+        ctx.addPath(path)
+        ctx.fillPath()
+        ctx.setStrokeColor(NSColor.white.withAlphaComponent(0.35).cgColor)
+        ctx.setLineWidth(1 * scale)
+        ctx.addPath(path)
+        ctx.strokePath()
+
+        // Text baseline: inside the badge, CT draws upright in this y-up context.
+        ctx.textPosition = CGPoint(x: rect.minX + padX, y: rect.minY + padY + ascent)
+        CTLineDraw(line, ctx)
+    }
 }
+
+
 
 extension NSColor {
     /// Simple hex color initializer, e.g. "#FFFFFF" or "FFFFFF".

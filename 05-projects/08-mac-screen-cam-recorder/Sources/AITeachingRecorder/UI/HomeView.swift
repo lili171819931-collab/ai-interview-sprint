@@ -36,6 +36,7 @@ struct HomeView: View {
                 } else {
                     modeSection
                     sourceSection
+                    teachingSection
                     startSection
                 }
             }
@@ -338,6 +339,141 @@ struct HomeView: View {
         .onChange(of: controller.systemAudioEnabled) { _, on in
             _ = on
         }
+    }
+
+    // MARK: Teaching (V0.2)
+
+    private var teachingSection: some View {
+        GlassCard {
+            VStack(alignment: .leading, spacing: 14) {
+                Text("Teaching Tools")
+                    .font(.headline)
+                Text("Keyboard OSD, mouse spotlight, teleprompter and the recording metadata side-channel (for AI editing).")
+                    .font(.caption)
+                    .foregroundColor(.secondary)
+
+                ToggleRow(icon: "keyboard", title: "Keyboard OSD",
+                          subtitle: "Show key combinations (⌘K …) on screen while recording",
+                          isOn: keyboardOSDBinding)
+                if SettingsStore.shared.keyboardOSDEnabled && !KeyboardEventMonitor.isAccessibilityTrusted {
+                    HStack(spacing: 8) {
+                        Image(systemName: "exclamationmark.triangle.fill")
+                            .foregroundColor(.orange)
+                        Text("Keyboard OSD needs Accessibility permission.")
+                            .font(.caption)
+                            .foregroundColor(.secondary)
+                        Spacer()
+                        Button("Open System Settings") {
+                            PermissionsManager.shared.openAccessibilitySettings()
+                        }
+                        .controlSize(.small)
+                    }
+                }
+
+                ToggleRow(icon: "circle.dashed", title: "Mouse Spotlight",
+                          subtitle: "Glow around the cursor to focus attention",
+                          isOn: spotlightEnabledBinding)
+                if SettingsStore.shared.spotlightEnabled {
+                    HStack(spacing: 12) {
+                        Text("Radius").font(.caption).foregroundColor(.secondary)
+                        Slider(value: spotlightRadiusBinding, in: 40...300)
+                        Text("\(Int(SettingsStore.shared.spotlightRadius))")
+                            .font(.caption2.monospacedDigit())
+                            .foregroundColor(.secondary)
+                            .frame(width: 30, alignment: .trailing)
+                        Text("Opacity").font(.caption).foregroundColor(.secondary)
+                        Slider(value: spotlightOpacityBinding, in: 0.1...0.8)
+                    }
+                }
+
+                ToggleRow(icon: "waveform.path.ecg", title: "Recording Metadata",
+                          subtitle: "Save cursor / click / window log as <video>.metadata.json (AI director input)",
+                          isOn: metadataBinding)
+
+                Divider()
+
+                HStack {
+                    Text("Teleprompter")
+                        .font(.callout.weight(.medium))
+                    Spacer()
+                    Button(SettingsStore.shared.teleprompterEnabled ? "Hide" : "Open") {
+                        let delegate = NSApp.delegate as? AppDelegate
+                        if SettingsStore.shared.teleprompterEnabled {
+                            delegate?.hideTeleprompter()
+                            SettingsStore.shared.teleprompterEnabled = false
+                        } else {
+                            delegate?.showTeleprompter()
+                            SettingsStore.shared.teleprompterEnabled = true
+                        }
+                    }
+                    .controlSize(.small)
+                }
+
+                TextEditor(text: teleprompterScriptBinding)
+                    .font(.system(size: 13, design: .monospaced))
+                    .frame(minHeight: 120)
+                    .padding(6)
+                    .background(RoundedRectangle(cornerRadius: 8).fill(Color(nsColor: .textBackgroundColor)))
+                    .overlay(RoundedRectangle(cornerRadius: 8).stroke(Color.white.opacity(0.1)))
+
+                HStack(spacing: 12) {
+                    Text("Speed").font(.caption).foregroundColor(.secondary)
+                    Slider(value: teleprompterSpeedBinding, in: 5...300)
+                        .frame(width: 140)
+                    Text("\(Int(SettingsStore.shared.teleprompterSpeed))")
+                        .font(.caption2.monospacedDigit())
+                        .foregroundColor(.secondary)
+                    Text("Font").font(.caption).foregroundColor(.secondary)
+                    Slider(value: teleprompterFontBinding, in: 12...60)
+                        .frame(width: 100)
+                    Text("\(Int(SettingsStore.shared.teleprompterFontSize))")
+                        .font(.caption2.monospacedDigit())
+                        .foregroundColor(.secondary)
+                    Toggle("Show in video (入画)", isOn: teleprompterVisibleBinding)
+                        .toggleStyle(.switch)
+                        .controlSize(.small)
+                }
+            }
+        }
+    }
+
+    // MARK: Teaching bindings
+
+    private var keyboardOSDBinding: Binding<Bool> {
+        Binding(get: { SettingsStore.shared.keyboardOSDEnabled },
+                set: { SettingsStore.shared.keyboardOSDEnabled = $0 })
+    }
+    private var spotlightEnabledBinding: Binding<Bool> {
+        Binding(get: { SettingsStore.shared.spotlightEnabled },
+                set: { SettingsStore.shared.spotlightEnabled = $0 })
+    }
+    private var spotlightRadiusBinding: Binding<Double> {
+        Binding(get: { SettingsStore.shared.spotlightRadius },
+                set: { SettingsStore.shared.spotlightRadius = $0 })
+    }
+    private var spotlightOpacityBinding: Binding<Double> {
+        Binding(get: { SettingsStore.shared.spotlightOpacity },
+                set: { SettingsStore.shared.spotlightOpacity = $0 })
+    }
+    private var metadataBinding: Binding<Bool> {
+        Binding(get: { SettingsStore.shared.metadataRecordingEnabled },
+                set: { SettingsStore.shared.metadataRecordingEnabled = $0 })
+    }
+    private var teleprompterScriptBinding: Binding<String> {
+        Binding(get: { SettingsStore.shared.teleprompterScript },
+                set: { SettingsStore.shared.teleprompterScript = $0 })
+    }
+    private var teleprompterSpeedBinding: Binding<Double> {
+        Binding(get: { SettingsStore.shared.teleprompterSpeed },
+                set: { SettingsStore.shared.teleprompterSpeed = $0 })
+    }
+    private var teleprompterFontBinding: Binding<Double> {
+        Binding(get: { SettingsStore.shared.teleprompterFontSize },
+                set: { SettingsStore.shared.teleprompterFontSize = $0 })
+    }
+    private var teleprompterVisibleBinding: Binding<Bool> {
+        Binding(get: { SettingsStore.shared.teleprompterVisibleInRecording },
+                set: { SettingsStore.shared.teleprompterVisibleInRecording = $0 })
     }
 
     // MARK: Start

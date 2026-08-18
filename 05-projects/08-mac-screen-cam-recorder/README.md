@@ -57,6 +57,17 @@
 - ⏱ 录制倒计时（0 / 3 / 5 / 10 秒），倒计时期间不录制，结束自动开始
 - 🖱 可选 **鼠标点击特效**（系统级高亮圆环）与鼠标光标显示
 
+### Teaching overlays (V0.2)
+- ⌨️ **Keyboard OSD**：全局键盘监听（CGEventTap），录制时把 `⌘K` / `⇧⌘P` 等组合键实时烘焙进画面（需辅助功能权限，主页有引导）
+- 🔦 **鼠标聚光灯**：光标周围径向光斑（CoreImage），可调半径/透明度，录制中可从悬浮控制条一键开关
+- 📜 **提词器**：脚本编辑 + 半透明置顶滚窗 + 速度/字号调节 + 播放/暂停/复位；可选「入画」（进入视频）或「不入画」（从采集内容排除，画面干净）
+- 🧾 **录制元数据旁录**：录制时把光标轨迹 / 点击 / 前台窗口切换 + 时间戳写入 `<视频>.metadata.json`，为 V1.0「AI 导演」（自动缩放/镜头）提供素材
+
+### Timeline editing (V0.2)
+- ✂️ **帧级最小时间线**：加载录制 → 裁剪头尾 → 检测静音段（一键删除）→ 以 AVMutableComposition 重新导出干净 MP4
+- 时间线可视化（绿=保留 / 红=删除），每个静音段可单独恢复
+- CLI：`aitr-cli timeline --input <视频> [--out <输出>] [--remove-silence] [--min-gap 1.0] [--threshold 0.02] [--trim-head N] [--trim-tail N]`
+
 ### Recording control & state machine
 - Start / Pause / Resume / Stop / Record Again
 - 明确状态机：`IDLE → PREPARING → RECORDING ⇄ PAUSED → STOPPING → PROCESSING → COMPLETED`，异常态 `ERROR / PERMISSION_DENIED / DEVICE_UNAVAILABLE / DISK_FULL`
@@ -183,6 +194,9 @@ swift run AITRCLI record --out /tmp/test.mp4 --seconds 5
 
 ## ⚠️ Known Limitations
 
+- 键盘 OSD 依赖 macOS「辅助功能」权限（全局键盘监听）；未授权时该功能自动禁用并在主页提示，不影响其他录制
+- 静音检测基于音频 RMS 阈值（默认 0.02 / 最短间隔 1s），可在时间线页调节
+
 - 系统声音采集依赖 macOS 的 ScreenCaptureKit（macOS 13+）；部分环境（如某些虚拟显示器/远程会话）可能无系统音频，应用会继续录屏并给出提示
 - 音频输出为 AAC 双轨（麦克风 + 系统声音各一轨），播放器通常合并播放；如需单轨混音可在后续版本实现
 - Window 模式按窗口的 2× 点尺寸采集（上限 3840×2160）
@@ -194,7 +208,7 @@ swift run AITRCLI record --out /tmp/test.mp4 --seconds 5
 - **P0（已完成）**：屏幕录制、摄像头、摄像头合成、麦克风、悬浮控制条、开始/暂停/继续/停止、MP4 导出、权限处理、基础设置、系统声音、快捷键、录制历史、自检
 - **P1（已完成）**：摄像头 5 形状 / 8 布局 / 滤镜 / 美颜、教学标注（画笔/箭头/矩形/椭圆/文字/橡皮）、录制倒计时、鼠标点击特效
 - **P2**：单轨混音、AAC 单轨输出、录制恢复（crash recovery）、AI 字幕、自动去停顿、AI 剪辑、自动生成标题/章节、OCR、教学总结
-- **V0.2（教学增强）**：键盘显示 OSD、提词器、鼠标聚光灯、录制元数据旁录、帧级时间线（详见蓝图 PART 10）
+- **V0.2（已完成）**：键盘显示 OSD、提词器、鼠标聚光灯、录制元数据旁录、帧级时间线（详见蓝图 PART 10）
 - **V0.3（AI 剪辑）**：本地 ASR 字幕、去停顿/去口头禅、章节/摘要（详见蓝图 PART 8.2）
 - **V1.0（AI 导演）**：自动镜头、短视频生成、多平台导出、云分享链接（详见蓝图 PART 8.3）
 
@@ -208,7 +222,7 @@ swift run AITRCLI record --out /tmp/test.mp4 --seconds 5
 关键结论（详细见文档）：
 - 技术路线：**Native macOS（Swift + ScreenCaptureKit）** 为 MVP 最优路线，后续补 Electron/Tauri 跨平台壳与 Web 轻量版
 - AI 引擎：本地 **faster-whisper / whisperX**（字幕·去停顿·章节），导出走 **FFmpeg**（子进程）
-- 教学层：**键盘显示 OSD / 提词器 / 聚光灯 / 帧级时间线** 为 V0.2 下一步范围
+- 教学层：**键盘显示 OSD / 提词器 / 聚光灯 / 帧级时间线** 已随 V0.2 落地
 - 差异化：**AI 导演（光标轨迹→自动镜头）+ 教学语义化（课程→知识点短视频）** 是空白机会点
 
 ## 📄 License

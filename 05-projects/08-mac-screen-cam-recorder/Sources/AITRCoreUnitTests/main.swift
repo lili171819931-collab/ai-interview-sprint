@@ -3,6 +3,7 @@ import CoreMedia
 import CoreVideo
 import CoreImage
 import CoreGraphics
+import AVFoundation
 @testable import AITeachingRecorderCore
 
 // Lightweight unit-test runner (no XCTest needed — works with Command Line Tools).
@@ -24,6 +25,181 @@ func checkEqual<T: Equatable>(_ a: T, _ b: T, _ name: String, file: String = #fi
 }
 
 // MARK: - State machine
+
+// MARK: - V0.2 tests
+
+func testKeyboardComboLabel() {
+    let cmdK = KeyboardComboLabel.label(keyCode: 40, flags: [.maskCommand], unicode: "k")
+    checkEqual(cmdK, "⌘K", "cmd+K label")
+    let cmdShiftP = KeyboardComboLabel.label(keyCode: 35, flags: [.maskCommand, .maskShift], unicode: "P")
+    checkEqual(cmdShiftP, "⇧⌘P", "cmd+shift+P label (modifier order)")
+    let ctrlAltA = KeyboardComboLabel.label(keyCode: 0, flags: [.maskControl, .maskAlternate], unicode: "a")
+    checkEqual(ctrlAltA, "⌃⌥A", "ctrl+alt+A label")
+    let space = KeyboardComboLabel.label(keyCode: 49, flags: [], unicode: " ")
+    checkEqual(space, "Space", "space key label")
+    let esc = KeyboardComboLabel.label(keyCode: 53, flags: [], unicode: nil)
+    checkEqual(esc, "Esc", "escape key label")
+    let bare = KeyboardComboLabel.modifierPrefix([.maskCommand])
+    checkEqual(bare, "⌘", "bare command modifier")
+}
+
+func testMetadataRecorder() {
+    let dir = FileManager.default.temporaryDirectory
+        .appendingPathComponent("aitr-meta-\(UUID().uuidString)", isDirectory: true)
+    try? FileManager.default.createDirectory(at: dir, withIntermediateDirectories: true)
+    let url = dir.appendingPathComponent("clip.metadata.json")
+
+    let recorder = RecordingMetadataRecorder()
+    recorder.start(outputURL: url)
+    Thread.sleep(forTimeInterval: 0.35)   // let the cursor sampler fire
+    let written = recorder.stop()
+    check(written != nil, "metadata recorder stopped and wrote a file")
+    guard let written, let data = try? Data(contentsOf: written) else {
+        check(false, "metadata file readable")
+        return
+    }
+    do {
+        let decoder = JSONDecoder()
+        decoder.dateDecodingStrategy = .iso8601
+        let file = try decoder.decode(MetadataFile.self, from: data)
+        checkEqual(file.formatVersion, RecordingMetadataRecorder.formatVersion, "metadata format version")
+        check(file.session.duration >= 0, "metadata session duration present")
+        check(file.events.contains { $0.type == "cursor" } || file.events.isEmpty,
+              "metadata contains cursor events or is empty")
+    } catch {
+        check(false, "metadata JSON decodes: \(error)")
+    }
+    try? FileManager.default.removeItem(at: dir)
+}
+
+func testTimelineModel() {
+    let timeline = TimelineModel(duration: 10)
+    checkEqual(timeline.duration, 10, "timeline duration")
+    checkEqual(timeline.keptRanges.map { $0.duration }.reduce(0, +), 10, "full duration kept initially")
+
+    timeline.removeRange(start: 2, end: 4)
+    let kept = timeline.keptRanges
+    checkEqual(kept.count, 2, "range removal splits into two kept clips")
+    checkEqual(kept.reduce(0) { $0 + $1.duration }, 8, "kept total = 8 after removing 2s")
+    check(abs(kept[0].end - 2) < 0.001 && abs(kept[1].start - 4) < 0.001, "kept ranges are [0,2) [4,10)")
+
+    timeline.trimHead(seconds: 1)
+    let afterTrim = timeline.keptRanges
+    check(abs(afterTrim[0].start - 1) < 0.001, "trim head removes 1s")
+
+    timeline.restoreAll()
+    checkEqual(timeline.keptRanges.reduce(0) { $0 + $1.duration }, 10, "restore all brings back full duration")
+
+    timeline.removeRange(start: 0, end: 10)
+    check(timeline.keptRanges.isEmpty, "removing everything leaves nothing")
+}
+
+func testSilenceWindowClassifier() {
+    // Pure classifier: 1s tone + 1s silence + 1s tone at 16 kHz.
+    let sampleRate = 16000.0
+    let total = Int(sampleRate * 3)
+    var samples: [Float] = []
+    samples.reserveCapacity(total)
+    for i in 0..<total {
+        let t = Double(i) / sampleRate
+        let amp = (i < Int(sampleRate) || i >= Int(sampleRate * 2)) ? 0.3 : 0.0
+        samples.append(Float(amp * sin(2 * .pi * 440.0 * t)))
+    }
+    let ranges = SilenceDetector.detectSilentRanges(samples: samples,
+                                                    sampleRate: sampleRate,
+                                                    threshold: 0.01,
+                                                    minGap: 0.5,
+                                                    window: 0.1)
+    check(ranges.count == 1, "silence classifier finds the 1s silent gap (got \(ranges.count))")
+    if let r = ranges.first {
+        check(abs(r.start - 1.0) < 0.25, "silence starts near 1s (got \(r.start))")
+        check(r.duration > 0.5 && r.duration < 1.6, "silence gap ~1s (got \(r.duration))")
+    }
+}
+
+func testSilenceDetectorOnFile() {
+    // End-to-end: read a real MP4's audio track. Uses ffmpeg to synthesize the
+    // fixture (1s tone + 1s silence + 1s tone); skipped if ffmpeg is unavailable.
+    let ffmpeg = "/opt/homebrew/bin/ffmpeg"
+    guard FileManager.default.isExecutableFile(atPath: ffmpeg) else {
+        print("  ⏭ skip silence-on-file (ffmpeg not found)")
+        return
+    }
+    let url = FileManager.default.temporaryDirectory
+        .appendingPathComponent("aitr-silence-\(UUID().uuidString).mp4")
+    let process = Process()
+    process.executableURL = URL(fileURLWithPath: ffmpeg)
+    process.arguments = ["-y",
+                         "-f", "lavfi", "-i", "color=c=gray:s=160x120:r=10:d=3",
+                         "-f", "lavfi", "-i", "aevalsrc=if(between(t\\,0\\,1)+between(t\\,2\\,3)\\,0.3*sin(2*PI*440*t)\\,0):s=16000:d=3",
+                         "-c:v", "libx264", "-pix_fmt", "yuv420p", "-c:a", "aac",
+                         "-shortest", url.path]
+    process.standardOutput = FileHandle.nullDevice
+    process.standardError = FileHandle.nullDevice
+    do {
+        try process.run()
+        process.waitUntilExit()
+    } catch {
+        check(false, "could not run ffmpeg: \(error)")
+        return
+    }
+    guard process.terminationStatus == 0 else {
+        check(false, "ffmpeg failed to generate the fixture (status \(process.terminationStatus))")
+        return
+    }
+    let sem = DispatchSemaphore(value: 0)
+    var ranges: [TimelineSegment] = []
+    Task {
+        ranges = (try? await SilenceDetector.detectSilentRanges(url: url, threshold: 0.01, minGap: 0.5)) ?? []
+        sem.signal()
+    }
+    _ = sem.wait(timeout: .now() + 30)
+    check(ranges.count == 1, "silence detector reads MP4 audio and finds 1 gap (got \(ranges.count))")
+    try? FileManager.default.removeItem(at: url)
+}
+
+
+func testCompositionBakesTeachingOverlay() {
+    guard let screen = makePixelBuffer(width: 100, height: 100, r: 200, g: 200, b: 200),
+          let screenSB = sampleBuffer(from: screen, pts: CMTime(value: 1, timescale: 30)) else {
+        check(false, "could not create synthetic screen")
+        return
+    }
+    let renderer = CompositionRenderer()
+    renderer.prepare(outputSize: CGSize(width: 100, height: 100))
+    let sourceInfo = ScreenCaptureEngine.SourceInfo(displayFrame: CGRect(x: 0, y: 0, width: 100, height: 100),
+                                                    contentRectPoints: CGRect(x: 0, y: 0, width: 100, height: 100),
+                                                    videoSizePixels: CGSize(width: 100, height: 100),
+                                                    isWindowMode: false,
+                                                    scale: 1)
+    var teaching = TeachingOverlayState()
+    teaching.spotlightEnabled = true
+    teaching.spotlightRadius = 40
+    teaching.spotlightOpacity = 0.5
+    teaching.mouseLocation = CGPoint(x: 50, y: 50)
+    teaching.keyboardCombo = "⌘K"
+    teaching.keyboardVisible = true
+
+    guard let out = renderer.composite(screenBuffer: screenSB,
+                                       cameraBuffer: nil,
+                                       overlay: nil,
+                                       sourceInfo: sourceInfo,
+                                       mirrorCamera: false,
+                                       drawingImage: nil,
+                                       teaching: teaching)?.imageBuffer else {
+        check(false, "composite with teaching returned nil")
+        return
+    }
+    let center = pixel(out, x: 50, y: 50)
+    check(center.0 > 220 && center.1 > 220 && center.2 > 220,
+          "spotlight brightens the mouse area (got \(center))")
+    let corner = pixel(out, x: 2, y: 2)
+    check(corner.0 <= 205, "far corner not brightened (got \(corner))")
+    // Badge: dark rounded rect near the bottom-right corner (output pixels: bottom-right).
+    // Badge for "⌘K" @ 13pt is ~ (40..84, 62..84); sample its center.
+    let badgePx = pixel(out, x: 70, y: 72)
+    check(badgePx.0 < 160, "keyboard badge darkens bottom-right corner (got \(badgePx))")
+}
 
 func testStateMachine() {
     var sm = RecorderStateMachine()
@@ -292,6 +468,12 @@ testCameraLayout()
 testBeautyDefaults()
 testCompositionBakesCameraOverlay()
 testCompositionBakesDrawing()
+testKeyboardComboLabel()
+testMetadataRecorder()
+testTimelineModel()
+testSilenceWindowClassifier()
+testSilenceDetectorOnFile()
+testCompositionBakesTeachingOverlay()
 
 print("")
 print("Passed: \(passed)   Failed: \(failures)")

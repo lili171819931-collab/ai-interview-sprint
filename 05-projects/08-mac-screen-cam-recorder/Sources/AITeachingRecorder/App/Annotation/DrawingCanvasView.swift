@@ -151,7 +151,12 @@ final class DrawingCanvasView: NSView {
             let font = NSFont.systemFont(ofSize: max(14, stroke.width * 4) * scale)
             let attrs: [NSAttributedString.Key: Any] = [.font: font, .foregroundColor: stroke.color]
             let point = stroke.points.first ?? .zero
+            // NSString drawing needs an active NSGraphicsContext, otherwise it silently no-ops.
+            let nsCtx = NSGraphicsContext(cgContext: ctx, flipped: false)
+            NSGraphicsContext.saveGraphicsState()
+            NSGraphicsContext.current = nsCtx
             (stroke.text as NSString).draw(at: point.scaled(scale), withAttributes: attrs)
+            NSGraphicsContext.restoreGraphicsState()
         case .eraser:
             break // eraser removes strokes, it never renders
         }
