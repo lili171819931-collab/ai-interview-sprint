@@ -15,7 +15,7 @@
 
 | 能力 | 说明 |
 |------|------|
-| 📡 项目发现 | 106 个精选 AI 开源项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
+| 📡 项目发现 | 138 个精选 AI 开源项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
 | 📊 Growth Intelligence Engine | 计算每个项目 7 / 30 / 90 天 Star 增长与增长率，生成趋势图 |
 | 🏆 排行榜 | Star Top 50 · **Fastest Growth TOP 100** · **Hot 热点 TOP 100**（每项目可展开查看实现路径/底层逻辑/技术架构/产品架构）· 30 个分类 TOP 榜 |
 | 🎯 AI Project Score | 8 维加权评分（Popularity 10% + Growth 15% + Innovation 15% + Product 15% + Demand 10% + Commercial 15% + Ecosystem 10% + PersonalDev 10%） |
@@ -71,7 +71,7 @@
 ```bash
 cd 05-projects/14-ai-oss-intel
 npm install          # 依赖（Next.js 15 / React 19 / Tailwind 4 / TypeScript strict）
-npm run data:build   # 数据完整性校验（106 个项目 ALL OK ✅）
+npm run data:build   # 数据完整性校验（138 个项目 ALL OK ✅）
 npm test             # 引擎单测（评分/排名/查询解析/报告生成）
 npm run dev          # http://localhost:3012
 ```
