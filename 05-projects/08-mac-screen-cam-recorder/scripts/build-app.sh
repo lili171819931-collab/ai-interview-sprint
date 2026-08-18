@@ -13,6 +13,7 @@ rm -rf "$APP"
 mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp "$BIN_DIR/AITeachingRecorder" "$APP/Contents/MacOS/AITeachingRecorder"
 cp Resources/Info.plist "$APP/Contents/Info.plist"
+cp Resources/AppIcon.icns "$APP/Contents/Resources/AppIcon.icns"
 
 # Ad-hoc code signature so TCC (Screen Recording / Camera / Mic) can attribute permissions.
 echo "==> Code signing (ad-hoc)…"
