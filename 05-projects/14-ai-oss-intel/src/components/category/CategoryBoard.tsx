@@ -193,6 +193,7 @@ function SeedRow({ p, s, rank, color, expandedKey, panelTab, onToggle, columns }
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
             <span className="flex items-center gap-1 text-[10.5px] text-[#5b6885]"><Clock size={10} /> 发布于 {p.createdAt}</span>
             <span className="chip !text-[9.5px]" style={{ color: meta.color, borderColor: meta.color + "55", background: meta.color + "12" }}>{meta.label}</span>
+            {p.license && <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 {p.license}</span>}
             <span className="text-[10.5px] text-[#5b6885] num">⭐{formatStars(p.stars)}</span>
             {p.language && <span className="chip !text-[9px]">{p.language}</span>}
           </div>
@@ -224,6 +225,7 @@ function LiveRow({ repo, rank, color, expandedKey, panelTab, onToggle, columns }
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
             <span className="flex items-center gap-1 text-[10.5px] text-[#5b6885]"><Clock size={10} /> 发布于 {repo.createdAt}</span>
             <StatusChip status={status} />
+            <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 开源</span>
             {repo.language && <span className="chip !text-[9px]">{repo.language}</span>}
           </div>
         </div>

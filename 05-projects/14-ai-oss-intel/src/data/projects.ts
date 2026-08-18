@@ -264,7 +264,9 @@ function toProject(s: Seed): Project {
 
 export const SEED_PROJECTS: Project[] = S.map(toProject);
 
-export const PROJECTS: Project[] = SEED_PROJECTS;
+// 平台仅展示开源项目：过滤非开源 License（Proprietary / 社区源码可用许可等）
+import { isOpenSourceLicense } from "@/lib/licenses";
+export const PROJECTS: Project[] = SEED_PROJECTS.filter((p) => isOpenSourceLicense(p.license));
 
 export function getProject(slug: string): Project | undefined {
   return PROJECTS.find((p) => p.slug === slug);

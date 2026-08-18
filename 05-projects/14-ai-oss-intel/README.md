@@ -15,7 +15,7 @@
 
 | 能力 | 说明 |
 |------|------|
-| 📡 项目发现 | 166 个精选 AI 开源项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
+| 📡 项目发现 | 160 个精选开源 AI 项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
 | 📊 Growth Intelligence Engine | 计算每个项目 7 / 30 / 90 天 Star 增长与增长率，生成趋势图 |
 | 🏆 分类 TOP 榜（唯一榜单体系） | 30 个一级分类 × 3 榜：机会 TOP / 收藏榜 / 收藏增长最快榜（2026 · 实时拉取 GitHub · 上限 100）· 每项目带 分析 / 逆向拆解 / 产品框图 |
 | 🎯 AI Project Score | 8 维加权评分（Popularity 10% + Growth 15% + Innovation 15% + Product 15% + Demand 10% + Commercial 15% + Ecosystem 10% + PersonalDev 10%） |
@@ -31,6 +31,7 @@
 | 📈 AI PM 学习中心 | 能力雷达图 + AI PM Score + 能力缺口→项目推荐 + 30 Days AI PM Challenge + 每日任务 |
 | 🗓️ 2026 Radar | Project Time Status（🆕 New / 🔥 Rising / 🚀 Active 多因子判定，不用单一时间条件）+ 场景分类系统（A-Q 17 组） |
 | 🗄️ 统一数据库 + 实时同步 | 全平台（Discover / Insights / 分类 TOP 榜 / My GitHub / Watchlist）共享一个数据库：本地快照 + GitHub 实时数据按 fullName 合并去重，顶栏「实时同步」一键拉取（缓存 30 分钟），每次打开自动同步 |
+| 🔓 仅开源项目 | 全平台只展示开源项目：本地快照过滤非开源 License（160 个开源项目），GitHub 实时抓取带 License 校验（OSI 许可白名单 + 查询 license 限定），非开源自动剔除；项目/榜单均显示 🔓 License 标签 |
 | 👤 My GitHub 按分类展示 | 实时同步你的 Star/收藏，按一级分类分组展示，每个项目可 分析 / 逆向拆解 / 产品框图 |
 | 🏗️ 产品底层逻辑架构分析 | Project DNA 14 节点 + PM Deep Analysis 15 维 + 如何搭建（五层架构/技术栈/数据流/7·14·30 天路线/复制与不复制/成本/自检清单） |
 | ❓ Why AI / AI Native Test | 为什么需要 AI、降低什么成本、创造什么体验；Current / AI Enhanced / AI Native 三态重设计 |
@@ -75,7 +76,7 @@
 ```bash
 cd 05-projects/14-ai-oss-intel
 npm install          # 依赖（Next.js 15 / React 19 / Tailwind 4 / TypeScript strict）
-npm run data:build   # 数据完整性校验（166 个项目 ALL OK ✅）
+npm run data:build   # 数据完整性校验（160 个项目 ALL OK ✅）
 npm test             # 引擎单测（评分/排名/查询解析/报告生成）
 npm run dev          # http://localhost:3012
 ```

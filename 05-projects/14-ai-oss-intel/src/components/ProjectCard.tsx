@@ -26,6 +26,7 @@ export function ProjectCard({ project, rank }: { project: Project; rank?: number
         </div>
       </div>
       <div className="flex flex-wrap gap-1">
+        {project.license && <span className="chip" style={{ color: "#34d399", borderColor: "#34d39955", background: "#34d39912" }}>🔓 {project.license}</span>}
         {(() => {
           const ts = timeStatusOf(project);
           const meta = TIME_STATUS_META[ts];

@@ -5,6 +5,7 @@
  * Client-side only (browser CORS to api.github.com).
  */
 import type { CategoryId } from "@/lib/types";
+import { isOpenSourceLicense, LICENSE_QUALIFIER } from "@/lib/licenses";
 
 export interface LiveRepo {
   fullName: string;
@@ -31,40 +32,40 @@ export interface LiveState {
 
 /** Category → GitHub search queries (primary topics, then fallback). */
 const CATEGORY_QUERIES: Record<CategoryId, string[]> = {
-  agent: ["topic:ai-agent stars:>500 fork:false", "topic:ai-agents stars:>200 fork:false"],
-  skill: ["topic:claude-code skills:>50 fork:false", "topic:ai-skills stars:>20 fork:false"],
-  mcp: ["topic:mcp stars:>50 fork:false", "topic:model-context-protocol stars:>20 fork:false"],
-  coding: ["topic:ai-coding stars:>500 fork:false", "topic:code-generation stars:>500 fork:false"],
-  devtools: ["topic:developer-tools stars:>1000 fork:false", "topic:ai-tools stars:>500 fork:false"],
-  saas: ["topic:saas stars:>500 fork:false", "topic:ai-saas stars:>100 fork:false"],
-  productivity: ["topic:productivity stars:>500 fork:false", "topic:assistant stars:>1000 fork:false"],
-  automation: ["topic:automation stars:>500 fork:false", "topic:rpa stars:>100 fork:false"],
-  content: ["topic:content-creation stars:>200 fork:false", "topic:ai-content stars:>100 fork:false"],
-  selfmedia: ["topic:social-media stars:>500 fork:false", "topic:social-media-automation stars:>50 fork:false"],
-  video: ["topic:video-generation stars:>200 fork:false", "topic:text-to-video stars:>100 fork:false"],
-  image: ["topic:stable-diffusion stars:>500 fork:false", "topic:image-generation stars:>500 fork:false"],
-  audio: ["topic:text-to-speech stars:>200 fork:false", "topic:speech-recognition stars:>200 fork:false"],
-  writing: ["topic:writing stars:>200 fork:false", "topic:ai-writing stars:>50 fork:false"],
-  resume: ["topic:job-search stars:>50 fork:false", "ai resume stars:>20 fork:false"],
-  sidehustle: ["topic:side-project stars:>200 fork:false", "topic:monetization stars:>50 fork:false"],
-  money: ["topic:fintech stars:>500 fork:false", "topic:monetization stars:>50 fork:false"],
-  ecommerce: ["topic:ecommerce stars:>500 fork:false", "topic:shopify stars:>200 fork:false"],
-  marketing: ["topic:marketing stars:>500 fork:false", "topic:marketing-automation stars:>50 fork:false"],
-  data: ["topic:data-analysis stars:>1000 fork:false", "topic:data-science stars:>1000 fork:false"],
-  rag: ["topic:rag stars:>200 fork:false", "topic:retrieval-augmented-generation stars:>50 fork:false"],
-  llm: ["topic:llm stars:>1000 fork:false", "topic:large-language-model stars:>200 fork:false"],
-  vision: ["topic:computer-vision stars:>1000 fork:false", "topic:object-detection stars:>500 fork:false"],
-  robotics: ["topic:robotics stars:>500 fork:false", "topic:ros stars:>500 fork:false"],
-  education: ["topic:education stars:>500 fork:false", "topic:learning stars:>500 fork:false"],
-  research: ["topic:research stars:>500 fork:false", "topic:deep-research stars:>50 fork:false"],
-  infra: ["topic:mlops stars:>500 fork:false", "topic:llm-infrastructure stars:>50 fork:false"],
-  devproductivity: ["topic:developer-experience stars:>50 fork:false", "topic:productivity-tools stars:>50 fork:false"],
-  pkm: ["topic:knowledge-management stars:>200 fork:false", "topic:second-brain stars:>50 fork:false"],
-  life: ["topic:productivity stars:>500 fork:false", "topic:lifehack stars:>20 fork:false"],
+  agent: ["topic:ai-agent stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ai-agents stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  skill: ["topic:claude-code skills:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ai-skills stars:>20 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  mcp: ["topic:mcp stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:model-context-protocol stars:>20 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  coding: ["topic:ai-coding stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:code-generation stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  devtools: ["topic:developer-tools stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ai-tools stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  saas: ["topic:saas stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ai-saas stars:>100 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  productivity: ["topic:productivity stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:assistant stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  automation: ["topic:automation stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:rpa stars:>100 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  content: ["topic:content-creation stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ai-content stars:>100 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  selfmedia: ["topic:social-media stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:social-media-automation stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  video: ["topic:video-generation stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:text-to-video stars:>100 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  image: ["topic:stable-diffusion stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:image-generation stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  audio: ["topic:text-to-speech stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:speech-recognition stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  writing: ["topic:writing stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ai-writing stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  resume: ["topic:job-search stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "ai resume stars:>20 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  sidehustle: ["topic:side-project stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:monetization stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  money: ["topic:fintech stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:monetization stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  ecommerce: ["topic:ecommerce stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:shopify stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  marketing: ["topic:marketing stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:marketing-automation stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  data: ["topic:data-analysis stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:data-science stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  rag: ["topic:rag stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:retrieval-augmented-generation stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  llm: ["topic:llm stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:large-language-model stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  vision: ["topic:computer-vision stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:object-detection stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  robotics: ["topic:robotics stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:ros stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  education: ["topic:education stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:learning stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  research: ["topic:research stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:deep-research stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  infra: ["topic:mlops stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:llm-infrastructure stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  devproductivity: ["topic:developer-experience stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:productivity-tools stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  pkm: ["topic:knowledge-management stars:>200 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:second-brain stars:>50 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
+  life: ["topic:productivity stars:>500 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)", "topic:lifehack stars:>20 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"],
 };
 
 export function categoryQueries(id: CategoryId): string[] {
-  return CATEGORY_QUERIES[id] ?? ["topic:ai stars:>1000 fork:false"];
+  return CATEGORY_QUERIES[id] ?? ["topic:ai stars:>1000 fork:false (license:mit OR license:apache-2.0 OR license:gpl-3.0 OR license:agpl-3.0 OR license:bsd-3-clause OR license:mpl-2.0 OR license:unlicense OR license:cc0-1.0)"];
 }
 
 const CACHE_KEY = "aioss.live.cache";
@@ -87,6 +88,8 @@ function writeCache(id: string, repos: LiveRepo[]) {
 
 export function normalize(it: any): LiveRepo | null {
   if (!it?.full_name) return null;
+  // 仅开源项目：License 校验（非开源直接丢弃）
+  if (!isOpenSourceLicense(it.license?.spdx_id)) return null;
   return {
     fullName: it.full_name,
     name: it.full_name.split("/")[1],

@@ -116,7 +116,7 @@ function DiscoverInner() {
       </div>
 
       <div className="panel px-4 py-2.5 flex flex-wrap items-center gap-2 text-[12px] text-[#8b98b3]">
-        <span>📂 全部项目已按 30 个分类接入「分类 TOP 榜」；平台数据库已关联实时 GitHub 数据（{state.repos.length} 个实时项目{syncing ? "，同步中…" : ""}）</span>
+        <span>🔓 平台仅展示开源项目（License 校验）· 📂 全部项目已按 30 个分类接入「分类 TOP 榜」；平台数据库已关联实时 GitHub 数据（{state.repos.length} 个实时项目{syncing ? "，同步中…" : ""}）</span>
         <Link href="/rankings/categories" className="chip chip-accent ml-auto">去分类 TOP 榜 →</Link>
       </div>
 

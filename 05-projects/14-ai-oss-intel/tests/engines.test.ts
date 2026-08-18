@@ -201,3 +201,10 @@ assert(srcMaster[20].title.includes("Feature → Code"), "source: feature→code
 assert(buildSourcePanorama(fakeRepo, srcIntel).length >= 14, "source: panorama");
 const srcDir = buildSourceDirectorView(fakeRepo, srcIntel);
 assert(srcDir.boundary.inScope.length >= 2 && srcDir.cases.length >= 3, "source: director view");
+
+/* ── Open-source license policy tests ─────────────────────────────────── */
+import { isOpenSourceLicense } from "../src/lib/licenses";
+assert(isOpenSourceLicense("MIT") && isOpenSourceLicense("Apache-2.0") && isOpenSourceLicense("AGPL-3.0"), "license: open ok");
+assert(isOpenSourceLicense("mit") && isOpenSourceLicense("apache-2.0"), "license: lowercase ok");
+assert(!isOpenSourceLicense("Proprietary") && !isOpenSourceLicense("Meta Community") && !isOpenSourceLicense("Fair Code") && !isOpenSourceLicense("Stability AI Community"), "license: closed excluded");
+assert(!isOpenSourceLicense(undefined) && !isOpenSourceLicense(""), "license: unknown excluded");

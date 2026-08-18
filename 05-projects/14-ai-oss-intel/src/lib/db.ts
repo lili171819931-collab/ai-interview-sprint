@@ -9,6 +9,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalize, type LiveRepo } from "@/lib/live";
+import { LICENSE_QUALIFIER } from "@/lib/licenses";
 
 export interface DbState {
   repos: LiveRepo[];
@@ -29,7 +30,7 @@ const GLOBAL_QUERIES = [
   "topic:computer-vision stars:>500 fork:false",
   "topic:automation stars:>300 fork:false",
   "topic:saas stars:>300 fork:false",
-];
+].map((q) => q + " " + LICENSE_QUALIFIER);
 
 const CACHE_KEY = "aioss.db.global";
 const TTL_MS = 30 * 60 * 1000;

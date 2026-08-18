@@ -31,7 +31,7 @@ function InsightsInner() {
     <div className="space-y-8">
       <div className="panel p-6">
         <div className="flex items-center gap-2 mb-2"><Sparkles size={17} className="text-[#7dd3fc]" /><h1 className="text-xl font-bold text-white">AI Insights · 每日智能洞察</h1></div>
-        <p className="text-[13px] text-[#8b98b3]">AI Open Source Daily · {today} · 自动生成的市场快照与行动雷达 · 全部洞察数据已关联「分类 TOP 榜」并实时同步 GitHub（{state.repos.length} 个实时项目{syncing ? " · 同步中…" : ""}）</p>
+        <p className="text-[13px] text-[#8b98b3]">AI Open Source Daily · {today} · 自动生成的市场快照与行动雷达 · 🔓 仅分析开源项目 · 全部洞察数据已关联「分类 TOP 榜」并实时同步 GitHub（{state.repos.length} 个实时项目{syncing ? " · 同步中…" : ""}）</p>
       </div>
 
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
