@@ -5,8 +5,8 @@ import CoreVideo
 import CoreMedia
 import CoreGraphics
 
-/// Composites the camera overlay onto each screen frame using CoreImage + CoreGraphics,
-/// so the overlay is baked into the final video (not just the UI preview).
+/// Composites the camera overlay and teaching annotations onto each screen frame using
+/// CoreImage + CoreGraphics, so both are baked into the final video (not just the UI preview).
 final class CompositionRenderer: @unchecked Sendable {
     private let ciContext: CIContext
     private var outputSizePixels: CGSize = .zero
@@ -22,13 +22,14 @@ final class CompositionRenderer: @unchecked Sendable {
         outputSizePixels = outputSize
     }
 
-    /// Renders `screenBuffer` (with optional region crop and camera overlay) into a new BGRA
-    /// pixel buffer and returns a ready-to-write CMSampleBuffer with the screen frame's timing.
+    /// Renders `screenBuffer` (with optional region crop, camera overlay + annotations)
+    /// into a new BGRA pixel buffer and returns a ready-to-write CMSampleBuffer.
     func composite(screenBuffer: CMSampleBuffer,
                    cameraBuffer: CMSampleBuffer?,
                    overlay: CameraOverlaySettings?,
                    sourceInfo: ScreenCaptureEngine.SourceInfo,
-                   mirrorCamera: Bool) -> CMSampleBuffer? {
+                   mirrorCamera: Bool,
+                   drawingImage: CIImage?) -> CMSampleBuffer? {
         guard let screenImageBuffer = screenBuffer.imageBuffer else { return nil }
         let screenImage = CIImage(cvPixelBuffer: screenImageBuffer)
 
@@ -55,6 +56,11 @@ final class CompositionRenderer: @unchecked Sendable {
             base = overlayLayer.composited(over: base)
         }
 
+        // Teaching annotations on top of everything.
+        if let drawingImage {
+            base = drawingImage.composited(over: base)
+        }
+
         let outSize = outputSizePixels
         guard outSize.width > 0, outSize.height > 0 else { return nil }
 
@@ -76,7 +82,6 @@ final class CompositionRenderer: @unchecked Sendable {
 
         ciContext.render(base, to: pixelBuffer, bounds: CGRect(origin: .zero, size: outSize), colorSpace: CGColorSpaceCreateDeviceRGB())
 
-        // Wrap in a CMSampleBuffer using the screen frame's timing.
         var formatDescription: CMVideoFormatDescription?
         let fdStatus = CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault,
                                                                     imageBuffer: pixelBuffer,
@@ -99,8 +104,10 @@ final class CompositionRenderer: @unchecked Sendable {
         return outBuffer
     }
 
-    /// Builds the camera overlay as a CIImage: mirrored/scaled camera inside a rounded-rect or
-    /// circle, with an optional border, positioned at the overlay's screen location.
+    // MARK: - Camera overlay
+
+    /// Builds the camera overlay as a CIImage: filtered/mirrored camera inside the chosen shape,
+    /// with an optional border, positioned at the overlay's screen location.
     private func makeOverlayLayer(cameraImage: CIImage,
                                   overlay: CameraOverlaySettings,
                                   sourceInfo: ScreenCaptureEngine.SourceInfo,
@@ -116,11 +123,12 @@ final class CompositionRenderer: @unchecked Sendable {
         let px = relX * scale
         let py = relY * scale
         let outputHeight = sourceInfo.videoSizePixels.height
-        // CI coordinate space is bottom-left origin; convert the top-left anchor.
         let originPx = CGPoint(x: px, y: outputHeight - py - sizePx.height)
 
-        // 1) Camera CGImage (aspect-fill into the overlay box).
-        guard let cameraCG = ciContext.createCGImage(cameraImage, from: cameraImage.extent) else {
+        // 1) Camera image with filter + beauty applied.
+        let enhanced = applyEnhancements(to: cameraImage, overlay: overlay)
+
+        guard let cameraCG = ciContext.createCGImage(enhanced, from: enhanced.extent) else {
             return CIImage.empty()
         }
         let cameraSizePx = CGSize(width: cameraCG.width, height: cameraCG.height)
@@ -143,27 +151,16 @@ final class CompositionRenderer: @unchecked Sendable {
         }
         ctx.clear(CGRect(origin: .zero, size: sizePx))
 
-        // Shape clip.
         let rect = CGRect(origin: .zero, size: sizePx)
-        switch overlay.shape {
-        case .roundedRect:
-            let radius = min(rect.width, rect.height) * 0.18
-            ctx.addPath(CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil))
-            ctx.clip()
-        case .circle:
-            ctx.addEllipse(in: rect)
-            ctx.clip()
-        }
+        ctx.addPath(shapePath(in: rect, shape: overlay.shape, scale: scale))
+        ctx.clip()
 
-        // Shadow (if enabled) — applied to the whole composited layer later via filter; here we
-        // keep a simple drop shadow under the clip.
         if overlay.shadow {
             ctx.setShadow(offset: CGSize(width: 0, height: -3 * scale),
                           blur: 8 * scale,
                           color: CGColor(gray: 0, alpha: 0.35))
         }
 
-        // Camera image (mirror horizontally if requested).
         ctx.saveGState()
         if mirror {
             ctx.translateBy(x: sizePx.width, y: 0)
@@ -172,28 +169,125 @@ final class CompositionRenderer: @unchecked Sendable {
         ctx.draw(cameraCG, in: CGRect(x: drawX, y: drawY, width: drawW, height: drawH))
         ctx.restoreGState()
 
-        // Border.
         if overlay.borderWidth > 0 {
-            ctx.setShadow(offset: .zero, blur: 0) // no shadow on the border stroke
+            ctx.setShadow(offset: .zero, blur: 0)
             let borderColor = NSColor(hex: overlay.borderColorHex) ?? .white
             ctx.setStrokeColor(borderColor.cgColor)
             ctx.setLineWidth(overlay.borderWidth * scale)
-            switch overlay.shape {
-            case .roundedRect:
-                let radius = min(rect.width, rect.height) * 0.18
-                ctx.addPath(CGPath(roundedRect: rect.insetBy(dx: overlay.borderWidth * scale / 2,
-                                                             dy: overlay.borderWidth * scale / 2),
-                                   cornerWidth: radius, cornerHeight: radius, transform: nil))
-            case .circle:
-                ctx.addEllipse(in: rect.insetBy(dx: overlay.borderWidth * scale / 2,
-                                                dy: overlay.borderWidth * scale / 2))
-            }
+            let inset = overlay.borderWidth * scale / 2
+            ctx.addPath(shapePath(in: rect.insetBy(dx: inset, dy: inset), shape: overlay.shape, scale: scale))
             ctx.strokePath()
         }
 
         guard let overlayCG = ctx.makeImage() else { return CIImage.empty() }
         let overlayCI = CIImage(cgImage: overlayCG)
         return overlayCI.transformed(by: CGAffineTransform(translationX: originPx.x, y: originPx.y))
+    }
+
+    // MARK: - Filter + beauty
+
+    private func applyEnhancements(to image: CIImage, overlay: CameraOverlaySettings) -> CIImage {
+        var out = image
+        let beauty = overlay.beauty
+
+        // Skin smoothing: semi-transparent blurred copy over the original.
+        if beauty.enabled && beauty.smooth > 0.01 {
+            let radius = max(0.6, 2.5 * beauty.smooth)
+            let blurred = out.applyingFilter("CIGaussianBlur", parameters: [kCIInputRadiusKey: radius])
+            let faded = blurred.applyingFilter("CIColorMatrix", parameters: [
+                "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 0.55 * beauty.smooth)
+            ])
+            out = faded.composited(over: out)
+        }
+
+        if beauty.enabled {
+            // Whitening: brightness up, slight desaturation (keeps skin tones soft).
+            if beauty.whitening > 0.01 {
+                out = out.applyingFilter("CIColorControls", parameters: [
+                    kCIInputBrightnessKey: 0.06 * beauty.whitening,
+                    kCIInputSaturationKey: 1.0 - 0.06 * beauty.whitening
+                ])
+            }
+            // Blush: gentle red/pink warm boost via color matrix.
+            if beauty.blush > 0.01 {
+                let b = beauty.blush
+                out = out.applyingFilter("CIColorMatrix", parameters: [
+                    "inputRVector": CIVector(x: 1 + 0.18 * b, y: 0, z: 0, w: 0),
+                    "inputGVector": CIVector(x: 0, y: 1, z: 0, w: 0),
+                    "inputBVector": CIVector(x: 0, y: 0, z: 1 - 0.08 * b, w: 0),
+                    "inputAVector": CIVector(x: 0, y: 0, z: 0, w: 1)
+                ])
+            }
+            // Clarity: micro-contrast + sharpness.
+            if beauty.clarity > 0.01 {
+                let c = beauty.clarity
+                out = out.applyingFilter("CIColorControls", parameters: [
+                    kCIInputContrastKey: 1 + 0.08 * c,
+                    kCIInputSaturationKey: 1 + 0.05 * c
+                ])
+                out = out.applyingFilter("CISharpenLuminance", parameters: [
+                    kCIInputSharpnessKey: 0.5 * c
+                ])
+            }
+        }
+
+        // Color filter preset (applied last so it tints the final look).
+        switch overlay.filterPreset {
+        case .none:
+            break
+        case .warm:
+            out = out.applyingFilter("CIColorControls", parameters: [
+                kCIInputSaturationKey: 1.28, kCIInputContrastKey: 1.04, kCIInputBrightnessKey: 0.02
+            ])
+            out = out.applyingFilter("CITemperatureAndTint", parameters: [
+                "inputTargetNeutral": CIVector(x: 4500, y: 0)
+            ])
+        case .cool:
+            out = out.applyingFilter("CIColorControls", parameters: [
+                kCIInputSaturationKey: 0.92, kCIInputContrastKey: 1.03, kCIInputBrightnessKey: 0.02
+            ])
+            out = out.applyingFilter("CITemperatureAndTint", parameters: [
+                "inputTargetNeutral": CIVector(x: 16000, y: 0)
+            ])
+        case .bw:
+            out = out.applyingFilter("CIColorControls", parameters: [
+                kCIInputSaturationKey: 0, kCIInputContrastKey: 1.12
+            ])
+        case .retro:
+            out = out.applyingFilter("CIColorControls", parameters: [
+                kCIInputSaturationKey: 0.82, kCIInputContrastKey: 1.06, kCIInputBrightnessKey: -0.02
+            ])
+            out = out.applyingFilter("CISepiaTone", parameters: [kCIInputIntensityKey: 0.35])
+        }
+        return out
+    }
+
+    // MARK: - Shape paths
+
+    private func shapePath(in rect: CGRect, shape: OverlayShape, scale: CGFloat) -> CGPath {
+        switch shape {
+        case .roundedRect:
+            let radius = min(rect.width, rect.height) * 0.18
+            return CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil)
+        case .square:
+            let radius = min(rect.width, rect.height) * 0.04
+            return CGPath(roundedRect: rect, cornerWidth: radius, cornerHeight: radius, transform: nil)
+        case .circle:
+            // Inscribed circle (uses the smaller dimension) so a non-square box still looks like a circle.
+            let r = min(rect.width, rect.height) / 2
+            let circleRect = CGRect(x: rect.midX - r, y: rect.midY - r, width: r * 2, height: r * 2)
+            return CGPath(ellipseIn: circleRect, transform: nil)
+        case .ellipse:
+            return CGPath(ellipseIn: rect, transform: nil)
+        case .diamond:
+            let path = CGMutablePath()
+            path.move(to: CGPoint(x: rect.midX, y: rect.minY))
+            path.addLine(to: CGPoint(x: rect.maxX, y: rect.midY))
+            path.addLine(to: CGPoint(x: rect.midX, y: rect.maxY))
+            path.addLine(to: CGPoint(x: rect.minX, y: rect.midY))
+            path.closeSubpath()
+            return path
+        }
     }
 }
 

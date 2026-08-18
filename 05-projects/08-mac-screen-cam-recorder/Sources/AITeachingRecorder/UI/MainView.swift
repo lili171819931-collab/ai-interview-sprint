@@ -30,6 +30,8 @@ struct MainView: View {
             if !newPhase.isActive, let delegate = NSApp.delegate as? AppDelegate {
                 delegate.hideControlBar()
                 delegate.hideCameraPanel()
+                delegate.hideAnnotationOverlay()
+                controller.drawingImageProvider = nil
             }
         }
     }

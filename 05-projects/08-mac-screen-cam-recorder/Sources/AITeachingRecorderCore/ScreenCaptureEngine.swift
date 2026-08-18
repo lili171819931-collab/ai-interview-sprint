@@ -28,6 +28,7 @@ final class ScreenCaptureEngine: NSObject, @unchecked Sendable {
     func start(configuration: RecordingConfiguration,
                excludedWindowIDs: [CGWindowID],
                showsCursor: Bool,
+               showMouseClicks: Bool,
                audioSampleRate: Int) async throws -> SourceInfo {
         let content = try await SCShareableContent.excludingDesktopWindows(false, onScreenWindowsOnly: true)
         let filter: SCContentFilter
@@ -85,6 +86,9 @@ final class ScreenCaptureEngine: NSObject, @unchecked Sendable {
         config.pixelFormat = kCVPixelFormatType_32BGRA
         config.queueDepth = 6
         config.showsCursor = showsCursor
+        if #available(macOS 15.0, *) {
+            config.showMouseClicks = showMouseClicks
+        }
         config.scalesToFit = true
         config.capturesAudio = configuration.captureSystemAudio
         config.sampleRate = audioSampleRate

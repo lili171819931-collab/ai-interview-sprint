@@ -9,6 +9,7 @@ struct FloatingControlBarView: View {
     @State private var compact = false
     @State private var forceCompact = false
     @State private var mouseTimer: Timer?
+    @State private var drawingOn = false
 
     var body: some View {
         HStack(spacing: 10) {
@@ -50,6 +51,12 @@ struct FloatingControlBarView: View {
                                  active: !controller.isPaused,
                                  help: controller.isPaused ? "Resume (⌘⇧P)" : "Pause (⌘⇧P)") {
                     if controller.isPaused { controller.resume() } else { controller.pause() }
+                }
+
+                ControlBarButton(systemName: "pencil.tip",
+                                 active: drawingOn,
+                                 help: "Toggle drawing annotations") {
+                    (NSApp.delegate as? AppDelegate)?.toggleDrawingMode()
                 }
 
                 ControlBarButton(systemName: "stop.fill",
@@ -113,6 +120,11 @@ struct FloatingControlBarView: View {
             let near = padded.contains(mouse)
             withAnimation(.easeInOut(duration: 0.2)) {
                 compact = forceCompact ? true : !near
+            }
+            // Sync the draw toggle with the actual annotation canvas state.
+            if let delegate = NSApp.delegate as? AppDelegate {
+                let on = delegate.annotationController.canvas.isDrawingEnabled
+                if drawingOn != on { drawingOn = on }
             }
         }
         RunLoop.main.add(mouseTimer!, forMode: .common)

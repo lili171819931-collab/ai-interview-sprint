@@ -1,5 +1,9 @@
 import Foundation
-import AITeachingRecorderCore
+import CoreMedia
+import CoreVideo
+import CoreImage
+import CoreGraphics
+@testable import AITeachingRecorderCore
 
 // Lightweight unit-test runner (no XCTest needed — works with Command Line Tools).
 
@@ -129,10 +133,165 @@ func testTimeFormatting() {
     checkEqual(TimeInterval(3723).recorderTimeString, "01:02:03", "3723s")
 }
 
+// MARK: - Camera layout & shapes
+
+func testCameraLayout() {
+    let frame = CGRect(x: 0, y: 0, width: 1000, height: 800)
+    let s = CameraOverlaySettings(position: CGPoint(x: 100, y: 100))
+    let tl = s.rect(for: .topLeft, in: frame)
+    checkEqual(tl.origin.x, 24, "topLeft x")
+    checkEqual(tl.origin.y, 24, "topLeft y")
+    let tr = s.rect(for: .topRight, in: frame)
+    checkEqual(tr.maxX, frame.maxX - 24, "topRight maxX")
+    let br = s.rect(for: .bottomRight, in: frame)
+    checkEqual(br.maxY, frame.maxY - 24, "bottomRight maxY")
+    let bar = s.rect(for: .bottomBar, in: frame)
+    checkEqual(bar.width, 1000, "bottomBar full width")
+    checkEqual(bar.maxY, 800, "bottomBar at bottom")
+    // floating keeps custom position
+    let fl = s.rect(for: .floating, in: frame)
+    checkEqual(fl.origin, CGPoint(x: 100, y: 100), "floating uses position")
+    checkEqual(s.rect(for: .circle, in: frame).width, s.rect(for: .circle, in: frame).height, "circle is square")
+}
+
+func testBeautyDefaults() {
+    let b = BeautySettings()
+    check(b.enabled == false, "beauty disabled by default")
+    check(b.whitening >= 0 && b.whitening <= 1, "whitening in range")
+    let s = CameraOverlaySettings()
+    checkEqual(s.filterPreset, .none, "filter default none")
+    checkEqual(s.layout, .floating, "layout default floating")
+    checkEqual(OverlayShape.allCases.count, 5, "five overlay shapes")
+    checkEqual(CameraLayout.allCases.count, 8, "eight layouts")
+}
+
+// MARK: - Composition integration (synthetic buffers)
+
+func makePixelBuffer(width: Int, height: Int, r: UInt8, g: UInt8, b: UInt8) -> CVPixelBuffer? {
+    var pb: CVPixelBuffer?
+    let attrs: [CFString: Any] = [
+        kCVPixelBufferCGImageCompatibilityKey: true,
+        kCVPixelBufferCGBitmapContextCompatibilityKey: true,
+        kCVPixelBufferPixelFormatTypeKey: kCVPixelFormatType_32BGRA,
+        kCVPixelBufferWidthKey: width,
+        kCVPixelBufferHeightKey: height
+    ]
+    guard CVPixelBufferCreate(kCFAllocatorDefault, width, height, kCVPixelFormatType_32BGRA, attrs as CFDictionary, &pb) == kCVReturnSuccess, let pb else { return nil }
+    CVPixelBufferLockBaseAddress(pb, [])
+    let base = CVPixelBufferGetBaseAddress(pb)!.assumingMemoryBound(to: UInt8.self)
+    let row = CVPixelBufferGetBytesPerRow(pb)
+    for y in 0..<height {
+        for x in 0..<width {
+            let off = y * row + x * 4
+            base[off] = b       // B
+            base[off + 1] = g   // G
+            base[off + 2] = r   // R
+            base[off + 3] = 255 // A
+        }
+    }
+    CVPixelBufferUnlockBaseAddress(pb, [])
+    return pb
+}
+
+func sampleBuffer(from pixelBuffer: CVPixelBuffer, pts: CMTime) -> CMSampleBuffer? {
+    var formatDesc: CMVideoFormatDescription?
+    CMVideoFormatDescriptionCreateForImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescriptionOut: &formatDesc)
+    guard let formatDesc else { return nil }
+    var timing = CMSampleTimingInfo(duration: CMTime(value: 1, timescale: 30), presentationTimeStamp: pts, decodeTimeStamp: .invalid)
+    var sb: CMSampleBuffer?
+    CMSampleBufferCreateReadyWithImageBuffer(allocator: kCFAllocatorDefault, imageBuffer: pixelBuffer, formatDescription: formatDesc, sampleTiming: &timing, sampleBufferOut: &sb)
+    return sb
+}
+
+func pixel(_ buffer: CVPixelBuffer, x: Int, y: Int) -> (UInt8, UInt8, UInt8) {
+    CVPixelBufferLockBaseAddress(buffer, [])
+    defer { CVPixelBufferUnlockBaseAddress(buffer, []) }
+    let base = CVPixelBufferGetBaseAddress(buffer)!.assumingMemoryBound(to: UInt8.self)
+    let row = CVPixelBufferGetBytesPerRow(buffer)
+    let off = y * row + x * 4
+    return (base[off + 2], base[off + 1], base[off]) // R,G,B
+}
+
+func testCompositionBakesCameraOverlay() {
+    guard let screen = makePixelBuffer(width: 100, height: 100, r: 10, g: 10, b: 60),
+          let camera = makePixelBuffer(width: 40, height: 40, r: 240, g: 30, b: 30),
+          let screenSB = sampleBuffer(from: screen, pts: CMTime(value: 1, timescale: 30)),
+          let cameraSB = sampleBuffer(from: camera, pts: CMTime(value: 1, timescale: 30)) else {
+        check(false, "could not create synthetic buffers")
+        return
+    }
+
+    let renderer = CompositionRenderer()
+    renderer.prepare(outputSize: CGSize(width: 100, height: 100))
+
+    let sourceInfo = ScreenCaptureEngine.SourceInfo(displayFrame: CGRect(x: 0, y: 0, width: 100, height: 100),
+                                                    contentRectPoints: CGRect(x: 0, y: 0, width: 100, height: 100),
+                                                    videoSizePixels: CGSize(width: 100, height: 100),
+                                                    isWindowMode: false,
+                                                    scale: 1)
+
+    var overlay = CameraOverlaySettings(enabled: true,
+                                        shape: .roundedRect,
+                                        sizePreset: .custom,
+                                        customSize: CGSize(width: 20, height: 20),
+                                        position: CGPoint(x: 10, y: 10))
+    overlay.customSize = CGSize(width: 20, height: 20)
+    overlay.borderWidth = 0
+
+    guard let out = renderer.composite(screenBuffer: screenSB,
+                                       cameraBuffer: cameraSB,
+                                       overlay: overlay,
+                                       sourceInfo: sourceInfo,
+                                       mirrorCamera: false,
+                                       drawingImage: nil)?.imageBuffer else {
+        check(false, "composite returned nil")
+        return
+    }
+    let inDot = pixel(out, x: 20, y: 20)   // inside overlay
+    let outside = pixel(out, x: 80, y: 80) // background
+    check(inDot.0 > 180 && inDot.1 < 120, "overlay pixel is red-ish (got \(inDot))")
+    check(outside.2 > 40 && outside.0 < 60, "background is blue-ish (got \(outside))")
+}
+
+func testCompositionBakesDrawing() {
+    guard let screen = makePixelBuffer(width: 80, height: 80, r: 10, g: 10, b: 10),
+          let screenSB = sampleBuffer(from: screen, pts: CMTime(value: 1, timescale: 30)) else {
+        check(false, "could not create synthetic screen")
+        return
+    }
+    // White drawing image covering the whole frame
+    guard let drawingPB = makePixelBuffer(width: 80, height: 80, r: 255, g: 255, b: 255) else {
+        check(false, "could not create drawing buffer")
+        return
+    }
+    let renderer = CompositionRenderer()
+    renderer.prepare(outputSize: CGSize(width: 80, height: 80))
+    let sourceInfo = ScreenCaptureEngine.SourceInfo(displayFrame: CGRect(x: 0, y: 0, width: 80, height: 80),
+                                                    contentRectPoints: CGRect(x: 0, y: 0, width: 80, height: 80),
+                                                    videoSizePixels: CGSize(width: 80, height: 80),
+                                                    isWindowMode: false,
+                                                    scale: 1)
+    guard let out = renderer.composite(screenBuffer: screenSB,
+                                       cameraBuffer: nil,
+                                       overlay: nil,
+                                       sourceInfo: sourceInfo,
+                                       mirrorCamera: false,
+                                       drawingImage: CIImage(cvPixelBuffer: drawingPB))?.imageBuffer else {
+        check(false, "composite with drawing returned nil")
+        return
+    }
+    let p = pixel(out, x: 40, y: 40)
+    check(p.0 > 200 && p.1 > 200 && p.2 > 200, "drawing pixel is white (got \(p))")
+}
+
 testStateMachine()
 testSettings()
 testFileManager()
 testTimeFormatting()
+testCameraLayout()
+testBeautyDefaults()
+testCompositionBakesCameraOverlay()
+testCompositionBakesDrawing()
 
 print("")
 print("Passed: \(passed)   Failed: \(failures)")

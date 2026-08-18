@@ -9,6 +9,10 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
     private var controlBarPanel: NSPanel?
     private var cameraPanel: NSPanel?
     private var regionPicker: RegionPickerController?
+    private(set) var annotationController = AnnotationController()
+    private var countdownPanel: NSPanel?
+    private var countdownLabel: NSTextField?
+    private var countdownTimer: Timer?
 
     func applicationDidFinishLaunching(_ notification: Notification) {
         NSApp.setActivationPolicy(.regular)
@@ -84,14 +88,91 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         let topLeft = CGPoint(x: frame.minX, y: screen.frame.maxY - frame.maxY)
         overlay.position = topLeft
         overlay.customSize = frame.size
+        overlay.sizePreset = .custom
         settings.cameraOverlay = overlay
     }
 
     // MARK: - Excluded windows
 
     func excludedWindowIDs() -> [CGWindowID] {
-        [controlBarPanel, cameraPanel].compactMap { $0?.windowNumber }
-            .map { CGWindowID($0) }
+        var ids: [CGWindowID] = [controlBarPanel, cameraPanel].compactMap { $0?.windowNumber }.map { CGWindowID($0) }
+        if let annotationID = annotationController.overlayWindowID {
+            ids.append(annotationID)
+        }
+        return ids
+    }
+
+    // MARK: - Teaching annotations
+
+    func showAnnotationOverlay(contentFrame: CGRect, pixelSize: CGSize) {
+        annotationController.show(over: contentFrame, pixelSize: pixelSize)
+    }
+
+    func hideAnnotationOverlay() {
+        annotationController.hide()
+    }
+
+    func setDrawingEnabled(_ enabled: Bool) {
+        annotationController.setDrawingEnabled(enabled)
+    }
+
+    func toggleDrawingMode() {
+        annotationController.setDrawingEnabled(!annotationController.canvas.isDrawingEnabled)
+    }
+
+    var annotationCanvasImageProvider: (() -> CoreImage.CIImage?)? {
+        { [weak annotationController] in annotationController?.canvasImage }
+    }
+
+    // MARK: - Countdown
+
+    func showCountdown(_ seconds: Int, completion: @escaping () -> Void) {
+        let panel = NSPanel(contentRect: NSRect(x: 0, y: 0, width: 360, height: 220),
+                            styleMask: [.borderless, .nonactivatingPanel],
+                            backing: .buffered,
+                            defer: false)
+        panel.title = "AITR-Countdown"
+        panel.level = .screenSaver
+        panel.isOpaque = false
+        panel.backgroundColor = .clear
+        panel.hasShadow = false
+        panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        let label = NSTextField(labelWithString: "\(seconds)")
+        label.font = NSFont.systemFont(ofSize: 96, weight: .bold)
+        label.textColor = .white
+        label.alignment = .center
+        let container = NSView(frame: NSRect(x: 0, y: 0, width: 360, height: 220))
+        container.wantsLayer = true
+        container.layer?.backgroundColor = NSColor.black.withAlphaComponent(0.55).cgColor
+        container.layer?.cornerRadius = 24
+        label.frame = container.bounds
+        label.autoresizingMask = [.width, .height]
+        container.addSubview(label)
+        panel.contentView = container
+        if let screen = NSScreen.main {
+            panel.setFrameOrigin(NSPoint(x: screen.visibleFrame.midX - 180, y: screen.visibleFrame.midY - 110))
+        }
+        panel.orderFrontRegardless()
+        countdownPanel = panel
+        countdownLabel = label
+
+        var remaining = seconds
+        countdownTimer?.invalidate()
+        countdownTimer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { timer in
+            remaining -= 1
+            if remaining > 0 {
+                label.stringValue = "\(remaining)"
+                NSSound.beep()
+            } else {
+                timer.invalidate()
+                self.countdownTimer = nil
+                panel.orderOut(nil)
+                self.countdownPanel = nil
+                self.countdownLabel = nil
+                completion()
+            }
+        }
+        RunLoop.main.add(countdownTimer!, forMode: .common)
     }
 
     // MARK: - Region picker

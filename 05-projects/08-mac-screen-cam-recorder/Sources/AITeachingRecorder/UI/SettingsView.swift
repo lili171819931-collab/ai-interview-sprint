@@ -31,6 +31,11 @@ struct SettingsView: View {
                                 Text(s.displayName).tag(s)
                             }
                         }
+                        Picker("Layout", selection: $overlay.layout) {
+                            ForEach(CameraLayout.allCases) { l in
+                                Text(l.displayName).tag(l)
+                            }
+                        }
                         Picker("Overlay size", selection: $overlay.sizePreset) {
                             ForEach(OverlaySizePreset.allCases) { s in
                                 Text(s.displayName).tag(s)
@@ -39,6 +44,26 @@ struct SettingsView: View {
                         Toggle("Border", isOn: Binding(get: { overlay.borderWidth > 0 },
                                                        set: { overlay.borderWidth = $0 ? 2 : 0 }))
                         Toggle("Shadow", isOn: $overlay.shadow)
+                        Divider()
+                        Picker("Color filter", selection: $overlay.filterPreset) {
+                            ForEach(CameraFilterPreset.allCases) { f in
+                                Text(f.displayName).tag(f)
+                            }
+                        }
+                        Toggle("Beauty", isOn: $overlay.beauty.enabled)
+                        if overlay.beauty.enabled {
+                            VStack(alignment: .leading, spacing: 6) {
+                                HStack { Text("Whitening"); Spacer(); Text("\(Int(overlay.beauty.whitening * 100))%").foregroundColor(.secondary).font(.caption) }
+                                Slider(value: $overlay.beauty.whitening, in: 0...1)
+                                HStack { Text("Blush"); Spacer(); Text("\(Int(overlay.beauty.blush * 100))%").foregroundColor(.secondary).font(.caption) }
+                                Slider(value: $overlay.beauty.blush, in: 0...1)
+                                HStack { Text("Clarity"); Spacer(); Text("\(Int(overlay.beauty.clarity * 100))%").foregroundColor(.secondary).font(.caption) }
+                                Slider(value: $overlay.beauty.clarity, in: 0...1)
+                                HStack { Text("Smooth"); Spacer(); Text("\(Int(overlay.beauty.smooth * 100))%").foregroundColor(.secondary).font(.caption) }
+                                Slider(value: $overlay.beauty.smooth, in: 0...1)
+                            }
+                            .padding(.leading, 8)
+                        }
                     }
                 }
 
@@ -66,6 +91,13 @@ struct SettingsView: View {
                             Slider(value: qualityBinding, in: 10...100, step: 5)
                         }
                         Toggle("Show mouse cursor in recording", isOn: $settings.showCursor)
+                        Toggle("Show mouse click effects", isOn: $settings.showMouseClicks)
+                        Picker("Countdown before recording", selection: $settings.countdown) {
+                            Text("None").tag(0)
+                            Text("3 seconds").tag(3)
+                            Text("5 seconds").tag(5)
+                            Text("10 seconds").tag(10)
+                        }
                     }
                 }
 
@@ -95,6 +127,35 @@ struct SettingsView: View {
                         ShortcutRow(name: "Stop", value: settings.stopShortcut)
                         ShortcutRow(name: "Toggle Camera", value: settings.cameraShortcut)
                         ShortcutRow(name: "Toggle Microphone", value: settings.micShortcut)
+                    }
+                }
+
+                // Teaching
+                GlassCard {
+                    VStack(alignment: .leading, spacing: 12) {
+                        sectionHeader("Teaching Annotations", icon: "pencil.tip")
+                        Toggle("Enable annotations while recording", isOn: $settings.annotationsEnabled)
+                        if settings.annotationsEnabled {
+                            Picker("Default tool", selection: $settings.annotationTool) {
+                                ForEach(AnnotationTool.allCases) { t in
+                                    Text(t.displayName).tag(t.rawValue)
+                                }
+                            }
+                            Picker("Default color", selection: $settings.annotationColorHex) {
+                                Text("Red").tag("#FF3B30")
+                                Text("Orange").tag("#FF9500")
+                                Text("Yellow").tag("#FFCC00")
+                                Text("Green").tag("#34C759")
+                                Text("Blue").tag("#32ADE6")
+                                Text("Purple").tag("#AF52DE")
+                                Text("White").tag("#FFFFFF")
+                            }
+                            HStack {
+                                Text("Line width")
+                                Spacer()
+                                Slider(value: $settings.annotationWidth, in: 2...16, step: 1).frame(width: 160)
+                            }
+                        }
                     }
                 }
 

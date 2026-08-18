@@ -16,6 +16,12 @@ public final class SettingsStore: ObservableObject {
         self.fps = Self.loadInt(defaults, Key.fps, 30)
         self.quality = Self.loadInt(defaults, Key.quality, 70)
         self.showCursor = Self.loadBool(defaults, Key.showCursor, true)
+        self.showMouseClicks = Self.loadBool(defaults, Key.showMouseClicks, false)
+        self.countdown = Self.loadInt(defaults, Key.countdown, 0)
+        self.annotationsEnabled = Self.loadBool(defaults, Key.annotationsEnabled, false)
+        self.annotationTool = defaults.string(forKey: Key.annotationTool) ?? "pen"
+        self.annotationColorHex = defaults.string(forKey: Key.annotationColorHex) ?? "#FF3B30"
+        self.annotationWidth = defaults.object(forKey: Key.annotationWidth) == nil ? 5.0 : defaults.double(forKey: Key.annotationWidth)
         self.cameraDeviceID = defaults.string(forKey: Key.cameraDeviceID)
         self.cameraResolution = defaults.string(forKey: Key.cameraResolution) ?? "1920x1080"
         self.cameraFPS = Self.loadInt(defaults, Key.cameraFPS, 30)
@@ -48,6 +54,12 @@ public final class SettingsStore: ObservableObject {
         static let cameraShortcut = "aitr.shortcut.camera"
         static let micShortcut = "aitr.shortcut.mic"
         static let showCursor = "aitr.showCursor"
+        static let showMouseClicks = "aitr.showMouseClicks"
+        static let countdown = "aitr.countdown"
+        static let annotationsEnabled = "aitr.annotationsEnabled"
+        static let annotationTool = "aitr.annotationTool"
+        static let annotationColorHex = "aitr.annotationColorHex"
+        static let annotationWidth = "aitr.annotationWidth"
         static let audioSampleRate = "aitr.audioSampleRate"
         static let excludeOwnWindows = "aitr.excludeOwnWindows"
     }
@@ -94,6 +106,30 @@ public final class SettingsStore: ObservableObject {
 
     @Published public var showCursor: Bool {
         didSet { defaults.set(showCursor, forKey: Key.showCursor) }
+    }
+
+    @Published public var showMouseClicks: Bool {
+        didSet { defaults.set(showMouseClicks, forKey: Key.showMouseClicks) }
+    }
+
+    @Published public var countdown: Int {
+        didSet { defaults.set(countdown, forKey: Key.countdown) }
+    }
+
+    @Published public var annotationsEnabled: Bool {
+        didSet { defaults.set(annotationsEnabled, forKey: Key.annotationsEnabled) }
+    }
+
+    @Published public var annotationTool: String {
+        didSet { defaults.set(annotationTool, forKey: Key.annotationTool) }
+    }
+
+    @Published public var annotationColorHex: String {
+        didSet { defaults.set(annotationColorHex, forKey: Key.annotationColorHex) }
+    }
+
+    @Published public var annotationWidth: Double {
+        didSet { defaults.set(annotationWidth, forKey: Key.annotationWidth) }
     }
 
     public var audioSampleRate: Int {
@@ -190,6 +226,8 @@ public final class SettingsStore: ObservableObject {
             cameraEnabled: cameraEnabled,
             cameraDeviceID: cameraDeviceID ?? self.cameraDeviceID,
             cameraOverlay: overlay,
+            countdown: countdown,
+            showMouseClicks: showMouseClicks,
             outputURL: nil
         )
     }

@@ -4,7 +4,8 @@ set -euo pipefail
 cd "$(dirname "$0")/.."
 
 echo "==> Building release binaries…"
-swift build -c release
+# Build only the app product (the unit-test runner needs debug/testing mode).
+swift build -c release --product AITeachingRecorder
 
 BIN_DIR="$(swift build -c release --show-bin-path)"
 APP="dist/AI Teaching Recorder.app"

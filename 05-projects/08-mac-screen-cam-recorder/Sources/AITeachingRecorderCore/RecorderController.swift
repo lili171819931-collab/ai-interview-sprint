@@ -2,6 +2,7 @@ import Foundation
 import Combine
 import CoreMedia
 import CoreVideo
+import CoreImage
 import AVFoundation
 
 /// Orchestrates screen + camera + mic capture, real-time overlay compositing and MP4 writing.
@@ -45,6 +46,9 @@ public final class RecorderController: ObservableObject {
     private var stateMachine = RecorderStateMachine()
     private var lastFramePTS: CMTime?
     private var pausedElapsed: TimeInterval = 0
+
+    /// The app provides the current annotation canvas image here; it gets baked into every frame.
+    public var drawingImageProvider: (() -> CIImage?)?
 
     public init() {
         cameraEngine.onSample = { [weak self] buffer in
@@ -133,6 +137,7 @@ public final class RecorderController: ObservableObject {
             info = try await screenEngine.start(configuration: configuration,
                                                 excludedWindowIDs: excludedWindowIDs,
                                                 showsCursor: settings.showCursor,
+                                                showMouseClicks: configuration.showMouseClicks,
                                                 audioSampleRate: settings.audioSampleRate)
         } catch {
             stopEnginesQuietly()
@@ -318,12 +323,14 @@ public final class RecorderController: ObservableObject {
         latestCameraBufferLock.unlock()
 
         let overlay = cameraEnabled ? self.overlay : nil
+        let drawing = drawingImageProvider?()
         guard let sourceInfo,
               let composed = compositor.composite(screenBuffer: buffer,
                                                   cameraBuffer: camera,
                                                   overlay: overlay,
                                                   sourceInfo: sourceInfo,
-                                                  mirrorCamera: overlay?.mirror ?? true) else { return }
+                                                  mirrorCamera: overlay?.mirror ?? true,
+                                                  drawingImage: drawing) else { return }
         writer.appendVideo(composed)
     }
 

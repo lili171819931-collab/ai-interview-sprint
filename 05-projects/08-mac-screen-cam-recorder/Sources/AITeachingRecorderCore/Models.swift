@@ -25,13 +25,117 @@ public enum CaptureMode: String, Codable, CaseIterable, Identifiable {
 public enum OverlayShape: String, Codable, CaseIterable, Identifiable {
     case roundedRect
     case circle
+    case ellipse
+    case square
+    case diamond
 
     public var id: String { rawValue }
     public var displayName: String {
         switch self {
         case .roundedRect: return "Rounded Rectangle"
         case .circle: return "Circle"
+        case .ellipse: return "Ellipse"
+        case .square: return "Square"
+        case .diamond: return "Diamond"
         }
+    }
+}
+
+/// Where/how the camera appears in the recording (mirrors the web app's split modes).
+public enum CameraLayout: String, Codable, CaseIterable, Identifiable {
+    case floating        // free draggable PiP (default, 画中画)
+    case topLeft
+    case topRight
+    case bottomLeft
+    case bottomRight
+    case topBar          // 上下分屏: camera as a full-width bar on top
+    case bottomBar       // 上下分屏: camera as a full-width bar at the bottom
+    case circle          // 圆形浮窗
+
+    public var id: String { rawValue }
+    public var displayName: String {
+        switch self {
+        case .floating: return "Floating PiP"
+        case .topLeft: return "Top Left"
+        case .topRight: return "Top Right"
+        case .bottomLeft: return "Bottom Left"
+        case .bottomRight: return "Bottom Right"
+        case .topBar: return "Top Bar"
+        case .bottomBar: return "Bottom Bar"
+        case .circle: return "Circle"
+        }
+    }
+}
+
+public enum CameraFilterPreset: String, Codable, CaseIterable, Identifiable {
+    case none
+    case warm
+    case cool
+    case bw
+    case retro
+
+    public var id: String { rawValue }
+    public var displayName: String {
+        switch self {
+        case .none: return "Original"
+        case .warm: return "Warm"
+        case .cool: return "Cool"
+        case .bw: return "Black & White"
+        case .retro: return "Retro"
+        }
+    }
+}
+
+/// Teaching annotation tools (integrated from the web app's annotation engine).
+public enum AnnotationTool: String, Codable, CaseIterable, Identifiable {
+    case pen
+    case arrow
+    case rect
+    case ellipse
+    case text
+    case eraser
+
+    public var id: String { rawValue }
+    public var displayName: String {
+        switch self {
+        case .pen: return "Pen"
+        case .arrow: return "Arrow"
+        case .rect: return "Rectangle"
+        case .ellipse: return "Ellipse"
+        case .text: return "Text"
+        case .eraser: return "Eraser"
+        }
+    }
+    public var iconName: String {
+        switch self {
+        case .pen: return "pencil.tip"
+        case .arrow: return "arrow.up.right"
+        case .rect: return "rectangle"
+        case .ellipse: return "circle"
+        case .text: return "textformat"
+        case .eraser: return "eraser"
+        }
+    }
+}
+
+/// Beauty adjustments applied to the camera before compositing (磨皮/美白/红润/清晰度).
+public struct BeautySettings: Codable, Equatable {
+    public var enabled: Bool
+    public var whitening: Double    // 0...1
+    public var blush: Double        // 0...1
+    public var clarity: Double      // 0...1
+    public var smooth: Double       // 0...1
+
+    public init(enabled: Bool = false,
+                whitening: Double = 0.3,
+                blush: Double = 0.2,
+                clarity: Double = 0.2,
+                smooth: Double = 0.2) {
+        self.enabled = enabled
+        self.whitening = whitening
+        self.blush = blush
+        self.clarity = clarity
+        self.smooth = smooth
     }
 }
 
@@ -39,6 +143,7 @@ public enum OverlaySizePreset: String, Codable, CaseIterable, Identifiable {
     case small
     case medium
     case large
+    case custom
 
     public var id: String { rawValue }
     public var displayName: String { rawValue.capitalized }
@@ -48,6 +153,7 @@ public enum OverlaySizePreset: String, Codable, CaseIterable, Identifiable {
         case .small: return CGSize(width: 160, height: 120)
         case .medium: return CGSize(width: 240, height: 180)
         case .large: return CGSize(width: 320, height: 240)
+        case .custom: return CGSize(width: 240, height: 180)
         }
     }
 }
@@ -62,6 +168,9 @@ public struct CameraOverlaySettings: Codable, Equatable {
     public var borderWidth: CGFloat
     public var borderColorHex: String
     public var shadow: Bool
+    public var layout: CameraLayout
+    public var filterPreset: CameraFilterPreset
+    public var beauty: BeautySettings
 
     public init(
         enabled: Bool = true,
@@ -72,7 +181,10 @@ public struct CameraOverlaySettings: Codable, Equatable {
         position: CGPoint = CGPoint(x: 80, y: 80),
         borderWidth: CGFloat = 2,
         borderColorHex: String = "#FFFFFF",
-        shadow: Bool = true
+        shadow: Bool = true,
+        layout: CameraLayout = .floating,
+        filterPreset: CameraFilterPreset = .none,
+        beauty: BeautySettings = BeautySettings()
     ) {
         self.enabled = enabled
         self.mirror = mirror
@@ -83,12 +195,39 @@ public struct CameraOverlaySettings: Codable, Equatable {
         self.borderWidth = borderWidth
         self.borderColorHex = borderColorHex
         self.shadow = shadow
+        self.layout = layout
+        self.filterPreset = filterPreset
+        self.beauty = beauty
+    }
+
+    /// Computes the camera overlay rect (in global display points) for a given layout.
+    public func rect(for layout: CameraLayout, in frame: CGRect) -> CGRect {
+        let size = resolvedSize
+        let margin: CGFloat = 24
+        switch layout {
+        case .floating:
+            return CGRect(origin: position, size: size)
+        case .topLeft:
+            return CGRect(x: frame.minX + margin, y: frame.minY + margin, width: size.width, height: size.height)
+        case .topRight:
+            return CGRect(x: frame.maxX - size.width - margin, y: frame.minY + margin, width: size.width, height: size.height)
+        case .bottomLeft:
+            return CGRect(x: frame.minX + margin, y: frame.maxY - size.height - margin, width: size.width, height: size.height)
+        case .bottomRight:
+            return CGRect(x: frame.maxX - size.width - margin, y: frame.maxY - size.height - margin, width: size.width, height: size.height)
+        case .topBar:
+            return CGRect(x: frame.minX, y: frame.minY, width: frame.width, height: size.height + 20)
+        case .bottomBar:
+            return CGRect(x: frame.minX, y: frame.maxY - size.height - 20, width: frame.width, height: size.height + 20)
+        case .circle:
+            let r = size.width
+            return CGRect(x: frame.maxX - r - margin, y: frame.minY + margin, width: r, height: r)
+        }
     }
 
     public var resolvedSize: CGSize {
-        switch sizePreset {
-        case .small, .medium, .large: return sizePreset.size
-        }
+        if sizePreset == .custom { return customSize }
+        return sizePreset.size
     }
 }
 
@@ -107,6 +246,8 @@ public struct RecordingConfiguration: Codable, Equatable {
     public var cameraEnabled: Bool
     public var cameraDeviceID: String?
     public var cameraOverlay: CameraOverlaySettings
+    public var countdown: Int
+    public var showMouseClicks: Bool
     public var outputURL: URL?
 
     public init(
@@ -122,6 +263,8 @@ public struct RecordingConfiguration: Codable, Equatable {
         cameraEnabled: Bool = true,
         cameraDeviceID: String? = nil,
         cameraOverlay: CameraOverlaySettings = CameraOverlaySettings(),
+        countdown: Int = 0,
+        showMouseClicks: Bool = false,
         outputURL: URL? = nil
     ) {
         self.mode = mode
@@ -136,6 +279,8 @@ public struct RecordingConfiguration: Codable, Equatable {
         self.cameraEnabled = cameraEnabled
         self.cameraDeviceID = cameraDeviceID
         self.cameraOverlay = cameraOverlay
+        self.countdown = countdown
+        self.showMouseClicks = showMouseClicks
         self.outputURL = outputURL
     }
 }

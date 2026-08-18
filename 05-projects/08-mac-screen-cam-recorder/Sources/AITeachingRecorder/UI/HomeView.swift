@@ -439,6 +439,22 @@ struct HomeView: View {
         // Show the floating windows FIRST so their window IDs exist and can be excluded from the capture.
         appDelegate.showControlBar()
         appDelegate.showCameraPanelIfNeeded()
+        if SettingsStore.shared.annotationsEnabled, let geometry = annotationGeometry() {
+            appDelegate.showAnnotationOverlay(contentFrame: geometry.frame, pixelSize: geometry.pixelSize)
+        }
+        controller.drawingImageProvider = appDelegate.annotationCanvasImageProvider
+
+        let countdown = SettingsStore.shared.countdown
+        if countdown > 0 {
+            appDelegate.showCountdown(countdown) {
+                self.beginRecording()
+            }
+        } else {
+            beginRecording()
+        }
+    }
+
+    private func beginRecording() {
         Task {
             do {
                 try await controller.startWith(mode: selectedMode,
@@ -449,8 +465,34 @@ struct HomeView: View {
             } catch {
                 appDelegate.hideControlBar()
                 appDelegate.hideCameraPanel()
+                appDelegate.hideAnnotationOverlay()
+                controller.drawingImageProvider = nil
                 // controller.lastError is already surfaced by the phase; nothing else to do.
             }
+        }
+    }
+
+    /// Frame (global points) + pixel size the annotation canvas must cover, matching the captured content.
+    private func annotationGeometry() -> (frame: CGRect, pixelSize: CGSize)? {
+        func scale(for display: DisplayInfo) -> CGFloat {
+            CGFloat(display.widthPixels) / max(display.frame.width, 1)
+        }
+        switch selectedMode {
+        case .entireScreen:
+            guard let d = displays.first else { return nil }
+            let sc = scale(for: d)
+            return (d.frame, CGSize(width: d.frame.width * sc, height: d.frame.height * sc))
+        case .display:
+            guard let id = selectedDisplayID, let d = displays.first(where: { $0.id == id }) else { return nil }
+            let sc = scale(for: d)
+            return (d.frame, CGSize(width: d.frame.width * sc, height: d.frame.height * sc))
+        case .region:
+            guard let r = region, let d = displays.first(where: { $0.id == selectedDisplayID }) else { return nil }
+            let sc = scale(for: d)
+            return (r, CGSize(width: r.width * sc, height: r.height * sc))
+        case .window:
+            guard let w = windows.first(where: { $0.id == selectedWindowID }) else { return nil }
+            return (w.frame, CGSize(width: w.frame.width * 2, height: w.frame.height * 2))
         }
     }
 
