@@ -203,3 +203,20 @@ export function buildSourceCompleteChain(repo: LiveRepo, intel: SourceIntel): { 
     { stage: 14, label: "可复制性", key: "replicable", content: `基于检出栈 ${stack} 可 7-30 天复制 MVP；风险：模型成本/竞争[INFERENCE]` },
   ];
 }
+
+
+/** 源码驱动全景图自问自答 */
+export function buildSourcePanoramaQA(repo: LiveRepo, intel: SourceIntel): { node: string; qa: { q: string; a: string }[] }[] {
+  return buildSourcePanorama(repo, intel).map((n) => ({ node: n.node, qa: n.questions.map((q, i) => ({ q, a: n.answers[i] ?? "" })) }));
+}
+
+export function buildSourceQaMarkdown(repo: LiveRepo, intel: SourceIntel): string {
+  const L: string[] = [`# ${repo.name} · 产品全景图自问自答（源码驱动）`, `> ${repo.fullName} · ${intel.tagline}`, ""];
+  L.push(`## 产品全景图`, "");
+  for (const it of buildSourcePanoramaQA(repo, intel)) {
+    L.push(`### ${it.node}`, "");
+    it.qa.forEach((x) => L.push(`**Q：${x.q}**`, `> A：${x.a}`, ""));
+  }
+  L.push("---", `*由 AI OSS Intel 自动生成（GitHub 实时源码抓取）· ${new Date().toISOString().slice(0, 10)}*`);
+  return L.join("\n");
+}

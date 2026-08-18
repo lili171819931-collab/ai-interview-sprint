@@ -385,3 +385,33 @@ export function buildTechRouteMainline(p: Project): MapNode[] {
     N("Moat", moatOf(p), [moatOf(p), "护城河 = 数据 × 场景 × 分发", "生态/工作流锁定让用户难以离开"], ["它为什么能持续存在？", "大厂做了怎么办？"], "Inferred"),
   ].map((n) => ({ ...n, answers: n.questions.map((qq) => answerQuestion(p, n.node, qq)) }));
 }
+
+
+/* ── 全景图自问自答（Q→A 报告） ─────────────────────────────────── */
+export interface QAItem {
+  node: string;
+  qa: { q: string; a: string }[];
+}
+
+export function buildPanoramaQA(p: Project): QAItem[] {
+  return buildPanorama(p).map((n) => ({ node: n.node, qa: n.questions.map((q, i) => ({ q, a: n.answers[i] ?? "" })) }));
+}
+
+export function buildMainlineQA(p: Project): QAItem[] {
+  return buildTechRouteMainline(p).map((n) => ({ node: n.node, qa: n.questions.map((q, i) => ({ q, a: n.answers[i] ?? "" })) }));
+}
+
+export function buildQaMarkdown(p: Project): string {
+  const L: string[] = [`# ${p.name} · 产品全景图自问自答`, `> ${p.fullName} · ${p.tagline}`, ""];
+  const push = (title: string, items: QAItem[]) => {
+    L.push(`## ${title}`, "");
+    for (const it of items) {
+      L.push(`### ${it.node}`, "");
+      it.qa.forEach((x) => L.push(`**Q：${x.q}**`, `> A：${x.a}`, ""));
+    }
+  };
+  push("产品全景图", buildPanoramaQA(p));
+  push("技术路线主线", buildMainlineQA(p));
+  L.push("---", `*由 AI OSS Intel 自动生成 · ${new Date().toISOString().slice(0, 10)}*`);
+  return L.join("\n");
+}

@@ -275,3 +275,20 @@ const panDir = buildDirectorReport(sample).panorama;
 assert(panDir.every((n) => n.answers.length === n.questions.length), "director panorama: answers");
 const srcPan = buildSourcePanorama(fakeRepo, srcIntel);
 assert(srcPan.every((n) => n.answers.length === n.questions.length), "source panorama: answers");
+
+/* ── 全景图自问自答（Q→A 报告）tests ─────────────────────────────────── */
+import { buildPanoramaQA, buildMainlineQA, buildQaMarkdown } from "../src/lib/master";
+import { buildDirectorQA } from "../src/lib/director";
+import { buildSourcePanoramaQA, buildSourceQaMarkdown } from "../src/lib/sourceMaster";
+
+const pqa = buildPanoramaQA(sample);
+assert(pqa.length === buildPanorama(sample).length && pqa.every((n) => n.qa.length > 0), "qa: panorama Q→A");
+assert(buildMainlineQA(sample).every((n) => n.qa.every((x) => x.a.length > 0)), "qa: mainline answers");
+assert(buildDirectorQA(sample).length === buildDirectorReport(sample).panorama.length, "qa: director panorama");
+const qmd = buildQaMarkdown(sample);
+assert(qmd.includes("产品全景图自问自答") && qmd.includes("Q：") && qmd.includes("A："), "qa: markdown");
+const sqa = buildSourcePanoramaQA(fakeRepo, srcIntel);
+assert(sqa.length === buildSourcePanorama(fakeRepo, srcIntel).length && sqa[0].qa.length > 0, "qa: source");
+assert(buildSourceQaMarkdown(fakeRepo, srcIntel).includes("Q："), "qa: source markdown");
+const fullMd = buildProjectReportMarkdown(sample);
+assert(fullMd.includes("产品全景图 · 自问自答") && fullMd.includes("Q：") && fullMd.includes("A："), "qa: in full report markdown");

@@ -450,3 +450,9 @@ export function buildSourceDirectorReport(repo: LiveRepo, intel: SourceIntel): D
 }
 
 export { scoreColor };
+
+
+/** 总监全景图自问自答 */
+export function buildDirectorQA(p: Project): { node: string; qa: { q: string; a: string }[] }[] {
+  return buildDirectorReport(p).panorama.map((n) => ({ node: n.node, qa: n.questions.map((q, i) => ({ q, a: n.answers[i] ?? "" })) }));
+}

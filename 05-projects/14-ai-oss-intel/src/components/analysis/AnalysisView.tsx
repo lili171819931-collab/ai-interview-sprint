@@ -41,7 +41,8 @@ export function MasterAnalysis({ project }: { project: Project }) {
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
         <span className="text-[12px] font-bold text-white">📄 完整报告</span>
-        <Link href={`/projects/${project.slug}/report`} className="chip chip-accent ml-auto">打开完整报告页 →</Link>
+        <Link href={`/projects/${project.slug}/report`} className="chip chip-accent">打开完整报告页 →</Link>
+        <Link href={`/projects/${project.slug}/qa`} className="chip hover:!text-[#7dd3fc]">💬 自问自答页 →</Link>
         <ReportActions markdown={buildProjectReportMarkdown(project)} />
       </div>
 

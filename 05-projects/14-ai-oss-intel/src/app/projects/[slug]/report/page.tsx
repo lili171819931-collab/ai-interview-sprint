@@ -8,7 +8,7 @@ import {
   buildMasterReport, buildFactSheet, buildKillerFeature, buildBeforeAfter, buildAiValueMap,
   buildFeatureDependency, buildTechChallenges, buildProductChallenges, buildProduct2,
   buildCloningPlan, buildThreeConclusions, buildPanorama, buildDirectorView,
-  buildCompleteChain, buildTechRouteMainline,
+  buildCompleteChain, buildTechRouteMainline, buildPanoramaQA,
 } from "@/lib/master";
 import { buildProjectReportMarkdown } from "@/lib/report";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
@@ -48,6 +48,7 @@ export default async function ProjectReportPage({ params }: { params: Promise<{ 
     <div className="max-w-[900px] mx-auto space-y-5">
       <div className="flex items-center gap-2">
         <Link href={`/projects/${p.slug}`} className="chip hover:!text-[#7dd3fc]"><ArrowLeft size={12} /> 返回项目页</Link>
+        <Link href={`/projects/${p.slug}/qa`} className="chip hover:!text-[#7dd3fc]">💬 全景图自问自答页 →</Link>
         <div className="ml-auto"><ReportActions markdown={md} /></div>
       </div>
 
@@ -178,6 +179,29 @@ export default async function ProjectReportPage({ params }: { params: Promise<{ 
             <div key={sec.n} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
               <div className="text-[12px] font-bold text-[#7dd3fc]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
               <div className="text-[12.5px] text-[#aab6cd] leading-relaxed mt-1">{sec.body}</div>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* 产品全景图 · 自问自答 */}
+      <section className="panel p-6">
+        <div className="flex items-center gap-2 mb-4">
+          <h2 className="text-[16px] font-bold text-white">💬 产品全景图 · 自问自答</h2>
+          <Link href={`/projects/${p.slug}/qa`} className="chip chip-accent ml-auto">打开自问自答页 →</Link>
+        </div>
+        <div className="grid gap-2 md:grid-cols-2">
+          {buildPanoramaQA(p).map((it) => (
+            <div key={it.node} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+              <div className="text-[12px] font-bold text-[#7dd3fc] mb-1">{it.node}</div>
+              <div className="space-y-1">
+                {it.qa.map((x, i) => (
+                  <div key={i} className="text-[11.5px]">
+                    <div className="text-[#fbbf24] font-semibold">Q：{x.q}</div>
+                    <div className="text-[#aab6cd]">A：{x.a}</div>
+                  </div>
+                ))}
+              </div>
             </div>
           ))}
         </div>

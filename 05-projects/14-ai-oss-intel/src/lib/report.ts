@@ -16,8 +16,9 @@ import { categoryOf } from "@/lib/categories";
 import type { Project } from "@/lib/types";
 import type { LiveRepo } from "@/lib/live";
 import type { SourceIntel } from "@/lib/source";
-import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceCompleteChain, buildSourceFactSheet } from "@/lib/sourceMaster";
-import { buildDirectorReport, buildSourceDirectorReport } from "@/lib/director";
+import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceCompleteChain, buildSourceFactSheet, buildSourcePanoramaQA } from "@/lib/sourceMaster";
+import { buildDirectorReport, buildSourceDirectorReport, buildDirectorQA } from "@/lib/director";
+import { buildPanoramaQA, buildMainlineQA } from "@/lib/master";
 
 export function buildProjectReportMarkdown(p: Project): string {
   const s = computeScores(p);
@@ -129,6 +130,21 @@ export function buildProjectReportMarkdown(p: Project): string {
   L.push(`- 30/60/90：${dr.plan90.d30.join("·")} / ${dr.plan90.d60.join("·")} / ${dr.plan90.d90.join("·")}`);
   L.push(`- Zero→One：${dr.zeroOne.join(" → ")}；保留 3 功能：${dr.threeFeatures.keep.join("·")}`);
   L.push(`- AI 10×：${dr.ai10x}`);
+  L.push(`\n## 💬 产品全景图 · 自问自答`);
+  buildPanoramaQA(p).forEach((it) => {
+    L.push(`\n### ${it.node}`);
+    it.qa.forEach((x) => L.push(`- **Q：${x.q}**\n  A：${x.a}`));
+  });
+  L.push(`\n## 🗺️ 技术路线主线 · 自问自答`);
+  buildMainlineQA(p).forEach((it) => {
+    L.push(`\n### ${it.node}`);
+    it.qa.forEach((x) => L.push(`- **Q：${x.q}**\n  A：${x.a}`));
+  });
+  L.push(`\n## 👔 产品总监全景图 · 自问自答`);
+  buildDirectorQA(p).forEach((it) => {
+    L.push(`\n### ${it.node}`);
+    it.qa.forEach((x) => L.push(`- **Q：${x.q}**\n  A：${x.a}`));
+  });
   L.push(`\n---\n*由 AI OSS Intel 自动生成 · ${p.fullName} · ${new Date().toISOString().slice(0, 10)}*`);
   return L.join("\n");
 }
@@ -163,6 +179,11 @@ export function buildSourceReportMarkdown(repo: LiveRepo, intel: SourceIntel): s
   L.push(`- Would I Bet On It：${dr.conclusions.bet} — ${dr.conclusions.betWhy}`);
   L.push(`### AI PRODUCT DIRECTOR SCORE：${dr.overall}/100`);
   dr.scores.forEach((x) => L.push(`- ${x.label}：${x.value}`));
+  L.push(`\n## 💬 产品全景图 · 自问自答（源码驱动）`);
+  buildSourcePanoramaQA(repo, intel).forEach((it) => {
+    L.push(`\n### ${it.node}`);
+    it.qa.forEach((x) => L.push(`- **Q：${x.q}**\n  A：${x.a}`));
+  });
   L.push(`\n---\n*由 AI OSS Intel 自动生成（GitHub 实时源码抓取）· ${repo.fullName} · ${new Date().toISOString().slice(0, 10)}*`);
   return L.join("\n");
 }
