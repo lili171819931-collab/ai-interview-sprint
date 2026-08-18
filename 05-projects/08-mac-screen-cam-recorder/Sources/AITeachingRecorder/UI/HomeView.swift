@@ -24,9 +24,9 @@ struct HomeView: View {
                 permissionSection
                 if !screenGrantedAtLaunch && permissions.screen == .granted {
                     PermissionBanner(title: "Screen Recording permission granted",
-                                     message: "Please restart AI Teaching Recorder so the new permission takes effect.",
-                                     buttonTitle: "Quit & Reopen") {
-                                        NSApp.terminate(nil)
+                                     message: "Restart AI Teaching Recorder so the new permission takes effect.",
+                                     buttonTitle: "Restart Now") {
+                                        (NSApp.delegate as? AppDelegate)?.relaunchApp()
                     }
                 }
                 if controller.phase.isActive || controller.phase.isBusy {
@@ -43,7 +43,15 @@ struct HomeView: View {
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
         .background(Color(nsColor: .windowBackgroundColor))
-        .onAppear { refresh() }
+        .onAppear {
+            refresh()
+            // Ask for Screen Recording on first launch — TCC requires a fresh grant for the
+            // currently-signed build; without it the app cannot start recording.
+            if PermissionsManager.shared.screenRecordingStatus == .notDetermined {
+                PermissionsManager.shared.requestScreenRecording()
+                refreshPermissions()
+            }
+        }
         .onReceive(NotificationCenter.default.publisher(for: .permissionsChanged)) { _ in
             refreshPermissions()
         }
@@ -96,9 +104,10 @@ struct HomeView: View {
             VStack(spacing: 8) {
                 if permissions.screen != .granted {
                     PermissionBanner(title: "Screen Recording permission required",
-                                     message: "AI Teaching Recorder needs Screen Recording to capture your screen.",
+                                     message: "Enable AI Teaching Recorder in System Settings → Privacy & Security → Screen Recording, then restart the app.",
                                      buttonTitle: "Open System Settings") {
                         PermissionsManager.shared.requestScreenRecording()
+                        PermissionsManager.shared.openScreenRecordingSettings()
                         refreshPermissions()
                     }
                 }

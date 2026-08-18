@@ -23,6 +23,29 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         UserDefaults.standard.set(PermissionsManager.shared.screenRecordingStatus == .granted,
                                   forKey: "aitr.screenGrantedAtLaunch")
         startPermissionMonitor()
+        dumpPermissions()
+    }
+
+    private func statusString(_ s: PermissionStatus) -> String {
+        switch s {
+        case .notDetermined: return "notDetermined"
+        case .granted: return "granted"
+        case .denied: return "denied"
+        case .restricted: return "restricted"
+        }
+    }
+
+    private func dumpPermissions() {
+        let p = PermissionsManager.shared
+        let dict: [String: Any] = [
+            "screen": statusString(p.screenRecordingStatus),
+            "camera": statusString(p.cameraStatus()),
+            "microphone": statusString(p.microphoneStatus()),
+            "timestamp": Date().timeIntervalSince1970
+        ]
+        if let data = try? JSONSerialization.data(withJSONObject: dict, options: [.prettyPrinted, .sortedKeys]) {
+            try? data.write(to: URL(fileURLWithPath: "/tmp/aitr-perms.json"))
+        }
     }
 
     /// Polls TCC status so the UI updates the moment the user grants permissions in System Settings
@@ -33,6 +56,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             let readiness = PermissionsManager.shared.readiness()
             if readiness != self?.lastReadiness {
                 self?.lastReadiness = readiness
+                self?.dumpPermissions()
                 NotificationCenter.default.post(name: .permissionsChanged, object: nil)
             }
         }
@@ -190,6 +214,19 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
         RunLoop.main.add(countdownTimer!, forMode: .common)
+    }
+
+    // MARK: - Relaunch (screen recording permission takes effect after restart)
+
+    func relaunchApp() {
+        let url = Bundle.main.bundleURL
+        let proc = Process()
+        proc.executableURL = URL(fileURLWithPath: "/usr/bin/open")
+        proc.arguments = [url.path]
+        try? proc.run()
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
+            NSApp.terminate(nil)
+        }
     }
 
     // MARK: - Region picker
