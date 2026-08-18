@@ -267,3 +267,11 @@ assert(guessCategoryFromRepo({ name: "random-tool", description: "misc", topics:
 assert(Array.isArray(getAddedProjects()) && getAddedProjects().length === 0, "db: added empty in node");
 addProject(fakeRepo as any); // no-op in node (no localStorage) — must not throw
 assert(true, "db: addProject no-throw in node");
+
+/* ── 产品自问答案 tests ───────────────────────────────────────────────── */
+assert(buildPanorama(sample).every((n) => n.answers && n.answers.length === n.questions.length && n.answers.every((a) => a.length > 0)), "panorama: answers for every question");
+assert(buildTechRouteMainline(sample).every((n) => n.answers.length === n.questions.length), "mainline: answers");
+const panDir = buildDirectorReport(sample).panorama;
+assert(panDir.every((n) => n.answers.length === n.questions.length), "director panorama: answers");
+const srcPan = buildSourcePanorama(fakeRepo, srcIntel);
+assert(srcPan.every((n) => n.answers.length === n.questions.length), "source panorama: answers");

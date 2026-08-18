@@ -7,7 +7,7 @@
  */
 import { computeScores, formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { buildReverseEngineering } from "@/lib/reverse";
-import { buildProductDna, buildHiddenNeeds, buildJTBD, buildAiNativeTest, buildWhyAi, buildFiveLayers, targetUsersOf, problemOf, sceneOf, painPointOf, aiCapabilityOf, deepNeedOf, latentNeedOf, dataOf, growthOf, moatOf, coreFeatureOf } from "@/lib/learning";
+import { buildProductDna, buildHiddenNeeds, buildJTBD, buildAiNativeTest, buildWhyAi, buildFiveLayers, targetUsersOf, problemOf, sceneOf, painPointOf, aiCapabilityOf, deepNeedOf, latentNeedOf, dataOf, growthOf, moatOf, coreFeatureOf, workflowOf, businessOf } from "@/lib/learning";
 import { scenariosOf, timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
 import type { Project } from "@/lib/types";
@@ -143,14 +143,36 @@ export interface MapNode {
   detail: string;
   explain: string[];
   questions: string[];
+  answers: string[];
   evidence: string;
+}
+
+/** 给「产品自问」生成项目专属答案（keyword 驱动，project-specific） */
+export function answerQuestion(p: Project, node: string, question: string): string {
+  const r = buildReverseEngineering(p);
+  const q = question;
+  const ql = q.toLowerCase();
+  if (/付费|谁愿意|谁最先/.test(q)) return `目标用户「${targetUsersOf(p)}」中，Power/企业用户付费意愿最高；核心是「${deepNeedOf(p)}」带来的效率价值。`;
+  if (/传播/.test(q)) return `靠「${r.productToTech.output}」的结果/模板分享 + 开发者口碑传播（${growthOf(p)}）。`;
+  if (/删除|砍|保留/.test(q)) return `核心是「${r.productToTech.feature}」，删掉它产品不成立；优先砍与核心 Job 无关的功能。`;
+  if (/为什么需要 ai|为什么用|ai 在|没有 ai/i.test(ql)) return `AI 承担「${aiCapabilityOf(p)}」，把「${workflowOf(p)}」自动化；没有 AI 只能靠人工/规则，无法规模化。`;
+  if (/护城河|10 个竞品|持续存在|为什么能赢/.test(q)) return `护城河 = ${moatOf(p)}；靠「${r.productToTech.output}」资产沉淀 + 工作流锁定 + 社区生态。`;
+  if (/飞轮|增长|持续涨|为什么涨/.test(q)) return `${growthOf(p)}；飞轮起点 = 「${r.productToTech.feature}」→ 产出资产 → 分享传播。`;
+  if (/数据/.test(q)) return `${dataOf(p)}；数据既是 RAG/个性化的燃料，也是长期护城河。`;
+  if (/用户|谁最先/.test(q)) return `种子用户 = ${targetUsersOf(p)} 中最痛的一批；先做「${sceneOf(p)}」垂直场景。`;
+  if (/风险|失败|出错/.test(q)) return `主要风险：模型/平台依赖、开源竞争、低切换成本、AI 商品化；详见战略风险。`;
+  if (/开源|saas|自托管|部署|托管/.test(q)) return `策略：${businessOf(p)}；开源获客与信任，托管/企业版/API 变现。`;
+  if (/api|开放|封闭/.test(q)) return `API 是前后端与第三方契约，也是生态与变现入口；是否开放需权衡壁垒。`;
+  if (/下一步|未来|2\.0|做到哪/.test(q)) return `下一步：${buildProduct2(p).newProduct}；把「${latentNeedOf(p)}」做成默认能力并资产化。`;
+  if (/为什么现在|时机|窗口/.test(q)) return `2026 窗口：模型/成本/Agent-MCP 生态成熟；${TIME_STATUS_META[timeStatusOf(p)].desc}。`;
+  return `见「${node}」详细分析；具体证据以 ${p.fullName} 源码/文档为准。`;
 }
 
 export function buildPanorama(p: Project): MapNode[] {
   const r = buildReverseEngineering(p);
   const killer = buildKillerFeature(p);
   const ba = buildBeforeAfter(p);
-  const nodes: MapNode[] = [
+  const nodes: Omit<MapNode, "answers">[] = [
     { node: "USER", detail: targetUsersOf(p), explain: [targetUsersOf(p), "种子用户 = 需求最痛、最早传播的那群人", `付费意愿：${P(p).commercialPotential >= 7 ? "中高（愿意为效率付费）" : "中（先免费获客）"}`], questions: ["谁最先付费？", "谁最先传播？"], evidence: "Inferred" },
     { node: "PROBLEM", detail: problemOf(p), explain: [problemOf(p), "用户在旧方案下的痛点：低效、高成本、高门槛", ba.reduce], questions: ["这个痛点有多痛？", "用户现在怎么解决的？"], evidence: "Inferred" },
     { node: "REQUIREMENT", detail: r.productToTech.productRequirement, explain: ["核心需求 = 用户真正的 Job", "表层需求是功能，深层需求是 Job", `未被满足：${latentNeedOf(p)}`], questions: ["用户嘴上要什么？", "用户真正要什么？"], evidence: "Inferred" },
@@ -168,7 +190,7 @@ export function buildPanorama(p: Project): MapNode[] {
     { node: "GROWTH", detail: growthOf(p), explain: [growthOf(p), "增长引擎：口碑/内容/工具链嵌入", "增长飞轮 = 使用 → 资产 → 传播"], questions: ["为什么能持续增长？", "哪个环节是飞轮起点？"], evidence: "Inferred" },
     { node: "MOAT", detail: moatOf(p), explain: [moatOf(p), "护城河 = 数据 × 场景 × 分发", "生态/工作流锁定让用户难以离开"], questions: ["它为什么能持续存在？", "大厂做了怎么办？"], evidence: "Inferred" },
   ];
-  return nodes;
+  return nodes.map((n) => ({ ...n, answers: n.questions.map((qq) => answerQuestion(p, n.node, qq)) }));
 }
 
 
@@ -335,7 +357,7 @@ export function buildTechRouteMainline(p: Project): MapNode[] {
   const needs = buildHiddenNeeds(p);
   const jtbd = buildJTBD(p);
   const killer = buildKillerFeature(p);
-  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode => ({ node, detail, explain, questions, evidence });
+  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): Omit<MapNode, "answers"> => ({ node, detail, explain, questions, evidence });
   return [
     N("用户", targetUsersOf(p), [targetUsersOf(p), "先做细分人群的深度价值，再扩展泛人群", "种子用户 = 需求最痛、最早传播的人"], ["谁最先付费？", "谁最先传播？"]),
     N("为什么需要", problemOf(p), ["市场背景：AI 能力成熟 + 用户痛点真实", `现有方案低效：${problemOf(p)}`, "时机：2026 窗口 + 新 AI 能力可落地"], ["为什么是现在出现？", "以前为什么做不了？"]),
@@ -361,5 +383,5 @@ export function buildTechRouteMainline(p: Project): MapNode[] {
     N("Business", r.businessModelDetail.streams.slice(0, 3).join(" / "), [r.businessModelDetail.moneyPoint, "开源获客 → 托管/企业版/API 变现", "商业模式决定可持续性"], ["真正的赚钱点在哪？", "谁愿意付费？"], "Inferred"),
     N("Growth", growthOf(p), [growthOf(p), "增长引擎：口碑/内容/工具链嵌入", "飞轮 = 使用 → 资产 → 传播"], ["为什么能持续增长？", "飞轮起点在哪？"], "Inferred"),
     N("Moat", moatOf(p), [moatOf(p), "护城河 = 数据 × 场景 × 分发", "生态/工作流锁定让用户难以离开"], ["它为什么能持续存在？", "大厂做了怎么办？"], "Inferred"),
-  ];
+  ].map((n) => ({ ...n, answers: n.questions.map((qq) => answerQuestion(p, n.node, qq)) }));
 }

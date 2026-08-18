@@ -11,12 +11,13 @@
 import { computeScores, formatPct, formatSigned, formatStars } from "@/lib/engines";
 import { buildReverseEngineering } from "@/lib/reverse";
 import { buildHiddenNeeds, buildJTBD, buildAiNativeTest, dataOf, growthOf, moatOf, deepNeedOf, latentNeedOf, problemOf, targetUsersOf, sceneOf, coreFeatureOf, aiCapabilityOf, workflowOf, businessOf } from "@/lib/learning";
-import { buildKillerFeature, buildProduct2, buildCloningPlan, buildDirectorView, buildThreeConclusions, type MapNode } from "@/lib/master";
+import { buildKillerFeature, buildProduct2, buildCloningPlan, buildDirectorView, buildThreeConclusions, answerQuestion, type MapNode } from "@/lib/master";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
 import type { Project } from "@/lib/types";
 import type { LiveRepo } from "@/lib/live";
 import type { SourceIntel } from "@/lib/source";
+import { answerSourceQuestion } from "@/lib/sourceMaster";
 
 export interface DirectorReport {
   execReview: { q: string; a: string }[];
@@ -199,7 +200,7 @@ export function buildDirectorReport(p: Project): DirectorReport {
     betWhy: v.why,
   };
 
-  const panorama: MapNode[] = [
+  const panorama: MapNode[] = ([
     N("MARKET", `${cat.name} 赛道`, [`市场：${cat.name} · 2026 窗口（${ts}）`, `TAM 大、SOM 聚焦「${sceneOf(p)}」`], ["市场多大？", "现在为什么是窗口？"]),
     N("USER", targetUsersOf(p), ["Primary=种子用户（需求最痛）", "分层：Power/Enterprise 付费意愿高"], ["谁最先付费？", "谁最先传播？"]),
     N("PROBLEM", problemOf(p), ["痛点真实且高频", "旧方案低效/高成本"], ["用户现在怎么解决？"]),
@@ -224,7 +225,7 @@ export function buildDirectorReport(p: Project): DirectorReport {
     N("GROWTH", growthOf(p), ["增长飞轮", "PLG/社区/内容/生态"], ["为什么能持续涨？"]),
     N("MOAT", moatOf(p), ["数据×场景×分发", "工作流锁定"], ["10 个竞品出现还能赢吗？"]),
     N("FUTURE", `Product 2.0：${p2.newProduct}`, ["AI 10× → 重新设计", "行业迁移"], ["下一步做什么？"]),
-  ];
+  ] as Omit<MapNode, "answers">[]).map((n) => ({ ...n, answers: n.questions.map((qq) => answerQuestion(p, n.node, qq)) }));
 
   return {
     execReview: exec, verdict: v.verdict, verdictWhy: v.why,
@@ -330,7 +331,7 @@ export function buildDirectorReport(p: Project): DirectorReport {
   };
 }
 
-function N(node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode {
+function N(node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): Omit<MapNode, "answers"> {
   return { node, detail, explain, questions, evidence };
 }
 
@@ -421,7 +422,7 @@ export function buildSourceDirectorReport(repo: LiveRepo, intel: SourceIntel): D
       bet: stars >= 20000 ? "YES" : stars >= 5000 ? "WATCH" : "WATCH",
       betWhy: `Stars ${formatStars(stars)} · 更新 ${repo.updatedAt}`,
     },
-    panorama: [
+    panorama: ([
       N("MARKET", "AI 赛道", ["2026 窗口（[INFERENCE]）"], ["市场多大？"]),
       N("USER", intel.tagline, ["README 定位"], ["谁最先用？"]),
       N("PROBLEM", repo.description ?? "—", ["定位痛点"], ["多痛？"]),
@@ -443,7 +444,7 @@ export function buildSourceDirectorReport(repo: LiveRepo, intel: SourceIntel): D
       N("GROWTH", `Stars ${formatStars(stars)}`, ["增长信号"], ["为什么涨？"]),
       N("MOAT", "数据/社区/工作流", ["护城河候选"], ["10 竞品还能赢？"]),
       N("FUTURE", "垂直化 + 资产化", ["Product 2.0"], ["下一步？"]),
-    ],
+    ] as Omit<MapNode, "answers">[]).map((n) => ({ ...n, answers: n.questions.map((qq) => answerSourceQuestion(repo, intel, n.node, qq)) })),
   };
   return basic;
 }

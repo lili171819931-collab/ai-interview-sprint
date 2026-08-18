@@ -82,8 +82,29 @@ export function buildSourceMasterReport(repo: LiveRepo, intel: SourceIntel): { n
   ];
 }
 
+
+
+/** 给「产品自问」生成源码驱动答案（keyword 驱动） */
+export function answerSourceQuestion(repo: LiveRepo, intel: SourceIntel, node: string, question: string): string {
+  const q = question;
+  if (/付费|谁愿意|谁最先/.test(q)) return `目标用户以「${intel.tagline}」定位为主（[INFERENCE]）；付费意愿需结合 Issues/社区确认。`;
+  if (/传播|增长|为什么涨/.test(q)) return `Stars ${formatStars(repo.stars)} · Forks ${formatStars(repo.forks)} · 更新 ${repo.updatedAt}；增长引擎偏向 OSS/社区/内容（[INFERENCE]）。`;
+  if (/删除|砍|保留/.test(q)) return `核心功能＝${intel.features[0] ?? "README 定位"}；砍与核心无关的功能（[HYPOTHESIS]）。`;
+  if (/为什么需要 ai|为什么用|ai 在|没有 ai/i.test(q.toLowerCase())) return `检出 AI 组件：${intel.aiComponents.join(" / ") || "未检出（[HYPOTHESIS]）"}；AI 承担的能力见依赖清单（[CONFIRMED via manifest]）。`;
+  if (/护城河|10 个竞品|持续存在|为什么能赢/.test(q)) return `护城河候选：数据/社区/工作流锁定（[HYPOTHESIS]）；需源码与生态确认。`;
+  if (/飞轮|持续涨/.test(q)) return `初步具备增长信号（Stars 增长）；飞轮是否成立待用户数据（[HYPOTHESIS]）。`;
+  if (/数据/.test(q)) return `数据层：${intel.moduleMap.find((m) => /数据/.test(m.role))?.module ?? "data/"}（[CONFIRMED via tree]）；数据是否形成资产待确认。`;
+  if (/用户|谁最先/.test(q)) return `README 定位：${intel.tagline}；种子用户待社区确认（[INFERENCE]）。`;
+  if (/风险|失败|出错/.test(q)) return `主要风险：模型依赖/开源竞争/低切换成本（[HYPOTHESIS]）。`;
+  if (/开源|saas|自托管|部署|托管/.test(q)) return `License=${repo.license ?? "—"}；开源获客 → 托管/API/企业版（[INFERENCE]）。`;
+  if (/api|开放|封闭/.test(q)) return `API 模块：${intel.moduleMap.find((m) => /Backend|API/.test(m.role))?.module ?? "api/"}（[CONFIRMED via tree]）；开放与否待定。`;
+  if (/下一步|未来|2\.0|做到哪/.test(q)) return `下一步：垂直化 + 资产化 + 托管（[HYPOTHESIS]）。`;
+  if (/为什么现在|时机|窗口/.test(q)) return `2026 AI 窗口：模型/生态成熟（[INFERENCE]）。`;
+  return `见「${node}」详细分析；具体证据以 ${repo.fullName} 源码/文档为准。`;
+}
+
 export function buildSourcePanorama(repo: LiveRepo, intel: SourceIntel): MapNode[] {
-  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode => ({ node, detail, explain, questions, evidence });
+  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): Omit<MapNode, "answers"> => ({ node, detail, explain, questions, evidence });
   return [
     N("USER", intel.tagline, ["README 定位：目标用户（[INFERENCE]）", "待 Issues/社区确认真实画像", "种子用户 = 需求最痛者"], ["谁最先用？", "谁最先付费？"]),
     N("PROBLEM", repo.description ?? "—", ["定位描述的痛点", "旧方案低效（[HYPOTHESIS]）", "结合 README/Issues 深挖"], ["用户现在怎么解决？", "痛点多痛？"]),
@@ -101,11 +122,11 @@ export function buildSourcePanorama(repo: LiveRepo, intel: SourceIntel): MapNode
     N("BUSINESS", `开源获客（License=${repo.license ?? "—"}）`, ["开源获客 → 托管/API/企业版（[INFERENCE]）", "License 决定商业边界", "真正的赚钱点待验证"], ["谁愿意付费？", "赚钱点在哪？"]),
     N("GROWTH", `Stars ${formatStars(repo.stars)} · Forks ${formatStars(repo.forks)}`, ["Star/Forks 增长信号（[CONFIRMED]）", "增长引擎：口碑/内容/工具链", "更新时间反映活跃度"], ["为什么能增长？", "飞轮起点？"]),
     N("MOAT", "数据/社区/工作流", ["护城河候选（[HYPOTHESIS]）", "数据 × 场景 × 分发", "工作流锁定"], ["为什么持续存在？", "大厂做了怎么办？"]),
-  ];
+  ].map((n) => ({ ...n, answers: n.questions.map((qq) => answerSourceQuestion(repo, intel, n.node, qq)) }));
 }
 
 export function buildSourceTechRouteMainline(repo: LiveRepo, intel: SourceIntel): MapNode[] {
-  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): MapNode => ({ node, detail, explain, questions, evidence });
+  const N = (node: string, detail: string, explain: string[], questions: string[], evidence = "Inferred"): Omit<MapNode, "answers"> => ({ node, detail, explain, questions, evidence });
   return [
     N("用户", intel.tagline, ["README 定位（[INFERENCE]）", "待社区确认", "种子用户"], ["谁最先用？"]),
     N("为什么需要", repo.description ?? "—", ["定位痛点", "旧方案低效（[HYPOTHESIS]）"], ["为什么现在？"]),
@@ -131,7 +152,7 @@ export function buildSourceTechRouteMainline(repo: LiveRepo, intel: SourceIntel)
     N("Business", `开源 · ${repo.license ?? "—"}`, ["开源获客 → 托管/API", "License 边界"], ["赚钱点？"]),
     N("Growth", `Stars ${formatStars(repo.stars)}`, ["增长信号", "飞轮"], ["为什么涨？"]),
     N("Moat", "数据/社区/工作流", ["护城河候选", "工作流锁定"], ["持续存在？"]),
-  ];
+  ].map((n) => ({ ...n, answers: n.questions.map((qq) => answerSourceQuestion(repo, intel, n.node, qq)) }));
 }
 
 export function buildSourceDirectorView(repo: LiveRepo, intel: SourceIntel) {

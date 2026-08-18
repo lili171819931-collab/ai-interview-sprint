@@ -46,9 +46,14 @@ export function InteractiveMap({ title, nodes, accent = "#7dd3fc", defaultOpen =
           </div>
           {current.questions.length > 0 && (
             <div className="mt-3 pt-2 border-t border-[#16213a]">
-              <div className="text-[11px] font-bold text-[#fbbf24] mb-1">产品经理自问</div>
-              <div className="flex flex-wrap gap-1.5">
-                {current.questions.map((q) => <span key={q} className="chip !text-[10.5px]">{q}</span>)}
+              <div className="text-[11px] font-bold text-[#fbbf24] mb-1.5">产品经理自问 · 答案补充</div>
+              <div className="space-y-1.5">
+                {current.questions.map((q, i) => (
+                  <div key={q} className="rounded-lg bg-[#0c1322] border border-[#16213a] p-2">
+                    <div className="text-[11.5px] font-semibold text-[#fbbf24]">Q：{q}</div>
+                    <div className="text-[11.5px] text-[#cfe0ff] leading-relaxed mt-0.5">A：{current.answers?.[i] ?? "见详细分析"}</div>
+                  </div>
+                ))}
               </div>
             </div>
           )}
