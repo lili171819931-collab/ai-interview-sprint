@@ -14,6 +14,8 @@ import { fetchRepoSource, getCachedSource, type SourceIntel } from "@/lib/source
 import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceFactSheet } from "@/lib/sourceMaster";
 import { buildCompleteChain, buildTechRouteMainline } from "@/lib/master";
 import { buildSourceCompleteChain } from "@/lib/sourceMaster";
+import { buildProjectReportMarkdown, buildSourceReportMarkdown } from "@/lib/report";
+import { ReportActions } from "@/components/ReportActions";
 import type { Project } from "@/lib/types";
 
 /* ── 分析（Master Reverse Engineering，含以上所有需求） ─────────── */
@@ -35,6 +37,12 @@ export function MasterAnalysis({ project }: { project: Project }) {
 
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
+        <span className="text-[12px] font-bold text-white">📄 完整报告</span>
+        <Link href={`/projects/${project.slug}/report`} className="chip chip-accent ml-auto">打开完整报告页 →</Link>
+        <ReportActions markdown={buildProjectReportMarkdown(project)} />
+      </div>
+
       {/* 完整链路（平台灵魂） */}
       <CompleteChain project={project} />
 
@@ -178,9 +186,9 @@ export function MasterAnalysis({ project }: { project: Project }) {
       </div>
 
       {/* 40-section report */}
-      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open>
         <summary className="cursor-pointer px-4 py-3 text-[12.5px] font-bold text-white flex items-center gap-2">
-          <FileText size={13} className="text-[#7dd3fc]" /> PROJECT REVERSE ENGINEERING REPORT · 40 节完整报告
+          <FileText size={13} className="text-[#7dd3fc]" /> PROJECT REVERSE ENGINEERING REPORT · 40 节完整报告（默认展开）
         </summary>
         <div className="px-4 pb-4 space-y-1.5 max-h-[420px] overflow-y-auto">
           {report.map((sec) => (
@@ -340,6 +348,10 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
   const meta = TIME_STATUS_META[status];
   return (
     <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
+        <span className="text-[12px] font-bold text-white">📄 完整报告（源码驱动）</span>
+        <div className="ml-auto"><ReportActions markdown={buildSourceReportMarkdown(repo, intel)} /></div>
+      </div>
       {degraded && <div className="rounded-xl bg-[#101a2e] border border-amber-400/30 p-2.5 text-[11.5px] text-[#fbbf24]">⚠️ {degraded}</div>}
       {/* 完整链路（源码驱动） */}
       <SourceCompleteChain repo={repo} intel={intel} />
@@ -409,9 +421,9 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
       )}
 
       {/* 40 节报告 */}
-      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open>
         <summary className="cursor-pointer px-4 py-3 text-[12.5px] font-bold text-white flex items-center gap-2">
-          <FileText size={13} className="text-[#7dd3fc]" /> PROJECT REVERSE ENGINEERING REPORT · 40 节（源码驱动）
+          <FileText size={13} className="text-[#7dd3fc]" /> PROJECT REVERSE ENGINEERING REPORT · 40 节（源码驱动 · 默认展开）
         </summary>
         <div className="px-4 pb-4 space-y-1.5 max-h-[420px] overflow-y-auto">
           {report.map((sec) => (

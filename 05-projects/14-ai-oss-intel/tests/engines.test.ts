@@ -221,3 +221,12 @@ const mainline = buildTechRouteMainline(sample);
 assert(mainline.length >= 20 && mainline[0].node === "用户" && mainline[mainline.length - 1].node === "Moat", "chain: mainline");
 const srcChain = buildSourceCompleteChain(fakeRepo, srcIntel);
 assert(srcChain.length === 14 && srcChain[0].label === "用户问题", "chain: source chain 14");
+
+/* ── Full report generators tests ─────────────────────────────────────── */
+import { buildProjectReportMarkdown, buildSourceReportMarkdown } from "../src/lib/report";
+
+const md = buildProjectReportMarkdown(sample);
+assert(md.includes("完整链路") && md.includes("可复制性") && md.includes("PROJECT REVERSE ENGINEERING REPORT（40 节）") && md.includes("产品总监视角"), "report: seed markdown sections");
+assert(md.includes("用户问题") && md.includes("产品方案") && md.includes("商业模式"), "report: seed chain stages");
+const srcMd = buildSourceReportMarkdown(fakeRepo, srcIntel);
+assert(srcMd.includes("完整链路") && srcMd.includes("源码驱动") && srcMd.includes("40 节"), "report: source markdown");
