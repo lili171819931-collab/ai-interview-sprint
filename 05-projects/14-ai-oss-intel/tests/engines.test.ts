@@ -230,3 +230,21 @@ assert(md.includes("完整链路") && md.includes("可复制性") && md.includes
 assert(md.includes("用户问题") && md.includes("产品方案") && md.includes("商业模式"), "report: seed chain stages");
 const srcMd = buildSourceReportMarkdown(fakeRepo, srcIntel);
 assert(srcMd.includes("完整链路") && srcMd.includes("源码驱动") && srcMd.includes("40 节"), "report: source markdown");
+
+/* ── AI Product Director tests ───────────────────────────────────────── */
+import { buildDirectorReport, buildSourceDirectorReport } from "../src/lib/director";
+
+const dr = buildDirectorReport(sample);
+assert(dr.execReview.length === 10, "director: 10 exec review questions");
+assert(["Strong Buy", "Invest", "Watch", "Pivot", "Do Not Invest"].includes(dr.verdict), "director: verdict enum");
+assert(dr.canvas.length >= 10, "director: strategy canvas");
+assert(dr.segments.length >= 4, "director: user segments");
+assert(dr.priority.length >= 4, "director: priority matrix");
+assert(dr.designDecisions.length >= 3, "director: design decisions");
+assert(dr.reliability.length === 10, "director: reliability matrix");
+assert(dr.scores.length === 13, "director: 13-dim score");
+assert(dr.overall > 0 && dr.overall <= 100, "director: overall score");
+assert(Object.keys(dr.conclusions).length >= 7, "director: conclusions");
+assert(dr.panorama.length >= 20, "director: panorama nodes");
+const sdr = buildSourceDirectorReport(fakeRepo, srcIntel);
+assert(sdr.verdict.length > 0 && sdr.scores.length === 13 && sdr.panorama.length >= 14, "director: source report");

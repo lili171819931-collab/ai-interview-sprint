@@ -14,6 +14,7 @@ import { buildProjectReportMarkdown } from "@/lib/report";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { ReportActions } from "@/components/ReportActions";
 import { InteractiveMap } from "@/components/InteractiveMap";
+import { DirectorView } from "@/components/analysis/AnalysisView";
 import type { Project } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -182,29 +183,10 @@ export default async function ProjectReportPage({ params }: { params: Promise<{ 
         </div>
       </section>
 
-      {/* 产品总监视角 */}
+      {/* AI 产品总监视角 */}
       <section className="panel p-6">
-        <h2 className="text-[16px] font-bold text-white mb-4">👔 产品总监视角</h2>
-        <div className="space-y-3">
-          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-            <div className="text-[12px] font-bold text-[#a78bfa] mb-1">边界考虑</div>
-            <div className="text-[12px] text-[#aab6cd]">✅ {dv.boundary.inScope.join("；")} ⛔ {dv.boundary.outScope.join("；")} ⚠️ {dv.boundary.constraints.join("；")}</div>
-            <div className="text-[12px] text-[#cfe0ff] mt-1">边界结论：{dv.boundary.verdict}</div>
-          </div>
-          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-            <div className="text-[12px] font-bold text-[#f87171] mb-1">痛点分析</div>
-            <div className="text-[12px] text-[#aab6cd]">{dv.pain.deep} {dv.pain.journeyFriction} {dv.pain.unmet}</div>
-          </div>
-          <div className="grid gap-2 md:grid-cols-3">
-            {dv.cases.map((c) => (
-              <div key={c.name} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-                <div className="text-[11.5px] font-bold text-[#34d399]">{c.name}</div>
-                <div className="text-[11px] text-[#aab6cd] mt-0.5">用户：{c.user} · 场景：{c.scenario}</div>
-                <div className="text-[11px] text-[#8b98b3]">之前：{c.before}；之后：{c.after}；预期：{c.outcome}；指标：{c.metric}</div>
-              </div>
-            ))}
-          </div>
-        </div>
+        <h2 className="text-[16px] font-bold text-white mb-4">👔 AI 产品总监视角（Head of AI Product 级）</h2>
+        <DirectorView project={p} />
       </section>
 
       <div className="text-center text-[11px] text-[#4d5a75] pb-4">AI OSS Intel · {p.fullName} · {new Date().toISOString().slice(0, 10)}</div>

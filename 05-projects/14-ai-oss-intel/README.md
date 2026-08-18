@@ -171,3 +171,4 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 | [`docs/demo/03-mainline-workflow.png`](docs/demo/03-mainline-workflow.png) | 技术路线主线 · 「WORKFLOW」节点展开 |
 | [`docs/demo/04-panorama-expanded.png`](docs/demo/04-panorama-expanded.png) | 产品全景图 · 「USER」节点展开 |
 | [`docs/demo/05-panorama-workflow.png`](docs/demo/05-panorama-workflow.png) | 产品全景图 · 「WORKFLOW」节点展开 |
+| [`docs/demo/06-director-report.png`](docs/demo/06-director-report.png) | AI 产品总监视角：Executive Review + Verdict + 13 维评分 + 总监结论 |

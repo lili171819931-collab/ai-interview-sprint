@@ -17,6 +17,7 @@ import type { Project } from "@/lib/types";
 import type { LiveRepo } from "@/lib/live";
 import type { SourceIntel } from "@/lib/source";
 import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, buildSourceCompleteChain, buildSourceFactSheet } from "@/lib/sourceMaster";
+import { buildDirectorReport, buildSourceDirectorReport } from "@/lib/director";
 
 export function buildProjectReportMarkdown(p: Project): string {
   const s = computeScores(p);
@@ -105,6 +106,29 @@ export function buildProjectReportMarkdown(p: Project): string {
   L.push(`- 未被满足：${dv.pain.unmet}`);
   L.push(`\n### 真实案例预测`);
   dv.cases.forEach((c) => L.push(`- **${c.name}**：用户=${c.user}；场景=${c.scenario}；之前=${c.before}；之后=${c.after}；预期=${c.outcome}；指标=${c.metric}`));
+  const dr = buildDirectorReport(p);
+  L.push(`\n## 👔 AI 产品总监视角（HEAD OF AI PRODUCT）`);
+  L.push(`### Executive Review + Verdict：**${dr.verdict}**`);
+  dr.execReview.forEach((x) => L.push(`- ${x.q}：${x.a}`));
+  L.push(`\n### 总监级结论`);
+  L.push(`- Why It Wins：${dr.conclusions.whyWins}`);
+  L.push(`- Why It Fails：${dr.conclusions.whyFails}`);
+  L.push(`- Real Moat：${dr.conclusions.realMoat}`);
+  L.push(`- 我会投：${dr.conclusions.invest}`);
+  L.push(`- 我会砍：${dr.conclusions.kill}`);
+  L.push(`- 下一步：${dr.conclusions.buildNext}`);
+  L.push(`- Would I Bet On It：${dr.conclusions.bet} — ${dr.conclusions.betWhy}`);
+  L.push(`\n### AI PRODUCT DIRECTOR SCORE：${dr.overall}/100`);
+  dr.scores.forEach((x) => L.push(`- ${x.label}：${x.value}`));
+  L.push(`\n### 市场 / 用户 / 飞轮 / 路线图`);
+  L.push(`- TAM/SAM/SOM：${dr.market.tam}；${dr.market.sam}；${dr.market.som}`);
+  L.push(`- Why Now：${dr.market.whyNow}`);
+  L.push(`- 用户：${dr.segments.map((x) => `${x.name}(${x.who})`).join("；")}`);
+  L.push(`- 飞轮：${dr.flywheel.cycle.join(" → ")}；${dr.flywheel.judge}`);
+  L.push(`- 路线图 Now/Next/Later：${dr.roadmap.now.join("·")} → ${dr.roadmap.next.join("·")} → ${dr.roadmap.later.join("·")}；不做：${dr.roadmap.dont.join("·")}`);
+  L.push(`- 30/60/90：${dr.plan90.d30.join("·")} / ${dr.plan90.d60.join("·")} / ${dr.plan90.d90.join("·")}`);
+  L.push(`- Zero→One：${dr.zeroOne.join(" → ")}；保留 3 功能：${dr.threeFeatures.keep.join("·")}`);
+  L.push(`- AI 10×：${dr.ai10x}`);
   L.push(`\n---\n*由 AI OSS Intel 自动生成 · ${p.fullName} · ${new Date().toISOString().slice(0, 10)}*`);
   return L.join("\n");
 }
@@ -132,6 +156,13 @@ export function buildSourceReportMarkdown(repo: LiveRepo, intel: SourceIntel): s
   L.push(`- 边界：${dv.boundary.verdict}`);
   L.push(`- 痛点：${dv.pain.deep}`);
   L.push(`- 案例：${dv.cases.map((c) => `${c.name}(${c.scenario})`).join("；")}`);
+  const dr = buildSourceDirectorReport(repo, intel);
+  L.push(`\n## 👔 AI 产品总监视角（源码驱动）`);
+  L.push(`### Verdict：**${dr.verdict}** — ${dr.verdictWhy}`);
+  dr.execReview.slice(0, 6).forEach((x) => L.push(`- ${x.q}：${x.a}`));
+  L.push(`- Would I Bet On It：${dr.conclusions.bet} — ${dr.conclusions.betWhy}`);
+  L.push(`### AI PRODUCT DIRECTOR SCORE：${dr.overall}/100`);
+  dr.scores.forEach((x) => L.push(`- ${x.label}：${x.value}`));
   L.push(`\n---\n*由 AI OSS Intel 自动生成（GitHub 实时源码抓取）· ${repo.fullName} · ${new Date().toISOString().slice(0, 10)}*`);
   return L.join("\n");
 }
