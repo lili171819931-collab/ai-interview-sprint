@@ -70,3 +70,15 @@
  ├── 06 票迹 小程序           ← 员工侧闭环（源码在 ai-projects）
  └── 07 智衡 AI Radar         ← 情报看板 + GTI 事件聚类/Agent/MCP（本仓完整包，见 docs/17）
 ```
+
+## AI OSS Intel（14 · 新交付）
+
+| 含义 | 本仓库路径 | 说明 |
+|------|------------|------|
+| AI 开源情报平台源码+文档 | `05-projects/14-ai-oss-intel/` | Next.js 可运行：9 大榜单 / 10-Agent 共识报告 / 机会生成器 / Compare / Ask AI / Watchlist / Insights |
+| 本地启动 | `cd 05-projects/14-ai-oss-intel && npm run dev` → http://localhost:3012 |
+| 实时数据 | `GITHUB_TOKEN=xxx npm run github:sync` |
+
+| 资源 | URL |
+|------|-----|
+| AI OSS Intel（面试仓） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/14-ai-oss-intel |
