@@ -1,7 +1,8 @@
 import Link from "next/link";
 import { ArrowRight, Search, Sparkles, TrendingUp, Star, Target, Coins, Zap, Layers, Database, LineChart } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
-import { allCategories, categoryCounts, topBy } from "@/lib/store";
+import { allCategories, categoryCounts, topBy, projectBySlug } from "@/lib/store";
+import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { computeScores, formatPct, formatSigned, formatStars } from "@/lib/engines";
 import { ProjectCard } from "@/components/ProjectCard";
 import { CategoryChips, Sparkline } from "@/components/ui";
@@ -61,6 +62,9 @@ export default function HomePage() {
           </div>
         </div>
       </section>
+
+      {/* WHAT SHOULD I STUDY TODAY? */}
+      <StudyToday />
 
       {/* Trending */}
       <section>
@@ -181,6 +185,61 @@ function RankPreview({ kind, icon: Icon, color, title, sub, href }: {
             </div>
           </Link>
         ))}
+      </div>
+    </section>
+  );
+}
+
+
+function StudyToday() {
+  const day = Math.floor(Date.now() / 86400000);
+  const lists = {
+    opportunity: topBy("opportunity", 12),
+    money: topBy("money", 12),
+    content: topBy("content", 12),
+    resume: topBy("resume", 12),
+    growth: topBy("growth", 12),
+  };
+  const pick = (kind: keyof typeof lists, offset: number) => {
+    const list = lists[kind];
+    const slug = list[(day + offset) % list.length]?.project.slug ?? list[0]?.project.slug ?? "";
+    return projectBySlug(slug) ?? PROJECTS[0];
+  };
+  const entries = [
+    { emoji: "🔥", label: "今天最值得研究的 AI 项目", tag: "OPPORTUNITY", color: "#f87171", p: pick("opportunity", 0) },
+    { emoji: "🧠", label: "最能补齐产品能力的项目", tag: "GROWTH", color: "#7dd3fc", p: pick("growth", 3) },
+    { emoji: "💰", label: "今天最值得研究的商业项目", tag: "MONEY", color: "#fbbf24", p: pick("money", 1) },
+    { emoji: "🎬", label: "最适合做自媒体内容的项目", tag: "CONTENT", color: "#f472b6", p: pick("content", 2) },
+    { emoji: "💼", label: "最适合写进 Portfolio 的项目", tag: "PORTFOLIO", color: "#a78bfa", p: pick("resume", 4) },
+  ];
+  return (
+    <section>
+      <div className="flex items-center gap-2 mb-4">
+        <Sparkles size={17} className="text-[#fbbf24]" />
+        <h2 className="text-[17px] font-bold text-white">WHAT SHOULD I STUDY TODAY?</h2>
+        <span className="text-[11.5px] text-[#5b6885]">今天的 AI PM 学习推荐（每日轮换）</span>
+      </div>
+      <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-5">
+        {entries.map((it) => {
+          const s = computeScores(it.p);
+          const ts = timeStatusOf(it.p);
+          const meta = TIME_STATUS_META[ts];
+          return (
+            <Link key={it.label} href={`/projects/${it.p.slug}`} className="panel card-hover p-4 flex flex-col gap-2">
+              <div className="flex items-center justify-between">
+                <span className="text-[20px]">{it.emoji}</span>
+                <span className="chip" style={{ color: it.color, borderColor: it.color + "55", background: it.color + "12" }}>{it.tag}</span>
+              </div>
+              <div className="text-[11px] text-[#5b6885]">{it.label}</div>
+              <div className="font-bold text-white text-[15px]">{it.p.name}</div>
+              <div className="text-[11.5px] text-[#5b6885] line-clamp-2">{it.p.tagline}</div>
+              <div className="mt-auto flex items-center justify-between text-[11px] num text-[#8b98b3]">
+                <span>⭐ {formatStars(it.p.stars)} · Opp {s.opportunity}</span>
+                <span style={{ color: meta.color }}>{meta.label}</span>
+              </div>
+            </Link>
+          );
+        })}
       </div>
     </section>
   );

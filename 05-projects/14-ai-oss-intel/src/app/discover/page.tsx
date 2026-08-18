@@ -5,7 +5,8 @@ import { computeScores } from "@/lib/engines";
 import { ProjectCard } from "@/components/ProjectCard";
 import { LangSelect } from "@/components/ClientBits";
 import { categoryOf } from "@/lib/categories";
-import type { CategoryId } from "@/lib/types";
+import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
+import type { CategoryId, TimeStatus } from "@/lib/types";
 
 export const dynamic = "force-static";
 
@@ -25,15 +26,17 @@ type SortId = (typeof SORTS)[number]["id"];
 export default async function DiscoverPage({
   searchParams,
 }: {
-  searchParams: Promise<{ q?: string; category?: string; lang?: string; sort?: string }>;
+  searchParams: Promise<{ q?: string; category?: string; lang?: string; sort?: string; ts?: string }>;
 }) {
   const sp = await searchParams;
   const q = sp.q ?? "";
   const category = (sp.category ?? "all") as CategoryId | "all";
   const lang = sp.lang ?? "";
   const sort = (sp.sort ?? "opportunity") as SortId;
+  const ts = (sp.ts ?? "all") as TimeStatus | "all";
 
   let projects = discoverProjects({ q, category, lang, minStars: undefined, maxStars: undefined });
+  if (ts !== "all") projects = projects.filter((p) => timeStatusOf(p) === ts);
   const scored = projects.map((p) => ({ p, s: computeScores(p) }));
   scored.sort((a, b) => {
     switch (sort) {
@@ -55,6 +58,7 @@ export default async function DiscoverPage({
     if (category !== "all") params.set("category", category);
     if (lang) params.set("lang", lang);
     if (sort !== "opportunity") params.set("sort", sort);
+    if (ts !== "all") params.set("ts", ts);
     for (const [k, v] of Object.entries(extra)) {
       if (v) params.set(k, v); else params.delete(k);
     }
@@ -77,6 +81,15 @@ export default async function DiscoverPage({
         {allCategories().map((c) => (
           <Link key={c.id} href={qs({ category: c.id })} className={`chip ${category === c.id ? "chip-accent" : ""}`}>
             {c.emoji} {c.name}
+          </Link>
+        ))}
+      </div>
+
+      <div className="flex flex-wrap gap-1.5">
+        <Link href={qs({ ts: "all" })} className={`chip ${ts === "all" ? "chip-accent" : ""}`}>全部时间</Link>
+        {(Object.keys(TIME_STATUS_META) as TimeStatus[]).map((t) => (
+          <Link key={t} href={qs({ ts: t })} className={`chip ${ts === t ? "chip-accent" : ""}`} style={ts === t ? { color: TIME_STATUS_META[t].color, borderColor: TIME_STATUS_META[t].color + "66" } : undefined}>
+            {TIME_STATUS_META[t].label}
           </Link>
         ))}
       </div>

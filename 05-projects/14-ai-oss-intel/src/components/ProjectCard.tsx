@@ -4,6 +4,7 @@ import { computeScores, formatPct, formatSigned, formatStars, growthRate } from 
 import type { Project } from "@/lib/types";
 import { CategoryChips, GitHubLink, ScorePills, Sparkline } from "@/components/ui";
 import { SaveButton } from "@/components/ClientBits";
+import { scenariosOf, timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 
 export function ProjectCard({ project, rank }: { project: Project; rank?: number }) {
   const s = computeScores(project);
@@ -23,6 +24,16 @@ export function ProjectCard({ project, rank }: { project: Project; rank?: number
         <div className="shrink-0">
           <Sparkline points={project.growthHistory} width={110} height={34} />
         </div>
+      </div>
+      <div className="flex flex-wrap gap-1">
+        {(() => {
+          const ts = timeStatusOf(project);
+          const meta = TIME_STATUS_META[ts];
+          return <span className="chip" style={{ color: meta.color, borderColor: meta.color + "55", background: meta.color + "12" }}>{meta.label}</span>;
+        })()}
+        {scenariosOf(project).slice(0, 2).map((sc) => (
+          <span key={sc.id} className="chip">{sc.emoji} {sc.group} · {sc.name}</span>
+        ))}
       </div>
 
       <div className="flex items-center gap-2 text-[12px] text-[#8b98b3] num">

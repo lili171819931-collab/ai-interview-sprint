@@ -71,13 +71,14 @@ assert(r.copyPath.length >= 4 && r.dna.length >= 4, "copy path & dna");
 console.log(process.exitCode ? "\nSOME TESTS FAILED ❌" : "\nALL TESTS PASSED ✅");
 
 /* ── AI PM Learning OS tests ─────────────────────────────────────────── */
-import { buildProductDna, buildFiveLayers, buildHiddenNeeds, buildJTBD, buildEvidence, buildAiNative, buildPmVsUser, buildChallenges, buildInterviewQuestions, buildOpinionFrame, buildContentPack, buildVideoScript, buildPrd, buildCaseStudy, abilityGapRecommendation, emptyAbilities } from "../src/lib/learning";
+import { buildProductDna, buildFiveLayers, buildHiddenNeeds, buildJTBD, buildEvidence, buildAiNative, buildPmVsUser, buildChallenges, buildInterviewQuestions, buildOpinionFrame, buildContentPack, buildVideoScript, buildPrd, buildCaseStudy, abilityGapRecommendation, emptyAbilities, buildPmDeepAnalysis, buildWhyAi, buildAiNativeTest, buildBuildPlan } from "../src/lib/learning";
+import { timeStatusOf, scenariosOf } from "../src/lib/scenarios";
 
 const sample = PROJECTS.find((p) => p.slug === "dify")!;
 
-assert(buildProductDna(sample).length === 11, "DNA chain 11 nodes");
+assert(buildProductDna(sample).length === 14, "DNA chain 14 nodes");
 assert(buildFiveLayers(sample).userProblem.includes("Layer 01"), "five layers L1");
-assert(Object.keys(buildHiddenNeeds(sample)).length === 4, "hidden needs 4 levels");
+assert(Object.keys(buildHiddenNeeds(sample)).length === 6, "hidden needs 6 levels");
 assert(buildJTBD(sample).when.startsWith("When"), "JTBD when");
 assert(buildEvidence(sample).length === 4, "evidence 4 items");
 assert(buildAiNative(sample).before.includes("AI Before"), "AI before");
@@ -96,3 +97,13 @@ assert(buildPrd(sample).features.length >= 3, "prd features");
 assert(buildCaseStudy(sample).projectId === "dify", "case study");
 const gap = abilityGapRecommendation(emptyAbilities());
 assert(gap.recommended.length >= 1, "gap recommendation");
+
+assert(buildPmDeepAnalysis(sample).length === 15, "PM deep analysis 15 dims");
+assert(Object.keys(buildWhyAi(sample)).length === 5, "why ai 5 answers");
+assert(buildAiNativeTest(sample).native.includes("AI Native"), "ai native test");
+const plan = buildBuildPlan(sample);
+assert(plan.architectureLayers.length === 5 && plan.steps.length === 3, "build plan layers+steps");
+assert(plan.checklist.length >= 5 && plan.techStack.length >= 3, "build plan checklist");
+assert(["2026NEW", "2026RISING", "2026ACTIVE", "2026RELEVANT"].includes(timeStatusOf(sample)), "time status");
+assert(scenariosOf(sample).length >= 1, "scenarios");
+assert(buildChallenges(sample, "beginner").every((c) => c.projectFacts && c.bestPractice && c.expertReview.good), "challenge enrichment");

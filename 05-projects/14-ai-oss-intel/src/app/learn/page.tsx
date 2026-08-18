@@ -13,8 +13,8 @@ import { computeScores, formatStars } from "@/lib/engines";
 import type { AbilityScores } from "@/lib/types";
 
 const ABILITY_KEYS: (keyof AbilityScores)[] = [
-  "productThinking", "aiUnderstanding", "userResearch", "requirementAnalysis", "featureDesign",
-  "aiAgent", "businessModel", "growth", "dataAnalysis", "communication",
+  "productThinking", "requirementAnalysis", "aiUnderstanding", "agentUnderstanding", "ux",
+  "businessModel", "growth", "dataAnalysis", "technical", "communication",
 ];
 
 const WEEK_PLAN = [
@@ -55,6 +55,7 @@ export default function LearnPage() {
     { n: 4, text: "判断为什么需要 AI", link: "/insights" },
     { n: 5, text: "找出一个商业化机会", link: "/rankings/opportunity" },
     { n: 6, text: "写出你的 PM 判断", link: "/portfolio" },
+    { n: 7, text: "生成一篇自媒体内容", link: "/rankings/content" },
   ];
 
   const learningRank = PROJECTS.map((p) => ({ p, done: getProjectCompletion(p.slug) }))

@@ -15,21 +15,49 @@ const P = (p: Project) => p.profile;
 
 /* ── ④ Product DNA：产品底层逻辑图 ─────────────────────────────── */
 export function buildProductDna(p: Project): DnaChainNode[] {
-  const cat = p.categories[0] ?? "agent";
-  const catName = categoryOf(cat).name;
   return [
-    { label: "用户", value: targetUsersOf(p) },
-    { label: "痛点", value: problemOf(p) },
-    { label: "需求", value: needOf(p) },
-    { label: "场景", value: sceneOf(p) },
-    { label: "产品", value: p.name + "（" + p.tagline + "）" },
-    { label: "核心功能", value: coreFeatureOf(p) },
-    { label: "AI 能力", value: aiCapabilityOf(p) },
-    { label: "Workflow", value: workflowOf(p) },
-    { label: "结果", value: outcomeOf(p) },
-    { label: "价值", value: valueOf(p) },
-    { label: "商业模式", value: businessOf(p) },
+    { label: "Problem", value: problemOf(p) },
+    { label: "User", value: targetUsersOf(p) },
+    { label: "Scenario", value: scenarioLabel(p) },
+    { label: "Job", value: deepNeedOf(p) },
+    { label: "Pain Point", value: painPointOf(p) },
+    { label: "Solution", value: p.name + "（" + p.tagline + "）" },
+    { label: "Feature", value: coreFeatureOf(p) },
+    { label: "AI Capability", value: aiCapabilityOf(p) },
+    { label: "Agent Workflow", value: workflowOf(p) },
+    { label: "Data", value: dataOf(p) },
+    { label: "UX", value: uxOf(p) },
+    { label: "Business", value: businessOf(p) },
+    { label: "Growth", value: growthOf(p) },
+    { label: "Moat", value: moatOf(p) },
   ];
+}
+
+function scenarioLabel(p: Project): string {
+  return p.categories.slice(0, 3).map((c) => categoryOf(c).name).join(" / ");
+}
+function painPointOf(p: Project): string {
+  return "用户在当前方案下感到「" + problemOf(p) + "」带来的低效/高成本/焦虑";
+}
+function dataOf(p: Project): string {
+  if (p.categories.includes("rag") || p.categories.includes("pkm")) return "文档/知识库 → 向量化 → 检索日志 → 用户反馈";
+  if (p.categories.includes("agent")) return "任务输入 → 工具结果 → 记忆/状态 → 质量日志";
+  if (p.categories.includes("coding")) return "代码库 → 索引 → 编辑记录 → 测试反馈";
+  return "用户输入 + 生成记录 + 使用行为（用于质量与个性化迭代）";
+}
+function uxOf(p: Project): string {
+  return "一句话输入 → 可视化进度 → 结果可审核/可导出 → 错误可解释可重试";
+}
+function growthOf(p: Project): string {
+  const r = growthRate(p, 30);
+  return `30 天 ${formatSigned(p.growth30d)}（${formatPct(r)}）· ${r > 10 ? "口碑 + 内容传播飞轮" : "工具链嵌入 + 社区生态"}`;
+}
+function moatOf(p: Project): string {
+  const pr = P(p);
+  if (pr.ecosystem >= 8) return "生态/社区网络效应 + 插件与集成资产";
+  if (pr.commercialPotential >= 8) return "垂直场景 + 数据资产 + 商业化先发";
+  if (pr.innovation >= 8) return "架构/技术领先 + 开发者心智";
+  return "易用性 + 社区口碑";
 }
 
 /* ── ⑤ 产品底层逻辑拆解：五层模型 ─────────────────────────────── */
@@ -49,6 +77,8 @@ export function buildHiddenNeeds(p: Project): HiddenNeeds {
   return {
     surface: `表层需求：用户明确说要「${base}」。（用户自己会说出来的需求）`,
     functional: `功能需求：用户希望产品能「${coreFeatureOf(p)}」，并集成到现有工作流（${workflowOf(p).split("→")[0]}）。`,
+    scenario: `场景需求：在「${sceneOf(p)}」中，用户需要随时可用、结果可复用、错误可补救。`,
+    core: `核心需求：围绕「${deepNeedOf(p)}」，用户需要「更快、更稳、更省」地完成每一次任务。`,
     deep: `深层需求：用户真正想要的是「${deepNeedOf(p)}」——节省时间/降低风险/提升产出，而不是工具本身。`,
     latent: `潜在需求：用户尚未意识到的需求——「${latentNeedOf(p)}」，这正是二次开发与商业化的机会点。`,
   };
@@ -126,10 +156,13 @@ export function buildPmVsUser(p: Project): PmVsUser {
 }
 
 /* ── ⑩ AI PM Challenge（Socratic Product Learning）─────────────── */
+type ChallengeSeed = Omit<Challenge, "projectFacts" | "bestPractice" | "expertReview"> & {
+  expertReview: { bestAnswer: string; why: string; keyInsight: string };
+};
+
 export function buildChallenges(p: Project, level: LearningLevel): Challenge[] {
-  const cat = categoryOf(p.categories[0] ?? "agent").name;
   const s = computeScores(p);
-  const banks: Record<LearningLevel, Challenge[]> = {
+  const banks: Record<LearningLevel, ChallengeSeed[]> = {
     beginner: [
       {
         id: "b1", level, question: `如果你是这个产品的 PM，你认为「${p.name}」解决的核心问题是什么？`, hint: "不要回答功能，要回答「用户在什么场景下、有什么痛点」。",
@@ -315,7 +348,34 @@ export function buildChallenges(p: Project, level: LearningLevel): Challenge[] {
       },
     ],
   };
-  return banks[level];
+  return banks[level].map((c) => enrichChallenge(c, p));
+}
+
+function enrichChallenge(c: ChallengeSeed, p: Project): Challenge {
+  const s = computeScores(p);
+  const facts =
+    c.skill === "需求分析" || c.skill === "用户研究"
+      ? `项目事实：${p.name} 服务「${targetUsersOf(p)}」，核心解决「${problemOf(p)}」，近 30 天增长 ${formatSigned(p.growth30d)}。`
+      : c.skill === "Feature Prioritization" || c.skill === "产品设计" || c.skill === "MVP"
+        ? `项目事实：核心功能是「${coreFeatureOf(p)}」，工作流为「${workflowOf(p)}」。`
+        : c.skill === "留存"
+          ? `项目事实：留存靠「${latentNeedOf(p)}」的资产沉淀，而非单次体验。`
+          : c.skill === "AI 产品设计" || c.skill === "增长分析"
+            ? `项目事实：AI 承担「${aiCapabilityOf(p)}」，增长由「${growthOf(p)}」驱动。`
+            : c.skill === "商业分析" || c.skill === "风险管理"
+              ? `项目事实：商业模式为「${businessOf(p)}」，竞争激烈度 ${P(p).competition}/10。`
+              : `项目事实：${p.name} 的定位是「${p.tagline}」，机会分 ${s.opportunity}/100。`;
+  const bestPractice = "行业最佳实践：用「用户 → 场景 → Job → 指标 → 验证」的结构回答；先定义问题，再谈功能与实现。";
+  const good = "Good：你抓住了「用户 + 场景 + Job」的关键维度，方向正确。";
+  const missing = "Missing：建议补充「验证方式」——你会用什么指标或访谈来证明这个判断。";
+  const wrong = "Wrong：避免停留在功能/技术层面（如「更好看、更快」），那是在描述实现，不是产品判断。";
+  const deeper = `Deeper Insight：真正的判断要落到「${deepNeedOf(p)}」与「${businessOf(p)}」的闭环，而不是单点功能。`;
+  return {
+    ...c,
+    projectFacts: facts,
+    bestPractice,
+    expertReview: { ...c.expertReview, good, missing, wrong, deeper },
+  };
 }
 
 /* ── ⑳ AI PM 面试题库 ─────────────────────────────────────────── */
@@ -568,14 +628,14 @@ export function buildCaseStudy(p: Project): CaseStudy {
 
 /* ── 能力评估与成长 ───────────────────────────────────────────── */
 export function emptyAbilities(): AbilityScores {
-  return { productThinking: 0, aiUnderstanding: 0, userResearch: 0, requirementAnalysis: 0, featureDesign: 0, aiAgent: 0, businessModel: 0, growth: 0, dataAnalysis: 0, communication: 0 };
+  return { productThinking: 0, requirementAnalysis: 0, aiUnderstanding: 0, agentUnderstanding: 0, ux: 0, businessModel: 0, growth: 0, dataAnalysis: 0, technical: 0, communication: 0 };
 }
 
 export function abilityLabel(k: keyof AbilityScores): string {
   const map: Record<keyof AbilityScores, string> = {
-    productThinking: "产品思维", aiUnderstanding: "AI 理解", userResearch: "用户研究",
-    requirementAnalysis: "需求分析", featureDesign: "产品设计", aiAgent: "Agent 理解",
-    businessModel: "商业分析", growth: "增长分析", dataAnalysis: "数据分析", communication: "表达能力",
+    productThinking: "产品思维", requirementAnalysis: "需求分析", aiUnderstanding: "AI 理解",
+    agentUnderstanding: "Agent 理解", ux: "UX 设计", businessModel: "商业",
+    growth: "增长", dataAnalysis: "数据", technical: "技术", communication: "表达",
   };
   return map[k];
 }
@@ -589,14 +649,14 @@ export function abilityGapRecommendation(a: AbilityScores): { weakness: string; 
   const entries = Object.entries(a) as [keyof AbilityScores, number][];
   const weakest = entries.sort((x, y) => x[1] - y[1])[0];
   const map: Record<string, { kind: string; title: string; reason: string }[]> = {
-    aiAgent: [{ kind: "opportunity", title: "AI Opportunity Top 10", reason: "补齐 Agent Product Design 能力" }],
+    agentUnderstanding: [{ kind: "opportunity", title: "AI Opportunity Top 10", reason: "补齐 Agent Product Design 能力" }],
     aiUnderstanding: [{ kind: "skills", title: "Skill 项目 Top 10", reason: "理解 AI 能力如何被封装复用" }],
     businessModel: [{ kind: "money", title: "Money / SaaS Top 10", reason: "补齐商业分析与变现判断" }],
     growth: [{ kind: "growth", title: "Fastest Growth Top 10", reason: "研究增长引擎与飞轮" }],
     productThinking: [{ kind: "opportunity", title: "Opportunity Top 10", reason: "训练产品判断与机会识别" }],
-    userResearch: [{ kind: "sidehustle", title: "Side Hustle Top 10", reason: "研究真实用户需求场景" }],
+    ux: [{ kind: "sidehustle", title: "Side Hustle Top 10", reason: "研究真实用户需求场景与体验设计" }],
     requirementAnalysis: [{ kind: "opportunity", title: "Opportunity Top 10", reason: "训练需求挖掘（Hidden Needs）" }],
-    featureDesign: [{ kind: "stars", title: "Star Top 10", reason: "研究成熟产品的功能取舍" }],
+    technical: [{ kind: "stars", title: "Star Top 10", reason: "研究成熟产品的技术实现与功能取舍" }],
     dataAnalysis: [{ kind: "growth", title: "Growth Top 10", reason: "训练指标与数据分析" }],
     communication: [{ kind: "content", title: "Self Media Top 10", reason: "通过输出内容训练表达" }],
   };
@@ -756,4 +816,159 @@ function latentNeedOf(p: Project): string {
     storm: "研究自动化报告服务",
   };
   return map[p.slug] ?? "垂直行业模板/资产市场与团队协作沉淀";
+}
+
+
+/* ── ⑥ PM Deep Analysis（15 维） ─────────────────────────────── */
+export function buildPmDeepAnalysis(p: Project): { key: string; label: string; value: string }[] {
+  return [
+    { key: "problem", label: "Problem", value: problemOf(p) },
+    { key: "user", label: "User", value: targetUsersOf(p) },
+    { key: "scenario", label: "Scenario", value: sceneOf(p) },
+    { key: "pain", label: "Pain", value: painPointOf(p) },
+    { key: "need", label: "Need", value: needOf(p) },
+    { key: "job", label: "Job", value: deepNeedOf(p) },
+    { key: "solution", label: "Solution", value: p.name + " — " + p.tagline },
+    { key: "feature", label: "Feature", value: coreFeatureOf(p) },
+    { key: "workflow", label: "Workflow", value: workflowOf(p) },
+    { key: "ai", label: "AI", value: aiCapabilityOf(p) },
+    { key: "agent", label: "Agent", value: p.categories.includes("agent") ? "多步任务编排 + 工具调用 + 记忆校验" : "单步增强（当前形态）" },
+    { key: "data", label: "Data", value: dataOf(p) },
+    { key: "ux", label: "UX", value: uxOf(p) },
+    { key: "business", label: "Business", value: businessOf(p) },
+    { key: "growth", label: "Growth", value: growthOf(p) },
+  ];
+}
+
+/* ── ⑧ Why AI ────────────────────────────────────────────────── */
+export function buildWhyAi(p: Project): { needAi: string; withoutAi: string; costReduced: string; efficiencyGained: string; newExperience: string } {
+  return {
+    needAi: `为什么需要 AI：因为「${coreFeatureOf(p)}」本质是「${workflowOf(p)}」的智能执行，规则脚本无法覆盖真实世界的开放输入与多步决策。`,
+    withoutAi: `如果没有 AI：「${workflowOf(p).split("→")[0]}」只能靠人工/固定模板完成，门槛高、不可规模化。`,
+    costReduced: `AI 降低的成本：人力成本（自动替代重复劳动）、时间成本（分钟级 vs 小时级）、学习成本（自然语言 vs 专业操作）。`,
+    efficiencyGained: `AI 提高的效率：吞吐量（批量并行）、决策速度（即时生成+校验）、覆盖度（长尾场景）。`,
+    newExperience: `AI 创造的新体验：从「工具」到「助理」——用户只需表达目标，产品负责执行，且结果可持续学习与沉淀。`,
+  };
+}
+
+/* ── ⑨ AI Native Test ────────────────────────────────────────── */
+export function buildAiNativeTest(p: Project): { current: string; enhanced: string; native: string } {
+  return {
+    current: `Current Product（当前）：${p.name} 用「${coreFeatureOf(p)}」+「${workflowOf(p)}」把 AI 作为功能嵌入现有流程。`,
+    enhanced: `AI Enhanced（AI 增强）：在现有形态上强化「${aiCapabilityOf(p)}」、增加校验/重试/记忆，并把「${latentNeedOf(p)}」做成默认能力。`,
+    native: `AI Native（AI 原生）：假设 AI 已存在 5 年，应该从第一天就设计为「目标 → 自主执行 → 用户审核」的单向闭环，并把每一次使用自动沉淀为资产与模板市场，商业模式直接围绕资产与生态展开。`,
+  };
+}
+
+/* ── 产品底层逻辑架构分析 + 如何搭建 ─────────────────────────── */
+export function buildBuildPlan(p: Project): {
+  summary: string;
+  architectureLayers: { layer: string; desc: string }[];
+  techStack: string[];
+  dataFlow: string[];
+  modules: string[];
+  steps: { phase: string; days: string; tasks: string[] }[];
+  copy: string[];
+  dontCopy: string[];
+  dependencies: string[];
+  cost: string;
+  checklist: string[];
+} {
+  const s = computeScores(p);
+  const isAgent = p.categories.includes("agent");
+  const isRag = p.categories.includes("rag") || p.categories.includes("pkm");
+  const isCoding = p.categories.includes("coding");
+  const isContent = p.categories.includes("content") || p.categories.includes("video") || p.categories.includes("image");
+
+  const layers = [
+    { layer: "① 接入层 / UX", desc: `${p.name} 的入口形态（${p.categories.includes("coding") ? "CLI/IDE" : isContent ? "Web 工作台" : "Web/API"}）+ 一句话目标输入 + 进度/结果可视化（${uxOf(p)}）` },
+    { layer: "② 业务/编排层", desc: `核心是「${workflowOf(p)}」的状态机：任务拆解、步骤执行、失败重试、结果校验` },
+    { layer: "③ AI/模型层", desc: `${aiCapabilityOf(p)}；模型 Provider 抽象（OpenAI/Anthropic/本地），提示模板与工具注册表` },
+    { layer: "④ 数据层", desc: `${dataOf(p)}；结构化输出（JSON Schema 校验）、向量库/缓存、使用日志` },
+    { layer: "⑤ 变现/增长层", desc: `${businessOf(p)}；用量计量、分享钩子、模板市场与内容分发` },
+  ];
+
+  const tech = [
+    ...(isAgent ? ["LangGraph / OpenAI Agents / CrewAI（编排）", "工具调用 + MCP"] : []),
+    ...(isRag ? ["向量库（Qdrant/Chroma/Milvus）", "文档解析（MarkItDown/unstructured）"] : []),
+    ...(isCoding ? ["代码索引 + LSP", "沙箱执行器（Docker/VM）"] : []),
+    ...(isContent ? ["媒体管线（FFmpeg/渲染）", "素材/模板管理"] : []),
+    "LLM Provider 抽象（OpenAI / Anthropic / 本地 Ollama）",
+    "Next.js / FastAPI + Postgres + Redis",
+    "Structured Output（Instructor / Zod）",
+  ];
+
+  const dataFlow = [
+    `输入：${p.categories.includes("coding") ? "代码库 + 需求" : "用户目标/文档/素材"}`,
+    `处理：${workflowOf(p)}`,
+    `输出：${outcomeOf(p)}`,
+    "反馈：结果校验 + 用户评分 → 质量日志 → 迭代提示/流程",
+  ];
+
+  const modules = [
+    `core-engine（${workflowOf(p).split("→")[0]} → 结果 的主流程）`,
+    "provider（模型/工具抽象）",
+    "templates（行业模板库）",
+    "assets（结果/产出沉淀）",
+    "usage（计量 + 分享 + 变现）",
+  ];
+
+  const steps = [
+    {
+      phase: "Phase 1 · 最小闭环",
+      days: "7 天",
+      tasks: [`跑通「${coreFeatureOf(p)}」的单用户闭环`, "固定模型 Provider 抽象与结构化输出", "做一个可展示的 Demo 页"],
+    },
+    {
+      phase: "Phase 2 · 产品化",
+      days: "14 天",
+      tasks: ["补齐校验/重试/错误提示（UX）", "模板库 + 历史资产沉淀", "接入计量与分享钩子"],
+    },
+    {
+      phase: "Phase 3 · 验证",
+      days: "30 天",
+      tasks: ["找 10 个种子用户（社区冷启动）", "验证付费意愿（落地页/套餐）", "根据「${deepNeedOf(p)}」迭代定位"],
+    },
+  ];
+
+  const copy = [
+    `复制「${workflowOf(p)}」这条主流程的产品化封装（核心价值）`,
+    `复制「结果可审核 + 资产沉淀」的 UX 设计`,
+    `复制「开源获客 + 托管/服务变现」的商业路径`,
+  ];
+  const dontCopy = [
+    "不要复制它的全部功能堆叠，只复制核心闭环",
+    "不要复制它的架构复杂度（KV 缓存/分布式可以先不做）",
+    "不要直接复刻其社区与生态（需要时间积累，先做垂直场景）",
+  ];
+
+  const deps = [
+    "LLM API 成本（每月 $20-200 视用量）",
+    ...(isRag ? ["向量库与嵌入服务"] : []),
+    ...(isAgent ? ["Agent 框架与工具运行环境"] : []),
+    "基础设施（Vercel/Serverless 或单台 VPS）",
+  ];
+
+  const checklist = [
+    `① 用 7 天跑通「${coreFeatureOf(p)}」最小闭环`,
+    "② 结果可审核、错误可解释、可重试",
+    "③ 每次使用沉淀资产（历史/模板）",
+    "④ 内置分享钩子（结果页/模板可传播）",
+    "⑤ 埋点：激活 / 留存 / 导出率 / 付费转化",
+    "⑥ 30 天验证 10 个种子用户的付费意愿",
+  ];
+
+  return {
+    summary: `${p.name} 的底层逻辑是「${deepNeedOf(p)}」：用「${workflowOf(p)}」把 AI 能力产品化，以「${businessOf(p)}」形成闭环。复制它的正确姿势 = 核心流程 + 垂直场景 + 更薄的产品层。`,
+    architectureLayers: layers,
+    techStack: tech,
+    dataFlow,
+    modules,
+    steps,
+    copy,
+    dontCopy,
+    dependencies: deps,
+    cost: `MVP 成本：${s.sideHustle >= 70 ? "低（$50-300，个人可负担）" : "中（$300-1500，含模型与基础设施）"}；7-30 天可上线`,
+    checklist,
+  };
 }

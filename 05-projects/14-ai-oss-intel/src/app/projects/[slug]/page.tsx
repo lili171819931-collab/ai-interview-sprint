@@ -12,7 +12,11 @@ import { SaveButtonBig } from "@/components/ClientBits";
 import { LearningMode } from "@/components/learn/LearningMode";
 import { ContentMode } from "@/components/learn/ContentMode";
 import { PortfolioMode } from "@/components/learn/PortfolioMode";
-import { buildProductDna, buildFiveLayers, buildPmVsUser, buildOpinionFrame } from "@/lib/learning";
+import {
+  buildProductDna, buildFiveLayers, buildPmVsUser, buildOpinionFrame,
+  buildPmDeepAnalysis, buildWhyAi, buildAiNativeTest, buildBuildPlan,
+} from "@/lib/learning";
+import { scenariosOf, timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import type { Project } from "@/lib/types";
 
 export const dynamic = "force-static";
@@ -31,12 +35,13 @@ const TABS = [
   { id: "deconstruct", label: "产品拆解", icon: Layers },
   { id: "content", label: "自媒体", icon: Megaphone },
   { id: "portfolio", label: "求职 Portfolio", icon: Briefcase },
+  { id: "build", label: "如何搭建", icon: Hammer },
   { id: "growth", label: "Growth", icon: TrendingUpIcon },
   { id: "opportunities", label: "Opportunities", icon: Target },
   { id: "ai-report", label: "AI Report", icon: BrainCircuit },
 ];
 
-import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal } from "lucide-react";
+import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal, Hammer } from "lucide-react";
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -57,9 +62,19 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
               <h1 className="text-2xl font-extrabold text-white">{project.name}</h1>
+              {(() => {
+                const ts = timeStatusOf(project);
+                const meta = TIME_STATUS_META[ts];
+                return <span className="chip" style={{ color: meta.color, borderColor: meta.color + "55", background: meta.color + "14" }}>{meta.label}</span>;
+              })()}
               <span className="chip">{project.language}</span>
               <span className="chip">{project.license}</span>
               <span className="chip">{project.categories.map((c) => categoryOf(c).emoji).join(" ")} {project.categories.map(categoryOf).map((c) => c.name).join(" · ")}</span>
+            </div>
+            <div className="mt-2 flex flex-wrap gap-1.5">
+              {scenariosOf(project).map((sc) => (
+                <span key={sc.id} className="chip chip-accent">{sc.emoji} {sc.group} · {sc.name}</span>
+              ))}
             </div>
             <p className="mt-2 text-[14.5px] text-[#cfe0ff]">{project.tagline}</p>
             <p className="mt-1.5 text-[13px] text-[#8b98b3] max-w-3xl leading-relaxed">{project.description}</p>
@@ -108,6 +123,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           { href: "#deconstruct", label: "🧩 产品拆解模式" },
           { href: "#content", label: "📱 自媒体模式" },
           { href: "#portfolio", label: "💼 求职 Portfolio 模式" },
+          { href: "#build", label: "🏗️ 如何搭建" },
         ].map((m) => (
           <a key={m.href} href={m.href} className="chip hover:!text-[#7dd3fc] hover:!border-[#2c4370]">{m.label}</a>
         ))}
@@ -354,6 +370,11 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
         <PortfolioMode project={project} />
       </Section>
 
+      {/* 产品底层逻辑架构分析 · 如何搭建 */}
+      <Section id="build" title="产品底层逻辑架构分析 · 如何搭建这个产品" icon={Hammer}>
+        <BuildSection project={project} />
+      </Section>
+
       {/* Related */}
       <section>
         <div className="text-[15px] font-bold text-white mb-3">相关项目</div>
@@ -469,6 +490,150 @@ function DnaSection({ project }: { project: Project }) {
           <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#8b98b3]">{pmVsUser.userView}</div>
           <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#cfe0ff]">{pmVsUser.pmView}</div>
           <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#aab6cd]"><b className="text-[#fbbf24]">如果我是 PM：</b>{frame.ifPmSteps.join(" ")}</div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+
+function BuildSection({ project }: { project: Project }) {
+  const dna = buildProductDna(project);
+  const deep = buildPmDeepAnalysis(project);
+  const why = buildWhyAi(project);
+  const native = buildAiNativeTest(project);
+  const plan = buildBuildPlan(project);
+  const assets = [
+    { n: 1, label: "Project Intelligence Report", target: "#ai-report", icon: "📄" },
+    { n: 2, label: "PM Learning Case", target: "#pm-learning", icon: "🎓" },
+    { n: 3, label: "Product Challenge", target: "#pm-learning", icon: "🧠" },
+    { n: 4, label: "Personal Opinion", target: "#content", icon: "✍️" },
+    { n: 5, label: "Social Media Content", target: "#content", icon: "📱" },
+    { n: 6, label: "Portfolio Case", target: "#portfolio", icon: "💼" },
+    { n: 7, label: "Interview Case", target: "#portfolio", icon: "🎤" },
+  ];
+  return (
+    <div className="space-y-5">
+      {/* 七种资产 */}
+      <div className="panel p-5">
+        <div className="text-[13px] font-semibold text-white mb-3">一项目 → 七种资产（一次研究，最大复利）</div>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
+          {assets.map((a) => (
+            <a key={a.n} href={a.target} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 hover:border-[#2c4370]">
+              <div className="text-[11px] text-[#5b6885]">0{a.n}</div>
+              <div className="text-[12.5px] font-semibold text-[#cfe0ff] mt-0.5">{a.icon} {a.label}</div>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      {/* DNA 14 nodes */}
+      <div className="panel p-5">
+        <div className="text-[13px] font-semibold text-white mb-4">Project DNA · 产品底层逻辑（14 节点）</div>
+        <div className="flex flex-wrap items-center gap-1.5">
+          {dna.map((n, i) => (
+            <div key={n.label} className="flex items-center gap-1.5">
+              <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] px-3 py-2 text-center min-w-[72px]">
+                <div className="text-[10px] font-bold text-[#7dd3fc] uppercase">{n.label}</div>
+                <div className="text-[11px] text-[#cfe0ff] leading-snug mt-0.5 max-w-[130px]">{n.value}</div>
+              </div>
+              {i < dna.length - 1 && <GitCommitHorizontal size={13} className="text-[#4f8cff] shrink-0" />}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* PM Deep Analysis 15 dims */}
+      <div className="panel p-5">
+        <div className="text-[13px] font-semibold text-white mb-4">PM Deep Analysis · 15 维深度拆解</div>
+        <div className="grid gap-2 md:grid-cols-2 xl:grid-cols-3">
+          {deep.map((d) => (
+            <div key={d.key} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
+              <div className="text-[11px] font-bold text-[#7dd3fc] uppercase">{d.label}</div>
+              <div className="text-[12px] text-[#aab6cd] mt-0.5 leading-relaxed">{d.value}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 如何搭建：Build Plan */}
+      <div className="panel p-5">
+        <div className="text-[13px] font-semibold text-white mb-1">如何搭建这个产品 · Build Plan</div>
+        <div className="text-[12.5px] text-[#8b98b3] mb-4">{plan.summary}</div>
+        <div className="space-y-3">
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+            <div className="text-[12px] font-bold text-[#7dd3fc] mb-2">五层架构</div>
+            <div className="space-y-1.5">
+              {plan.architectureLayers.map((l) => (
+                <div key={l.layer} className="text-[12.5px] text-[#aab6cd]"><b className="text-[#cfe0ff]">{l.layer}</b> — {l.desc}</div>
+              ))}
+            </div>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+              <div className="text-[12px] font-bold text-[#34d399] mb-2">技术栈</div>
+              <div className="flex flex-wrap gap-1.5">{plan.techStack.map((t) => <span key={t} className="chip">{t}</span>)}</div>
+            </div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+              <div className="text-[12px] font-bold text-[#34d399] mb-2">数据流</div>
+              <div className="space-y-1 text-[12.5px] text-[#aab6cd]">{plan.dataFlow.map((d, i) => <div key={i}>{i + 1}. {d}</div>)}</div>
+            </div>
+          </div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+            <div className="text-[12px] font-bold text-[#fbbf24] mb-2">模块划分</div>
+            <div className="flex flex-wrap gap-1.5">{plan.modules.map((m) => <span key={m} className="chip chip-accent">{m}</span>)}</div>
+          </div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+            <div className="text-[12px] font-bold text-[#60a5fa] mb-2">搭建路线（7 / 14 / 30 天）</div>
+            <div className="space-y-2.5">
+              {plan.steps.map((st) => (
+                <div key={st.phase} className="flex gap-3">
+                  <div className="w-40 shrink-0"><div className="text-[12px] font-semibold text-white">{st.phase}</div><div className="text-[10.5px] text-[#5b6885]">{st.days}</div></div>
+                  <div className="text-[12.5px] text-[#aab6cd]">{st.tasks.join("；")}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="grid gap-3 md:grid-cols-2">
+            <div className="rounded-xl bg-[#0c1322] border border-emerald-400/25 p-4">
+              <div className="text-[12px] font-bold text-emerald-300 mb-2">✅ 复制什么</div>
+              <div className="space-y-1 text-[12.5px] text-[#aab6cd]">{plan.copy.map((c, i) => <div key={i}>· {c}</div>)}</div>
+            </div>
+            <div className="rounded-xl bg-[#0c1322] border border-rose-400/25 p-4">
+              <div className="text-[12px] font-bold text-rose-300 mb-2">⛔ 不要复制什么</div>
+              <div className="space-y-1 text-[12.5px] text-[#aab6cd]">{plan.dontCopy.map((c, i) => <div key={i}>· {c}</div>)}</div>
+            </div>
+          </div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+            <div className="text-[12px] font-bold text-[#f472b6] mb-2">依赖与成本</div>
+            <div className="text-[12.5px] text-[#aab6cd]">{plan.dependencies.join(" · ")}<div className="mt-1 text-[#f472b6]">{plan.cost}</div></div>
+          </div>
+          <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+            <div className="text-[12px] font-bold text-[#2dd4bf] mb-2">搭建自检清单</div>
+            <div className="space-y-1 text-[12.5px] text-[#aab6cd]">{plan.checklist.map((c, i) => <div key={i}>{c}</div>)}</div>
+          </div>
+        </div>
+      </div>
+
+      {/* Why AI + AI Native Test */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="panel p-5">
+          <div className="text-[13px] font-semibold text-white mb-3">Why AI · 为什么需要 AI</div>
+          <div className="space-y-2 text-[12.5px] text-[#aab6cd]">
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#7dd3fc]">为什么需要 AI：</b>{why.needAi}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#8b98b3]">如果没有 AI：</b>{why.withoutAi}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#34d399]">降低了什么成本：</b>{why.costReduced}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#34d399]">提高了什么效率：</b>{why.efficiencyGained}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#fbbf24]">创造了什么新体验：</b>{why.newExperience}</div>
+          </div>
+        </div>
+        <div className="panel p-5">
+          <div className="text-[13px] font-semibold text-white mb-3">AI Native Test · 从 0 重新设计会怎么做</div>
+          <div className="space-y-2 text-[12.5px] text-[#aab6cd]">
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#8b98b3]">Current：</b>{native.current}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#7dd3fc]">AI Enhanced：</b>{native.enhanced}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3"><b className="text-[#34d399]">AI Native：</b>{native.native}</div>
+          </div>
         </div>
       </div>
     </div>

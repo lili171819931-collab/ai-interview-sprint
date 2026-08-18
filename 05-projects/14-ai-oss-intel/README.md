@@ -29,6 +29,12 @@
 | 📱 自媒体模式 | 一键生成 8 平台内容（小红书/公众号/B站/YouTube/X/LinkedIn/抖音/视频号）+ 视频脚本 + 观点注入 + Content Score |
 | 💼 求职 Portfolio 模式 | Portfolio Case + Interview Me + AI PM 面试题库 + Rebuild→PRD + If I Were The PM + 产品决策日志 |
 | 📈 AI PM 学习中心 | 能力雷达图 + AI PM Score + 能力缺口→项目推荐 + 30 Days AI PM Challenge + 每日任务 |
+| 🗓️ 2026 Radar | Project Time Status（NEW/RISING/ACTIVE/RELEVANT 多因子判定，不用单一时间条件）+ 场景分类系统（A-Q 17 组） |
+| 🏗️ 产品底层逻辑架构分析 | Project DNA 14 节点 + PM Deep Analysis 15 维 + 如何搭建（五层架构/技术栈/数据流/7·14·30 天路线/复制与不复制/成本/自检清单） |
+| ❓ Why AI / AI Native Test | 为什么需要 AI、降低什么成本、创造什么体验；Current / AI Enhanced / AI Native 三态重设计 |
+| 👤 My GitHub | 同步 GitHub Stars → 2026 Favorites / Rising / Hidden Gems / My Project Radar + Radar vs Global + 兴趣图谱 |
+| 🏠 WHAT SHOULD I STUDY TODAY | 首页每日学习推荐（🔥 研究 / 🧠 补能力 / 💰 商业 / 🎬 内容 / 💼 Portfolio） |
+| 🗂️ 一项目 → 七种资产 | 每项目自动生成 报告 / 学习 Case / Challenge / 观点 / 内容 / Portfolio / Interview |
 | ⚖️ Compare | 2-4 项目多指标对比 + AI 最终推荐 |
 | 📡 My AI Radar | Watchlist 收藏 + 智能提醒（增长/排名/商业化信号） |
 
@@ -49,6 +55,8 @@
 | `/interview` | AI PM 面试模式 + 全项目面试题库（8 类 × 72 项目） |
 | `/portfolio` | My AI PM Portfolio：案例 / 决策日志 / 观点 / 内容 / 导出 |
 | `/projects/[slug]` | 项目页新增 4 大模式：AI PM 学习 / 产品拆解 / 自媒体 / 求职 Portfolio |
+| `/projects/[slug]#build` | 产品底层逻辑架构分析：DNA 14 节点 + 15 维拆解 + 如何搭建 + Why AI + AI Native Test |
+| `/my-github` | 同步 GitHub Stars：2026 收藏雷达 / Rising / Hidden Gems / Radar vs Global / 兴趣图谱 |
 
 ## 🚀 快速开始
 
@@ -128,6 +136,7 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 - [`docs/04-roadmap.md`](docs/04-roadmap.md) — 版本路线图（V1 / V1.5 / V2 / V3）
 - [`docs/05-deployment.md`](docs/05-deployment.md) — 部署策略（本地 / Docker / 服务器）
 - [`docs/06-ai-pm-learning-os.md`](docs/06-ai-pm-learning-os.md) — AI PM 学习与内容情报 OS（战略补充）
+- [`docs/07-2026-radar-build-os.md`](docs/07-2026-radar-build-os.md) — 2026 Radar · 产品底层逻辑架构分析 · 如何搭建
 
 ## 🎯 产品定位
 

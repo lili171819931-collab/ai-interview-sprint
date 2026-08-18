@@ -139,10 +139,12 @@ export function computeAbilities(): AbilityScores {
     if (done > 0) {
       add("productThinking", 3);
       add("requirementAnalysis", 2.5);
-      add("featureDesign", 2);
-      if (steps.overview || steps.problem) add("userResearch", 2);
+      add("ux", 2);
+      if (steps.overview || steps.problem) add("requirementAnalysis", 2);
+      if (steps.feature) add("ux", 2);
       if (steps.aiLogic) add("aiUnderstanding", 3);
-      if (steps.architecture) add("aiAgent", 2.5);
+      if (steps.architecture) add("agentUnderstanding", 2.5);
+      if (steps.architecture) add("technical", 2);
       if (steps.business) add("businessModel", 2.5);
       if (steps.opinion) add("communication", 2);
     }
@@ -150,12 +152,15 @@ export function computeAbilities(): AbilityScores {
   for (const c of challenges) {
     add("requirementAnalysis", c.correct ? 2 : 0.6);
     add("productThinking", c.correct ? 1.5 : 0.5);
-    if (c.skill === "用户研究") add("userResearch", 2);
-    if (c.skill === "Feature Prioritization" || c.skill === "产品设计") add("featureDesign", 2);
+    if (c.skill === "用户研究") add("ux", 2);
+    if (c.skill === "Feature Prioritization" || c.skill === "产品设计" || c.skill === "MVP") add("ux", 2);
     if (c.skill === "AI 产品设计") add("aiUnderstanding", 2);
+    if (c.skill === "Agent") add("agentUnderstanding", 2);
     if (c.skill === "商业分析") add("businessModel", 2);
     if (c.skill === "增长分析") add("growth", 2);
+    if (c.skill === "留存") add("growth", 2);
     if (c.skill === "风险管理" || c.skill === "产品战略" || c.skill === "GTM / 市场进入") add("productThinking", 2);
+    if (c.skill === "沟通表达") add("communication", 2);
   }
   for (const it of interviews) {
     add("communication", it.score / 20);

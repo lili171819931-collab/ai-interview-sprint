@@ -156,6 +156,8 @@ export type LearningLevel = "beginner" | "intermediate" | "advanced" | "expert";
 export interface HiddenNeeds {
   surface: string;
   functional: string;
+  scenario: string;
+  core: string;
   deep: string;
   latent: string;
 }
@@ -218,7 +220,9 @@ export interface Challenge {
   hint: string;
   skill: string;
   options: ChallengeOption[];
-  expertReview: { bestAnswer: string; why: string; keyInsight: string };
+  projectFacts: string;
+  bestPractice: string;
+  expertReview: { bestAnswer: string; why: string; keyInsight: string; good: string; missing: string; wrong: string; deeper: string };
 }
 
 export interface InterviewQuestion {
@@ -294,14 +298,14 @@ export interface CaseStudy {
 
 export interface AbilityScores {
   productThinking: number;
-  aiUnderstanding: number;
-  userResearch: number;
   requirementAnalysis: number;
-  featureDesign: number;
-  aiAgent: number;
+  aiUnderstanding: number;
+  agentUnderstanding: number;
+  ux: number;
   businessModel: number;
   growth: number;
   dataAnalysis: number;
+  technical: number;
   communication: number;
 }
 
@@ -321,3 +325,56 @@ export const LEARNING_STEPS: LearningStep[] = [
   { id: "opinion", label: "Opinion" },
   { id: "challenge", label: "Challenge" },
 ];
+
+
+/* ── 2026 Radar: Time Status / Scenario / Deep Analysis / Build Plan ── */
+
+export type TimeStatus = "2026NEW" | "2026RISING" | "2026ACTIVE" | "2026RELEVANT";
+
+export interface Scenario {
+  id: string;
+  group: string;   // A-Q
+  name: string;
+  nameZh: string;
+  emoji: string;
+}
+
+export interface PmDeepAnalysisItem {
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface WhyAi {
+  needAi: string;
+  withoutAi: string;
+  costReduced: string;
+  efficiencyGained: string;
+  newExperience: string;
+}
+
+export interface AiNativeTest {
+  current: string;
+  enhanced: string;
+  native: string;
+}
+
+export interface BuildStep {
+  phase: string;
+  days: string;
+  tasks: string[];
+}
+
+export interface BuildPlan {
+  summary: string;
+  architectureLayers: { layer: string; desc: string }[];
+  techStack: string[];
+  dataFlow: string[];
+  modules: string[];
+  steps: BuildStep[];
+  copy: string[];
+  dontCopy: string[];
+  dependencies: string[];
+  cost: string;
+  checklist: string[];
+}

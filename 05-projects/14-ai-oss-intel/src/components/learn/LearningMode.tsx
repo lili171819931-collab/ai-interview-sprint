@@ -55,13 +55,21 @@ export function LearningMode({ project }: { project: Project }) {
       <div className="panel p-5">
         <div className="flex items-center gap-2 mb-3"><Target size={16} className="text-[#fbbf24]" /><span className="text-[14px] font-bold text-white">Hidden Needs Detector · 需求挖掘训练</span></div>
         <div className="space-y-2.5">
-          {Object.entries(needs).map(([k, v]) => (
+          {[
+            ["surface", "表层需求", "#8b98b3"],
+            ["functional", "功能需求", "#7dd3fc"],
+            ["scenario", "场景需求", "#34d399"],
+            ["core", "核心需求", "#fbbf24"],
+            ["deep", "深层需求", "#f472b6"],
+            ["latent", "潜在需求", "#c084fc"],
+          ].map(([k, label, color]) => (
             <div key={k} className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3.5">
-              <div className="text-[11.5px] font-semibold text-[#7dd3fc] mb-1">{k === "surface" ? "表层需求" : k === "functional" ? "功能需求" : k === "deep" ? "深层需求" : "潜在需求"}</div>
-              <div className="text-[13px] text-[#aab6cd]">{v}</div>
+              <div className="text-[11.5px] font-semibold mb-1" style={{ color }}>{label}</div>
+              <div className="text-[13px] text-[#aab6cd]">{needs[k as keyof typeof needs]}</div>
             </div>
           ))}
         </div>
+        <div className="mt-3 text-[12px] text-[#5b6885]">提示：这个产品真正解决的可能不是它表面宣传的问题，而是「{needs.core.split("：")[1] ?? ""}」。</div>
       </div>
 
       {/* Requirement tree */}
@@ -222,12 +230,17 @@ function ChallengeBoard({ project }: { project: Project }) {
         </div>
 
         {revealed && (
-          <div className="mt-4 rounded-xl bg-[#101a2e] border border-[#16213a] p-4 space-y-2">
-            <div className="text-[12px] font-semibold text-[#7dd3fc]">Expert Review</div>
-            <div className="text-[12.5px] text-[#cfe0ff]">✓ {c.expertReview.bestAnswer}</div>
-            <div className="text-[12.5px] text-[#8b98b3]">为什么：{c.expertReview.why}</div>
-            <div className="text-[12.5px] text-[#fbbf24]">Key Insight：{c.expertReview.keyInsight}</div>
-            <button onClick={next} className="mt-2 h-9 px-4 rounded-lg bg-[#1a2a4a] border border-[#2c4370] text-[12.5px] text-white hover:bg-[#1f3158]">下一题</button>
+          <div className="mt-4 rounded-xl bg-[#101a2e] border border-[#16213a] p-4 space-y-3">
+            <div className="text-[12px] font-semibold text-[#7dd3fc]">AI 对比分析 · 你的答案 vs 项目事实 vs AI PM Expert vs 行业最佳实践</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#8b98b3]"><b className="text-[#34d399]">项目事实：</b>{c.projectFacts}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#8b98b3]"><b className="text-[#a78bfa]">行业最佳实践：</b>{c.bestPractice}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#34d399]"><b>Good：</b>{c.expertReview.good}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#fbbf24]"><b>Missing：</b>{c.expertReview.missing}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#f87171]"><b>Wrong：</b>{c.expertReview.wrong}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#7dd3fc]"><b>Deeper Insight：</b>{c.expertReview.deeper}</div>
+            <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[12.5px] text-[#cfe0ff]">✓ AI PM Expert：{c.expertReview.bestAnswer}</div>
+            <div className="text-[12.5px] text-[#5b6885]">为什么：{c.expertReview.why} · Key Insight：{c.expertReview.keyInsight}</div>
+            <button onClick={next} className="mt-1 h-9 px-4 rounded-lg bg-[#1a2a4a] border border-[#2c4370] text-[12.5px] text-white hover:bg-[#1f3158]">下一题</button>
           </div>
         )}
       </div>
