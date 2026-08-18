@@ -57,3 +57,9 @@
 → 提出自己的方案 → 形成自己的产品观点
 ```
 最终目标：看到一个 AI 产品，就能快速逆向理解它（用户/需求/设计/功能/AI/Agent/数据/技术/商业/竞争/未来），并知道如果自己做应该怎么做。
+
+## 8. Master 分析 / 产品框图 / 产品总监视角（v3）
+- **分析**（每个项目）：打开完整「AI 产品深度逆向工程」——40 节 PROJECT REVERSE ENGINEERING REPORT、PROJECT FACT SHEET、产品全景图（USER→…→MOAT 16 节点）、KILLER FEATURE、BEFORE VS AFTER、AI VALUE MAP（Traditional/AI Enhanced/AI Native/Agentic）、FEATURE DEPENDENCY GRAPH、技术难点地图、产品难点地图、PRODUCT 2.0、PRODUCT CLONING PLAN、三结论（WHY/HOW/WHERE IT WORKS）
+- **产品框图**：更新为「功能实现路径框图」——Step01 User Input → Frontend → API → Backend → Intent → Prompt → LLM → Tool → Data → Reasoning → Structured Output → Render → Feedback（每步带 Evidence 标签）
+- **产品总监视角**（新增）：边界考虑（In/Out Scope + 约束 + 边界结论）、痛点分析（深层痛点/路径摩擦/未被满足需求）、真实案例预测（个人/团队/副业三类案例：用户·场景·Before/After·预期·指标）
+- 已删除「逆向拆解」按钮（内容并入「分析」）

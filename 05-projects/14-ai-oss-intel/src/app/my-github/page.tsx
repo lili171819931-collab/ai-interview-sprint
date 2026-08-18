@@ -7,8 +7,8 @@ import { PROJECTS } from "@/data/projects";
 import { topBy } from "@/lib/store";
 import { computeScores, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { timeStatusOf, TIME_STATUS_META, scenariosOf } from "@/lib/scenarios";
-import { buildMyProjectReport, buildReverseEngineering } from "@/lib/reverse";
-import { buildProductDna } from "@/lib/learning";
+import { buildMyProjectReport } from "@/lib/reverse";
+import { MasterAnalysis, FeaturePathDiagram, DirectorView } from "@/components/analysis/AnalysisView";
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
@@ -182,7 +182,7 @@ export default function MyGitHubPage() {
       </Section>
 
       {/* 按分类展示 */}
-      <Section title="按分类展示 · 我的收藏雷达（实时同步）" emoji="🗂️" desc="实时同步的 Star/收藏项目按一级分类分组展示，每个项目可 分析 / 逆向拆解 / 产品框图">
+      <Section title="按分类展示 · 我的收藏雷达（实时同步）" emoji="🗂️" desc="实时同步的 Star/收藏项目按一级分类分组展示，每个项目可 分析 / 产品框图 / 产品总监视角">
         {activePool.length === 0 ? <Empty /> : <GroupedByCategory pool={activePool} />}
       </Section>
 
@@ -340,7 +340,7 @@ async function fetchStars(username: string): Promise<StarredRepo[]> {
 
 function GroupedByCategory({ pool }: { pool: Project[] }) {
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [panel, setPanel] = useState<"reverse" | "dna">("reverse");
+  const [panel, setPanel] = useState<"analysis" | "diagram" | "director">("analysis");
   const groups = useMemo(() => {
     const map = new Map<string, Project[]>();
     for (const p of pool) {
@@ -354,7 +354,7 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
       .sort((a, b) => b.list.length - a.list.length);
   }, [pool]);
 
-  const toggle = (key: string, pt: "reverse" | "dna") => {
+  const toggle = (key: string, pt: "analysis" | "diagram" | "director") => {
     if (expanded === key && panel === pt) { setExpanded(null); return; }
     setExpanded(key); setPanel(pt);
   };
@@ -392,18 +392,19 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
-                        <Link href={`/projects/${p.slug}`} className="chip chip-accent !text-[10.5px]">分析</Link>
-                        <button onClick={() => toggle(key, "reverse")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "reverse" ? "chip-accent" : ""}`}>逆向拆解</button>
-                        <button onClick={() => toggle(key, "dna")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "dna" ? "chip-accent" : ""}`}>产品框图</button>
+                        <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
+                        <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
+                        <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
                       </div>
                     </div>
                     {open && (
                       <div className="px-4 py-3 bg-[#0a101d] border-t border-[#16213a]">
-                        {panel === "reverse" ? (
-                          <MiniReverse p={p} />
-                        ) : (
-                          <MiniDna p={p} />
-                        )}
+                        <div className="flex flex-wrap gap-1.5 mb-3">
+                          <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer ${panel === "analysis" ? "chip-accent" : ""}`}>分析（完整逆向工程）</button>
+                          <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图（功能实现路径）</button>
+                          <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        </div>
+                        {panel === "analysis" ? <MasterAnalysis project={p} /> : panel === "diagram" ? <FeaturePathDiagram project={p} /> : <DirectorView project={p} />}
                       </div>
                     )}
                   </div>
@@ -417,44 +418,4 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
   );
 }
 
-function MiniReverse({ p }: { p: Project }) {
-  const r = buildReverseEngineering(p);
-  return (
-    <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
-      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-        <div className="text-[11px] font-bold text-[#34d399] mb-1.5">⚙️ 产品功能实现路径</div>
-        <div className="text-[11px] text-[#aab6cd] leading-relaxed">{r.implementationPath.slice(0, 8).map((x) => `${x.step}`).join(" → ")}…</div>
-      </div>
-      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-        <div className="text-[11px] font-bold text-[#7dd3fc] mb-1.5">🧬 底层逻辑</div>
-        <div className="text-[11px] text-[#aab6cd] leading-relaxed">{r.productDnaFlow.slice(0, 6).join(" → ")}…</div>
-      </div>
-      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-        <div className="text-[11px] font-bold text-[#a78bfa] mb-1.5">🏗️ 技术架构</div>
-        <div className="text-[11px] text-[#aab6cd]">{r.techStackExplained.slice(0, 4).map((t) => t.tech).join(" / ")}</div>
-      </div>
-      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3">
-        <div className="text-[11px] font-bold text-[#f472b6] mb-1.5">📐 产品架构</div>
-        <div className="text-[11px] text-[#aab6cd]">{r.productToTech.feature} → {r.productToTech.workflow.split("→")[0]}</div>
-        <Link href={`/projects/${p.slug}#reverse`} className="chip chip-accent mt-1.5 !text-[10px]">完整报告 →</Link>
-      </div>
-    </div>
-  );
-}
 
-function MiniDna({ p }: { p: Project }) {
-  const dna = buildProductDna(p);
-  return (
-    <div className="flex flex-wrap items-center gap-1.5">
-      {dna.map((n, i) => (
-        <div key={n.label} className="flex items-center gap-1.5">
-          <div className="rounded-lg bg-[#0c1322] border border-[#2c4370] px-2 py-1.5 text-center min-w-[64px]">
-            <div className="text-[9px] font-bold text-[#7dd3fc] uppercase">{n.label}</div>
-            <div className="text-[10px] text-[#cfe0ff] leading-snug max-w-[110px]">{n.value}</div>
-          </div>
-          {i < dna.length - 1 && <span className="text-[#4f8cff] text-[10px]">→</span>}
-        </div>
-      ))}
-    </div>
-  );
-}

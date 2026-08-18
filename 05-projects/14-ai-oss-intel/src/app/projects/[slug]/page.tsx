@@ -16,6 +16,8 @@ import {
   buildProductDna, buildFiveLayers, buildPmVsUser, buildOpinionFrame,
   buildPmDeepAnalysis, buildWhyAi, buildAiNativeTest, buildBuildPlan,
 } from "@/lib/learning";
+import { buildMasterReport } from "@/lib/master";
+import { FeaturePathDiagram, DirectorView } from "@/components/analysis/AnalysisView";
 import { scenariosOf, timeStatusOf, TIME_STATUS_META, secondaryScenariosOf } from "@/lib/scenarios";
 import { ReverseSection } from "@/components/ReverseSection";
 import { buildReverseEngineering } from "@/lib/reverse";
@@ -44,7 +46,7 @@ const TABS = [
   { id: "ai-report", label: "AI Report", icon: BrainCircuit },
 ];
 
-import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal, Hammer, Microscope } from "lucide-react";
+import { TrendingUp as TrendingUpIcon, GraduationCap, GitCommitHorizontal, Hammer, Microscope, UserRoundCheck } from "lucide-react";
 
 export default async function ProjectPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
@@ -52,6 +54,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
   if (!project) notFound();
   const s = computeScores(project);
   const report = generateReport(project);
+  const masterReport = buildMasterReport(project);
   const related = relatedProjects(project, 4);
   const r7 = growthRate(project, 7);
   const r30 = growthRate(project, 30);
@@ -349,9 +352,9 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
             ))}
           </div>
           <div className="prose-report space-y-1">
-            {report.sections.map((sec) => (
-              <div key={sec.title}>
-                <h2><span className="w-1.5 h-3.5 rounded-full bg-gradient-to-b from-[#4f8cff] to-[#7c5cff] inline-block" /> {sec.title}</h2>
+            {masterReport.map((sec) => (
+              <div key={sec.n}>
+                <h2><span className="w-1.5 h-3.5 rounded-full bg-gradient-to-b from-[#4f8cff] to-[#7c5cff] inline-block" /> {String(sec.n).padStart(2, "0")} · {sec.title}</h2>
                 <p>{sec.body}</p>
               </div>
             ))}
@@ -633,6 +636,18 @@ function BuildSection({ project }: { project: Project }) {
             <div className="text-[12px] font-bold text-[#2dd4bf] mb-2">搭建自检清单</div>
             <div className="space-y-1 text-[12.5px] text-[#aab6cd]">{plan.checklist.map((c, i) => <div key={i}>{c}</div>)}</div>
           </div>
+        </div>
+      </div>
+
+      {/* 功能实现路径框图 + 产品总监视角 */}
+      <div className="grid gap-4 md:grid-cols-2">
+        <div className="panel p-5">
+          <div className="flex items-center gap-2 mb-3"><Boxes size={16} className="text-[#7dd3fc]" /><span className="text-[14px] font-bold text-white">产品框图 · 功能实现路径</span></div>
+          <FeaturePathDiagram project={project} />
+        </div>
+        <div className="panel p-5">
+          <div className="flex items-center gap-2 mb-3"><UserRoundCheck size={16} className="text-[#a78bfa]" /><span className="text-[14px] font-bold text-white">产品总监视角 · 边界 / 痛点 / 真实案例</span></div>
+          <DirectorView project={project} />
         </div>
       </div>
 

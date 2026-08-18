@@ -154,3 +154,25 @@ const spd = starsPerDay(liveRepo("2025-08-18", "2026-08-18", 365));
 assert(spd > 0.9 && spd < 1.1, "live: stars per day ~1 (365 stars in ~365 days)");
 assert(categoryQueries("agent").length >= 1 && categoryQueries("agent")[0].includes("topic:ai-agent"), "live: category queries");
 assert(categoryQueries("bogus" as any).length >= 1, "live: fallback query");
+
+/* ── Master Reverse Engineering tests ─────────────────────────────────── */
+import { buildMasterReport, buildFactSheet, buildKillerFeature, buildBeforeAfter, buildAiValueMap, buildFeatureDependency, buildTechChallenges, buildProductChallenges, buildProduct2, buildCloningPlan, buildThreeConclusions, buildPanorama, buildDirectorView } from "../src/lib/master";
+
+const master = buildMasterReport(sample);
+assert(master.length === 40, "master: 40-section report");
+assert(master[0].title.includes("FACT SHEET") && master[39].title.includes("Final"), "master: first/last sections");
+assert(buildFactSheet(sample).length >= 10, "master: fact sheet");
+assert(buildKillerFeature(sample).feature.length > 0, "master: killer feature");
+assert(Object.keys(buildBeforeAfter(sample)).length === 6, "master: before/after");
+assert(buildAiValueMap(sample).length === 4, "master: AI value map 4 tiers");
+assert(buildFeatureDependency(sample).length === 4, "master: dependency paths");
+assert(buildTechChallenges(sample).length >= 5, "master: tech challenges");
+assert(buildProductChallenges(sample).length >= 4, "master: product challenges");
+assert(buildProduct2(sample).newProduct.length > 0, "master: product 2.0");
+assert(buildCloningPlan(sample).timeline.includes("天"), "master: cloning plan");
+assert(Object.keys(buildThreeConclusions(sample)).length === 3, "master: three conclusions");
+assert(buildPanorama(sample).length >= 14, "master: panorama nodes");
+const dv = buildDirectorView(sample);
+assert(dv.boundary.inScope.length >= 2 && dv.boundary.outScope.length >= 1, "master: director boundary");
+assert(dv.pain.deep.length > 0, "master: director pain");
+assert(dv.cases.length >= 3, "master: director cases");

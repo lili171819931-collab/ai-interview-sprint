@@ -41,7 +41,7 @@
 | 🧪 Evidence Mode | 每个技术实现判断标注 Confirmed / Inferred / Hypothesis / Unknown，禁止把推测写成事实 |
 | 📂 分类 TOP 榜 | 30 个一级分类各自独立 TOP 榜 + 二级场景拆解（30 页） |
 | 🔗 全站关联分类 TOP 榜 | 全部项目（Discover）与智能洞察（Insights）数据全部关联分类 TOP 榜，项目卡片分类标签可直达对应榜单 |
-| 🎛️ 分类榜项目操作 | 每个项目支持 分析（项目页）/ 逆向拆解（实现路径·底层逻辑·技术·产品架构）/ 产品框图（Product DNA 14 节点） |
+| 🎛️ 分类榜项目操作 | 每个项目支持 分析（完整逆向工程：40 节报告 + 事实表 + 全景图 + 杀手级功能 + Before/After + AI 价值图 + 难点 + Product 2.0 + 抄作业）/ 产品框图（功能实现路径框图）/ 产品总监视角（边界考虑 / 痛点分析 / 真实案例预测） |
 | 🏠 2026 Radar 首页 | 2026 HOT / RISING / FASTEST GROWING / HIDDEN GEMS + 右侧 MY AI PM SCORE |
 | 📑 My Project Report | 每个收藏项目自动生成个人报告：为什么收藏/重点学什么/是否值得自媒体·Portfolio·二开 |
 | 📖 Personal AI PM Curriculum | 根据能力短板自动编排 4 周个性化课程 |
@@ -68,7 +68,7 @@
 | `/projects/[slug]#build` | 产品底层逻辑架构分析：DNA 14 节点 + 15 维拆解 + 如何搭建 + Why AI + AI Native Test |
 | `/my-github` | 实时同步 GitHub Stars + 按分类分组展示（分析/逆向拆解/产品框图）+ 2026 雷达 / 兴趣图谱 / 个人报告 |
 | `/rankings/categories` | 30 个一级分类独立 TOP 榜索引 · `/rankings/category/[id]` 含 机会/收藏/收藏增长 三榜（实时） |
-| `/projects/[slug]#reverse` | 逆向工程 Lab：40 节报告 / 用户路径 / 实现路径 / 源码映射 / Evidence Mode |
+| `/projects/[slug]` | 深度分析：AI Report = 40 节逆向工程报告；新增 产品框图·功能实现路径 与 产品总监视角（边界/痛点/真实案例） |
 
 ## 🚀 快速开始
 
