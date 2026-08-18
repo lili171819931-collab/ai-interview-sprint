@@ -4,7 +4,7 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
   LayoutDashboard, Compass, Sparkles, Scale, Radar, Menu, X, FolderKanban,
-  GraduationCap, UserRound, MessagesSquare, GitFork,
+  GraduationCap, UserRound, MessagesSquare, GitFork, Link2,
 } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 
@@ -32,7 +32,10 @@ const NAV = [
   },
   {
     section: "My GitHub",
-    items: [{ href: "/my-github", label: "My GitHub 收藏雷达", icon: GitFork }],
+    items: [
+      { href: "/my-github", label: "My GitHub 收藏雷达", icon: GitFork },
+      { href: "/add-project", label: "➕ 添加 GitHub 项目", icon: Link2 },
+    ],
   },
   {
     section: "AI PM Learning OS",

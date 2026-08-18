@@ -10,6 +10,7 @@ import { timeStatusOf, TIME_STATUS_META, scenariosOf, secondaryScenariosOf } fro
 import { buildMyProjectReport } from "@/lib/reverse";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel } from "@/components/analysis/AnalysisView";
 import type { LiveRepo } from "@/lib/live";
+import { getAddedProjects } from "@/lib/db";
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
@@ -56,6 +57,12 @@ export default function MyGitHubPage() {
     () => starred.filter((r) => !PROJECTS.some((p) => p.fullName.toLowerCase() === r.fullName.toLowerCase())),
     [starred]
   );
+  // 全平台联动：手动添加的项目（add-project）并入收藏雷达
+  const added = useMemo(() => getAddedProjects(), [ready]);
+  const addedSeed = useMemo(() => added.map((a) => PROJECTS.find((p) => p.fullName.toLowerCase() === a.repo.fullName.toLowerCase())).filter(Boolean) as Project[], [added]);
+  const addedLive = useMemo(() => added
+    .filter((a) => !PROJECTS.some((p) => p.fullName.toLowerCase() === a.repo.fullName.toLowerCase()))
+    .map((a) => ({ ...a.repo, url: `https://github.com/${a.repo.fullName}` }) as StarredRepo), [added]);
 
   const sync = async () => {
     if (!user.trim()) { setSyncNote("先输入 GitHub 用户名"); return; }
@@ -131,9 +138,16 @@ export default function MyGitHubPage() {
     const bySlug = new Map<string, Project>();
     for (const p of starredProjects) bySlug.set(p.slug, p);
     for (const p of savedProjects) bySlug.set(p.slug, p);
+    for (const p of addedSeed) bySlug.set(p.slug, p);
     return [...bySlug.values()];
-  }, [savedProjects, starredProjects]);
-  const totalShown = allSeedPool.length + starredUnknown.length;
+  }, [savedProjects, starredProjects, addedSeed]);
+  const allLivePool = useMemo(() => {
+    const byName = new Map<string, StarredRepo>();
+    for (const r of starredUnknown) byName.set(r.fullName.toLowerCase(), r);
+    for (const r of addedLive) byName.set(r.fullName.toLowerCase(), r);
+    return [...byName.values()];
+  }, [starredUnknown, addedLive]);
+  const totalShown = allSeedPool.length + allLivePool.length;
 
   return (
     <div className="space-y-6">
@@ -192,7 +206,7 @@ export default function MyGitHubPage() {
 
       {/* 按分类展示 */}
       <Section title="按分类展示 · 我的收藏雷达（实时同步）" emoji="🗂️" desc={`全部 ${totalShown} 个 Star 项目（含未收录快照的实时项目）按一级分类分组展示`}>
-        {totalShown === 0 ? <Empty /> : <GroupedByCategory seedPool={allSeedPool} livePool={starredUnknown} />}
+        {totalShown === 0 ? <Empty /> : <GroupedByCategory seedPool={allSeedPool} livePool={allLivePool} />}
       </Section>
 
       {/* My Project Report */}

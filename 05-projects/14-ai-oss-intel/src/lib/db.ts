@@ -98,9 +98,43 @@ export async function syncGlobal(force = false): Promise<DbState> {
   return inFlight;
 }
 
+export interface AddedProject {
+  repo: LiveRepo;
+  addedAt: number;
+}
+
+const ADDED_KEY = "aioss.db.added";
+
+export function getAddedProjects(): AddedProject[] {
+  try {
+    return JSON.parse(localStorage.getItem(ADDED_KEY) ?? "[]") as AddedProject[];
+  } catch {
+    return [];
+  }
+}
+
+/** Persist an added project (past a GitHub link) so it's linked platform-wide. */
+export function addProject(repo: LiveRepo) {
+  try {
+    const list = getAddedProjects().filter((x) => x.repo.fullName.toLowerCase() !== repo.fullName.toLowerCase());
+    list.push({ repo, addedAt: Date.now() });
+    localStorage.setItem(ADDED_KEY, JSON.stringify(list));
+    window.dispatchEvent(new CustomEvent("aioss.db.change"));
+  } catch {}
+}
+
+/** Merge cached live repos + user-added projects (added always wins by fullName). */
+function mergeAdded(cache: DbState): DbState {
+  const added = getAddedProjects().map((x) => x.repo);
+  if (added.length === 0) return cache;
+  const byName = new Map(cache.repos.map((r) => [r.fullName.toLowerCase(), r]));
+  for (const r of added) byName.set(r.fullName.toLowerCase(), r);
+  return { ...cache, repos: [...byName.values()] };
+}
+
 export function getDb(): DbState {
   const cache = readCache();
-  if (cache && cache.repos.length > 0) return cache;
+  if (cache && cache.repos.length > 0) return mergeAdded(cache);
   return { repos: [], fetchedAt: 0, source: "seed" };
 }
 

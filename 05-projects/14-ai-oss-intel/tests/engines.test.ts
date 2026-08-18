@@ -254,3 +254,16 @@ const askDir = answerQuery("找出最近30天增长最快、适合做副业、�
 assert(askDir.projects.length > 0 && askDir.projects.every((x) => x.director && ["Strong Buy", "Invest", "Watch", "Pivot", "Do Not Invest"].includes(x.director.verdict)), "ask: director verdict on every project");
 assert(askDir.directorSummary.includes("AI 产品总监视角"), "ask: director summary present");
 assert(askDir.recommendations[0].includes("总监判定"), "ask: rec includes director verdict");
+
+/* ── Add-project / categorize / added DB tests ────────────────────────── */
+import { guessCategoryFromRepo } from "../src/lib/categorize";
+import { getAddedProjects, addProject } from "../src/lib/db";
+
+assert(guessCategoryFromRepo({ name: "browser-use", description: "让 AI 操控浏览器", topics: ["agent", "browser"], language: "Python" }) === "agent", "categorize: agent");
+assert(guessCategoryFromRepo({ name: "mcp-servers", description: "MCP 服务器", topics: ["mcp"] }) === "mcp", "categorize: mcp");
+assert(guessCategoryFromRepo({ name: "duckdb", description: "analytics database", topics: [] }) === "data", "categorize: data");
+assert(guessCategoryFromRepo({ name: "whisper", description: "speech recognition", topics: ["asr"] }) === "audio", "categorize: audio");
+assert(guessCategoryFromRepo({ name: "random-tool", description: "misc", topics: [] }) === "other", "categorize: other");
+assert(Array.isArray(getAddedProjects()) && getAddedProjects().length === 0, "db: added empty in node");
+addProject(fakeRepo as any); // no-op in node (no localStorage) — must not throw
+assert(true, "db: addProject no-throw in node");

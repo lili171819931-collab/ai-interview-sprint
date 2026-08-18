@@ -1,5 +1,5 @@
 "use client";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Clock, RefreshCw, Radio, Database, AlertTriangle, ChevronDown, ChevronUp, Boxes, FileText, UserRoundCheck, ExternalLink } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
@@ -8,6 +8,8 @@ import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel } from "@/components/analysis/AnalysisView";
 import { loadLive, liveStatus, starsPerDay, type LiveRepo, type LiveState } from "@/lib/live";
+import { getAddedProjects } from "@/lib/db";
+import { guessCategoryFromRepo } from "@/lib/categorize";
 import { GithubIcon } from "@/components/icons";
 import type { CategoryId, Project } from "@/lib/types";
 
@@ -36,6 +38,16 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
   useEffect(() => { setTab("stars"); setLive(null); setLoading(true); setExpandedKey(null); load(false); }, [id, load]);
 
   const seed = PROJECTS.filter((p) => p.categories.includes(id));
+  // 全平台联动：手动添加的项目（add-project）若匹配当前分类，并入实时展示
+  const addedInCat = useMemo(
+    () => getAddedProjects().map((a) => a.repo).filter((r) => guessCategoryFromRepo(r) === id),
+    [id]
+  );
+  const mergeLive = (repos: LiveRepo[]) => {
+    const byName = new Map(repos.map((r) => [r.fullName.toLowerCase(), r]));
+    for (const r of addedInCat) byName.set(r.fullName.toLowerCase(), r);
+    return [...byName.values()];
+  };
   const opportunity = seed.map((p) => ({ p, s: computeScores(p) })).sort((a, b) => b.s.opportunity - a.s.opportunity);
   const starsSeed = [...seed].sort((a, b) => b.stars - a.stars);
   const growthSeed = [...seed].sort((a, b) => b.growth90d - a.growth90d);
@@ -59,7 +71,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
     }
     if (tab === "stars") {
       if (liveOn) {
-        return [...live!.repos].sort((a, b) => b.stars - a.stars).slice(0, LIMIT).map((r, i) => (
+        return mergeLive(live!.repos).sort((a, b) => b.stars - a.stars).slice(0, LIMIT).map((r, i) => (
           <LiveRow key={r.fullName} repo={r} rank={i + 1} color="#fbbf24" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
             columns={<>{[
               <Cell key="stars" label="⭐ Stars"><span className="num font-bold text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
@@ -81,7 +93,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
     }
     // growth
     if (liveOn) {
-      return [...live!.repos].sort((a, b) => starsPerDay(b) - starsPerDay(a)).slice(0, LIMIT).map((r, i) => (
+      return mergeLive(live!.repos).sort((a, b) => starsPerDay(b) - starsPerDay(a)).slice(0, LIMIT).map((r, i) => (
         <LiveRow key={r.fullName} repo={r} rank={i + 1} color="#34d399" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
           columns={<>{[
             <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
@@ -132,7 +144,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
       </div>
 
       <p className="text-[11px] text-[#4d5a75]">
-        📡 每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」）；未联网或超限时自动回退本地快照（{seed.length} 个项目）。
+        📡 每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」）；未联网或超限时自动回退本地快照（{seed.length} 个项目）· 🧷 手动添加的项目（add-project）自动并入本分类（{addedInCat.length} 个）。
         每个项目均可「分析」打开完整逆向工程（40 节报告 + 全景图），「产品框图」查看功能实现路径框图，「产品总监视角」查看边界 / 痛点 / 真实案例预测。
       </p>
     </div>

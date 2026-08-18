@@ -68,6 +68,7 @@
 | `/projects/[slug]` | 项目页新增 4 大模式：AI PM 学习 / 产品拆解 / 自媒体 / 求职 Portfolio |
 | `/projects/[slug]#build` | 产品底层逻辑架构分析：DNA 14 节点 + 15 维拆解 + 如何搭建 + Why AI + AI Native Test |
 | `/my-github` | 实时同步 GitHub Stars + 按分类分组展示（分析/逆向拆解/产品框图）+ 2026 雷达 / 兴趣图谱 / 个人报告 |
+| `/add-project` | ➕ 添加 GitHub 项目：粘贴链接一键抓取仓库+源码，生成 三件套（分析/产品框图/产品总监视角）+ 全项目报告（Markdown 复制/下载），并联动全平台数据库（Discover / Insights / My GitHub / 分类榜可见） |
 | `/rankings/categories` | 30 个一级分类独立 TOP 榜索引 · `/rankings/category/[id]` 含 机会/收藏/收藏增长 三榜（实时） |
 | `/projects/[slug]` | 深度分析：AI Report = 40 节逆向工程报告 + 产品框图·功能实现路径 + 产品总监视角 |
 | `/projects/[slug]/report` | 📄 完整报告页（打印/导出 PDF）：完整链路 + 技术路线主线 + 三结论 + 全景图 + 事实表 + 40 节报告 + 总监视角；分析面板支持 复制/下载 Markdown |
