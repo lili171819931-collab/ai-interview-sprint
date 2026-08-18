@@ -1,7 +1,7 @@
 "use client";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
-import { Star, TrendingUp, Puzzle, Radar, RefreshCw, Sparkles, GitFork } from "lucide-react";
+import { Star, TrendingUp, Puzzle, Radar, RefreshCw, Sparkles, GitFork, ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 import { PROJECTS } from "@/data/projects";
 import { topBy } from "@/lib/store";
@@ -12,7 +12,7 @@ import { MasterAnalysis, FeaturePathDiagram, DirectorView } from "@/components/a
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
-interface StarredRepo { fullName: string; name: string; owner: string; stars: number; url: string }
+interface StarredRepo { fullName: string; name: string; owner: string; stars: number; url: string; createdAt?: string; language?: string; description?: string; topics?: string[] }
 
 export default function MyGitHubPage() {
   const [saved, setSaved] = useState<string[]>([]);
@@ -125,6 +125,14 @@ export default function MyGitHubPage() {
   }, [savedProjects, starredProjects]);
 
   const activePool = savedProjects.length > 0 ? savedProjects : starredProjects;
+  // 全部 Star：已收藏 + 已同步（去重）——分类展示用全量
+  const allSeedPool = useMemo(() => {
+    const bySlug = new Map<string, Project>();
+    for (const p of starredProjects) bySlug.set(p.slug, p);
+    for (const p of savedProjects) bySlug.set(p.slug, p);
+    return [...bySlug.values()];
+  }, [savedProjects, starredProjects]);
+  const totalShown = allSeedPool.length + starredUnknown.length;
 
   return (
     <div className="space-y-6">
@@ -143,7 +151,7 @@ export default function MyGitHubPage() {
       </div>
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        <Metric icon={Star} label="已收藏 / 已同步" value={`${activePool.length}`} color="#fbbf24" />
+        <Metric icon={Star} label="Star 项目（全部）" value={`${totalShown}`} color="#fbbf24" />
         <Metric icon={TrendingUp} label="2026 Rising" value={`${favorites2026.filter((p) => timeStatusOf(p) === "2026RISING").length}`} color="#7dd3fc" />
         <Metric icon={Sparkles} label="2026 New" value={`${favorites2026.filter((p) => timeStatusOf(p) === "2026NEW").length}`} color="#34d399" />
         <Metric icon={GitFork} label="漏掉的机会（推荐）" value={`${hiddenGems.length}`} color="#f472b6" />
@@ -182,8 +190,8 @@ export default function MyGitHubPage() {
       </Section>
 
       {/* 按分类展示 */}
-      <Section title="按分类展示 · 我的收藏雷达（实时同步）" emoji="🗂️" desc="实时同步的 Star/收藏项目按一级分类分组展示，每个项目可 分析 / 产品框图 / 产品总监视角">
-        {activePool.length === 0 ? <Empty /> : <GroupedByCategory pool={activePool} />}
+      <Section title="按分类展示 · 我的收藏雷达（实时同步）" emoji="🗂️" desc={`全部 ${totalShown} 个 Star 项目（含未收录快照的实时项目）按一级分类分组展示`}>
+        {totalShown === 0 ? <Empty /> : <GroupedByCategory seedPool={allSeedPool} livePool={starredUnknown} />}
       </Section>
 
       {/* My Project Report */}
@@ -330,29 +338,29 @@ async function fetchStars(username: string): Promise<StarredRepo[]> {
       headers: { Accept: "application/vnd.github+json" },
     });
     if (!res.ok) throw new Error(`GitHub API ${res.status}`);
-    const items = (await res.json()) as { full_name: string; stargazers_count: number; html_url: string }[];
+    const items = (await res.json()) as { full_name: string; stargazers_count: number; html_url: string; created_at?: string; language?: string | null; description?: string | null; topics?: string[] }[];
     if (items.length === 0) break;
-    for (const it of items) all.push({ fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0], stars: it.stargazers_count, url: it.html_url });
+    for (const it of items) all.push({ fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0], stars: it.stargazers_count, url: it.html_url, createdAt: (it.created_at ?? "").slice(0, 10), language: it.language ?? undefined, description: it.description ?? undefined, topics: it.topics ?? [] });
     if (items.length < 100) break;
   }
   return all;
 }
 
-function GroupedByCategory({ pool }: { pool: Project[] }) {
+function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePool: StarredRepo[] }) {
   const [expanded, setExpanded] = useState<string | null>(null);
   const [panel, setPanel] = useState<"analysis" | "diagram" | "director">("analysis");
   const groups = useMemo(() => {
-    const map = new Map<string, Project[]>();
-    for (const p of pool) {
-      const cat = p.categories[0] ?? "agent";
-      const arr = map.get(cat) ?? [];
-      arr.push(p);
-      map.set(cat, arr);
-    }
+    const map = new Map<string, { seeds: Project[]; lives: StarredRepo[] }>();
+    const ensure = (cat: string) => {
+      if (!map.has(cat)) map.set(cat, { seeds: [], lives: [] });
+      return map.get(cat)!;
+    };
+    for (const p of seedPool) ensure(p.categories[0] ?? "other").seeds.push(p);
+    for (const r of livePool) ensure(guessCategory(r)).lives.push(r);
     return [...map.entries()]
-      .map(([id, list]) => ({ id: id as Project["categories"][number], list: list.sort((a, b) => b.stars - a.stars) }))
-      .sort((a, b) => b.list.length - a.list.length);
-  }, [pool]);
+      .map(([id, g]) => ({ id, seeds: g.seeds.sort((a, b) => b.stars - a.stars), lives: g.lives.sort((a, b) => b.stars - a.stars) }))
+      .sort((a, b) => b.seeds.length + b.lives.length - (a.seeds.length + a.lives.length));
+  }, [seedPool, livePool]);
 
   const toggle = (key: string, pt: "analysis" | "diagram" | "director") => {
     if (expanded === key && panel === pt) { setExpanded(null); return; }
@@ -362,22 +370,23 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
   return (
     <div className="space-y-4">
       {groups.map((g) => {
-        const cat = categoryOf(g.id);
+        const cat = g.id === "other" ? null : categoryOf(g.id as Project["categories"][number]);
+        const total = g.seeds.length + g.lives.length;
         return (
           <div key={g.id} className="rounded-xl bg-[#0c1322] border border-[#16213a] overflow-hidden">
             <div className="flex items-center gap-2 px-3.5 py-2.5 bg-[#101a2e] border-b border-[#16213a]">
-              <span className="text-[14px]">{cat.emoji}</span>
-              <span className="font-bold text-white text-[13.5px]">{cat.name}</span>
-              <span className="chip ml-auto">{g.list.length} 个</span>
-              <Link href={`/rankings/category/${g.id}`} className="chip chip-accent">分类 TOP 榜 →</Link>
+              <span className="text-[14px]">{cat?.emoji ?? "🗂️"}</span>
+              <span className="font-bold text-white text-[13.5px]">{cat?.name ?? "其他 / 未分类"}</span>
+              <span className="chip ml-auto">{total} 个</span>
+              {cat && <Link href={`/rankings/category/${g.id}`} className="chip chip-accent">分类 TOP 榜 →</Link>}
             </div>
             <div className="divide-y divide-[#101a2e]">
-              {g.list.map((p) => {
+              {g.seeds.map((p) => {
                 const key = `seed:${p.slug}`;
                 const open = expanded === key;
                 const ts = timeStatusOf(p);
                 const meta = TIME_STATUS_META[ts];
-                const s = computeScores(p);
+                const sc = computeScores(p);
                 return (
                   <div key={p.slug}>
                     <div className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2.5 hover:bg-[#0e1626]">
@@ -386,9 +395,10 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
                         <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10.5px] text-[#5b6885]">
                           <span>🕐 发布于 {p.createdAt}</span>
                           <span className="chip !text-[9px]" style={{ color: meta.color, borderColor: meta.color + "55" }}>{meta.label}</span>
+                          {p.license && <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 {p.license}</span>}
                           <span className="num">⭐{formatStars(p.stars)}</span>
                           <span className="text-emerald-300 num">↗{formatSigned(p.growth30d)}</span>
-                          <span className="num">Opp {s.opportunity}</span>
+                          <span className="num">Opp {sc.opportunity}</span>
                         </div>
                       </div>
                       <div className="flex items-center gap-1.5">
@@ -410,6 +420,21 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
                   </div>
                 );
               })}
+              {g.lives.map((r) => (
+                <div key={r.fullName} className="flex flex-wrap items-center gap-x-3 gap-y-1.5 px-3.5 py-2.5 hover:bg-[#0e1626]">
+                  <div className="min-w-0 flex-1">
+                    <a href={r.url} target="_blank" className="font-semibold text-white text-[13px] hover:text-[#7dd3fc]">{r.name} <ExternalLink size={11} className="inline text-[#4d5a75]" /></a>
+                    <div className="flex flex-wrap items-center gap-1.5 mt-0.5 text-[10.5px] text-[#5b6885]">
+                      <span>🕐 发布于 {r.createdAt ?? "—"}</span>
+                      <span className="chip !text-[9px] !text-emerald-300 !border-emerald-400/40">🔓 开源</span>
+                      <span className="num">⭐{formatStars(r.stars)}</span>
+                      {r.language && <span className="chip !text-[9px]">{r.language}</span>}
+                    </div>
+                    {r.description && <div className="text-[11px] text-[#5b6885] truncate max-w-[560px] mt-0.5">{r.description}</div>}
+                  </div>
+                  <a href={r.url} target="_blank" className="chip !text-[10.5px]">GitHub</a>
+                </div>
+              ))}
             </div>
           </div>
         );
@@ -418,4 +443,23 @@ function GroupedByCategory({ pool }: { pool: Project[] }) {
   );
 }
 
+/** 实时未收录项目的分类猜测（best-effort） */
+function guessCategory(r: StarredRepo): string {
+  const hay = `${r.name} ${r.description ?? ""} ${(r.topics ?? []).join(" ")} ${r.language ?? ""}`.toLowerCase();
+  const rules: [RegExp, string][] = [
+    [/agent|autogen|crew|langgraph|smolagents|browser-use/i, "agent"],
+    [/mcp|model-context/i, "mcp"],
+    [/llm|gpt|transformer|model|ollama|inference|finetun/i, "llm"],
+    [/rag|retriev|knowledge|qa|vector|embedding|chroma|qdrant/i, "rag"],
+    [/code|coding|ide|editor|compiler/i, "coding"],
+    [/video|ffmpeg|text-to-video|sora/i, "video"],
+    [/image|diffusion|stable-diffusion|photo|segment|vision|cv|detect/i, "image"],
+    [/audio|speech|tts|voice|asr|music/i, "audio"],
+    [/db|database|sql|duckdb|warehouse|analytics/i, "data"],
+    [/saas|billing|subscription|api|cloud|serverless/i, "saas"],
+    [/chat|ui|web|app|assistant|desktop|notebook/i, "productivity"],
+  ];
+  for (const [re, cat] of rules) if (re.test(hay)) return cat;
+  return "other";
+}
 
