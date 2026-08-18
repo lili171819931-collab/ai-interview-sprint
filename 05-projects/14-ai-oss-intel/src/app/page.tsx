@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { ArrowRight, Search, Sparkles, TrendingUp, Star, Target, Coins, Zap, Layers, Database, LineChart } from "lucide-react";
+import { ArrowRight, Search, Sparkles, TrendingUp, Star, Flame, Zap, Layers, LineChart } from "lucide-react";
 import { PROJECTS } from "@/data/projects";
 import { allCategories, categoryCounts, topBy, projectBySlug } from "@/lib/store";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
@@ -91,9 +91,8 @@ export default function HomePage() {
       {/* Rank previews */}
       <section className="space-y-8">
         <RankPreview kind="stars" icon={Star} color="#fbbf24" title="Star Top 10" sub="Stars 总量排名" href="/rankings/stars" />
-        <RankPreview kind="growth" icon={TrendingUp} color="#34d399" title="Fastest Growth Top 10" sub="近 30 天绝对增长" href="/rankings/growth" />
-        <RankPreview kind="opportunity" icon={Target} color="#7dd3fc" title="AI Opportunity Top 10" sub="平台最核心的机会榜" href="/rankings/opportunity" />
-        <RankPreview kind="money" icon={Coins} color="#f87171" title="Money Making Top 10" sub="赚钱潜力排名" href="/rankings/money" />
+        <RankPreview kind="growth" icon={TrendingUp} color="#34d399" title="Fastest Growth Top 10" sub="近 30 天绝对增长 · 100 项目" href="/rankings/growth" />
+        <RankPreview kind="hot" icon={Flame} color="#f87171" title="Hot 热点 Top 10" sub="近 7 天热度 · 100 项目" href="/rankings/hot" />
       </section>
 
       {/* Categories */}
@@ -159,7 +158,7 @@ function SectionHead({ icon: Icon, title, sub, href }: { icon: any; title: strin
 }
 
 function RankPreview({ kind, icon: Icon, color, title, sub, href }: {
-  kind: "stars" | "growth" | "opportunity" | "money";
+  kind: "stars" | "growth" | "hot";
   icon: any; color: string; title: string; sub: string; href: string;
 }) {
   const items = topBy(kind, 10);
@@ -183,7 +182,7 @@ function RankPreview({ kind, icon: Icon, color, title, sub, href }: {
             <div className="text-right shrink-0">
               <div className="text-[10.5px] text-[#5b6885]">Score</div>
               <div className="font-bold num text-[15px]" style={{ color }}>
-                {kind === "stars" ? formatStars(project.stars) : kind === "growth" ? formatSigned(project.growth30d) : scores[kind]}
+                {kind === "stars" ? formatStars(project.stars) : kind === "growth" ? formatSigned(project.growth30d) : kind === "hot" ? formatSigned(project.growth7d) : scores[kind]}
               </div>
             </div>
           </Link>

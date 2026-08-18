@@ -98,10 +98,10 @@ export function timeStatusOf(p: Project): TimeStatus {
 }
 
 export const TIME_STATUS_META: Record<TimeStatus, { label: string; color: string; desc: string }> = {
-  "2026NEW": { label: "2026 NEW", color: "#34d399", desc: "2026 年首次创建的新项目" },
-  "2026RISING": { label: "2026 RISING", color: "#7dd3fc", desc: "2026 年显著增长/活跃" },
-  "2026ACTIVE": { label: "2026 ACTIVE", color: "#fbbf24", desc: "2026 年持续活跃开发" },
-  "2026RELEVANT": { label: "2026 RELEVANT", color: "#a78bfa", desc: "2026 年仍具产品/生态价值" },
+  "2026NEW": { label: "🆕 2026 New", color: "#34d399", desc: "2026 年首次创建" },
+  "2026RISING": { label: "🔥 2026 Rising", color: "#7dd3fc", desc: "2026 年以前创建，但 2026 年出现明显增长" },
+  "2026ACTIVE": { label: "🚀 2026 Active", color: "#fbbf24", desc: "2026 年仍然持续开发并出现重大版本/功能变化" },
+  "2026RELEVANT": { label: "📌 2026 Relevant", color: "#a78bfa", desc: "2026 年仍具产品/生态价值" },
 };
 
 /* 二级场景拆解 — 每个一级分类拆成二级场景（§5） */

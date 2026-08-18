@@ -1,17 +1,19 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowUpRight, ArrowDownRight, Minus, Star, TrendingUp, Target, Coins, Briefcase, Puzzle, FileText, Megaphone, Sparkles } from "lucide-react";
+import { ArrowUpRight, ArrowDownRight, Minus, Star, TrendingUp, Target, Coins, Briefcase, Puzzle, FileText, Megaphone, Sparkles, Flame } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 import { topBy } from "@/lib/store";
 import { formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { Sparkline } from "@/components/ui";
+import { ExpandableRankRow } from "@/components/ExpandableRankRow";
 import type { Project, ProjectScores, RankKind } from "@/lib/types";
 
 export const dynamic = "force-static";
 
 const KINDS: { kind: RankKind; title: string; desc: string; icon: any; color: string; metric: (s: ProjectScores, p: Project) => string }[] = [
   { kind: "stars", title: "Star Top 50", desc: "按 GitHub Stars 总量排名 — 社区规模与影响力的基准。", icon: Star, color: "#fbbf24", metric: (_, p) => formatStars(p.stars) },
-  { kind: "growth", title: "Star Growth Top 50", desc: "按近 30 天 Star 绝对增长排名 — Growth Intelligence Engine 核心输出。", icon: TrendingUp, color: "#34d399", metric: (_, p) => `${formatSigned(p.growth30d)} ⭐` },
+  { kind: "hot", title: "Hot 热点 TOP 100", desc: "按近 7 天 Star 增长排名 — 今天最热的项目。每个项目都可展开查看「产品功能实现路径 / 底层逻辑 / 技术架构 / 产品架构」。", icon: Flame, color: "#f87171", metric: (_, p) => `${formatSigned(p.growth7d)} ⭐` },
+  { kind: "growth", title: "Fastest Growth TOP 100", desc: "按近 30 天 Star 绝对增长排名 — Growth Intelligence Engine 核心输出。每个项目都可展开查看「产品功能实现路径 / 底层逻辑 / 技术架构 / 产品架构」。", icon: TrendingUp, color: "#34d399", metric: (_, p) => `${formatSigned(p.growth30d)} ⭐` },
   { kind: "opportunity", title: "AI Opportunity Top 50", desc: "Growth×25% + Demand×20% + Commercial×20% + Innovation×15% + Ecosystem×10% + LowCompetition×10% — 平台最核心榜单。", icon: Target, color: "#7dd3fc", metric: (s) => `${s.opportunity}/100` },
   { kind: "money", title: "Money Making Top 50", desc: "赚钱潜力：SaaS / API / Subscription / Plugin / Service / Template 等变现路径的适配度。", icon: Coins, color: "#f87171", metric: (s) => `${s.money}/100` },
   { kind: "sidehustle", title: "Side Hustle Top 50", desc: "副业机会榜：二次开发难度、SaaS 化、服务化、个人开发者适配度综合评分。", icon: Briefcase, color: "#fb923c", metric: (s) => `${s.sideHustle}/100` },
@@ -29,7 +31,8 @@ export default async function RankingPage({ params }: { params: Promise<{ kind: 
   const { kind } = await params;
   const meta = KINDS.find((k) => k.kind === kind);
   if (!meta) notFound();
-  const items = topBy(meta.kind, 50);
+  const limit = kind === "growth" || kind === "hot" ? 100 : 50;
+  const items = topBy(meta.kind, limit);
   const Icon = meta.icon;
 
   return (
@@ -75,6 +78,19 @@ export default async function RankingPage({ params }: { params: Promise<{ kind: 
                 const r30 = growthRate(project, 30);
                 const r90 = growthRate(project, 90);
                 const keyMetric = meta.metric(scores, project);
+                if (kind === "growth" || kind === "hot") {
+                  return (
+                    <ExpandableRankRow
+                      key={project.slug}
+                      project={project}
+                      rank={rank}
+                      delta={delta}
+                      metaColor={meta.color}
+                      keyMetric={keyMetric}
+                      showExtra
+                    />
+                  );
+                }
                 return (
                   <tr key={project.slug} className="border-b border-[#101a2e] hover:bg-[#0e1626]">
                     <td className="px-4 py-3">
@@ -115,7 +131,7 @@ export default async function RankingPage({ params }: { params: Promise<{ kind: 
           </table>
         </div>
       </div>
-      <p className="text-[11px] text-[#4d5a75]">数据快照：{new Date().toISOString().slice(0, 10)} · 运行 <code className="text-[#8fa6cf]">npm run github:sync</code> 可拉取实时数据</p>
+      <p className="text-[11px] text-[#4d5a75]">共 {items.length} 个项目 · 数据快照：{new Date().toISOString().slice(0, 10)} · 运行 <code className="text-[#8fa6cf]">npm run github:sync</code> 可拉取实时数据</p>
     </div>
   );
 }

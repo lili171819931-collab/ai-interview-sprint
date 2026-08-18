@@ -119,7 +119,7 @@ export function answerQuery(text: string): QueryAnswer {
   }));
 
   const kindLabel: Record<RankKind, string> = {
-    stars: "Stars 总量", growth: "30 天增长", opportunity: "AI 机会分",
+    stars: "Stars 总量", growth: "30 天增长", hot: "7 天热度", opportunity: "AI 机会分",
     money: "赚钱潜力", sidehustle: "副业适配", skills: "Skill 化适配",
     resume: "简历价值", content: "内容潜力", new: "最近发布",
   };

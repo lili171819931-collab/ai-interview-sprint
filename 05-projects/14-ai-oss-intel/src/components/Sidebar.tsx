@@ -3,9 +3,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import {
-  LayoutDashboard, Compass, Star, TrendingUp, Target, Coins, Briefcase,
-  Puzzle, FileText, Megaphone, Sparkles, Scale, Radar, Menu, X, FolderKanban,
-  GraduationCap, UserRound, MessagesSquare, GitFork,
+  LayoutDashboard, Compass, Star, TrendingUp, Flame, Sparkles, Scale, Radar,
+  Menu, X, FolderKanban, GraduationCap, UserRound, MessagesSquare, GitFork,
 } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 
@@ -23,12 +22,7 @@ const NAV = [
     items: [
       { href: "/rankings/stars", label: "Star Top 50", icon: Star },
       { href: "/rankings/growth", label: "Fastest Growth", icon: TrendingUp },
-      { href: "/rankings/opportunity", label: "Opportunity 机会榜", icon: Target },
-      { href: "/rankings/money", label: "Money 赚钱榜", icon: Coins },
-      { href: "/rankings/sidehustle", label: "Side Hustle 副业榜", icon: Briefcase },
-      { href: "/rankings/skills", label: "Skill 项目榜", icon: Puzzle },
-      { href: "/rankings/resume", label: "Resume 简历榜", icon: FileText },
-      { href: "/rankings/content", label: "Self Media 自媒体榜", icon: Megaphone },
+      { href: "/rankings/hot", label: "Hot 热点 TOP 100", icon: Flame },
       { href: "/rankings/categories", label: "分类 TOP 榜", icon: FolderKanban },
     ],
   },
@@ -101,7 +95,7 @@ export function Sidebar() {
         ))}
       </nav>
       <div className="px-4 py-4 border-t border-[#141e33] text-[11px] text-[#5b6885]">
-        <div className="flex items-center gap-1.5"><FolderKanban size={13} /> 72 个项目 · 30 类 · 实时雷达</div>
+        <div className="flex items-center gap-1.5"><FolderKanban size={13} /> 106 个项目 · 30 类 · 实时雷达</div>
       </div>
     </div>
   );

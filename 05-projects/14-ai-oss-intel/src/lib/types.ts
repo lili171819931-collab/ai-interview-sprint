@@ -139,7 +139,7 @@ export interface ProjectReport {
 }
 
 export type RankKind =
-  | "stars" | "growth" | "opportunity" | "money" | "sidehustle"
+  | "stars" | "growth" | "hot" | "opportunity" | "money" | "sidehustle"
   | "skills" | "resume" | "content" | "new";
 
 export interface RankedItem {

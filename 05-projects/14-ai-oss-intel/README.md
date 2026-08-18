@@ -15,9 +15,9 @@
 
 | 能力 | 说明 |
 |------|------|
-| 📡 项目发现 | 72 个精选 AI 开源项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
+| 📡 项目发现 | 106 个精选 AI 开源项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
 | 📊 Growth Intelligence Engine | 计算每个项目 7 / 30 / 90 天 Star 增长与增长率，生成趋势图 |
-| 🏆 9 大排行榜 | Star Top 50 · Growth Top 50 · Opportunity · Money · Side Hustle · Skill · Resume · Self Media · New |
+| 🏆 排行榜 | Star Top 50 · **Fastest Growth TOP 100** · **Hot 热点 TOP 100**（每项目可展开查看实现路径/底层逻辑/技术架构/产品架构）· 30 个分类 TOP 榜 |
 | 🎯 AI Project Score | 8 维加权评分（Popularity 10% + Growth 15% + Innovation 15% + Product 15% + Demand 10% + Commercial 15% + Ecosystem 10% + PersonalDev 10%） |
 | 🧠 10-Agent 共识报告 | 每项目生成 25 节 Project Intelligence Report + Should-I-Build Verdict |
 | 💡 产品机会生成器 | 每项目自动生成 ≥5 个新产品方向（名称/用户/痛点/MVP/商业模式/壁垒/难度/周期/潜力） |
@@ -29,7 +29,7 @@
 | 📱 自媒体模式 | 一键生成 8 平台内容（小红书/公众号/B站/YouTube/X/LinkedIn/抖音/视频号）+ 视频脚本 + 观点注入 + Content Score |
 | 💼 求职 Portfolio 模式 | Portfolio Case + Interview Me + AI PM 面试题库 + Rebuild→PRD + If I Were The PM + 产品决策日志 |
 | 📈 AI PM 学习中心 | 能力雷达图 + AI PM Score + 能力缺口→项目推荐 + 30 Days AI PM Challenge + 每日任务 |
-| 🗓️ 2026 Radar | Project Time Status（NEW/RISING/ACTIVE/RELEVANT 多因子判定，不用单一时间条件）+ 场景分类系统（A-Q 17 组） |
+| 🗓️ 2026 Radar | Project Time Status（🆕 New / 🔥 Rising / 🚀 Active 多因子判定，不用单一时间条件）+ 场景分类系统（A-Q 17 组） |
 | 🏗️ 产品底层逻辑架构分析 | Project DNA 14 节点 + PM Deep Analysis 15 维 + 如何搭建（五层架构/技术栈/数据流/7·14·30 天路线/复制与不复制/成本/自检清单） |
 | ❓ Why AI / AI Native Test | 为什么需要 AI、降低什么成本、创造什么体验；Current / AI Enhanced / AI Native 三态重设计 |
 | 👤 My GitHub | 同步 GitHub Stars → 2026 Favorites / Rising / Hidden Gems / My Project Radar + Radar vs Global + 兴趣图谱 |
@@ -50,7 +50,7 @@
 |------|------|
 | `/` | Dashboard：Hero + Trending + 排行榜预览 + 分类 |
 | `/discover` | Explore：搜索 / 分类 / 语言 / 排序筛选全部项目 |
-| `/rankings` | 排行榜体系总览 |
+| `/rankings` | 排行榜体系总览（Star / Fastest Growth / Hot 热点） |
 | `/rankings/[stars|growth|opportunity|money|sidehustle|skills|resume|content|new]` | 9 大榜单 |
 | `/projects/[slug]` | 项目情报页：Overview / Architecture / Features / Product / Business / Growth / Opportunities / AI Report |
 | `/compare` | 项目对比 + AI 最终推荐 |
@@ -71,7 +71,7 @@
 ```bash
 cd 05-projects/14-ai-oss-intel
 npm install          # 依赖（Next.js 15 / React 19 / Tailwind 4 / TypeScript strict）
-npm run data:build   # 数据完整性校验（72 个项目 ALL OK ✅）
+npm run data:build   # 数据完整性校验（106 个项目 ALL OK ✅）
 npm test             # 引擎单测（评分/排名/查询解析/报告生成）
 npm run dev          # http://localhost:3012
 ```

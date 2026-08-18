@@ -112,6 +112,7 @@ function rankKey(p: Project, s: ProjectScores, kind: RankKind): number {
   switch (kind) {
     case "stars": return p.stars;
     case "growth": return p.growth30d;
+    case "hot": return p.growth7d;
     case "opportunity": return s.opportunity;
     case "money": return s.money;
     case "sidehustle": return s.sideHustle;
