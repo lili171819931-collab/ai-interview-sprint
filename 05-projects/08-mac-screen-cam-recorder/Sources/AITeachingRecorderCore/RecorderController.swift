@@ -65,7 +65,7 @@ public final class RecorderController: ObservableObject {
             let normalized = max(level, -60)
             let now = Date().timeIntervalSince1970
             // Throttle to ~10 Hz so the UI meter updates don't re-layout the whole home view.
-            if now - self.lastMicLevelAt < 0.1 { return }
+            if now - self.lastMicLevelAt < 0.12 { return }
             self.lastMicLevelAt = now
             DispatchQueue.main.async { self.micLevel = normalized }
         }

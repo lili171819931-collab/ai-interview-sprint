@@ -675,16 +675,15 @@ struct MicLevelMeter: View {
             Text("Microphone level")
                 .font(.caption2)
                 .foregroundColor(.secondary)
-            GeometryReader { geo in
-                ZStack(alignment: .leading) {
-                    Capsule().fill(Color.white.opacity(0.1))
-                    Capsule()
-                        .fill(LinearGradient(colors: [.green, .yellow, .red],
-                                             startPoint: .leading, endPoint: .trailing))
-                        .frame(width: max(4, geo.size.width * fraction))
-                }
+            // Fixed-width bar (no GeometryReader) so level updates never re-measure the layout.
+            ZStack(alignment: .leading) {
+                Capsule().fill(Color.white.opacity(0.1))
+                Capsule()
+                    .fill(LinearGradient(colors: [.green, .yellow, .red],
+                                         startPoint: .leading, endPoint: .trailing))
+                    .frame(width: max(4, 300 * fraction))
             }
-            .frame(height: 6)
+            .frame(width: 300, height: 6)
         }
     }
 }
