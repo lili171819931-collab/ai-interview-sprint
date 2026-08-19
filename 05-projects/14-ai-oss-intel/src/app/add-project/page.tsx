@@ -124,17 +124,15 @@ export default function AddProjectPage() {
           </div>
 
           {/* Tabs */}
-          <div className="flex flex-wrap gap-1.5">
-            <button onClick={() => setTab("analysis")} className={`chip cursor-pointer ${tab === "analysis" ? "chip-accent" : ""}`}><FileText size={12} /> 分析（完整逆向工程）</button>
-            <button onClick={() => setTab("diagram")} className={`chip cursor-pointer ${tab === "diagram" ? "chip-accent" : ""}`}><Boxes size={12} /> 产品框图</button>
-            <button onClick={() => setTab("director")} className={`chip cursor-pointer ${tab === "director" ? "chip-accent" : ""}`}><UserRoundCheck size={12} /> 产品总监视角</button>
-            <button onClick={() => setTab("agent")} className={`chip cursor-pointer ${tab === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
-            <button onClick={() => setTab("expert")} className={`chip cursor-pointer ${tab === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
-            <button onClick={() => setTab("prompt")} className={`chip cursor-pointer ${tab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
-            <button onClick={() => setTab("report")} className={`chip cursor-pointer ${tab === "report" ? "chip-accent" : ""}`}><Database size={12} /> 完整报告</button>
-            <div className="ml-auto">
-              <ReportActions markdown={result.seed ? buildProjectReportMarkdown(result.seed) : buildSourceReportMarkdown(result.repo, result.intel)} />
-            </div>
+          <div className="grid grid-cols-3 gap-1.5">
+            <button onClick={() => setTab("analysis")} className={`chip cursor-pointer w-full justify-center ${tab === "analysis" ? "chip-accent" : ""}`}><FileText size={12} /> 分析（完整逆向工程）</button>
+            <button onClick={() => setTab("diagram")} className={`chip cursor-pointer w-full justify-center ${tab === "diagram" ? "chip-accent" : ""}`}><Boxes size={12} /> 产品框图</button>
+            <button onClick={() => setTab("expert")} className={`chip cursor-pointer w-full justify-center ${tab === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
+            <button onClick={() => setTab("agent")} className={`chip cursor-pointer w-full justify-center ${tab === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
+            <button onClick={() => setTab("director")} className={`chip cursor-pointer w-full justify-center ${tab === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+            <button onClick={() => setTab("prompt")} className={`chip cursor-pointer w-full justify-center ${tab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
+            <button onClick={() => setTab("report")} className={`chip cursor-pointer w-full justify-center ${tab === "report" ? "chip-accent" : ""}`}><Database size={12} /> 完整报告</button>
+            <div className="col-span-2 flex justify-end"><ReportActions markdown={result.seed ? buildProjectReportMarkdown(result.seed) : buildSourceReportMarkdown(result.repo, result.intel)} /></div>
           </div>
 
           <div className="panel p-5">

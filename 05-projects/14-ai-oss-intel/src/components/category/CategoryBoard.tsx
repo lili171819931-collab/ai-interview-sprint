@@ -172,26 +172,26 @@ function Actions({ seed, repo, expandedKey, panelTab, onToggle }: {
   const key = seed ? `seed:${seed.slug}` : `live:${repo!.fullName}`;
   const isOpen = expandedKey === key;
   return (
-    <div className="flex items-center justify-end gap-1.5 whitespace-nowrap">
-      <button onClick={() => onToggle(key, "analysis")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "analysis" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
+    <div className="grid grid-cols-3 gap-1.5">
+      <button onClick={() => onToggle(key, "analysis")} className={`chip !text-[11px] cursor-pointer w-full justify-center ${isOpen && panelTab === "analysis" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <FileText size={11} /> 分析
       </button>
-      <button onClick={() => onToggle(key, "diagram")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "diagram" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
+      <button onClick={() => onToggle(key, "diagram")} className={`chip !text-[11px] cursor-pointer w-full justify-center ${isOpen && panelTab === "diagram" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <Boxes size={11} /> 产品框图
       </button>
-      <button onClick={() => onToggle(key, "expert")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "expert" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
+      <button onClick={() => onToggle(key, "expert")} className={`chip !text-[11px] cursor-pointer w-full justify-center ${isOpen && panelTab === "expert" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <UserRoundCheck size={11} /> 专家实战
       </button>
-      <button onClick={() => onToggle(key, "agent")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "agent" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
+      <button onClick={() => onToggle(key, "agent")} className={`chip !text-[11px] cursor-pointer w-full justify-center ${isOpen && panelTab === "agent" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <Bot size={11} /> Agent 拆解
       </button>
-      <button onClick={() => onToggle(key, "director")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "director" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
+      <button onClick={() => onToggle(key, "director")} className={`chip !text-[11px] cursor-pointer w-full justify-center ${isOpen && panelTab === "director" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <UserRoundCheck size={11} /> 产品总监视角
       </button>
       {seed ? (
-        <Link href={`/projects/${seed.slug}/prompt`} className="chip !text-[11px] hover:!text-[#fbbf24]">⚡ Prompt</Link>
+        <Link href={`/projects/${seed.slug}/prompt`} className="chip !text-[11px] hover:!text-[#fbbf24] w-full justify-center">⚡ Prompt</Link>
       ) : (
-        <button onClick={() => onToggle(key, "prompt")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "prompt" ? "chip-accent" : "hover:!text-[#fbbf24]"}`}>
+        <button onClick={() => onToggle(key, "prompt")} className={`chip !text-[11px] cursor-pointer w-full justify-center ${isOpen && panelTab === "prompt" ? "chip-accent" : "hover:!text-[#fbbf24]"}`}>
           ⚡ Prompt
         </button>
       )}
@@ -271,16 +271,16 @@ function ExpandPanel({ seed, repo, panelTab, onTab }: {
   const key = seed ? `seed:${seed.slug}` : `live:${repo!.fullName}`;
   return (
     <div className="border-t border-[#16213a] bg-[#0a101d] px-4 py-4">
-      <div className="flex flex-wrap gap-1.5 mb-3">
-        <button onClick={() => onTab(key, "analysis")} className={`chip cursor-pointer ${panelTab === "analysis" ? "chip-accent" : ""}`}><FileText size={11} /> 分析（完整逆向工程）</button>
-        <button onClick={() => onTab(key, "diagram")} className={`chip cursor-pointer ${panelTab === "diagram" ? "chip-accent" : ""}`}><Boxes size={11} /> 产品框图（功能实现路径）</button>
-        <button onClick={() => onTab(key, "expert")} className={`chip cursor-pointer ${panelTab === "expert" ? "chip-accent" : ""}`}><UserRoundCheck size={11} /> 专家实战</button>
-        <button onClick={() => onTab(key, "agent")} className={`chip cursor-pointer ${panelTab === "agent" ? "chip-accent" : ""}`}><Bot size={11} /> Agent 拆解</button>
-        <button onClick={() => onTab(key, "director")} className={`chip cursor-pointer ${panelTab === "director" ? "chip-accent" : ""}`}><UserRoundCheck size={11} /> 产品总监视角</button>
+      <div className="grid grid-cols-3 gap-1.5 mb-3">
+        <button onClick={() => onTab(key, "analysis")} className={`chip cursor-pointer w-full justify-center ${panelTab === "analysis" ? "chip-accent" : ""}`}><FileText size={11} /> 分析（完整逆向工程）</button>
+        <button onClick={() => onTab(key, "diagram")} className={`chip cursor-pointer w-full justify-center ${panelTab === "diagram" ? "chip-accent" : ""}`}><Boxes size={11} /> 产品框图（功能实现路径）</button>
+        <button onClick={() => onTab(key, "expert")} className={`chip cursor-pointer w-full justify-center ${panelTab === "expert" ? "chip-accent" : ""}`}><UserRoundCheck size={11} /> 专家实战</button>
+        <button onClick={() => onTab(key, "agent")} className={`chip cursor-pointer w-full justify-center ${panelTab === "agent" ? "chip-accent" : ""}`}><Bot size={11} /> Agent 拆解</button>
+        <button onClick={() => onTab(key, "director")} className={`chip cursor-pointer w-full justify-center ${panelTab === "director" ? "chip-accent" : ""}`}><UserRoundCheck size={11} /> 产品总监视角</button>
         {seed ? (
-          <Link href={`/projects/${seed.slug}/prompt`} className={`chip ${panelTab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</Link>
+          <Link href={`/projects/${seed.slug}/prompt`} className={`chip w-full justify-center ${panelTab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</Link>
         ) : (
-          <button onClick={() => onTab(key, "prompt")} className={`chip cursor-pointer ${panelTab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
+          <button onClick={() => onTab(key, "prompt")} className={`chip cursor-pointer w-full justify-center ${panelTab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
         )}
       </div>
       {seed ? (

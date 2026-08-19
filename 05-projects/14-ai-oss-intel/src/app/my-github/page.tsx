@@ -446,22 +446,24 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                           <span className="num">Opp {sc.opportunity}</span>
                         </div>
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
-                        <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
-                        <button onClick={() => toggle(key, "expert")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
-                        <button onClick={() => toggle(key, "agent")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
-                        <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
+                        <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
+                        <button onClick={() => toggle(key, "expert")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
+                        <button onClick={() => toggle(key, "agent")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
+                        <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        <Link href={`/projects/${p.slug}/prompt`} className="chip !text-[10.5px] w-full justify-center">⚡ Prompt</Link>
                       </div>
                     </div>
                     {open && (
                       <div className="px-4 py-3 bg-[#0a101d] border-t border-[#16213a]">
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer ${panel === "analysis" ? "chip-accent" : ""}`}>分析（完整逆向工程）</button>
-                          <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图（功能实现路径）</button>
-                          <button onClick={() => toggle(key, "expert")} className={`chip cursor-pointer ${panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
-                          <button onClick={() => toggle(key, "agent")} className={`chip cursor-pointer ${panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
-                          <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        <div className="grid grid-cols-3 gap-1.5 mb-3">
+                          <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer w-full justify-center ${panel === "analysis" ? "chip-accent" : ""}`}>分析（完整逆向工程）</button>
+                          <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer w-full justify-center ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图（功能实现路径）</button>
+                          <button onClick={() => toggle(key, "expert")} className={`chip cursor-pointer w-full justify-center ${panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
+                          <button onClick={() => toggle(key, "agent")} className={`chip cursor-pointer w-full justify-center ${panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
+                          <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer w-full justify-center ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                          <Link href={`/projects/${p.slug}/prompt`} className={`chip w-full justify-center ${panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</Link>
                         </div>
                         {panel === "analysis" ? <MasterAnalysis project={p} /> : panel === "diagram" ? <FeaturePathDiagram project={p} /> : panel === "director" ? <DirectorView project={p} /> : panel === "agent" ? <AgentCockpit project={p} /> : panel === "expert" ? <ExpertCockpit project={p} /> : null}
                       </div>
@@ -486,25 +488,25 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                         </div>
                         {r.description && <div className="text-[11px] text-[#5b6885] truncate max-w-[520px] mt-0.5">{r.description}</div>}
                       </div>
-                      <div className="flex items-center gap-1.5">
-                        <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
-                        <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
-                        <button onClick={() => toggle(key, "expert")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
-                        <button onClick={() => toggle(key, "agent")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
-                        <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
-                        <button onClick={() => toggle(key, "prompt")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
-                        <a href={r.url} target="_blank" className="chip !text-[10.5px]">GitHub</a>
+                      <div className="grid grid-cols-3 gap-1.5">
+                        <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
+                        <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
+                        <button onClick={() => toggle(key, "expert")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
+                        <button onClick={() => toggle(key, "agent")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
+                        <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        <button onClick={() => toggle(key, "prompt")} className={`chip !text-[10.5px] cursor-pointer w-full justify-center ${open && panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
                       </div>
+                      <a href={r.url} target="_blank" className="chip !text-[10.5px] mt-1.5">GitHub</a>
                     </div>
                     {open && (
                       <div className="px-4 py-3 bg-[#0a101d] border-t border-[#16213a]">
-                        <div className="flex flex-wrap gap-1.5 mb-3">
-                          <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer ${panel === "analysis" ? "chip-accent" : ""}`}>分析（源码抓取）</button>
-                          <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
-                          <button onClick={() => toggle(key, "expert")} className={`chip cursor-pointer ${panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
-                          <button onClick={() => toggle(key, "agent")} className={`chip cursor-pointer ${panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
-                          <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
-                          <button onClick={() => toggle(key, "prompt")} className={`chip cursor-pointer ${panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
+                        <div className="grid grid-cols-3 gap-1.5 mb-3">
+                          <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer w-full justify-center ${panel === "analysis" ? "chip-accent" : ""}`}>分析（源码抓取）</button>
+                          <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer w-full justify-center ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
+                          <button onClick={() => toggle(key, "expert")} className={`chip cursor-pointer w-full justify-center ${panel === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
+                          <button onClick={() => toggle(key, "agent")} className={`chip cursor-pointer w-full justify-center ${panel === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
+                          <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer w-full justify-center ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                          <button onClick={() => toggle(key, "prompt")} className={`chip cursor-pointer w-full justify-center ${panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
                         </div>
                         <LiveSourcePanel repo={toLiveRepo(r)} mode={panel} />
                       </div>
