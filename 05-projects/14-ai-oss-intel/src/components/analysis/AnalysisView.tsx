@@ -52,39 +52,6 @@ export function MasterAnalysis({ project }: { project: Project }) {
       {/* 完整链路（平台灵魂） */}
       <CompleteChain project={project} />
 
-      {/* AI Agent 拆解层 */}
-      <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-4">
-        <div className="flex flex-wrap items-center gap-2 mb-3">
-          <span className="text-[13px] font-bold text-white">🤖 AI AGENT 拆解驾驶舱</span>
-          <Link href={`/projects/${project.slug}#content`} className="chip chip-accent ml-auto">📱 一键自媒体拆解 →</Link>
-        </div>
-        <InteractiveMap title="AI AGENT MASTER MAP · 点击节点查看详细分析" nodes={buildAgentMasterMap(project)} />
-        <div className="grid gap-2 md:grid-cols-2 mt-3">
-          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
-            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#34d399]">REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节）</summary>
-            <div className="px-3 pb-3 space-y-1.5">
-              {buildAgentDirectorReport(project).map((sec) => (
-                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
-                  <div className="text-[11px] font-bold text-[#34d399]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
-                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
-                </div>
-              ))}
-            </div>
-          </details>
-          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
-            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#7dd3fc]">REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节）</summary>
-            <div className="px-3 pb-3 space-y-1.5">
-              {buildWorkflowReport(project).map((sec) => (
-                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
-                  <div className="text-[11px] font-bold text-[#7dd3fc]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
-                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
-                </div>
-              ))}
-            </div>
-          </details>
-        </div>
-      </div>
-
       {/* 三结论 */}
       <div className="grid gap-2 md:grid-cols-3">
         {[["WHY IT WORKS", three.why, "#34d399"], ["HOW IT WORKS", three.how, "#7dd3fc"], ["WHERE IT GOES", three.where, "#fbbf24"]].map(([k, v, c]) => (
@@ -477,7 +444,7 @@ export function SourceDirectorView({ repo, intel }: { repo: LiveRepo; intel: Sou
 }
 
 /* ── Live（实时项目）源码深度分析 ─────────────────────────────── */
-export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" | "prompt" }) {
+export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" | "agent" | "prompt" }) {
   const [intel, setIntel] = useState<SourceIntel | null>(() => getCachedSource(repo.fullName));
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState("");
@@ -531,6 +498,7 @@ export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysi
   if (mode === "analysis") return <LiveSourceAnalysis repo={repo} intel={intel} degraded={degraded} onRefresh={run} />;
   if (mode === "diagram") return <LiveSourceDiagram repo={repo} intel={intel} />;
   if (mode === "director") return <SourceDirectorView repo={repo} intel={intel} />;
+  if (mode === "agent") return <SourceAgentCockpit repo={repo} intel={intel} />;
   return <LivePromptView repo={repo} intel={intel} />;
 }
 
@@ -553,35 +521,6 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
       {degraded && <div className="rounded-xl bg-[#101a2e] border border-amber-400/30 p-2.5 text-[11.5px] text-[#fbbf24]">⚠️ {degraded}</div>}
       {/* 完整链路（源码驱动） */}
       <SourceCompleteChain repo={repo} intel={intel} />
-      {/* AI Agent 拆解层（源码驱动） */}
-      <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-4">
-        <div className="text-[13px] font-bold text-white mb-3">🤖 AI AGENT 拆解驾驶舱（源码驱动）</div>
-        <InteractiveMap title="AI AGENT MASTER MAP · 点击节点查看详细分析" nodes={buildSourceAgentMasterMap(repo, intel)} />
-        <div className="grid gap-2 md:grid-cols-2 mt-3">
-          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
-            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#34d399]">REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节）</summary>
-            <div className="px-3 pb-3 space-y-1.5">
-              {buildSourceAgentDirectorReport(repo, intel).map((sec) => (
-                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
-                  <div className="text-[11px] font-bold text-[#34d399]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
-                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
-                </div>
-              ))}
-            </div>
-          </details>
-          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
-            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#7dd3fc]">REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节）</summary>
-            <div className="px-3 pb-3 space-y-1.5">
-              {buildSourceWorkflowReport(repo, intel).map((sec) => (
-                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
-                  <div className="text-[11px] font-bold text-[#7dd3fc]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
-                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
-                </div>
-              ))}
-            </div>
-          </details>
-        </div>
-      </div>
       {/* 产品全景图（源码驱动） */}
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
         <InteractiveMap title={`产品全景图 · PRODUCT PANORAMA（源码驱动 · 源码 ${intel.treeSource === "tree" ? "✓ 目录树" : "README/依赖"}）`} nodes={panorama} />
@@ -822,3 +761,60 @@ function LivePromptActions({ markdown }: { markdown: string }) {
   );
 }
 
+
+
+/* ── AI AGENT 拆解驾驶舱（独立动作面板） ─────────────────────────── */
+export function AgentCockpit({ project }: { project: Project }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
+        <span className="text-[12px] font-bold text-white">🤖 AI AGENT 拆解驾驶舱</span>
+        <Link href={`/projects/${project.slug}#content`} className="chip chip-accent ml-auto">📱 一键自媒体拆解 →</Link>
+        <Link href={`/projects/${project.slug}/prompt`} className="chip hover:!text-[#fbbf24]">⚡ 项目 Prompt →</Link>
+      </div>
+      <InteractiveMap title="AI AGENT MASTER MAP · 点击节点查看详细分析" nodes={buildAgentMasterMap(project)} />
+      <div className="grid gap-3 md:grid-cols-2">
+        <AgentReportBlock title="REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节）" color="#34d399" sections={buildAgentDirectorReport(project)} />
+        <AgentReportBlock title="REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节）" color="#7dd3fc" sections={buildWorkflowReport(project)} />
+      </div>
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-3 text-[11.5px] text-[#5b6885]">
+        判定依据：Agent 必要性矩阵（传统软件/Chatbot/Copilot/Workflow/Agent/Multi-Agent 对比）· 自主等级 L0-L5 · 人在回路 · 失败路径 · 成本/延迟 · Workflow 2.0。
+      </div>
+    </div>
+  );
+}
+
+export function SourceAgentCockpit({ repo, intel }: { repo: LiveRepo; intel: SourceIntel }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
+        <span className="text-[12px] font-bold text-white">🤖 AI AGENT 拆解驾驶舱（源码驱动）</span>
+        <button
+          onClick={async () => { try { await navigator.clipboard.writeText(buildSourceProjectPrompt(repo, intel)); alert("✓ 已复制项目 Prompt"); } catch {} }}
+          className="chip hover:!text-[#fbbf24] ml-auto"
+        >⚡ 复制项目 Prompt</button>
+      </div>
+      <InteractiveMap title="AI AGENT MASTER MAP · 点击节点查看详细分析（源码驱动）" nodes={buildSourceAgentMasterMap(repo, intel)} />
+      <div className="grid gap-3 md:grid-cols-2">
+        <AgentReportBlock title="REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节）" color="#34d399" sections={buildSourceAgentDirectorReport(repo, intel)} />
+        <AgentReportBlock title="REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节）" color="#7dd3fc" sections={buildSourceWorkflowReport(repo, intel)} />
+      </div>
+    </div>
+  );
+}
+
+function AgentReportBlock({ title, color, sections }: { title: string; color: string; sections: { n: number; title: string; body: string }[] }) {
+  return (
+    <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+      <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold" style={{ color }}>{title}</summary>
+      <div className="px-3 pb-3 space-y-1.5">
+        {sections.map((sec) => (
+          <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+            <div className="text-[11px] font-bold" style={{ color }}>{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+            <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+          </div>
+        ))}
+      </div>
+    </details>
+  );
+}
