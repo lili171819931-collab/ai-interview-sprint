@@ -376,7 +376,7 @@ const walk = (dir: string): string[] => {
 const leaked = walk(join(process.cwd(), "src")).filter((f) => /ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}/.test(readFileSync(f, "utf8")));
 assert(leaked.length === 0, "github: no hardcoded tokens in src");
 
-/* ── Category board：只显示本分类相关 2026 年项目 tests ─────────────────── */
+/* ── Category board：只显示本分类相关 · 2025 年至今项目 tests ──────────────── */
 import { buildBoardRows, type BoardRow } from "../src/lib/boardRows";
 import type { Project } from "../src/lib/types";
 
@@ -393,7 +393,8 @@ const projects = Array.from({ length: 60 }, (_, i) => seedP(`seed-${i}`, `owner/
 projects.push(seedP("r1", "owner/r1", 500, ["robotics"]));
 projects.push(seedP("r2", "owner/r2", 400, ["robotics"]));
 projects.push(seedP("r3", "owner/r3", 300, ["robotics"]));
-projects.push(seedP("old", "owner/old", 900, ["robotics"], "2024-01-01", "2025-06-01")); // 2026 前停更 → 应剔除
+projects.push(seedP("old", "owner/old", 900, ["robotics"], "2024-01-01", "2024-06-01")); // 2025 前已停更 → 应剔除
+projects.push(seedP("mid", "owner/mid", 700, ["robotics"], "2024-01-01", "2025-06-01")); // 2024 创建但 2025 仍更新 → 应保留
 const liveRepos = Array.from({ length: 50 }, (_, i) => liveR(`owner/live${i}`, 2000 + i));
 
 const bOpp = buildBoardRows({ projects, liveRepos, addedRepos: [], categoryId: "robotics" as any, tab: "opportunity", limit: 100 });
@@ -401,11 +402,12 @@ const bStars = buildBoardRows({ projects, liveRepos, addedRepos: [], categoryId:
 const bGrowth = buildBoardRows({ projects, liveRepos, addedRepos: [], categoryId: "robotics" as any, tab: "growth", limit: 100 });
 
 // 只显示本分类相关 2026 项目，不做跨分类补齐
-assert(bStars.rows.length === 3, "board: 小分类只显示本分类相关 2026 项目（robotics=3，不补 100）");
-assert(bOpp.rows.length === 3 && bGrowth.rows.length === 3, "board: 三榜一致只显示 3 条");
-assert(bStars.catCount === 3, "board: catCount 为本分类项数");
-assert(bStars.rows.every((r) => r.kind === "seed" && (r.p.slug === "r1" || r.p.slug === "r2" || r.p.slug === "r3")), "board: 全部为本分类项目");
-assert(!bStars.rows.some((r) => r.kind === "seed" && r.p.slug === "old"), "board: 2026 前停更的旧项目被剔除");
+assert(bStars.rows.length === 4, "board: 小分类只显示本分类相关项目（robotics=4：r1/r2/r3/mid，不补 100）");
+assert(bOpp.rows.length === 4 && bGrowth.rows.length === 4, "board: 三榜一致只显示 4 条");
+assert(bStars.catCount === 4, "board: catCount 为本分类项数");
+assert(bStars.rows.every((r) => r.kind === "seed" && ["r1", "r2", "r3", "mid"].includes(r.p.slug)), "board: 全部为本分类项目");
+assert(!bStars.rows.some((r) => r.kind === "seed" && r.p.slug === "old"), "board: 2025 前已停更的旧项目被剔除");
+assert(bStars.rows.some((r) => r.kind === "seed" && r.p.slug === "mid"), "board: 2024 创建但 2025 仍更新的项目保留");
 
 // agent 大分类：60 个本分类 2026 项目 → 60 条，绝不出现 robotics 或其他分类
 const bAgent = buildBoardRows({ projects, liveRepos, addedRepos: [], categoryId: "agent" as any, tab: "stars", limit: 100 });
@@ -414,9 +416,9 @@ assert(bAgent.rows.every((r) => r.kind === "seed" && r.p.categories.includes("ag
 assert(bAgent.rows.every((r) => !(r.kind === "seed" && r.p.slug.startsWith("r"))), "board: agent 榜不包含 robotics 项目");
 
 // 2026 过滤对实时仓库同样生效：2025 停更的实时仓库被剔除
-const staleLive = liveR("owner/stale-live", 5000, "2024-01-01", "2025-12-31");
+const staleLive = liveR("owner/stale-live", 5000, "2024-01-01", "2024-12-31");
 const bLive = buildBoardRows({ projects, liveRepos: [...liveRepos, staleLive], addedRepos: [], categoryId: "robotics" as any, tab: "stars", limit: 100 });
-assert(bLive.rows.every((r) => !(r.kind === "live" && r.r.fullName === "owner/stale-live")), "board: 2026 前停更的实时仓库被剔除");
+assert(bLive.rows.every((r) => !(r.kind === "live" && r.r.fullName === "owner/stale-live")), "board: 2025 前停更的实时仓库被剔除");
 
 // 去重
 const keys = bAgent.rows.map((r) => (r.kind === "seed" ? r.p.fullName : r.r.fullName));
@@ -429,7 +431,7 @@ assert(starVals.every((v, i) => i === 0 || starVals[i - 1] >= v), "board: stars 
 // 实时项目并入（loadLive 已按分类查询 → liveTrusted=true 视为本分类）
 const bLiveMix = buildBoardRows({ projects, liveRepos: [liveR("owner/robot-live", 800, "2026-01-01", "2026-07-01")], addedRepos: [], categoryId: "robotics" as any, tab: "stars", limit: 100, liveTrusted: true });
 assert(bLiveMix.rows.some((r) => r.kind === "live" && r.r.fullName === "owner/robot-live"), "board: 本分类实时项目并入");
-assert(bLiveMix.rows.length === 4, "board: 3 快照 + 1 实时 = 4 条");
+assert(bLiveMix.rows.length === 5, "board: 4 快照 + 1 实时 = 5 条");
 // 未加 liveTrusted 时实时项目需按特征猜测（避免误归类）
 const bGuess = buildBoardRows({ projects, liveRepos: [liveR("owner/random-live", 800, "2026-01-01", "2026-07-01")], addedRepos: [], categoryId: "robotics" as any, tab: "stars", limit: 100 });
 assert(bGuess.rows.every((r) => r.kind === "seed"), "board: 未 trust 时非本分类实时项不并入");

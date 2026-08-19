@@ -45,6 +45,12 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
     return () => window.removeEventListener("aioss.db.change", h);
   }, [load]);
 
+  // 实时更新：页面可见时每 10 分钟自动重拉（未认证限流时快速失败，不挂起）
+  useEffect(() => {
+    const t = setInterval(() => { if (!document.hidden) load(true); }, 10 * 60 * 1000);
+    return () => clearInterval(t);
+  }, [load]);
+
   const seed = PROJECTS.filter((p) => p.categories.includes(id));
   // 全平台联动：手动添加的项目（add-project）若匹配当前分类，并入实时展示
   const addedInCat = useMemo(
@@ -75,15 +81,21 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
 
   const renderRows = () => {
     const { rows, liveCount } = board;
+    const shortage = rows.length < LIMIT;
     const head =
       tab === "opportunity"
-        ? `机会 TOP 榜 = 仅本分类 · 2026 时间窗项目 · 共 ${rows.length} 个（快照真实评分 + 实时启发式评分）· 实时 ${liveCount}`
+        ? `机会 TOP 榜 = 仅本分类 · 2025 年至今项目 · 共 ${rows.length}/${LIMIT} 个（快照真实评分 + 实时启发式评分）· 从高到低 · 实时 ${liveCount}`
         : tab === "stars"
-          ? `收藏榜 = 仅本分类 · 2026 时间窗项目 · 共 ${rows.length} 个 · 实时 ${liveCount}`
-          : `收藏增长最快榜 = 仅本分类 · 2026 时间窗项目 · 共 ${rows.length} 个 · 实时 ${liveCount}`;
+          ? `收藏榜 = 仅本分类 · 2025 年至今项目 · 共 ${rows.length}/${LIMIT} 个 · 从高到低 · 实时 ${liveCount}`
+          : `收藏增长最快榜 = 仅本分类 · 2025 年至今项目 · 共 ${rows.length}/${LIMIT} 个 · 从高到低 · 实时 ${liveCount}`;
     return (
       <>
         <div className="px-1 text-[11.5px] text-[#5b6885]">{head}</div>
+        {shortage && (
+          <div className="px-1 mt-1 flex items-center gap-1.5 text-[11px] text-amber-300/90">
+            <AlertTriangle size={11} /> 本分类可用数据 {rows.length} 条（目标 {LIMIT}）：GitHub 实时拉取受限（未配置 Token 或该分类真实项目较少）。在 My GitHub 页配置 GITHUB_TOKEN 后自动补齐至 {LIMIT} 条本分类真实项目；点击「立即刷新」重试。
+          </div>
+        )}
         {rows.map((row, i) => {
           const rank = i + 1;
           if (row.kind === "seed") {
@@ -177,7 +189,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
       </div>
 
       <p className="text-[11px] text-[#4d5a75]">
-        📡 三榜**只展示本分类相关且属于 2026 年**的开源项目（创建或最近更新在 2026 年；小分类数量以实际为准，不做跨分类补齐）。每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」完成后本榜自动重拉）；未配置 Token 限流时自动降级，不会挂起。
+        📡 三榜只展示**本分类相关且发布时间为 2025 年至今**的开源项目（创建或最近更新在 2025 年至今；不做跨分类凑数），**从高到低**排列；配置 Token 后实时拉取可每榜补齐 {LIMIT} 条本分类真实项目。每次打开页面自动拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」与每 10 分钟自动重拉同步本榜）；未配置 Token 限流时自动降级，不会挂起。
         每个项目均可「分析」打开完整逆向工程（40 节报告 + 全景图），「产品框图」查看功能实现路径框图，「产品总监视角」查看边界 / 痛点 / 真实案例预测。
       </p>
     </div>

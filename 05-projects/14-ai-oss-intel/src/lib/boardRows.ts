@@ -1,9 +1,10 @@
 /**
  * Unified category-board row builder.
- * 每个分类榜单（机会 / 收藏 / 收藏增长最快）**只展示本分类且属于 2026 年**的项目：
- * - 分类相关：seed 项目 categories 包含该分类；实时项目按仓库特征归类
- * - 2026 年：创建或最近更新在 2026 年（剔除 2026 前已停更的旧仓库）
- * 不做跨分类补齐 —— 相关性优先，小分类数量以实际为准。
+ * 每个分类榜单（机会 / 收藏 / 收藏增长最快）**只展示本分类且发布时间在 2025 年至今**的项目：
+ * - 分类相关：seed 项目 categories 包含该分类；实时项目按分类查询拉取（liveTrusted）或特征归类
+ * - 时间窗：创建或最近更新在 2025 年至今（2025-01-01 起），剔除 2025 前已停更的旧仓库
+ * - 从高到低排列（按各榜指标降序）
+ * 不做跨分类补齐 —— 相关性优先，实时拉取（配置 Token 后）每榜可凑满 100 条真实本分类项目。
  * 纯函数，可单测。
  */
 import type { CategoryId, Project } from "@/lib/types";
@@ -60,16 +61,16 @@ export function buildBoardRows({
     return row.kind === "seed" ? (row.p.growth90d ?? 0) / 90 : starsPerDay(row.r);
   };
 
-  // 2026 年窗口：创建或最近更新在 2026 年（剔除 2026 前已停更的旧仓库）
+  // 时间窗：2025 年至今（创建或最近更新 ≥2025，剔除 2025 前已停更的旧仓库）
   const year = (d?: string) => parseInt((d ?? "").slice(0, 4), 10);
-  const in2026 = (row: BoardRow): boolean =>
+  const inWindow = (row: BoardRow): boolean =>
     row.kind === "seed"
-      ? year(row.p.createdAt) >= 2026 || year(row.p.updatedAt) >= 2026
-      : year(row.r.createdAt) >= 2026 || year(row.r.updatedAt) >= 2026;
+      ? year(row.p.createdAt) >= 2025 || year(row.p.updatedAt) >= 2025
+      : year(row.r.createdAt) >= 2025 || year(row.r.updatedAt) >= 2025;
 
-  // 只保留：本分类相关 且 2026 年项目 —— 不做跨分类补齐
+  // 只保留：本分类相关 且 2025 年至今项目 —— 不做跨分类补齐，从高到低排列
   const rows = all
-    .filter((row) => isCat(row) && in2026(row))
+    .filter((row) => isCat(row) && inWindow(row))
     .sort((a, b) => metric(b, tab) - metric(a, tab))
     .slice(0, limit);
   return {

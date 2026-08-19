@@ -136,16 +136,19 @@ export async function fetchCategoryLive(id: CategoryId): Promise<LiveRepo[]> {
       if (repo && !map.has(repo.fullName)) map.set(repo.fullName, repo);
     }
   }
-  // 至少拉取 100 条：用宽泛 AI 查询补齐（保留已有去重）
+  // 至少拉取 100 条：用「本分类宽泛查询」补齐（保持分类相关，不做跨分类凑数）
   if (map.size < 100) {
-    try {
-      const items = await fetchPage(FALLBACK_FILL);
-      for (const it of items) {
-        if (map.size >= 100) break;
-        const repo = normalize(it);
-        if (repo && !map.has(repo.fullName)) map.set(repo.fullName, repo);
-      }
-    } catch {}
+    const broad = CATEGORY_BROAD[id];
+    if (broad) {
+      try {
+        const items = await fetchPage(broad);
+        for (const it of items) {
+          if (map.size >= 100) break;
+          const repo = normalize(it);
+          if (repo && !map.has(repo.fullName)) map.set(repo.fullName, repo);
+        }
+      } catch {}
+    }
   }
   return [...map.values()].slice(0, 100);
 }
@@ -194,4 +197,38 @@ export function liveOpportunityScore(repo: LiveRepo): number {
 }
 
 /** Ensure the category live list reaches the target (fill with a broad AI fallback). */
+/** 每分类的宽泛兜底查询（无星标门槛）：确保实时拉取能凑满 100 条本分类真实开源项目（替代通用 AI 补齐）。 */
+const CATEGORY_BROAD: Record<string, string> = {
+  agent: "(topic:ai-agent OR topic:ai-agents OR topic:agent) fork:false " + LICENSE_QUALIFIER,
+  skill: "(topic:claude-code OR topic:ai-skills OR topic:skills) fork:false " + LICENSE_QUALIFIER,
+  mcp: "(topic:mcp OR topic:model-context-protocol) fork:false " + LICENSE_QUALIFIER,
+  coding: "(topic:ai-coding OR topic:code-generation OR topic:copilot) fork:false " + LICENSE_QUALIFIER,
+  devtools: "(topic:developer-tools OR topic:ai-tools OR topic:cli) fork:false " + LICENSE_QUALIFIER,
+  saas: "(topic:saas OR topic:ai-saas) fork:false " + LICENSE_QUALIFIER,
+  productivity: "(topic:productivity OR topic:assistant OR topic:personal-assistant) fork:false " + LICENSE_QUALIFIER,
+  automation: "(topic:automation OR topic:workflow OR topic:rpa) fork:false " + LICENSE_QUALIFIER,
+  content: "(topic:content-creation OR topic:ai-content OR topic:writing) fork:false " + LICENSE_QUALIFIER,
+  selfmedia: "(topic:social-media OR topic:content OR topic:blog) fork:false " + LICENSE_QUALIFIER,
+  video: "(topic:video OR topic:text-to-video OR topic:ffmpeg) fork:false " + LICENSE_QUALIFIER,
+  image: "(topic:image-generation OR topic:diffusion OR topic:stable-diffusion) fork:false " + LICENSE_QUALIFIER,
+  audio: "(topic:audio OR topic:tts OR topic:speech OR topic:music) fork:false " + LICENSE_QUALIFIER,
+  writing: "(topic:writing OR topic:markdown OR topic:docs) fork:false " + LICENSE_QUALIFIER,
+  resume: "(topic:resume OR topic:career OR topic:job) fork:false " + LICENSE_QUALIFIER,
+  sidehustle: "(topic:side-project OR topic:monetization OR topic:startup) fork:false " + LICENSE_QUALIFIER,
+  money: "(topic:fintech OR topic:creator-economy OR topic:monetization) fork:false " + LICENSE_QUALIFIER,
+  ecommerce: "(topic:ecommerce OR topic:shopify OR topic:commerce) fork:false " + LICENSE_QUALIFIER,
+  marketing: "(topic:marketing OR topic:seo OR topic:growth) fork:false " + LICENSE_QUALIFIER,
+  data: "(topic:data-science OR topic:data-analysis OR topic:analytics) fork:false " + LICENSE_QUALIFIER,
+  rag: "(topic:rag OR topic:retrieval-augmented-generation OR topic:vector-database) fork:false " + LICENSE_QUALIFIER,
+  llm: "(topic:llm OR topic:large-language-models OR topic:generative-ai) fork:false " + LICENSE_QUALIFIER,
+  vision: "(topic:computer-vision OR topic:object-detection OR topic:ocr) fork:false " + LICENSE_QUALIFIER,
+  robotics: "(topic:robotics OR topic:ros OR topic:autonomous OR topic:drones) fork:false " + LICENSE_QUALIFIER,
+  education: "(topic:education OR topic:learning OR topic:course) fork:false " + LICENSE_QUALIFIER,
+  research: "(topic:research OR topic:paper OR topic:scientific) fork:false " + LICENSE_QUALIFIER,
+  infra: "(topic:infrastructure OR topic:kubernetes OR topic:database OR topic:devops) fork:false " + LICENSE_QUALIFIER,
+  devproductivity: "(topic:developer-experience OR topic:developer-tools OR topic:productivity) fork:false " + LICENSE_QUALIFIER,
+  pkm: "(topic:knowledge-management OR topic:notes OR topic:second-brain) fork:false " + LICENSE_QUALIFIER,
+  life: "(topic:personal-knowledge OR topic:life-os OR topic:digital-garden) fork:false " + LICENSE_QUALIFIER,
+};
+
 const FALLBACK_FILL = "topic:ai stars:>100 fork:false " + LICENSE_QUALIFIER;

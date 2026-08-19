@@ -26,7 +26,7 @@ export default async function CategoryRankingPage({ params }: { params: Promise<
           <div className="w-11 h-11 rounded-xl bg-[#1a2a4a] border border-[#2c4370] flex items-center justify-center text-xl">{cat.emoji}</div>
           <div>
             <h1 className="text-xl font-bold text-white">{cat.name} · 分类榜单</h1>
-            <p className="text-[12.5px] text-[#8b98b3] mt-0.5">{cat.nameZh} · 2026 时间窗 · 三榜只展示本分类相关 2026 年开源项目（创建或最近更新在 2026；数量以实际为准） · 每项目显示发布时间</p>
+            <p className="text-[12.5px] text-[#8b98b3] mt-0.5">{cat.nameZh} · 2025 年至今 · 三榜只展示本分类相关开源项目（发布时间 2025 至今，从高到低，配置 Token 后每榜补齐 100 条） · 每项目显示发布时间</p>
           </div>
           <div className="ml-auto flex flex-wrap gap-1.5">
             {allCategories().slice(0, 14).map((c) => (
