@@ -1,0 +1,20 @@
+{
+  "env": {
+    "DEMO_EPHEMERAL_FS": "true"
+  },
+  "services": {
+    "invoice-reimburse-web": {
+      "root": ".",
+      "framework": "nextjs"
+    }
+  },
+  "rewrites": [
+    {
+      "source": "/(.*)",
+      "destination": {
+        "type": "service",
+        "service": "invoice-reimburse-web"
+      }
+    }
+  ]
+}
