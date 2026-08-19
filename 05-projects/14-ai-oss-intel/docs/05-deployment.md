@@ -52,3 +52,14 @@ CMD ["node", "server.js"]
 |------|------|
 | `GITHUB_TOKEN` | GitHub API 认证（sync 脚本） |
 | `PORT` | 服务端口（默认 3012） |
+
+## Standalone 启动（含 GitHub Token）
+
+```bash
+# 1. 构建
+npm run build
+# 2. 拷贝静态资源（Next standalone 不自动拷贝 .next/static）
+cp -r .next/static .next/standalone/05-projects/14-ai-oss-intel/.next/static
+# 3. 启动（必须指定 AIOSS_DATA_DIR，否则 Token/缓存写入 .next 被构建清空）
+AIOSS_DATA_DIR=/path/to/14-ai-oss-intel/data HOSTNAME=0.0.0.0 PORT=3012 node .next/standalone/05-projects/14-ai-oss-intel/server.js
+```

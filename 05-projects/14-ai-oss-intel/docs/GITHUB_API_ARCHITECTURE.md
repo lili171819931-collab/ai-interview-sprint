@@ -41,3 +41,15 @@ GitHub API
 ## Token 配置
 1. 服务器环境变量 `GITHUB_TOKEN=ghp_xxx`（推荐）
 2. 或平台内「GitHub Integration」页面保存到 `data/github-token`（gitignore，0600 权限）
+
+## 数据目录解析（standalone 部署）
+
+- 开发模式（`npm run dev`）：`process.cwd()` = 项目根，数据目录 = `<项目>/data`。
+- 生产 standalone（`node .next/standalone/.../server.js`）：`server.js` 内部 `process.chdir(__dirname)`，cwd 变为 `.next/standalone/...`。
+  必须显式指定 `AIOSS_DATA_DIR=<项目绝对路径>/data`，否则 Token/缓存/限流状态会写入 `.next/`（构建时被清空，Token 丢失）。
+
+```bash
+AIOSS_DATA_DIR=/path/to/14-ai-oss-intel/data HOSTNAME=0.0.0.0 PORT=3012 node .next/standalone/05-projects/14-ai-oss-intel/server.js
+```
+
+- `.env.example` 已含 `AIOSS_DATA_DIR=` 说明。

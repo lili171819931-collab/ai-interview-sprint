@@ -12,7 +12,9 @@ import { existsSync, mkdirSync, readFileSync, rmSync, writeFileSync } from "node
 import { join } from "node:path";
 import { createHash } from "node:crypto";
 
-const DATA_DIR = join(process.cwd(), "data");
+// 数据目录：优先 AIOSS_DATA_DIR（生产 standalone 部署会 chdir 到 .next/standalone，必须显式指定到真实项目 data/）；
+// 开发模式（npm run dev，cwd=项目根）默认使用 ./data
+const DATA_DIR = process.env.AIOSS_DATA_DIR || join(process.cwd(), "data");
 const CACHE_DIR = join(DATA_DIR, "cache", "github");
 const CACHE_FILE = join(CACHE_DIR, "github-cache.json");
 const RATE_FILE = join(CACHE_DIR, "ratelimit.json");
@@ -64,6 +66,7 @@ export const TTL_MS: Record<string, number> = {
   pr: 30 * 60 * 1000,
   releases: 60 * 60 * 1000,
   contributors: 60 * 60 * 1000,
+  user: 60 * 60 * 1000,
 };
 
 /* ── rate state ───────────────────────────────────────────────────────── */
@@ -271,6 +274,9 @@ export function searchRepos(q: string, sort = "stars") {
 }
 export function repoDetail(fullName: string) {
   return githubRequest<any>(`/repos/${fullName}`, { type: "repo" });
+}
+export function authUser() {
+  return githubRequest<any>("/user", { type: "user" });
 }
 export function repoTree(fullName: string) {
   return githubRequest<any>(`/repos/${fullName}/git/trees/HEAD?recursive=1`, { type: "tree" });

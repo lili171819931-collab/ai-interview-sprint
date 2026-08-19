@@ -1,5 +1,5 @@
 import { NextResponse } from "next/server";
-import { setToken, clearToken, getToken, repoDetail } from "@/lib/server/githubClient";
+import { setToken, clearToken, getToken, authUser } from "@/lib/server/githubClient";
 
 export const dynamic = "force-dynamic";
 export async function POST(req: Request) {
@@ -9,8 +9,8 @@ export async function POST(req: Request) {
     const token = getToken();
     if (!token) return NextResponse.json({ ok: false, error: "GitHub API 当前处于未认证模式。请配置 Token。" }, { status: 400 });
     try {
-      const user = await repoDetail("octocat/Hello-World");
-      const login = user.owner?.login ?? null;
+      const user = await authUser();
+      const login = user?.login ?? null;
       return NextResponse.json({ ok: true, authenticated: true, username: login });
     } catch (e) {
       return NextResponse.json({ ok: false, error: (e as Error).message }, { status: 401 });
