@@ -9,6 +9,7 @@
 "use client";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { normalize, type LiveRepo } from "@/lib/live";
+import { proxySearch } from "@/lib/githubProxy";
 import { LICENSE_QUALIFIER } from "@/lib/licenses";
 
 export interface DbState {
@@ -55,10 +56,12 @@ function writeCache(state: DbState) {
 }
 
 async function fetchPage(q: string): Promise<any[]> {
+  const proxied = await proxySearch(q);
+  if (proxied?.items) return proxied.items;
   const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=100`;
   const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
   if (!res.ok) {
-    if (res.status === 403 || res.status === 429) throw new Error("GitHub API rate limit（未认证 10 次/分钟）");
+    if (res.status === 403 || res.status === 429) throw new Error("GitHub API rate limit（未认证 10 次/分钟）；请配置 Token 或稍后重试");
     throw new Error(`GitHub API ${res.status}`);
   }
   const data = await res.json();

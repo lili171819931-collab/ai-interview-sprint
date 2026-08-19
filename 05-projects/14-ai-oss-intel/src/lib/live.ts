@@ -6,6 +6,7 @@
  */
 import type { CategoryId } from "@/lib/types";
 import { isOpenSourceLicense, LICENSE_QUALIFIER } from "@/lib/licenses";
+import { proxySearch } from "@/lib/githubProxy";
 
 export interface LiveRepo {
   fullName: string;
@@ -108,10 +109,14 @@ export function normalize(it: any): LiveRepo | null {
 }
 
 async function fetchPage(q: string): Promise<any[]> {
+  // 生产级路径：经服务器 /api/github 代理（Token + Rate Limit + 缓存 + Retry）
+  const proxied = await proxySearch(q);
+  if (proxied?.items) return proxied.items;
+  // 降级路径：直连 GitHub（未认证，限流 10/分钟）
   const url = `https://api.github.com/search/repositories?q=${encodeURIComponent(q)}&sort=stars&order=desc&per_page=100`;
   const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
   if (!res.ok) {
-    if (res.status === 403 || res.status === 429) throw new Error("GitHub API rate limit（未认证 10 次/分钟）；请稍后再试或配置 Token");
+    if (res.status === 403 || res.status === 429) throw new Error("GitHub API rate limit（未认证 10 次/分钟）；请配置 Token 或稍后重试");
     throw new Error(`GitHub API ${res.status}`);
   }
   const data = await res.json();

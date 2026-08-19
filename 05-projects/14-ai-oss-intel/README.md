@@ -36,6 +36,7 @@
 | 🏗️ 产品底层逻辑架构分析 | Project DNA 14 节点 + PM Deep Analysis 15 维 + 如何搭建（五层架构/技术栈/数据流/7·14·30 天路线/复制与不复制/成本/自检清单） |
 | ❓ Why AI / AI Native Test | 为什么需要 AI、降低什么成本、创造什么体验；Current / AI Enhanced / AI Native 三态重设计 |
 | 👤 My GitHub | 同步 GitHub Stars → 2026 Favorites / Rising / Hidden Gems / My Project Radar + Radar vs Global + 兴趣图谱 |
+| 🔒 生产级 GitHub API 数据层 | 服务端 Token（环境变量/本地文件，前端零暴露）+ Rate Limit Manager + 403/429 退避重试 + 缓存 + 请求去重 + 批量分析队列 + Health/Token 管理 API + My GitHub 集成面板 |
 | 🏠 WHAT SHOULD I STUDY TODAY | 首页每日学习推荐（🔥 研究 / 🧠 补能力 / 💰 商业 / 🎬 内容 / 💼 Portfolio） |
 | 🗂️ 一项目 → 七种资产 | 每项目自动生成 报告 / 学习 Case / Challenge / 观点 / 内容 / Portfolio / Interview |
 | 🔬 逆向工程 Lab | 完整用户路径（15 步）+ 核心功能实现路径 + 源码架构逆向 + 代码→功能映射 + 技术选型解释 + 产品设计→技术设计映射 + MVP 逆向 + 产品决策分析 + 40 节情报报告 |
@@ -153,6 +154,18 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 - [`docs/06-ai-pm-learning-os.md`](docs/06-ai-pm-learning-os.md) — AI PM 学习与内容情报 OS（战略补充）
 - [`docs/07-2026-radar-build-os.md`](docs/07-2026-radar-build-os.md) — 2026 Radar · 产品底层逻辑架构分析 · 如何搭建
 - [`docs/08-reverse-engineering-os.md`](docs/08-reverse-engineering-os.md) — AI 产品逆向工程 OS · 40 节情报报告 · Evidence Mode
+- [`docs/GITHUB_API_ARCHITECTURE.md`](docs/GITHUB_API_ARCHITECTURE.md) — 生产级 GitHub API Client 架构（Token/RateLimit/Retry/Cache/Queue/Health）
+- [`docs/GITHUB_API_SECURITY.md`](docs/GITHUB_API_SECURITY.md) — GitHub API 安全模型（Token 零前端暴露 / 密钥审计）
+- [`docs/GITHUB_API_RATE_LIMIT.md`](docs/GITHUB_API_RATE_LIMIT.md) — 限流策略 / 缓存 TTL / 批量队列 / 友好错误
+- [`docs/GITHUB_API_TEST_REPORT.md`](docs/GITHUB_API_TEST_REPORT.md) — GitHub API 层测试与冒烟验证报告
+
+## 🏗️ 工程资产
+
+- [`CHANGELOG.md`](CHANGELOG.md) — 版本变更记录（Keep a Changelog）
+- [`ROADMAP.md`](ROADMAP.md) — 版本路线图（V0.7 → V3）
+- [`CONTRIBUTING.md`](CONTRIBUTING.md) — 贡献指南（环境 / 结构 / 约定 / CI）
+- [`SECURITY.md`](SECURITY.md) — 安全模型（Token 处理 / 密钥审计 / 漏洞报告）
+- [`.github/workflows/ci.yml`](.github/workflows/ci.yml) — CI（typecheck + tests + build）
 
 ## 🎯 产品定位
 

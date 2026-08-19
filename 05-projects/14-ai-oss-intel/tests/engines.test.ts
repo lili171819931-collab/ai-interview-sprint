@@ -348,3 +348,30 @@ const oppLive = liveOpportunityScore(fakeRepo);
 assert(oppLive >= 0 && oppLive <= 100 && Number.isFinite(oppLive), "live opp: bounded");
 const oppBig = liveOpportunityScore({ ...fakeRepo, stars: 200000, createdAt: "2026-01-01", description: "AI agent with rag and mcp" });
 assert(oppBig > oppLive, "live opp: bigger/better repo scores higher");
+
+/* ── GitHub API Client（生产级） tests ────────────────────────────────── */
+import { computeBackoff, rateLevel, shouldGate, waitMs, cacheKey, TTL_MS, capWait } from "../src/lib/server/githubClient";
+import { readFileSync, readdirSync } from "node:fs";
+import { join } from "node:path";
+
+assert(computeBackoff(0) >= 1000 && computeBackoff(2) <= 8500, "github: backoff bounded");
+assert(rateLevel(100) === "healthy" && rateLevel(30) === "warning" && rateLevel(5) === "critical" && rateLevel(2) === "out", "github: rateLevel");
+assert(shouldGate(10) && !shouldGate(50), "github: gate threshold");
+assert(waitMs(Math.floor(Date.now() / 1000) + 60) > 55000, "github: waitMs ~ reset");
+assert(cacheKey("search", "q") === cacheKey("search", "q") && cacheKey("a", "b") !== cacheKey("b", "a"), "github: cacheKey");
+assert(TTL_MS.search === 600000 && TTL_MS.readme === 86400000, "github: TTLs");
+assert(capWait(3600000) === 30000 && capWait(5000) === 5000 && capWait(-1) === 0, "github: capWait caps at 30s");
+
+// Secret audit: no hardcoded tokens in src
+const walk = (dir: string): string[] => {
+  const out: string[] = [];
+  for (const f of readdirSync(dir, { withFileTypes: true })) {
+    if (f.name === "node_modules" || f.name === ".next") continue;
+    const full = join(dir, f.name);
+    if (f.isDirectory()) out.push(...walk(full));
+    else if (/\.(ts|tsx|mjs)$/.test(f.name)) out.push(full);
+  }
+  return out;
+};
+const leaked = walk(join(process.cwd(), "src")).filter((f) => /ghp_[A-Za-z0-9]{20,}|github_pat_[A-Za-z0-9_]{20,}/.test(readFileSync(f, "utf8")));
+assert(leaked.length === 0, "github: no hardcoded tokens in src");

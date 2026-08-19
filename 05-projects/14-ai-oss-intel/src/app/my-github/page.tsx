@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Star, TrendingUp, Puzzle, Radar, RefreshCw, Sparkles, GitFork, ExternalLink } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
+import { GithubIntegrationPanel } from "@/components/GithubStatus";
 import { PROJECTS } from "@/data/projects";
 import { topBy } from "@/lib/store";
 import { computeScores, formatSigned, formatStars, growthRate } from "@/lib/engines";
@@ -11,6 +12,7 @@ import { buildMyProjectReport } from "@/lib/reverse";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, ExpertCockpit } from "@/components/analysis/AnalysisView";
 import type { LiveRepo } from "@/lib/live";
 import { getAddedProjects } from "@/lib/db";
+import { proxyStarred } from "@/lib/githubProxy";
 import { categoryOf } from "@/lib/categories";
 import type { Project, TimeStatus } from "@/lib/types";
 
@@ -164,6 +166,8 @@ export default function MyGitHubPage() {
         {syncNote && <div className="mt-2 text-[12.5px] text-[#8b98b3]">{syncNote}</div>}
         {!ready && <div className="mt-2 text-[12px] text-[#5b6885]">加载中…</div>}
       </div>
+
+      <GithubIntegrationPanel />
 
       <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-4">
         <Metric icon={Star} label="Star 项目（全部）" value={`${totalShown}`} color="#fbbf24" />
@@ -347,6 +351,19 @@ function MyReportRow({ p }: { p: Project }) {
 
 
 async function fetchStars(username: string): Promise<StarredRepo[]> {
+  // 生产级路径：经服务器代理（Token + Rate Limit）
+  const proxied = await proxyStarred(username);
+  if (proxied && proxied.length > 0) {
+    return proxied.map((it: any) => ({
+      fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0],
+      stars: it.stargazers_count ?? 0, url: it.html_url ?? `https://github.com/${it.full_name}`,
+      createdAt: (it.created_at ?? "").slice(0, 10), language: it.language ?? undefined,
+      description: it.description ?? undefined, topics: it.topics ?? [],
+      forks: it.forks_count ?? 0, openIssues: it.open_issues_count ?? 0,
+      updatedAt: (it.updated_at ?? "").slice(0, 10), license: it.license?.spdx_id,
+    }));
+  }
+  // 降级：直连 GitHub
   const all: StarredRepo[] = [];
   for (let page = 1; page <= 3; page++) {
     const res = await fetch(`https://api.github.com/users/${encodeURIComponent(username)}/starred?per_page=100&page=${page}`, {

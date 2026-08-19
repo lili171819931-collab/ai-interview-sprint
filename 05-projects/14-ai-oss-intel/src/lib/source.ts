@@ -7,6 +7,8 @@
  */
 "use client";
 
+import { proxyTree } from "@/lib/githubProxy";
+
 export interface SourceIntel {
   fullName: string;
   readme?: string;
@@ -63,6 +65,12 @@ async function fetchRaw(fullName: string, path: string): Promise<string | null> 
 }
 
 async function fetchTree(fullName: string): Promise<string[] | null> {
+  // 经服务器代理（Token + Rate Limit），失败降级直连
+  const proxied = await proxyTree(fullName);
+  if (proxied?.tree) {
+    const paths = (proxied.tree ?? []).map((t: { path?: string }) => t.path).filter(Boolean) as string[];
+    return paths.slice(0, 4000);
+  }
   const url = `https://api.github.com/repos/${fullName}/git/trees/HEAD?recursive=1`;
   try {
     const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });

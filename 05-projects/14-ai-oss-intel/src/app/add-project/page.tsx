@@ -9,6 +9,7 @@ import { fetchRepoSource, type SourceIntel } from "@/lib/source";
 import { addProject } from "@/lib/db";
 import { buildSourceReportMarkdown, buildProjectReportMarkdown } from "@/lib/report";
 import { buildProjectPrompt } from "@/lib/prompt";
+import { proxyRepo } from "@/lib/githubProxy";
 import { useState as usePromptState } from "react";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, ExpertCockpit } from "@/components/analysis/AnalysisView";
 import { ReportActions } from "@/components/ReportActions";
@@ -174,6 +175,18 @@ function parseRepo(input: string): { owner: string; repo: string } | null {
 }
 
 async function fetchRepoMeta(owner: string, repo: string): Promise<LiveRepo> {
+  // 生产级路径：经服务器代理（Token + Rate Limit + 缓存）
+  const proxied = await proxyRepo(`${owner}/${repo}`);
+  if (proxied?.full_name) {
+    const it = proxied;
+    return {
+      fullName: it.full_name, name: it.full_name.split("/")[1], owner: it.full_name.split("/")[0],
+      stars: it.stargazers_count ?? 0, forks: it.forks_count ?? 0, openIssues: it.open_issues_count ?? 0,
+      language: it.language ?? null, description: it.description ?? null, topics: (it.topics ?? []).slice(0, 10),
+      createdAt: (it.created_at ?? "").slice(0, 10), updatedAt: (it.updated_at ?? "").slice(0, 10),
+      homepage: it.homepage ?? null, license: it.license?.spdx_id ?? null,
+    };
+  }
   const url = `https://api.github.com/repos/${encodeURIComponent(owner)}/${encodeURIComponent(repo)}`;
   const res = await fetch(url, { headers: { Accept: "application/vnd.github+json" } });
   if (!res.ok) {

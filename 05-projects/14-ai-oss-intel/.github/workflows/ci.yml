@@ -1,0 +1,29 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+
+jobs:
+  typecheck-test-build:
+    name: Typecheck + Tests + Build (AI OSS Intel)
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 05-projects/14-ai-oss-intel
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: 05-projects/14-ai-oss-intel/package-lock.json
+      - name: Install dependencies
+        run: npm install
+      - name: Typecheck
+        run: npx tsc --noEmit
+      - name: Unit tests
+        run: npm test
+      - name: Build
+        run: npm run build

@@ -5,6 +5,7 @@ import { useState } from "react";
 import { Search, RefreshCw, Radio, Database } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
 import { useDb } from "@/lib/db";
+import { GithubStatusDot } from "@/components/GithubStatus";
 
 const SUGGESTIONS = [
   "最近30天增长最快的Agent项目",
@@ -54,6 +55,7 @@ export function Topbar() {
           </div>
         )}
       </form>
+      <GithubStatusDot />
       <SyncControl />
       <Link
         href="https://github.com"

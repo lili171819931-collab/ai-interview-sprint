@@ -3,5 +3,7 @@ node_modules
 out/
 *.tsbuildinfo
 .env
-.env.local
+.env.*
+!.env.example
 data/cache/
+data/github-token
