@@ -16,6 +16,7 @@ import { buildCompleteChain, buildTechRouteMainline } from "@/lib/master";
 import { buildSourceCompleteChain, buildSourceTechRouteMainline } from "@/lib/sourceMaster";
 import { buildDirectorReport, buildSourceDirectorReport } from "@/lib/director";
 import { buildProjectReportMarkdown, buildSourceReportMarkdown } from "@/lib/report";
+import { buildProjectPrompt, buildSourceProjectPrompt } from "@/lib/prompt";
 import { ReportActions } from "@/components/ReportActions";
 import { InteractiveMap } from "@/components/InteractiveMap";
 import type { Project } from "@/lib/types";
@@ -43,6 +44,7 @@ export function MasterAnalysis({ project }: { project: Project }) {
         <span className="text-[12px] font-bold text-white">📄 完整报告</span>
         <Link href={`/projects/${project.slug}/report`} className="chip chip-accent">打开完整报告页 →</Link>
         <Link href={`/projects/${project.slug}/qa`} className="chip hover:!text-[#7dd3fc]">💬 自问自答页 →</Link>
+        <Link href={`/projects/${project.slug}/prompt`} className="chip hover:!text-[#fbbf24]">⚡ 项目 Prompt →</Link>
         <ReportActions markdown={buildProjectReportMarkdown(project)} />
       </div>
 
@@ -507,6 +509,10 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
     <div className="space-y-4">
       <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
         <span className="text-[12px] font-bold text-white">📄 完整报告（源码驱动）</span>
+        <button
+          onClick={async () => { try { await navigator.clipboard.writeText(buildSourceProjectPrompt(repo, intel)); alert("✓ 已复制项目 Prompt"); } catch {} }}
+          className="chip hover:!text-[#fbbf24]"
+        >⚡ 复制项目 Prompt</button>
         <div className="ml-auto"><ReportActions markdown={buildSourceReportMarkdown(repo, intel)} /></div>
       </div>
       {degraded && <div className="rounded-xl bg-[#101a2e] border border-amber-400/30 p-2.5 text-[11.5px] text-[#fbbf24]">⚠️ {degraded}</div>}

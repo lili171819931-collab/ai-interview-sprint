@@ -292,3 +292,16 @@ assert(sqa.length === buildSourcePanorama(fakeRepo, srcIntel).length && sqa[0].q
 assert(buildSourceQaMarkdown(fakeRepo, srcIntel).includes("Q："), "qa: source markdown");
 const fullMd = buildProjectReportMarkdown(sample);
 assert(fullMd.includes("产品全景图 · 自问自答") && fullMd.includes("Q：") && fullMd.includes("A："), "qa: in full report markdown");
+
+/* ── Project Prompt generator tests ───────────────────────────────────── */
+import { buildProjectPrompt, buildSourceProjectPrompt } from "../src/lib/prompt";
+
+const prompt = buildProjectPrompt(sample);
+assert(prompt.includes("【Master Prompt】") && prompt.includes("AI 产品逆向工程专家团队"), "prompt: role");
+assert(prompt.includes("TARGET PROJECT") && prompt.includes(sample.fullName), "prompt: project facts");
+assert(prompt.includes("完整链路") && prompt.includes("技术路线主线") && prompt.includes("PROJECT REVERSE ENGINEERING REPORT（40 节）"), "prompt: framework");
+assert(prompt.includes("产品总监视角") && prompt.includes("Executive Review") && prompt.includes("EVIDENCE MODE"), "prompt: director + evidence");
+assert(prompt.includes("Q：") && prompt.includes("A："), "prompt: Q&A embedded");
+assert(prompt.includes("不要描述产品，要解释产品"), "prompt: standards");
+const sp = buildSourceProjectPrompt(fakeRepo, srcIntel);
+assert(sp.includes("【Master Prompt】") && sp.includes("源码驱动") && sp.includes("EVIDENCE MODE"), "prompt: source");

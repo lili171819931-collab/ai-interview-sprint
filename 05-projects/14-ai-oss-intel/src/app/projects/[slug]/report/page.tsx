@@ -49,6 +49,7 @@ export default async function ProjectReportPage({ params }: { params: Promise<{ 
       <div className="flex items-center gap-2">
         <Link href={`/projects/${p.slug}`} className="chip hover:!text-[#7dd3fc]"><ArrowLeft size={12} /> 返回项目页</Link>
         <Link href={`/projects/${p.slug}/qa`} className="chip hover:!text-[#7dd3fc]">💬 全景图自问自答页 →</Link>
+        <Link href={`/projects/${p.slug}/prompt`} className="chip hover:!text-[#fbbf24]">⚡ 项目 Prompt →</Link>
         <div className="ml-auto"><ReportActions markdown={md} /></div>
       </div>
 
