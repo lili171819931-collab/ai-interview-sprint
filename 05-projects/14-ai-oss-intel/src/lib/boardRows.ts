@@ -1,8 +1,9 @@
 /**
  * Unified category-board row builder.
- * 每个分类榜单（机会 / 收藏 / 收藏增长最快）都必须 ≥ LIMIT 个项目：
- * 本分类（快照 + 实时 + 手动添加）优先按指标排名，再用「全局池」补齐，
- * 保证未认证限流 / 小分类（如 robotics=1）也能凑满 100。
+ * 每个分类榜单（机会 / 收藏 / 收藏增长最快）**只展示本分类且属于 2026 年**的项目：
+ * - 分类相关：seed 项目 categories 包含该分类；实时项目按仓库特征归类
+ * - 2026 年：创建或最近更新在 2026 年（剔除 2026 前已停更的旧仓库）
+ * 不做跨分类补齐 —— 相关性优先，小分类数量以实际为准。
  * 纯函数，可单测。
  */
 import type { CategoryId, Project } from "@/lib/types";
@@ -20,12 +21,16 @@ export interface BuildBoardRowsInput {
   categoryId: CategoryId;
   tab: BoardTab;
   limit?: number;
+  /**
+   * 实时仓库是否已按分类查询拉取（loadLive(id) 用分类查询），
+   * true 时视为本分类相关（默认 false 表示需按仓库特征猜测）。
+   */
+  liveTrusted?: boolean;
 }
 
 export interface BuildBoardRowsResult {
   rows: BoardRow[];
   catCount: number;
-  padCount: number;
   liveCount: number;
 }
 
@@ -38,6 +43,7 @@ export function buildBoardRows({
   categoryId,
   tab,
   limit = DEFAULT_LIMIT,
+  liveTrusted = false,
 }: BuildBoardRowsInput): BuildBoardRowsResult {
   // 统一行池：快照 + 实时 + 手动添加（按 fullName 去重）
   const pool = new Map<string, BoardRow>();
@@ -47,27 +53,28 @@ export function buildBoardRows({
   const all = [...pool.values()];
 
   const isCat = (row: BoardRow) =>
-    row.kind === "seed" ? row.p.categories.includes(categoryId) : guessCategoryFromRepo(row.r) === categoryId;
-  const key = (row: BoardRow) => (row.kind === "seed" ? `seed:${row.p.slug}` : `live:${row.r.fullName}`);
+    row.kind === "seed" ? row.p.categories.includes(categoryId) : liveTrusted || guessCategoryFromRepo(row.r) === categoryId;
   const metric = (row: BoardRow, t: BoardTab): number => {
     if (t === "opportunity") return row.kind === "seed" ? computeScores(row.p).opportunity : liveOpportunityScore(row.r);
     if (t === "stars") return row.kind === "seed" ? row.p.stars : row.r.stars;
     return row.kind === "seed" ? (row.p.growth90d ?? 0) / 90 : starsPerDay(row.r);
   };
 
-  const cat = all.filter(isCat).sort((a, b) => metric(b, tab) - metric(a, tab));
-  const used = new Set(cat.map(key));
-  const rest = all.filter((row) => !used.has(key(row))).sort((a, b) => metric(b, tab) - metric(a, tab));
-  const fill: BoardRow[] = [];
-  for (const row of rest) {
-    if (cat.length + fill.length >= limit) break;
-    fill.push(row);
-  }
-  const rows = [...cat, ...fill].slice(0, limit);
+  // 2026 年窗口：创建或最近更新在 2026 年（剔除 2026 前已停更的旧仓库）
+  const year = (d?: string) => parseInt((d ?? "").slice(0, 4), 10);
+  const in2026 = (row: BoardRow): boolean =>
+    row.kind === "seed"
+      ? year(row.p.createdAt) >= 2026 || year(row.p.updatedAt) >= 2026
+      : year(row.r.createdAt) >= 2026 || year(row.r.updatedAt) >= 2026;
+
+  // 只保留：本分类相关 且 2026 年项目 —— 不做跨分类补齐
+  const rows = all
+    .filter((row) => isCat(row) && in2026(row))
+    .sort((a, b) => metric(b, tab) - metric(a, tab))
+    .slice(0, limit);
   return {
     rows,
-    catCount: cat.length,
-    padCount: Math.max(0, rows.length - Math.min(cat.length, rows.length)),
+    catCount: rows.length,
     liveCount: rows.filter((r) => r.kind === "live").length,
   };
 }

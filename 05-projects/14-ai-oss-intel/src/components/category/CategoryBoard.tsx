@@ -65,6 +65,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
     categoryId: id,
     tab,
     limit: LIMIT,
+    liveTrusted: true, // loadLive(id) 已按分类查询拉取实时项目
   });
 
   const toggle = (key: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => {
@@ -73,13 +74,13 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
   };
 
   const renderRows = () => {
-    const { rows, catCount, padCount, liveCount } = board;
+    const { rows, liveCount } = board;
     const head =
       tab === "opportunity"
-        ? `机会 TOP 榜 = 本分类（快照真实评分 + 实时启发式评分）+ 全局补充 · 共 ${rows.length} 个项目（目标 ${LIMIT}）· 本分类 ${catCount} · 全局补充 ${padCount}`
+        ? `机会 TOP 榜 = 仅本分类 · 2026 时间窗项目 · 共 ${rows.length} 个（快照真实评分 + 实时启发式评分）· 实时 ${liveCount}`
         : tab === "stars"
-          ? `收藏榜 = 本分类 + 全局补充 · 共 ${rows.length} 个项目（目标 ${LIMIT}）· 本分类 ${catCount} · 全局补充 ${padCount} · 实时 ${liveCount}`
-          : `收藏增长最快榜 = 本分类 + 全局补充 · 共 ${rows.length} 个项目（目标 ${LIMIT}）· 本分类 ${catCount} · 全局补充 ${padCount} · 实时 ${liveCount}`;
+          ? `收藏榜 = 仅本分类 · 2026 时间窗项目 · 共 ${rows.length} 个 · 实时 ${liveCount}`
+          : `收藏增长最快榜 = 仅本分类 · 2026 时间窗项目 · 共 ${rows.length} 个 · 实时 ${liveCount}`;
     return (
       <>
         <div className="px-1 text-[11.5px] text-[#5b6885]">{head}</div>
@@ -176,7 +177,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
       </div>
 
       <p className="text-[11px] text-[#4d5a75]">
-        📡 每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」完成后本榜自动重拉）；三榜均保证展示 {LIMIT} 个项目：本分类（快照 {seed.length} 项 + 实时 + 手动添加 {addedInCat.length} 项）优先，不足部分由全局开源池按指标补齐 · 未配置 Token 限流时自动降级，不会挂起。
+        📡 三榜**只展示本分类相关且属于 2026 年**的开源项目（创建或最近更新在 2026 年；小分类数量以实际为准，不做跨分类补齐）。每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」完成后本榜自动重拉）；未配置 Token 限流时自动降级，不会挂起。
         每个项目均可「分析」打开完整逆向工程（40 节报告 + 全景图），「产品框图」查看功能实现路径框图，「产品总监视角」查看边界 / 痛点 / 真实案例预测。
       </p>
     </div>
