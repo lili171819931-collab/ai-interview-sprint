@@ -26,7 +26,7 @@ export default async function CategoryRankingPage({ params }: { params: Promise<
           <div className="w-11 h-11 rounded-xl bg-[#1a2a4a] border border-[#2c4370] flex items-center justify-center text-xl">{cat.emoji}</div>
           <div>
             <h1 className="text-xl font-bold text-white">{cat.name} · 分类榜单</h1>
-            <p className="text-[12.5px] text-[#8b98b3] mt-0.5">{cat.nameZh} · 2026 时间窗 · 收藏榜/收藏增长最快榜上限 100 个项目（实时拉取 GitHub 数据） · 每项目显示发布时间</p>
+            <p className="text-[12.5px] text-[#8b98b3] mt-0.5">{cat.nameZh} · 2026 时间窗 · 机会榜 / 收藏榜 / 收藏增长最快榜 均拉取 ≥100 个项目（实时 GitHub 数据） · 每项目显示发布时间</p>
           </div>
           <div className="ml-auto flex flex-wrap gap-1.5">
             {allCategories().slice(0, 14).map((c) => (

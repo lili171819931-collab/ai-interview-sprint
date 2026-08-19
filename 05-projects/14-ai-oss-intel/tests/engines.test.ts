@@ -341,3 +341,10 @@ assert(PROJECTS.some((p) => p.categories.includes("money") && p.slug === "ghost"
 assert(PROJECTS.some((p) => p.categories.includes("money")), "money: has projects");
 assert(guessCategoryFromRepo({ name: "reactive-resume", description: "开源简历生成器", topics: ["resume"], language: "TypeScript" }) === "resume", "categorize: resume");
 assert(guessCategoryFromRepo({ name: "ghost", description: "创作者变现平台", topics: ["monetization"], language: "JavaScript" }) === "money", "categorize: money");
+
+/* ── 100-per-list live opportunity tests ──────────────────────────────── */
+import { liveOpportunityScore } from "../src/lib/live";
+const oppLive = liveOpportunityScore(fakeRepo);
+assert(oppLive >= 0 && oppLive <= 100 && Number.isFinite(oppLive), "live opp: bounded");
+const oppBig = liveOpportunityScore({ ...fakeRepo, stars: 200000, createdAt: "2026-01-01", description: "AI agent with rag and mcp" });
+assert(oppBig > oppLive, "live opp: bigger/better repo scores higher");

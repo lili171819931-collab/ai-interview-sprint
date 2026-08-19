@@ -7,7 +7,7 @@ import { computeScores, formatPct, formatSigned, formatStars, growthRate } from 
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, SourceAgentCockpit, ExpertCockpit, SourceExpertCockpit } from "@/components/analysis/AnalysisView";
-import { loadLive, liveStatus, starsPerDay, type LiveRepo, type LiveState } from "@/lib/live";
+import { loadLive, liveStatus, starsPerDay, liveOpportunityScore, type LiveRepo, type LiveState } from "@/lib/live";
 import { getAddedProjects } from "@/lib/db";
 import { guessCategoryFromRepo } from "@/lib/categorize";
 import { GithubIcon } from "@/components/icons";
@@ -60,14 +60,33 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
 
   const renderRows = () => {
     if (tab === "opportunity") {
-      return opportunity.map(({ p, s }, i) => (
-        <SeedRow key={p.slug} p={p} s={s} rank={i + 1} color="#7dd3fc" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-          columns={<>{[
-            { v: <span className="num font-bold text-[#7dd3fc]">{s.opportunity}</span>, label: "Opp" },
-            { v: <span className="num text-[#34d399]">{s.technical}</span>, label: "Tech" },
-            { v: <span className="num text-[#f87171]">{s.money}</span>, label: "Money" },
-          ].map((c) => <Cell key={c.label} label={c.label}>{c.v}</Cell>)}</>} />
-      ));
+      const livePool = liveOn ? mergeLive(live!.repos) : addedInCat;
+      const seedRows = opportunity.map(({ p, s }) => ({ kind: "seed" as const, p, s, opp: s.opportunity }));
+      const liveRows = livePool.map((r) => ({ kind: "live" as const, r, opp: liveOpportunityScore(r) }));
+      const all = [...seedRows, ...liveRows].sort((a, b) => b.opp - a.opp).slice(0, LIMIT);
+      return (
+        <>
+          <div className="px-1 text-[11.5px] text-[#5b6885]">机会 TOP 榜 = 快照项目（真实评分）+ 实时项目（启发式评分）· 共 {all.length} 个项目（目标 {LIMIT}）</div>
+          {all.map((row, i) =>
+            row.kind === "seed" ? (
+              <SeedRow key={row.p.slug} p={row.p} s={row.s} rank={i + 1} color="#7dd3fc" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
+                columns={<>{[
+                  { v: <span className="num font-bold text-[#7dd3fc]">{row.s.opportunity}</span>, label: "Opp" },
+                  { v: <span className="num text-[#34d399]">{row.s.technical}</span>, label: "Tech" },
+                  { v: <span className="num text-[#f87171]">{row.s.money}</span>, label: "Money" },
+                ].map((c) => <Cell key={c.label} label={c.label}>{c.v}</Cell>)}</>} />
+            ) : (
+              <LiveRow key={row.r.fullName} repo={row.r} rank={i + 1} color="#7dd3fc" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
+                columns={<>{[
+                  <Cell key="opp" label="Opp(估)"><span className="num font-bold text-[#7dd3fc]">{row.opp}</span></Cell>,
+                  <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(row.r.stars)}</span></Cell>,
+                  <Cell key="lang" label="语言"><span className="text-[#8b98b3] text-[12px]">{row.r.language ?? "—"}</span></Cell>,
+                  <Cell key="upd" label="更新时间"><span className="num text-[#5b6885]">{row.r.updatedAt}</span></Cell>,
+                ]}</>} />
+            )
+          )}
+        </>
+      );
     }
     if (tab === "stars") {
       if (liveOn) {
@@ -126,7 +145,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
           ) : liveOn ? (
             <>
               <span className="chip !text-[10.5px] !text-emerald-300 !border-emerald-400/40"><Radio size={11} /> 实时数据 {live.source === "live" ? "· 刚刚" : `· 缓存 ${new Date(live.fetchedAt).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}`}</span>
-              <span className="text-[#5b6885]">收录 {Math.min(LIMIT, live.repos.length)}/100 个项目</span>
+              <span className="text-[#5b6885]">实时收录 {Math.min(LIMIT, live.repos.length)}/100 个项目 · 三榜均 ≥100（实时模式）</span>
               <button onClick={() => load(true)} className="chip cursor-pointer hover:!text-[#7dd3fc]"><RefreshCw size={11} /> 立即刷新</button>
             </>
           ) : (

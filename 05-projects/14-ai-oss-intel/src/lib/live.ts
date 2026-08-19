@@ -131,6 +131,17 @@ export async function fetchCategoryLive(id: CategoryId): Promise<LiveRepo[]> {
       if (repo && !map.has(repo.fullName)) map.set(repo.fullName, repo);
     }
   }
+  // 至少拉取 100 条：用宽泛 AI 查询补齐（保留已有去重）
+  if (map.size < 100) {
+    try {
+      const items = await fetchPage(FALLBACK_FILL);
+      for (const it of items) {
+        if (map.size >= 100) break;
+        const repo = normalize(it);
+        if (repo && !map.has(repo.fullName)) map.set(repo.fullName, repo);
+      }
+    } catch {}
+  }
   return [...map.values()].slice(0, 100);
 }
 
@@ -164,3 +175,18 @@ export function starsPerDay(repo: LiveRepo): number {
   const days = Math.max(1, (Date.now() - Date.parse(repo.createdAt)) / 86400000);
   return repo.stars / days;
 }
+
+const clamp = (v: number, min = 0, max = 100) => Math.max(min, Math.min(max, v));
+
+/** Heuristic Opportunity Score for live repos (no full profile available). */
+export function liveOpportunityScore(repo: LiveRepo): number {
+  const pop = clamp((Math.log10(repo.stars + 1) / 5.3) * 100);
+  const spd = clamp(starsPerDay(repo) * 3.5);
+  const hay = `${repo.name} ${repo.description ?? ""} ${repo.topics.join(" ")} ${repo.language ?? ""}`.toLowerCase();
+  const ai = /agent|llm|gpt|rag|mcp|ai|ml|model|retriev|embedding|automation|intelligence/i.test(hay) ? 18 : 6;
+  const topicsBoost = Math.min(8, repo.topics.length * 2);
+  return Math.round(clamp(pop * 0.32 + spd * 0.4 + ai + topicsBoost + (repo.license ? 4 : 0)));
+}
+
+/** Ensure the category live list reaches the target (fill with a broad AI fallback). */
+const FALLBACK_FILL = "topic:ai stars:>100 fork:false " + LICENSE_QUALIFIER;
