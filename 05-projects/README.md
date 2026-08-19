@@ -26,6 +26,7 @@
 ├── 03-rag-validation-lab/         ← C. 评测验证 Lab
 ├── 04-workbuddy-invoice-reimburse/← 发票报销 · WorkBuddy Skill 载体
 ├── 04-05-06-发票报销三平台合集.md ← 04/05/06 三平台合并总览（同域三载体）
+├── invoice-reimburse-trio/        ← 04/05/06 三平台聚合副本（Skill/Web/小程序）
 ├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
 ├── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
 ├── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包 · GTI）
@@ -45,6 +46,7 @@
 | **04** | 发票 · Skill 载体 | [`04-workbuddy-invoice-reimburse/`](04-workbuddy-invoice-reimburse/) | 领域 Prompt/Skill | ✅ |
 | **05** | 发票 · Web 载体 | [`05-invoice-reimburse-web/`](05-invoice-reimburse-web/) | 可运行审批系统 | ✅ |
 | **06** | 发票 · 小程序+商业 | [`06-piaoji-product/`](06-piaoji-product/) | 合规交付物+付费叙事 | ✅ |
+| **合集** | 三平台聚合副本 | [`invoice-reimburse-trio/`](invoice-reimburse-trio/) | 04/05/06 合并查看/演示 | ✅ |
 | **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更+GTI 事件聚类+Agent/MCP+简报推送 | ✅ |
 | **11** | 个人 AI Skill 操作系统 | [`11-lily-skills/`](11-lily-skills/) | Skill 注册/检索/Agent/Workflow/权限/分析全闭环 | ✅ |
 
