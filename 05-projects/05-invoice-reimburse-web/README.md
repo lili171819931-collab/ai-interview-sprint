@@ -11,6 +11,7 @@
 | [`04-workbuddy-invoice-reimburse`](../04-workbuddy-invoice-reimburse/) | WorkBuddy Skill | 对话式快速出报销包 |
 | **05（本目录）** | Next.js Web | 多用户单据 + 审批 + 导出 + 留痕 |
 | [`06-piaoji-product`](../06-piaoji-product/) + [`piaoji-mini`](../ai-projects/products/piaoji-mini/) | 微信小程序 | 员工侧收票/对账/HR 包；含商业价值分析 |
+| [**04/05/06 三平台合集**](../04-05-06-发票报销三平台合集.md) | 合并文档 | 同一报销流程在 Skill / Web / 小程序三平台的实现对照 |
 
 面试一句：领域能力（类目/情景/合规 CoT）一次建模，**Skill / Web / 小程序** 三载体交付。
 

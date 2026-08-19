@@ -3,6 +3,7 @@
 > 同源领域资产：面向 WorkBuddy 的发票报销智能专员（Prompt / Skill 包）  
 > Web 可运行版本：[`../05-invoice-reimburse-web/`](../05-invoice-reimburse-web/)  
 > 微信小程序版本：[`../06-piaoji-product/`](../06-piaoji-product/) · 源码 [`piaoji-mini`](../ai-projects/products/piaoji-mini/)
+> **三平台合并总览**：[`../04-05-06-发票报销三平台合集.md`](../04-05-06-发票报销三平台合集.md)
 
 ## 内容
 

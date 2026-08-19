@@ -1,7 +1,8 @@
 # 08 · 发票报销三载体对比分析报告
 
 > 对照仓库：[`04-workbuddy-invoice-reimburse`](../04-workbuddy-invoice-reimburse/) · [`05-invoice-reimburse-web`](../05-invoice-reimburse-web/) · 本目录（06）+ [`piaoji-mini`](../ai-projects/products/piaoji-mini/)  
-> 结论先行：三者**不是互斥竞品**，而是同一报销领域能力（类目 · 情景 · 合规 CoT）的分层载体。
+> 结论先行：三者**不是互斥竞品**，而是同一报销领域能力（类目 · 情景 · 合规 CoT）的分层载体。  
+> 📄 合并版：**[04/05/06 发票报销三平台合集](../04-05-06-发票报销三平台合集.md)**（三平台实现汇总）
 
 ---
 
