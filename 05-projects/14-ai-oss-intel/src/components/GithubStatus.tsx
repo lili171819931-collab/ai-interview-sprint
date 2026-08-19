@@ -40,9 +40,15 @@ export function GithubStatusDot() {
   if (loading && !health) return <span className="chip !text-[10px] !py-1">GitHub API …</span>;
   const level = LEVEL_META[health?.level ?? "warning"] ?? LEVEL_META.warning;
   const rem = health?.rateLimit?.remaining;
+  const authed = health?.authenticated;
+  const reset = health?.rateLimit?.reset ? new Date(health.rateLimit.reset * 1000).toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" }) : null;
+  const low = !authed && (health?.level === "critical" || health?.level === "out");
+  const tip = authed
+    ? `GitHub API 已认证（5000 次/小时）· 剩余 ${rem ?? "—"}${reset ? ` · 重置 ${reset}` : ""}`
+    : `GitHub API 未认证（60 次/小时，搜索 10 次/分钟）· 剩余 ${rem ?? "—"}${reset ? ` · 重置 ${reset}` : ""} · 建议在 My GitHub 页配置 GITHUB_TOKEN 自动提速`;
   return (
-    <span className="chip !text-[10px] !py-1 hidden md:inline-flex" style={{ color: level.color, borderColor: level.color + "55", background: level.color + "10" }} title={`GitHub API ${health?.authenticated ? "已认证" : "未认证"} · Remaining ${rem ?? "—"}`}>
-      <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" /> API {rem ?? "—"} {health?.authenticated ? "· Auth" : "· No-Token"}
+    <span className="chip !text-[10px] !py-1 hidden md:inline-flex" style={{ color: low ? "#f87171" : level.color, borderColor: (low ? "#f87171" : level.color) + "55", background: (low ? "#f87171" : level.color) + "10" }} title={tip}>
+      <span className="inline-block w-1.5 h-1.5 rounded-full bg-current" /> API {rem ?? "—"} · {authed ? "已认证" : low ? "未认证·限流" : "未认证"}
     </span>
   );
 }

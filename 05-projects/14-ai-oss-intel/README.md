@@ -17,7 +17,7 @@
 |------|------|
 | 📡 项目发现 | 169 个精选开源 AI 项目，覆盖 30 大分类（Agent / Skill / MCP / Coding / SaaS / RAG…） |
 | 📊 Growth Intelligence Engine | 计算每个项目 7 / 30 / 90 天 Star 增长与增长率，生成趋势图 |
-| 🏆 分类 TOP 榜（唯一榜单体系） | 30 个一级分类 × 3 榜：机会 TOP / 收藏榜 / 收藏增长最快榜（2026 · 实时拉取 GitHub · 上限 100）· 每项目带 分析 / 逆向拆解 / 产品框图 |
+| 🏆 分类 TOP 榜（唯一榜单体系） | 30 个一级分类 × 3 榜：机会 TOP / 收藏榜 / 收藏增长最快榜（2026 · 实时拉取 GitHub · **每榜保证 ≥100**：本分类优先 + 全局开源池补齐，未认证限流自动降级不挂起）· 每项目带 分析 / 产品框图 / 专家实战 / Agent 拆解 / 产品总监视角 / Prompt |
 | 🎯 AI Project Score | 8 维加权评分（Popularity 10% + Growth 15% + Innovation 15% + Product 15% + Demand 10% + Commercial 15% + Ecosystem 10% + PersonalDev 10%） |
 | 🧠 10-Agent 共识报告 | 每项目生成 25 节 Project Intelligence Report + Should-I-Build Verdict |
 | 💡 产品机会生成器 | 每项目自动生成 ≥5 个新产品方向（名称/用户/痛点/MVP/商业模式/壁垒/难度/周期/潜力） |

@@ -9,6 +9,7 @@ import { categoryOf } from "@/lib/categories";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, SourceAgentCockpit, ExpertCockpit, SourceExpertCockpit } from "@/components/analysis/AnalysisView";
 import { loadLive, liveStatus, starsPerDay, liveOpportunityScore, type LiveRepo, type LiveState } from "@/lib/live";
 import { getAddedProjects } from "@/lib/db";
+import { buildBoardRows } from "@/lib/boardRows";
 import { guessCategoryFromRepo } from "@/lib/categorize";
 import { GithubIcon } from "@/components/icons";
 import type { CategoryId, Project } from "@/lib/types";
@@ -37,6 +38,13 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
 
   useEffect(() => { setTab("stars"); setLive(null); setLoading(true); setExpandedKey(null); load(false); }, [id, load]);
 
+  // 全平台实时联动：顶栏「实时同步」（db.ts 写入后派发 aioss.db.change）完成后自动重拉本榜
+  useEffect(() => {
+    const h = () => { load(true); };
+    window.addEventListener("aioss.db.change", h);
+    return () => window.removeEventListener("aioss.db.change", h);
+  }, [load]);
+
   const seed = PROJECTS.filter((p) => p.categories.includes(id));
   // 全平台联动：手动添加的项目（add-project）若匹配当前分类，并入实时展示
   const addedInCat = useMemo(
@@ -48,10 +56,16 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
     for (const r of addedInCat) byName.set(r.fullName.toLowerCase(), r);
     return [...byName.values()];
   };
-  const opportunity = seed.map((p) => ({ p, s: computeScores(p) })).sort((a, b) => b.s.opportunity - a.s.opportunity);
-  const starsSeed = [...seed].sort((a, b) => b.stars - a.stars);
-  const growthSeed = [...seed].sort((a, b) => b.growth90d - a.growth90d);
   const liveOn = !!live && live.source !== "seed" && live.repos.length > 0;
+  // 统一榜单行：本分类优先（快照 + 实时 + 手动添加），再用全局池补齐至 LIMIT（保证每榜 ≥100）
+  const board = buildBoardRows({
+    projects: PROJECTS,
+    liveRepos: liveOn ? mergeLive(live!.repos) : [],
+    addedRepos: addedInCat,
+    categoryId: id,
+    tab,
+    limit: LIMIT,
+  });
 
   const toggle = (key: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => {
     if (expandedKey === key && panelTab === pt) { setExpandedKey(null); return; }
@@ -59,78 +73,77 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
   };
 
   const renderRows = () => {
-    if (tab === "opportunity") {
-      const livePool = liveOn ? mergeLive(live!.repos) : addedInCat;
-      const seedRows = opportunity.map(({ p, s }) => ({ kind: "seed" as const, p, s, opp: s.opportunity }));
-      const liveRows = livePool.map((r) => ({ kind: "live" as const, r, opp: liveOpportunityScore(r) }));
-      const all = [...seedRows, ...liveRows].sort((a, b) => b.opp - a.opp).slice(0, LIMIT);
-      return (
-        <>
-          <div className="px-1 text-[11.5px] text-[#5b6885]">机会 TOP 榜 = 快照项目（真实评分）+ 实时项目（启发式评分）· 共 {all.length} 个项目（目标 {LIMIT}）</div>
-          {all.map((row, i) =>
-            row.kind === "seed" ? (
-              <SeedRow key={row.p.slug} p={row.p} s={row.s} rank={i + 1} color="#7dd3fc" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-                columns={<>{[
-                  { v: <span className="num font-bold text-[#7dd3fc]">{row.s.opportunity}</span>, label: "Opp" },
-                  { v: <span className="num text-[#34d399]">{row.s.technical}</span>, label: "Tech" },
-                  { v: <span className="num text-[#f87171]">{row.s.money}</span>, label: "Money" },
-                ].map((c) => <Cell key={c.label} label={c.label}>{c.v}</Cell>)}</>} />
+    const { rows, catCount, padCount, liveCount } = board;
+    const head =
+      tab === "opportunity"
+        ? `机会 TOP 榜 = 本分类（快照真实评分 + 实时启发式评分）+ 全局补充 · 共 ${rows.length} 个项目（目标 ${LIMIT}）· 本分类 ${catCount} · 全局补充 ${padCount}`
+        : tab === "stars"
+          ? `收藏榜 = 本分类 + 全局补充 · 共 ${rows.length} 个项目（目标 ${LIMIT}）· 本分类 ${catCount} · 全局补充 ${padCount} · 实时 ${liveCount}`
+          : `收藏增长最快榜 = 本分类 + 全局补充 · 共 ${rows.length} 个项目（目标 ${LIMIT}）· 本分类 ${catCount} · 全局补充 ${padCount} · 实时 ${liveCount}`;
+    return (
+      <>
+        <div className="px-1 text-[11.5px] text-[#5b6885]">{head}</div>
+        {rows.map((row, i) => {
+          const rank = i + 1;
+          if (row.kind === "seed") {
+            const s = computeScores(row.p);
+            const color = tab === "opportunity" ? "#7dd3fc" : tab === "stars" ? "#fbbf24" : "#34d399";
+            const cols =
+              tab === "opportunity" ? (
+                <>{[
+                  { v: <span className="num font-bold text-[#7dd3fc]">{s.opportunity}</span>, label: "Opp" },
+                  { v: <span className="num text-[#34d399]">{s.technical}</span>, label: "Tech" },
+                  { v: <span className="num text-[#f87171]">{s.money}</span>, label: "Money" },
+                ].map((c) => <Cell key={c.label} label={c.label}>{c.v}</Cell>)}</>
+              ) : tab === "stars" ? (
+                <>{[
+                  <Cell key="stars" label="⭐ Stars"><span className="num font-bold text-[#fbbf24]">{formatStars(row.p.stars)}</span></Cell>,
+                  <Cell key="forks" label="Forks"><span className="num text-[#8b98b3]">{formatStars(row.p.forks)}</span></Cell>,
+                  <Cell key="g30" label="30D"><span className="num text-emerald-300">{formatSigned(row.p.growth30d)}<div className="text-[10px] text-[#5b6885]">{formatPct(growthRate(row.p, 30))}</div></span></Cell>,
+                  <Cell key="g90" label="90D"><span className="num text-emerald-300/80">{formatSigned(row.p.growth90d)}</span></Cell>,
+                ]}</>
+              ) : (
+                <>{[
+                  <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(row.p.stars)}</span></Cell>,
+                  <Cell key="g7" label="7D"><span className="num text-emerald-300">{formatSigned(row.p.growth7d)}</span></Cell>,
+                  <Cell key="g30" label="30D"><span className="num text-emerald-300">{formatSigned(row.p.growth30d)}</span></Cell>,
+                  <Cell key="g90" label="90D(2026)"><span className="num font-bold text-emerald-300">{formatSigned(row.p.growth90d)}</span></Cell>,
+                ]}</>
+              );
+            return (
+              <SeedRow key={row.p.slug} p={row.p} s={s} rank={rank} color={color} expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle} columns={cols} />
+            );
+          }
+          const r = row.r;
+          const color = tab === "opportunity" ? "#7dd3fc" : tab === "stars" ? "#fbbf24" : "#34d399";
+          const cols =
+            tab === "opportunity" ? (
+              <>{[
+                <Cell key="opp" label="Opp(估)"><span className="num font-bold text-[#7dd3fc]">{liveOpportunityScore(r)}</span></Cell>,
+                <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
+                <Cell key="lang" label="语言"><span className="text-[#8b98b3] text-[12px]">{r.language ?? "—"}</span></Cell>,
+                <Cell key="upd" label="更新时间"><span className="num text-[#5b6885]">{r.updatedAt}</span></Cell>,
+              ]}</>
+            ) : tab === "stars" ? (
+              <>{[
+                <Cell key="stars" label="⭐ Stars"><span className="num font-bold text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
+                <Cell key="forks" label="Forks"><span className="num text-[#8b98b3]">{formatStars(r.forks)}</span></Cell>,
+                <Cell key="lang" label="语言"><span className="text-[#8b98b3] text-[12px]">{r.language ?? "—"}</span></Cell>,
+                <Cell key="upd" label="更新时间"><span className="num text-[#5b6885]">{r.updatedAt}</span></Cell>,
+              ]}</>
             ) : (
-              <LiveRow key={row.r.fullName} repo={row.r} rank={i + 1} color="#7dd3fc" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-                columns={<>{[
-                  <Cell key="opp" label="Opp(估)"><span className="num font-bold text-[#7dd3fc]">{row.opp}</span></Cell>,
-                  <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(row.r.stars)}</span></Cell>,
-                  <Cell key="lang" label="语言"><span className="text-[#8b98b3] text-[12px]">{row.r.language ?? "—"}</span></Cell>,
-                  <Cell key="upd" label="更新时间"><span className="num text-[#5b6885]">{row.r.updatedAt}</span></Cell>,
-                ]}</>} />
-            )
-          )}
-        </>
-      );
-    }
-    if (tab === "stars") {
-      if (liveOn) {
-        return mergeLive(live!.repos).sort((a, b) => b.stars - a.stars).slice(0, LIMIT).map((r, i) => (
-          <LiveRow key={r.fullName} repo={r} rank={i + 1} color="#fbbf24" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-            columns={<>{[
-              <Cell key="stars" label="⭐ Stars"><span className="num font-bold text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
-              <Cell key="forks" label="Forks"><span className="num text-[#8b98b3]">{formatStars(r.forks)}</span></Cell>,
-              <Cell key="lang" label="语言"><span className="text-[#8b98b3] text-[12px]">{r.language ?? "—"}</span></Cell>,
-              <Cell key="upd" label="更新时间"><span className="num text-[#5b6885]">{r.updatedAt}</span></Cell>,
-            ]}</>} />
-        ));
-      }
-      return starsSeed.slice(0, LIMIT).map((p, i) => (
-        <SeedRow key={p.slug} p={p} s={computeScores(p)} rank={i + 1} color="#fbbf24" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-          columns={<>{[
-            <Cell key="stars" label="⭐ Stars"><span className="num font-bold text-[#fbbf24]">{formatStars(p.stars)}</span></Cell>,
-            <Cell key="forks" label="Forks"><span className="num text-[#8b98b3]">{formatStars(p.forks)}</span></Cell>,
-            <Cell key="g30" label="30D"><span className="num text-emerald-300">{formatSigned(p.growth30d)}<div className="text-[10px] text-[#5b6885]">{formatPct(growthRate(p, 30))}</div></span></Cell>,
-            <Cell key="g90" label="90D"><span className="num text-emerald-300/80">{formatSigned(p.growth90d)}</span></Cell>,
-          ]}</>} />
-      ));
-    }
-    // growth
-    if (liveOn) {
-      return mergeLive(live!.repos).sort((a, b) => starsPerDay(b) - starsPerDay(a)).slice(0, LIMIT).map((r, i) => (
-        <LiveRow key={r.fullName} repo={r} rank={i + 1} color="#34d399" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-          columns={<>{[
-            <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
-            <Cell key="spd" label="平均日增"><span className="num font-bold text-emerald-300">{starsPerDay(r).toFixed(1)}/天</span></Cell>,
-            <Cell key="forks" label="Forks"><span className="num text-[#8b98b3]">{formatStars(r.forks)}</span></Cell>,
-            <Cell key="upd" label="更新时间"><span className="num text-[#5b6885]">{r.updatedAt}</span></Cell>,
-          ]}</>} />
-      ));
-    }
-    return growthSeed.slice(0, LIMIT).map((p, i) => (
-      <SeedRow key={p.slug} p={p} s={computeScores(p)} rank={i + 1} color="#34d399" expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle}
-        columns={<>{[
-          <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(p.stars)}</span></Cell>,
-          <Cell key="g7" label="7D"><span className="num text-emerald-300">{formatSigned(p.growth7d)}</span></Cell>,
-          <Cell key="g30" label="30D"><span className="num text-emerald-300">{formatSigned(p.growth30d)}</span></Cell>,
-          <Cell key="g90" label="90D(2026)"><span className="num font-bold text-emerald-300">{formatSigned(p.growth90d)}</span></Cell>,
-        ]}</>} />
-    ));
+              <>{[
+                <Cell key="stars" label="⭐ Stars"><span className="num text-[#fbbf24]">{formatStars(r.stars)}</span></Cell>,
+                <Cell key="spd" label="平均日增"><span className="num font-bold text-emerald-300">{starsPerDay(r).toFixed(1)}/天</span></Cell>,
+                <Cell key="forks" label="Forks"><span className="num text-[#8b98b3]">{formatStars(r.forks)}</span></Cell>,
+              ]}</>
+            );
+          return (
+            <LiveRow key={r.fullName} repo={r} rank={rank} color={color} expandedKey={expandedKey} panelTab={panelTab} onToggle={toggle} columns={cols} />
+          );
+        })}
+      </>
+    );
   };
 
   return (
@@ -163,7 +176,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
       </div>
 
       <p className="text-[11px] text-[#4d5a75]">
-        📡 每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」）；未联网或超限时自动回退本地快照（{seed.length} 个项目）· 🧷 手动添加的项目（add-project）自动并入本分类（{addedInCat.length} 个）。
+        📡 每次打开页面自动从 GitHub 拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」完成后本榜自动重拉）；三榜均保证展示 {LIMIT} 个项目：本分类（快照 {seed.length} 项 + 实时 + 手动添加 {addedInCat.length} 项）优先，不足部分由全局开源池按指标补齐 · 未配置 Token 限流时自动降级，不会挂起。
         每个项目均可「分析」打开完整逆向工程（40 节报告 + 全景图），「产品框图」查看功能实现路径框图，「产品总监视角」查看边界 / 痛点 / 真实案例预测。
       </p>
     </div>
