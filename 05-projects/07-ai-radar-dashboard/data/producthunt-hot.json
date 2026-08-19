@@ -1,0 +1,1043 @@
+{
+  "schemaVersion": 2,
+  "fetchedAt": "2026-08-19T03:39:22.704Z",
+  "source": "NewsNow · Product Hunt 官方 API v2 + 历史档案回填（个人非商业）",
+  "count": 57,
+  "items": [
+    {
+      "slug": "lambdatest",
+      "rank": 45,
+      "title": "Kane CLI",
+      "tagline": "Natural language browser & mobile app tests from terminal",
+      "votes": 399,
+      "url": "https://www.producthunt.com/products/lambdatest?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Kane%20CLI&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.055Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 399
+        }
+      ]
+    },
+    {
+      "slug": "ito-ai-code-review-that-runs-code",
+      "rank": 46,
+      "title": "Ito",
+      "tagline": "AI code review that runs your code",
+      "votes": 389,
+      "url": "https://www.producthunt.com/products/ito-ai-code-review-that-runs-code?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Ito&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.055Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 389
+        }
+      ]
+    },
+    {
+      "slug": "clara-ai-sdr",
+      "rank": 1,
+      "title": "Clara AI SDR",
+      "tagline": "Turn website visitors into qualified pipeline",
+      "votes": 365,
+      "url": "https://www.producthunt.com/products/clara-ai-sdr?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Clara%20AI%20SDR&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 365
+        }
+      ]
+    },
+    {
+      "slug": "nuphos",
+      "rank": 47,
+      "title": "Nuphos",
+      "tagline": "The AI-Native DevOps Workspace.",
+      "votes": 334,
+      "url": "https://www.producthunt.com/products/nuphos?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Nuphos&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.055Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 334
+        }
+      ]
+    },
+    {
+      "slug": "taku-ai",
+      "rank": 2,
+      "title": "Taku AI",
+      "tagline": "Borrow the best AI setups and make them yours.",
+      "votes": 310,
+      "url": "https://www.producthunt.com/products/taku-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Taku%20AI&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 310
+        }
+      ]
+    },
+    {
+      "slug": "scrimba",
+      "rank": 49,
+      "title": "Scrimba Explain",
+      "tagline": "Ask any question, get a video back instantly",
+      "votes": 271,
+      "url": "https://www.producthunt.com/products/scrimba?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "content",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Scrimba%20Explain&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.055Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 271
+        }
+      ]
+    },
+    {
+      "slug": "human-behavior",
+      "rank": 48,
+      "title": "Human Behavior",
+      "tagline": "Product analytics told you what happened. We handle it.",
+      "votes": 258,
+      "url": "https://www.producthunt.com/products/human-behavior?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "intel",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Human%20Behavior&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.055Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 258
+        }
+      ]
+    },
+    {
+      "slug": "superflow-webflow-plugin-for-revisions",
+      "rank": 3,
+      "title": "Superflow AI",
+      "tagline": "AI agents that QA your website before launch",
+      "votes": 242,
+      "url": "https://www.producthunt.com/products/superflow-webflow-plugin-for-revisions?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "growth",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Superflow%20AI&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 242
+        }
+      ]
+    },
+    {
+      "slug": "oasis-6",
+      "rank": 50,
+      "title": "Oasis",
+      "tagline": "Where humans and agents come to work.",
+      "votes": 219,
+      "url": "https://www.producthunt.com/products/oasis-6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Oasis&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.055Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 219
+        }
+      ]
+    },
+    {
+      "slug": "skilldocs",
+      "rank": 51,
+      "title": "Skilldocs",
+      "tagline": "Figma for markdown",
+      "votes": 185,
+      "url": "https://www.producthunt.com/products/skilldocs?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "content",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Skilldocs&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 185
+        }
+      ]
+    },
+    {
+      "slug": "hubble-11",
+      "rank": 4,
+      "title": "Hubble",
+      "tagline": "Retrieve medical records other APIs can't",
+      "votes": 178,
+      "url": "https://www.producthunt.com/products/hubble-11?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Hubble&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 178
+        }
+      ]
+    },
+    {
+      "slug": "caveman",
+      "rank": 52,
+      "title": "Caveman",
+      "tagline": "why use many token when few do trick",
+      "votes": 153,
+      "url": "https://www.producthunt.com/products/caveman?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": {
+        "url": "https://github.com/JuliusBrussee/caveman",
+        "name": "caveman",
+        "stars": 98063,
+        "homepage": "https://caveman.so/"
+      },
+      "githubSearchUrl": "https://github.com/search?q=Caveman&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 153
+        }
+      ]
+    },
+    {
+      "slug": "elevenlabs-mcp-2",
+      "rank": 5,
+      "title": "ElevenLabs MCP in Claude",
+      "tagline": "Create and manage ElevenLabs voice agents in your chat",
+      "votes": 152,
+      "url": "https://www.producthunt.com/products/elevenlabs-mcp-2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=ElevenLabs%20MCP%20in%20Claude&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 152
+        }
+      ]
+    },
+    {
+      "slug": "kitbitz",
+      "rank": 53,
+      "title": "Kitbitz",
+      "tagline": "2K+ free hand-drawn illustrations for your projects, CC0",
+      "votes": 139,
+      "url": "https://www.producthunt.com/products/kitbitz?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "content",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Kitbitz&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 139
+        }
+      ]
+    },
+    {
+      "slug": "mem-2-0",
+      "rank": 56,
+      "title": "Mem Agent",
+      "tagline": "The AI that refuses to let you drop the ball",
+      "votes": 124,
+      "url": "https://www.producthunt.com/products/mem-2-0?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Mem%20Agent&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 124
+        }
+      ]
+    },
+    {
+      "slug": "fluiddocs-html-deck-builder",
+      "rank": 57,
+      "title": "FluidDocs CLI",
+      "tagline": "Publish interactive docs that answer and report back",
+      "votes": 119,
+      "url": "https://www.producthunt.com/products/fluiddocs-html-deck-builder?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=FluidDocs%20CLI&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 119
+        }
+      ]
+    },
+    {
+      "slug": "webbrain",
+      "rank": 54,
+      "title": "WebBrain",
+      "tagline": "The sidebar agent for the rest of us",
+      "votes": 118,
+      "url": "https://www.producthunt.com/products/webbrain?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=WebBrain&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 118
+        }
+      ]
+    },
+    {
+      "slug": "google",
+      "rank": 55,
+      "title": "Google Pixel 11",
+      "tagline": "Your most personal Pixel yet",
+      "votes": 117,
+      "url": "https://www.producthunt.com/products/google?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Google%20Pixel%2011&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.056Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-14T05:43:50.054Z",
+          "votes": 117
+        }
+      ]
+    },
+    {
+      "slug": "shepherd-terminal-designed-for-agent",
+      "rank": 6,
+      "title": "Shepherd Terminal",
+      "tagline": "A persistent terminal for Codex and Claude side by side",
+      "votes": 116,
+      "url": "https://www.producthunt.com/products/shepherd-terminal-designed-for-agent?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Shepherd%20Terminal&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 116
+        }
+      ]
+    },
+    {
+      "slug": "airbuddy-2",
+      "rank": 7,
+      "title": "AirBuddy 3",
+      "tagline": "Easily manage devices and switch them between Macs",
+      "votes": 114,
+      "url": "https://www.producthunt.com/products/airbuddy-2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=AirBuddy%203&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 114
+        }
+      ]
+    },
+    {
+      "slug": "reckon",
+      "rank": 8,
+      "title": "Reckon",
+      "tagline": "The decision journal that helps you calibrate",
+      "votes": 113,
+      "url": "https://www.producthunt.com/products/reckon?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Reckon&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 113
+        }
+      ]
+    },
+    {
+      "slug": "workos",
+      "rank": 10,
+      "title": "Atlas by WorkOS",
+      "tagline": "Your AI coworker in Slack",
+      "votes": 109,
+      "url": "https://www.producthunt.com/products/workos?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Atlas%20by%20WorkOS&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 109
+        }
+      ]
+    },
+    {
+      "slug": "clipwing",
+      "rank": 9,
+      "title": "Clipwing Autopilot",
+      "tagline": "Get your clips without AI slop or hiring hassle",
+      "votes": 109,
+      "url": "https://www.producthunt.com/products/clipwing?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Clipwing%20Autopilot&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 109
+        }
+      ]
+    },
+    {
+      "slug": "finch-6",
+      "rank": 11,
+      "title": "Finch",
+      "tagline": "A single place for your health data and tests",
+      "votes": 106,
+      "url": "https://www.producthunt.com/products/finch-6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "intel",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Finch&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 106
+        }
+      ]
+    },
+    {
+      "slug": "tiny-funnel",
+      "rank": 12,
+      "title": "Tiny Funnel",
+      "tagline": "Funnel analytics you'll actually understand",
+      "votes": 102,
+      "url": "https://www.producthunt.com/products/tiny-funnel?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "intel",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Tiny%20Funnel&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 102
+        }
+      ]
+    },
+    {
+      "slug": "dates-by-agenda-hero",
+      "rank": 14,
+      "title": "Dates by Agenda Hero",
+      "tagline": "Create a plan for anything. Share it with anyone.",
+      "votes": 99,
+      "url": "https://www.producthunt.com/products/dates-by-agenda-hero?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Dates%20by%20Agenda%20Hero&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 99
+        }
+      ]
+    },
+    {
+      "slug": "gauge",
+      "rank": 13,
+      "title": "Gauge",
+      "tagline": "Agent Led Growth: Get written into every customer's codebase",
+      "votes": 99,
+      "url": "https://www.producthunt.com/products/gauge?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Gauge&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 99
+        }
+      ]
+    },
+    {
+      "slug": "deepmark",
+      "rank": 15,
+      "title": "Deepmark",
+      "tagline": "Search your bookmarks by what's inside them, not the title",
+      "votes": 98,
+      "url": "https://www.producthunt.com/products/deepmark?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "intel",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Deepmark&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 98
+        }
+      ]
+    },
+    {
+      "slug": "crew-tower",
+      "rank": 16,
+      "title": "CrewTower",
+      "tagline": "Control your agents from the notch",
+      "votes": 95,
+      "url": "https://www.producthunt.com/products/crew-tower?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=CrewTower&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 95
+        }
+      ]
+    },
+    {
+      "slug": "open-brain",
+      "rank": 17,
+      "title": "Open Index",
+      "tagline": "Build Smarter Agents using Structured Context",
+      "votes": 92,
+      "url": "https://www.producthunt.com/products/open-brain?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Open%20Index&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 92
+        }
+      ]
+    },
+    {
+      "slug": "layerproof-social-content-generation",
+      "rank": 19,
+      "title": "LayerProof Matte 3.0",
+      "tagline": "Grow your social media content: posts, carousels and stories",
+      "votes": 88,
+      "url": "https://www.producthunt.com/products/layerproof-social-content-generation?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "content",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=LayerProof%20Matte%203.0&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 88
+        }
+      ]
+    },
+    {
+      "slug": "monolog-2",
+      "rank": 18,
+      "title": "monolog",
+      "tagline": "Chat to yourself and find anything by what you remember",
+      "votes": 88,
+      "url": "https://www.producthunt.com/products/monolog-2?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=monolog&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 88
+        }
+      ]
+    },
+    {
+      "slug": "meterless-ai",
+      "rank": 20,
+      "title": "Meterless.ai",
+      "tagline": "Run AI locally and own the whole workflow",
+      "votes": 80,
+      "url": "https://www.producthunt.com/products/meterless-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Meterless.ai&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-19T03:39:22.704Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": [
+        {
+          "at": "2026-08-19T03:39:22.704Z",
+          "votes": 80
+        }
+      ]
+    },
+    {
+      "slug": "ai-group-call",
+      "rank": 25,
+      "title": "AI Group Call",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/ai-group-call?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=AI%20Group%20Call&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "assembly-7",
+      "rank": 37,
+      "title": "Assembly Studio",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/assembly-7?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Assembly%20Studio&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "beardrive",
+      "rank": 38,
+      "title": "BearDrive",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/beardrive?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=BearDrive&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "click-6",
+      "rank": 42,
+      "title": "Click",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/click-6?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "coding",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Click&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "dograh",
+      "rank": 33,
+      "title": "Dograh",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/dograh?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Dograh&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "grok",
+      "rank": 35,
+      "title": "Grok Bot",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/grok?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Grok%20Bot&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "gutta",
+      "rank": 27,
+      "title": "Gutta",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/gutta?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Gutta&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "heym",
+      "rank": 31,
+      "title": "Heym",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/heym?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Heym&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "laracopilot",
+      "rank": 39,
+      "title": "LaraCopilot",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/laracopilot?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=LaraCopilot&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "lettertrace",
+      "rank": 34,
+      "title": "Lettertrace",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/lettertrace?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Lettertrace&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "argos",
+      "rank": 43,
+      "title": "Media Sharing",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/argos?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Media%20Sharing&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "oqoqo",
+      "rank": 21,
+      "title": "oqoqo",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/oqoqo?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=oqoqo&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "paritok",
+      "rank": 23,
+      "title": "Paritok",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/paritok?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Paritok&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "portfolio-lab",
+      "rank": 22,
+      "title": "Portfolio Lab",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/portfolio-lab?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Portfolio%20Lab&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "postsnag",
+      "rank": 32,
+      "title": "PostSnag",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/postsnag?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=PostSnag&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "prime-intellect",
+      "rank": 26,
+      "title": "Prime Agent",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/prime-intellect?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "agent-office",
+      "github": {
+        "url": "https://github.com/PrimeIntellect-ai/prime-agent",
+        "name": "prime-agent",
+        "stars": 15593,
+        "homepage": null
+      },
+      "githubSearchUrl": "https://github.com/search?q=Prime%20Agent&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "remix-8",
+      "rank": 28,
+      "title": "Remix",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/remix-8?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Remix&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "rightcard",
+      "rank": 40,
+      "title": "RightCard",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/rightcard?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=RightCard&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "salesman-ai",
+      "rank": 30,
+      "title": "Salesman AI",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/salesman-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "growth",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Salesman%20AI&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "genspark",
+      "rank": 24,
+      "title": "SecondBrain Note by GenSpark",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/genspark?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=SecondBrain%20Note%20by%20GenSpark&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "swipe-9",
+      "rank": 41,
+      "title": "Swipe",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/swipe-9?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Swipe&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "tash",
+      "rank": 44,
+      "title": "tash",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/tash?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=tash&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "unsloth",
+      "rank": 36,
+      "title": "Unsloth Desktop",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/unsloth?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": {
+        "url": "https://github.com/unslothai/unsloth",
+        "name": "unsloth",
+        "stars": 71158,
+        "homepage": "https://unsloth.ai/docs"
+      },
+      "githubSearchUrl": "https://github.com/search?q=Unsloth%20Desktop&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    },
+    {
+      "slug": "vidaya",
+      "rank": 29,
+      "title": "Vidaya",
+      "tagline": "",
+      "votes": 0,
+      "url": "https://www.producthunt.com/products/vidaya?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29",
+      "category": "other",
+      "github": null,
+      "githubSearchUrl": "https://github.com/search?q=Vidaya&type=repositories",
+      "delta": 0,
+      "firstSeenAt": "2026-08-14T05:43:50.054Z",
+      "lastSeenAt": "2026-08-19T03:39:22.704Z",
+      "history": []
+    }
+  ]
+}

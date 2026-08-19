@@ -1,8 +1,11 @@
-export function formatUpdatedAt(iso: string | null | undefined): string {
-  if (!iso) return "尚未同步";
+import type { Locale } from "@/lib/i18n/messages";
+import { interpolate, messages } from "@/lib/i18n/messages";
+
+export function formatUpdatedAt(iso: string | null | undefined, locale: Locale = "zh"): string {
+  if (!iso) return locale === "en" ? "Not synced" : "尚未同步";
   const t = Date.parse(iso);
-  if (Number.isNaN(t)) return "尚未同步";
-  return new Intl.DateTimeFormat("zh-CN", {
+  if (Number.isNaN(t)) return locale === "en" ? "Not synced" : "尚未同步";
+  return new Intl.DateTimeFormat(locale === "en" ? "en-US" : "zh-CN", {
     timeZone: "Asia/Shanghai",
     month: "numeric",
     day: "numeric",
@@ -33,17 +36,18 @@ export function hoursAgo(iso: string, now = Date.now()): number {
 }
 
 /** 相对时间：8小时前 / 1天前 / 12分钟前 */
-export function formatRelativeZh(iso: string, now = Date.now()): string {
+export function formatRelativeZh(iso: string, now = Date.now(), locale: Locale = "zh"): string {
   const t = Date.parse(iso);
-  if (Number.isNaN(t)) return "刚刚";
+  const table = messages[locale];
+  if (Number.isNaN(t)) return table["time.justNow"];
   const hours = hoursAgo(iso, now);
   if (hours < 1) {
     const mins = Math.max(1, Math.round(hours * 60));
-    return `${mins}分钟前`;
+    return interpolate(table["time.minutes"], { n: mins });
   }
-  if (hours < 24) return `${Math.round(hours)}小时前`;
+  if (hours < 24) return interpolate(table["time.hours"], { n: Math.round(hours) });
   const days = Math.max(1, Math.round(hours / 24));
-  return `${days}天前`;
+  return interpolate(table["time.days"], { n: days });
 }
 
 const CN_DIGITS = ["〇", "一", "二", "三", "四", "五", "六", "七", "八", "九"];

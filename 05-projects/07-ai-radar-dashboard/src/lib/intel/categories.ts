@@ -52,9 +52,21 @@ export function mapToFeedCategory(raw: string | null | undefined, title = "", su
 
 export function isAiSelectedBlob(title: string, category: string, summary = ""): boolean {
   if (isFeedCategory(category) || category === "ai" || category === "tech") return true;
-  return /AI|Agent|大模型|LLM|GPT|Claude|Grok|Gemini|OpenAI|Anthropic|NVIDIA|算力|机器人|Sora|RAG/i.test(
-    `${title} ${summary}`,
+  return isAiRelatedText(`${title} ${summary}`);
+}
+
+/** AI / 模型 / 开发相关：英文避免匹配 said 里的 AI 片段。 */
+export function isAiRelatedText(text: string): boolean {
+  const blob = (text || "").trim();
+  if (!blob) return false;
+  return /人工智能|生成式|大模型|大语言模型|智能体|机器学习|深度学习|神经网络|计算机视觉|自然语言处理|多模态|AIGC|ChatGPT|Claude|Gemini|Grok|DeepSeek|Qwen|Llama|Mistral|Nemotron|OpenAI|Anthropic|xAI|Hugging\s?Face|Midjourney|Stable Diffusion|Sora|Runway|Cursor|Copilot|Codex|Windsurf|Devin|Manus|Kimi|通义|文心|豆包|即梦|可灵|\bLLMs?\b|\bGPTs?\b|GPT-?\d|(?:^|[^A-Za-z])AI(?:[^A-Za-z]|$)|Agentic|\bAgents?\b|\bRAG\b|\bMCP\b|微调|推理引擎|模型权重|模型训练|模型开发|开源模型|闭源模型|foundation model|transformer|diffusion|CUDA|算力|英伟达|NVIDIA|数字人|AI编程|AI视频|AI绘画|AI写作|AI搜索|AI助手|coding agent|LLMOps|MLOps|vLLM|Ollama|ComfyUI|LangChain|LlamaIndex/i.test(
+    blob,
   );
+}
+
+/** Stricter AI filter for mixed consumer hot lists (Weibo / Douyin / etc.). */
+export function isAiHotTitle(title: string, extra = ""): boolean {
+  return isAiRelatedText(`${title} ${extra}`);
 }
 
 export function beijingTime(iso: string | null | undefined): string {

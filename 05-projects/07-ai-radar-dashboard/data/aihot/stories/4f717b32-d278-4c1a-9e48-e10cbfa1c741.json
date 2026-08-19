@@ -1,0 +1,247 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:20.954Z",
+  "story": {
+    "publicId": "4f717b32-d278-4c1a-9e48-e10cbfa1c741",
+    "title": "DeepSeek 发布 DeepSeek V4 Pro",
+    "status": "active",
+    "sourceCount": 11,
+    "reportCount": 14,
+    "firstReportAt": "2026-08-12T15:48:21.256Z",
+    "latestAt": "2026-08-13T16:52:19.501Z",
+    "latest": "官方宣布 V4-Pro 与 V4-Flash 支持三档推理强度，API 采用峰谷定价，新价格 8 月 17 日生效。",
+    "digest": "DeepSeek 于 2026 年 8 月 12 日发布 DeepSeek V4 Pro 正式版（模型版本号 DeepSeek-V4-Pro-0813），同步在 APP、网页端和 API 上线，用户可在 APP 或网页端选择“专家模式”使用。该版本增强 Agent 能力，API 原生支持 OpenAI Responses API 格式并适配 Codex。定价为百万 tokens 输入（缓存命中）0.025 元、输入（缓存未命中）3 元、输出 6 元。\n在基准测试中，DeepSeek V4 Pro 表现突出：HLE (wo/w tools) 达 42.7/60.0，Terminal Bench 2.1 为 87.9；在 Code Arena WebDev AutoEval 获 1607 分，仅落后 GPT-5.6 Sol xHigh 15 分，但混合 token 价格约为其 1/31。SemiAnalysis 称其在智能体任务上大幅超越 Nemotron3 Ultra，且 DeepSeek V4 Flash 0731 同样超越 Nemotron3 Ultra，活跃参数少 4.2 倍，总参数少近 2 倍。\n此前 7 月 31 日 DeepSeek-V4-Flash 正式版 API 上线公测，官方曾称 V4-Pro 正式版将尽快发布。8 月 12 日 API 文档新增 DeepSeek-V4-Pro-0813 模型，支持非思考与思考模式，但截至发稿官方尚未发布更新日志。\n8 月 13 日官方宣布 V4-Pro 与 V4-Flash 支持灵活推理强度（低/高/最大三档），API 采用“峰谷定价”，闲时价格为高峰一半，新价格于 2026 年 8 月 17 日生效。此外，The Decoder 报道称 V4-Pro-0813 在 Terminal Bench 2.1 上得分从 72.1 升至 87.9，DeepSWE 从 12.8 升至 62.7，但整体排名仍落后于 Claude Opus 5。",
+    "digestUpdatedAt": "2026-08-13T17:09:45.612Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/4f717b32-d278-4c1a-9e48-e10cbfa1c741"
+    },
+    "reports": [
+      {
+        "id": "cmsrrahzs02igro0n8s8o8j35",
+        "title": "DeepSeek 发布 V4-Pro 升级版，开源智能体软件并上调 API 价格",
+        "summary": "DeepSeek 将旗舰模型 V4-Pro 移出测试阶段，新构建版本 V4-Pro-0813 在 Terminal Bench 2.1 上得分从 72.1 升至 87.9，DeepSWE 从 12.8 升至 62.7，但整体排名仍落后于 Claude Opus 5。",
+        "source": {
+          "name": "The Decoder：AI News（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T16:52:19.501Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrrahzs02igro0n8s8o8j35",
+          "original": "https://the-decoder.com/deepseek-launches-an-improved-v4-pro-model-raises-api-prices-and-makes-its-agent-software-open-source"
+        }
+      },
+      {
+        "id": "cmsrjk9ru02skro46k7gb996g",
+        "title": "DeepSeek-V4-Pro 发布，Agent 成本打穿地板",
+        "summary": "DeepSeek 正式发布 V4-Pro 0813，Agent 基准全面追平第一梯队：Terminal Bench 87.9、Cybergym 83.3，DeepSWE 从 12.8 跃升至 62.7。",
+        "source": {
+          "name": "X：阿易 AI Notes (@AYi_AInotes)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T13:15:59.064Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrjk9ru02skro46k7gb996g",
+          "original": "https://x.com/AYi_AInotes/status/2087882208044253406"
+        }
+      },
+      {
+        "id": "cmsrioemj13xiroz2vxf31jz8",
+        "title": "DeepSeek-V4-Pro 发布，主打 Agent 升级",
+        "summary": "DeepSeek 发布 DeepSeek-V4-Pro，已在 DeepSeek Chat“Expert Mode”及 API 上线。该模型带来重大 Agent 升级，支持灵活推理强度（低/高/最大），并原生支持 OpenAI Responses API，针对 Codex 优化且可一键配置。模型名称保持不变。",
+        "source": {
+          "name": "X：Testing Catalog (@testingcatalog)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T12:51:12.912Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrioemj13xiroz2vxf31jz8",
+          "original": "https://x.com/testingcatalog/status/2087880384381952150"
+        }
+      },
+      {
+        "id": "cmsrhlg9c12rrroz2dc5y7u82",
+        "title": "DeepSeek-V4-Pro 正式发布，支持可调推理强度",
+        "summary": "DeepSeek-V4-Pro 正式发布，支持低/高/最大三档可调推理强度，V4-Flash 同样获得该控制。模型新增原生 OpenAI Responses API 支持及 Codex 一键配置，现有 API 模型名称保持不变。V4-Pro 已通过 API 及 App/Web 的 Expert Mode 上线，官方称智能体升级带来显著生产收益，但未公布独立基准数据。",
+        "source": {
+          "name": "X：Kim (@kimmonismus)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T12:20:55.050Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrhlg9c12rrroz2dc5y7u82",
+          "original": "https://x.com/kimmonismus/status/2087871970943606797"
+        }
+      },
+      {
+        "id": "cmsrhf5li12n9roz2dgla5m4r",
+        "title": "DeepSeek-V4-Pro 正式版上线：原生支持 OpenAI Responses API，针对性适配 Codex",
+        "summary": "DeepSeek 宣布 V4-Pro 正式版在 App、网页端和 API 同步上线，用户可选择“专家模式”使用。正式版增强 Agent 能力，API 原生支持 OpenAI Responses API 格式并适配 Codex，思考模式支持 low/high/max 三档强度。API 采用“峰谷定价”，闲时价格为高峰一半，新价格于 2026 年 8 月 17 日生效。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T12:15:58.420Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrhf5li12n9roz2dgla5m4r",
+          "original": "https://www.ithome.com/0/989/423.htm"
+        }
+      },
+      {
+        "id": "cmsrgiy2x0yz2roz2sguvwrta",
+        "title": "DeepSeek 发布 V4-Pro 与 V4-Flash 升级",
+        "summary": "我们今天正式发布 DeepSeek-V4-Pro！🚀\n\n🔷 重大 Agent 升级，带来强劲的生产环境性能提升！🔷 V4-Pro 与 V4-Flash 支持灵活推理强度：简单任务用低强度，日常 Agent 工作流用高强度，复杂任务用最高强度。🔷 原生支持 OpenAI Responses API，针对 Codex 优化，一键即可完成配置。\n\nV4 Pro 现已上线 App 和网页端，可通过“专家模式”体验。V4 Pro 也已通过 API 提供。模型名称保持不变——具体配置请参阅 API 文档。",
+        "source": {
+          "name": "X：DeepSeek (@deepseek_ai)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T11:50:59.095Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrgiy2x0yz2roz2sguvwrta",
+          "original": "https://x.com/deepseek_ai/status/2087864585504305397"
+        }
+      },
+      {
+        "id": "cmsrfgdsf0xqcroz2g0ihrtoz",
+        "title": "DeepSeek-V4-Pro 正式版上线",
+        "summary": "DeepSeek 发布 V4 Pro 正式版，已同步在 APP、网页端和 API 更新上线，用户可在 APP 或网页端选择“专家模式”使用。正式版增强 Agent 能力，API 原生支持 OpenAI Responses API 格式并适配 Codex。",
+        "source": {
+          "name": "公众号：DeepSeek（深度求索）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T11:20:59.825Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrfgdsf0xqcroz2g0ihrtoz",
+          "original": "https://mp.weixin.qq.com/s?__biz=Mzk0OTYwNzc3NQ%3D%3D&mid=2247485770&idx=1&sn=dab0be341cb46a410ec40a062a5cb895"
+        }
+      },
+      {
+        "id": "cmsrfaw5c0xo2roz2s8b4p2sv",
+        "title": "DeepSeek-V4-Pro 正式版上线，Agent 能力大幅增强",
+        "summary": "DeepSeek-V4-Pro 正式版已在 APP、网页端和 API 同步上线，模型名设为 deepseek-v4-pro 即可使用。其 Agent 能力显著提升，HLE (wo/w tools) 达 42.7/60.0，Terminal Bench 2.1 为 87.9。",
+        "source": {
+          "name": "DeepSeek：API 更新日志",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T11:16:42.199Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrfaw5c0xo2roz2s8b4p2sv",
+          "original": "https://api-docs.deepseek.com/zh-cn/updates#%E6%97%B6%E9%97%B4-2026-08-13"
+        }
+      },
+      {
+        "id": "cmsr90wgl0ps0roz2m49tmhah",
+        "title": "DeepSeek-V4-Pro 以低价逼近 GPT-5.6",
+        "summary": "DeepSeek-V4-Pro (Max) 在 Code Arena WebDev AutoEval 获 1607 分，仅落后 GPT-5.6 Sol xHigh 15 分，但混合 token 价格约为其 1/31。该开源权重模型定价 $0.435/$0.87 每百万 token，超越 Opus-4.8 与 GLM-5.2 等高价竞品，位列总榜约第 8。",
+        "source": {
+          "name": "X：Rohan Paul (@rohanpaul_ai)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T08:20:59.858Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsr90wgl0ps0roz2m49tmhah",
+          "original": "https://x.com/rohanpaul_ai/status/2087813049537401235"
+        }
+      },
+      {
+        "id": "cmsqg31ja01z1roxvsa8gxifl",
+        "title": "DeepSeek v4 Pro 1.5T 发布，大幅超越 Nemotron3 Ultra",
+        "summary": "祝贺 @deepseek_ai 发布 DeepSeekv4 Pro 0813 1.5T🔥 它在智能体任务上大幅超越 Nemotron3 Ultra。\n\n此外，DeepSeekv4 Flash 0731 同样大幅超越 Nemotron3 Ultra，而活跃参数少 4.2 倍，总参数也少近 2 倍！\n\nNemotron 团队有很多优秀的人才，但根本上，委员会式的模型前沿开发是行不通的。👇️ 1/3🧵",
+        "source": {
+          "name": "X：SemiAnalysis (@SemiAnalysis_)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T18:50:50.867Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqg31ja01z1roxvsa8gxifl",
+          "original": "https://x.com/SemiAnalysis_/status/2087608173729370162"
+        }
+      },
+      {
+        "id": "cmsqamziy0184roucgwxnsmy8",
+        "title": "DeepSeek V4 Pro 发布，基准对比预览版",
+        "summary": "最新消息：DeepSeek V4 Pro 刚刚发布。快速一览与 V4 预览版对比的最新基准测试结果。",
+        "source": {
+          "name": "X：X.PIN (@thexpin)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:18:23.479Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqamziy0184roucgwxnsmy8",
+          "original": "https://x.com/thexpin/status/2087566901715288120"
+        }
+      },
+      {
+        "id": "cmsqagyyz00yxrouc5p7uk05u",
+        "title": "DeepSeek 官网 API 文档新增 DeepSeek-V4-Pro-0813 模型",
+        "summary": "DeepSeek 官网 API 文档“模型 & 价格”页面新增 DeepSeek-V4-Pro-0813 模型，支持非思考与思考模式。截至发稿，官方尚未发布该模型的更新日志。此前 7 月 31 日 DeepSeek-V4-Flash 正式版 API 上线公测，官方曾称 V4-Pro 正式版将尽快发布。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:13:41.612Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqagyyz00yxrouc5p7uk05u",
+          "original": "https://www.ithome.com/0/988/998.htm"
+        }
+      },
+      {
+        "id": "cmsqagyyz00yvrouc4mbpuuop",
+        "title": "DeepSeek V4 Pro 正式版 API 更新上线，多项测试性能接近 Fable 5",
+        "summary": "DeepSeek V4 Pro 正式版（DeepSeek-V4-Pro-0813）今日晚间发布并更新至 API，调用模型名不变。新版本增强 Agent 能力，支持 Responses API 和 Codex 接入，多项测试性能接近 Fable 5，较预览版大幅提升。定价为百万 tokens 输入（缓存命中）0.025 元、输入（缓存未命中）3 元、输出 6 元。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:13:41.612Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqagyyz00yvrouc4mbpuuop",
+          "original": "https://www.ithome.com/0/989/000.htm"
+        }
+      },
+      {
+        "id": "cmsq9kcjv023jrondj9su3tvy",
+        "title": "DeepSeek V4 Pro 发布，基准对比预览版",
+        "summary": "最新消息：DeepSeek V4 Pro 刚刚发布。快速浏览一下与 V4 预览版对比的最新基准测试结果。",
+        "source": {
+          "name": "X：X.PIN (@thexpin)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T15:48:21.256Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsq9kcjv023jrondj9su3tvy",
+          "original": "https://x.com/thexpin/status/2087566718206083464"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "87bb3819-cb05-45fa-85d0-9588adf7dffd",
+        "title": "DeepSeek 发布 DeepSeek v4 Pro 0813 1.5T",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/87bb3819-cb05-45fa-85d0-9588adf7dffd",
+          "api": "https://aihot.virxact.com/api/v1/stories/87bb3819-cb05-45fa-85d0-9588adf7dffd"
+        }
+      },
+      {
+        "publicId": "9c04eed8-1641-442d-91f2-ce563fcfd4f8",
+        "title": "DeepSeek 升级 DeepSeek-V4-Flash 的 Agent 能力",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/9c04eed8-1641-442d-91f2-ce563fcfd4f8",
+          "api": "https://aihot.virxact.com/api/v1/stories/9c04eed8-1641-442d-91f2-ce563fcfd4f8"
+        }
+      },
+      {
+        "publicId": "da7a0855-584c-4fcb-a86e-bb1010102297",
+        "title": "DeepSeek 发布 DeepSeek V4 Pro 与 V4 预览版的基准对比",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/da7a0855-584c-4fcb-a86e-bb1010102297",
+          "api": "https://aihot.virxact.com/api/v1/stories/da7a0855-584c-4fcb-a86e-bb1010102297"
+        }
+      }
+    ],
+    "related": []
+  }
+}

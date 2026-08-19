@@ -1,0 +1,61 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-19T03:26:22.059Z",
+  "story": {
+    "publicId": "4b339413-0f68-410d-8a56-720f603e1eaf",
+    "title": "Modular 开源 Mojo 语言",
+    "status": "active",
+    "sourceCount": 2,
+    "reportCount": 2,
+    "firstReportAt": "2026-08-18T21:54:13.934Z",
+    "latestAt": "2026-08-18T22:01:40.332Z",
+    "latest": "Mojo 正式开源，编译器与工具链采用 Apache 2 许可。",
+    "digest": "Mojo 语言于 2026 年 8 月 18 日正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。此前 Mojo 于上周达成 1.0 版本，源码稳定。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。\nMojo 自 2023 年 5 月起承诺开源，此次兑现承诺。该语言已不再追求成为 Python 的超集，而是定位为独立语言，旨在用类 Python 语法简化 GPU 编程，即便与现有代码并非 100% 兼容。",
+    "digestUpdatedAt": "2026-08-18T22:25:15.147Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/4b339413-0f68-410d-8a56-720f603e1eaf"
+    },
+    "reports": [
+      {
+        "id": "cmsz7jjz105v9rodp7tpwkis9",
+        "title": "Mojo 编程语言正式开源，编译器与工具链采用 Apache 2 许可",
+        "summary": "Mojo 编程语言兑现自 2023 年 5 月以来的承诺，于上周发布 1.0 版本后，本周正式以 Apache 2 许可开源其编译器与工具链。Mojo 已不再追求成为 Python 的超集，而是定位为独立语言，旨在用类 Python 语法尽可能简化 GPU 编程，即便与现有代码并非 100% 兼容。",
+        "source": {
+          "name": "Simon Willison 博客",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-18T22:01:40.332Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsz7jjz105v9rodp7tpwkis9",
+          "original": "https://simonwillison.net/2026/Aug/18/mojo-is-now-open-source"
+        }
+      },
+      {
+        "id": "cmsz79zol04j8rodpvun6zobl",
+        "title": "Mojo 语言正式开源，编译器与工具链全面开放",
+        "summary": "Mojo🔥 语言现已正式开源，采用 Apache 2.0 许可证（含 LLVM 例外），编译器、工具链及全部源码已发布至 modular GitHub 仓库。Mojo 上周刚达成 1.0 版本（源码稳定），此次开源涵盖整个编译器与工具链。目前暂不接受编译器相关贡献，计划年底前开放，标准库自 2024 年起已接受社区贡献。",
+        "source": {
+          "name": "Hacker News 热门（buzzing.cc 中文翻译）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-18T21:54:13.934Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsz79zol04j8rodpvun6zobl",
+          "original": "https://www.modular.com/blog/mojo-open-source"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "5401248c-dccd-42ad-83fb-5d896ff0a803",
+        "title": "Modular 发布 Mojo 1.0",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/5401248c-dccd-42ad-83fb-5d896ff0a803",
+          "api": "https://aihot.virxact.com/api/v1/stories/5401248c-dccd-42ad-83fb-5d896ff0a803"
+        }
+      }
+    ],
+    "related": []
+  }
+}

@@ -37,6 +37,25 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 | `/items/[id]` | 精选阅读页 |
 | `/events/[id]` | 事件详情 |
 
+## 站点体验修复（2026-08-19）
+
+- **未知路径 → 精选**：新增 `src/app/not-found.tsx`，任何未匹配路径（含被误拼的中文路径）自动 `307` 跳回 `/` 精选界面，不再出现 “This page could not be found”。
+- **AI 机会报告实时更新**：
+  - `scripts/sync-builder-pulse.ts` 从今天向前最多找 10 天，自动取最近一期已发布的 BuilderPulse 日报（上游缺更早日期时不再降级到 seed）；
+  - `scripts/generate-opportunity-report.ts` 以简报实际日期为准生成报告；
+  - `/opportunities` 页新增「实时更新」按钮（`POST /api/refresh?mode=opp` → 自动重新拉取最新一期并归档）。
+
+### AI 机会报告 · 全平台实时联动
+
+- **BuilderPulse 当天有日报**：对齐其方法生成（builderpulse-aligned）。
+- **BuilderPulse 未发布当天**（如上游缺失 8.15+）：自动切到 **实时生成模式（live）**，由智衡全平台实时数据联动合成：
+  - AI 热点榜（AIHOT）→ Top 信号与趋势机会
+  - GitHub 热点（增速最快仓库）→ 开源缺口机会 + 今日建议（做一款「X」式产品）
+  - Product Hunt 热点 → 新品发布（launches）机会
+  - 国内外全域热点（NewsNow）→ 信号补充
+- 页面展示「实时生成 · 全平台实时联动」标签，并提供「实时更新」按钮（`POST /api/refresh?mode=opp`）。
+- 数据全部实时刷新：`npm run aihot:sync && npm run hot:sync && npm run github:sync && npm run github:hot && npm run ph:sync && npm run opp:sync`
+
 ## 完整项目文档地图
 
 ### 0) 立项与需求
@@ -124,8 +143,20 @@ npm run dev            # http://localhost:3010  → 看 /pulse
 | Agent 匿名 v1 | `/agent` · `/api/v1/items` |
 | leader 目标七问 | `/goal` 生成可复制任务书 |
 | 公开精选同步 | `npm run aihot:sync` → `data/aihot/` |
+| 事件故事线（图 2 模式：搜索逻辑 + 热度计算 + 推荐理由 + 报道时间线） | `/story/[publicId]`（热点榜点击直达，不跳外部链接） |
 
 AIHOT 数据仅用于个人非商业 / 面试演示，遵守 [公开使用规则](https://aihot.virxact.com/terms)，不是公开镜像。
+
+### 事件故事线（本站自建，不再外跳）
+
+点击 `/ranking` 热点榜任意条目，进入本站 **`/story/[publicId]`** 故事线页（对齐 AIHOT story 页的信息架构，但搜索与热度为本项目本地实现）：
+
+- **搜索逻辑**：从标题抽取实体关键词（模型名 / 产品名），标注检索范围（X / 公众号 / 博客 RSS / 官方渠道 / 媒体）、匹配策略与完整信源清单；
+- **热度计算**：`热度 = (信源数 × 10 + 信号数 × 4) × 2^(−小时/24)`，24 小时半衰期衰减，渲染本地 24h 热度曲线（峰值 / 当前值 / 趋势）；
+- **推荐理由**：总述（优先复用 AIHOT 精选推荐理由，否则本地生成）+ 逐篇报道理由；
+- **报道故事线**：时间倒序时间线（官方一手标记 + 原文外链）+ 相关故事线互链。
+
+数据经 `npm run aihot:sync` 缓存至 `data/aihot/stories/{publicId}.json`；`GET /api/v1/hot-topics` 的 `links.story` 已指向本站故事线页，`links.original` 保留第三方原文、`links.aihot` 仅作署名。
 
 ## BuilderPulse 能力映射
 
@@ -153,6 +184,19 @@ AIHOT 数据仅用于个人非商业 / 面试演示，遵守 [公开使用规则
 | AI 相关速览 | 标题关键词标签（辅助发现，不改评分） |
 | HTML 报告 | 外链本机 `8080`（可选） |
 | 本地安装 | `08-resources/TrendRadar/`（gitignore）+ [`TrendRadar-USAGE.md`](../../08-resources/TrendRadar-USAGE.md) |
+
+## Product Hunt 热点
+
+- 位置：集成在 `/github-hot` 页内「Product Hunt 热点」区块（无独立页面）
+- 数据：`npm run ph:sync` → `data/producthunt-hot.json`（NewsNow 转推 PH 官方 API v2 + 历史档案回填，个人非商业；**44 款**，近 14 天滚动）
+- 能力：**按场景分类**展示 Product Hunt 热门 App，每类弹窗含**「收藏最多」（票数降序）与「增速最快」（票数增量降序）两个 Tab**，与 GitHub 热点同一套展示逻辑；每款 App 附**简介、票数、PH 下载链接、GitHub 源码地址**（爬取库匹配同名开源仓库直接给源码，未匹配给 GitHub 全库搜索）
+- 弹窗统一为**可拖动 / 可最小化 / 可关闭**（`DraggableModal`），GitHub 热点、收藏、搜索、Product Hunt 共用
+
+## GitHub 搜索推荐（中英双语）
+
+- `/github-hot` 与 `/github` 顶部「搜索推荐」：对爬取库（收藏 + 热点，去重后约 220 个项目）按关键字检索
+- **中英文自动互译**：输入中文自动翻译成英文、输入英文自动翻译成中文，同时命中中英文项目（走本站 `/api/v1/translate`）
+- 推荐弹窗两个 Tab：**收藏最多**（stars 降序）/ **增长最快**（starsDelta 降序），展示场景分类标签 + GitHub / 产品站链接 + 「GitHub 全库搜索」外链
 
 ## 文档
 

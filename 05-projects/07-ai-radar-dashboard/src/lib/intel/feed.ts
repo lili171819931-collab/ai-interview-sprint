@@ -2,6 +2,8 @@ import { aihotHotToRank, aihotItemToFeed, getAihotDailySnapshot, getAihotHotSnap
 import { enrichHotRank } from "@/lib/intel/hot-rank";
 import type { FeedItem, HotRankItem } from "@/lib/intel/aihot-types";
 import {
+  isAiHotTitle,
+  isAiRelatedText,
   isAiSelectedBlob,
   isFeedCategory,
   mapToFeedCategory,
@@ -13,8 +15,11 @@ import {
   type FeedWindow,
 } from "@/lib/intel/categories";
 import { getEventsView, getTopEvents } from "@/lib/intel/events-data";
+import { getGlobalHotTopicsView } from "@/lib/global-hot-data";
+import { mergeRegionalHotTopics, type MergedHotTopic } from "@/lib/global-hot-merge";
 import { getItemsSnapshot } from "@/lib/intel/items-data";
 import { buildRecommendReason, normalizeScore } from "@/lib/intel/recommend";
+import { getTwitterLiveSnapshot, twitterToFeed } from "@/lib/intel/twitter-data";
 import type { IntelEvent, IntelItem } from "@/lib/intel/types";
 
 export type FeedQuery = {
@@ -30,7 +35,7 @@ export type FeedResult = {
   items: FeedItem[];
   count: number;
   generatedAt: string;
-  sources: { aihot: boolean; intel: boolean; events: boolean };
+  sources: { aihot: boolean; intel: boolean; events: boolean; twitter: boolean; hot: boolean };
 };
 
 function eventToFeed(e: IntelEvent, generatedAt: string): FeedItem {
@@ -106,6 +111,27 @@ function intelToFeed(it: IntelItem, generatedAt: string): FeedItem {
   };
 }
 
+function hotToFeed(it: MergedHotTopic, generatedAt: string, region: "国内" | "海外"): FeedItem {
+  const summary = `${it.sourceLabel} · 热度 ${it.heat}`;
+  const category = mapToFeedCategory("industry", it.title, summary);
+  const publishedAt = toIsoOr(it.latestAt, generatedAt);
+  return {
+    id: `hot-${region}-${it.id}`,
+    title: it.title,
+    summary,
+    sourceName: `${region} · ${it.sourceLabel}`,
+    originalUrl: it.href,
+    localHref: it.href,
+    publishedAt,
+    discoveredAt: publishedAt,
+    category,
+    selected: isAiSelectedBlob(it.title, "", summary),
+    origin: "hot",
+    score: Math.min(100, Math.max(1, it.heat)),
+    recommendReason: `${region}热点 · ${Math.max(1, it.platforms.length)} 个平台正在讨论`,
+  };
+}
+
 function applyFilters(items: FeedItem[], query: FeedQuery, generatedAt: string): FeedItem[] {
   const start = windowStartMs(query.window);
   const q = query.q.trim().toLowerCase();
@@ -113,6 +139,7 @@ function applyFilters(items: FeedItem[], query: FeedQuery, generatedAt: string):
     const axis = timelineMs(it.publishedAt, it.discoveredAt, generatedAt);
     if (axis < start) return false;
     if (query.category && it.category !== query.category) return false;
+    if (query.mode === "all" && !isAiRelatedText(`${it.title} ${it.summary} ${it.sourceName}`)) return false;
     if (q) {
       const blob = `${it.title} ${it.summary} ${it.sourceName}`.toLowerCase();
       if (!blob.includes(q)) return false;
@@ -149,7 +176,7 @@ export function parseFeedQuery(sp: {
     window,
     category,
     q: (sp.q || "").trim().slice(0, 200),
-    limit: Number.isFinite(limitRaw) ? Math.min(100, Math.max(1, limitRaw)) : undefined,
+    limit: Number.isFinite(limitRaw) ? Math.min(150, Math.max(1, limitRaw)) : undefined,
   };
 }
 
@@ -157,12 +184,25 @@ export function queryFeed(query: FeedQuery): FeedResult {
   const aihotSnap = getAihotItemsSnapshot();
   const intelSnap = getItemsSnapshot();
   const eventsView = getEventsView();
+  const twitterSnap = getTwitterLiveSnapshot();
+  const hotView = getGlobalHotTopicsView();
   const generatedAt =
-    aihotSnap?.fetchedAt || intelSnap?.generatedAt || eventsView.snapshot.generatedAt || new Date().toISOString();
+    twitterSnap?.fetchedAt ||
+    aihotSnap?.fetchedAt ||
+    intelSnap?.generatedAt ||
+    eventsView.snapshot.generatedAt ||
+    hotView.snapshot.generatedAt ||
+    new Date().toISOString();
 
   const aihotItems = (aihotSnap?.items || []).map(aihotItemToFeed);
   const eventItems = eventsView.snapshot.events.map((e) => eventToFeed(e, generatedAt));
   const intelItems = (intelSnap?.items || []).map((it) => intelToFeed(it, generatedAt));
+  const twitterItems = (twitterSnap?.items || []).slice(0, 80).map(twitterToFeed);
+  const hotItems = (["国内", "海外"] as const).flatMap((region) =>
+    mergeRegionalHotTopics(hotView.snapshot.platforms, region, { limit: 40 })
+      .filter((it) => isAiHotTitle(it.title, it.sourceLabel))
+      .map((it) => hotToFeed(it, generatedAt, region)),
+  );
 
   let pool: FeedItem[];
   if (query.mode === "selected") {
@@ -170,13 +210,13 @@ export function queryFeed(query: FeedQuery): FeedResult {
     const fallbackEvents = eventItems.filter((it) => it.selected && it.summary.length >= 8);
     pool = curated.length ? curated : fallbackEvents;
   } else {
-    pool = [...aihotItems, ...eventItems, ...intelItems];
+    pool = [...twitterItems, ...aihotItems, ...eventItems, ...intelItems, ...hotItems];
   }
 
   const filtered = applyFilters(dedupeFeed(pool), query, generatedAt).sort(
     (a, b) => timelineMs(b.publishedAt, b.discoveredAt, generatedAt) - timelineMs(a.publishedAt, a.discoveredAt, generatedAt),
   );
-  const limit = query.limit ?? (query.mode === "selected" ? 40 : 60);
+  const limit = query.limit ?? (query.mode === "selected" ? 40 : 120);
   const items = filtered.slice(0, limit);
 
   return {
@@ -188,6 +228,8 @@ export function queryFeed(query: FeedQuery): FeedResult {
       aihot: Boolean(aihotSnap?.items.length),
       intel: Boolean(intelSnap?.items.length),
       events: eventsView.fromFile,
+      twitter: Boolean(twitterSnap?.items.length),
+      hot: hotItems.length > 0,
     },
   };
 }

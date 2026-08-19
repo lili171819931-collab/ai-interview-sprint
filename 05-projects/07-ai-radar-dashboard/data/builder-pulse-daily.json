@@ -1,136 +1,136 @@
 {
-  "generatedAt": "2026-08-13T11:00:12.505Z",
-  "reportDate": "2026-08-13",
+  "generatedAt": "2026-08-19T03:44:19.288Z",
+  "reportDate": "2026-08-14",
   "timezone": "Asia/Shanghai",
   "source": "builderpulse-remote",
-  "sourceUrl": "https://raw.githubusercontent.com/BuilderPulse/BuilderPulse/main/zh/2026/2026-08-13.md",
+  "sourceUrl": "https://raw.githubusercontent.com/BuilderPulse/BuilderPulse/main/zh/2026/2026-08-14.md",
   "attribution": "内容解析自 BuilderPulse 公开中文日报（CC BY-NC 4.0，非商业用途）。原作者：Liu Xiaopai / BuilderPulse。",
-  "editorNote": "今天最大的两场讨论，都在争\"谁能搜索你的数据\"。一位犯罪学家主张，车牌识别数据库的检索应当先取得搜查令（555 票、332 条讨论）；同一天，伦敦警方把实时人脸识别试点扩大到更多地铁站（377 票、504 条讨论）。争论的重心已经从\"采集数据\"移到了\"检索数据\"——而规则明显落后于扫描仪。 现状每天都在制造什么痛苦？ 车牌识别器记录你开过的每一辆车，而没有任何机制阻止警员翻查数年历史——争论的不再是摄像头本身，而是摄像头背后的数据库。",
-  "plainBrief": "过去 24 小时：最响的新争论是\"车牌检索要不要搜查令\"和伦敦扩大人脸扫描；ngrok 认为\"压缩\"才是理解模型行为的更好心智模型；Google 为智能体时代的 Go 辩护；一位备受尊重的 solo 开发者写 Linux 打包之痛的文章，成了今天被转发最多的开发者抱怨。",
+  "editorNote": "行业正在从「AI 能造什么」转向「谁能证明 AI 造了什么」。公开讨论里反复出现「真实性回执 / 审计」需求，却缺少可交付的小工具。",
+  "plainBrief": "一句话概括今天： Google 发布了一个又快又便宜的模型；DeepSeek 开放了 agent 执行外壳；\"agent 记忆\"搜索量突然 +1,900%——本周的瓶颈是记忆，不是模型智商。",
   "buildIdea": {
-    "title": "做一个一份配置生成四种安装包并逐一冒烟测试的 Linux 打包流水线",
-    "whyNow": "Linux 打包难题今天登上 Lobsters 热榜，53 条讨论却无人做出成品",
-    "timeboxTitle": "ShipLinux",
-    "timeboxDetail": "一套\"一个配置\"打包流水线：为你的桌面应用生成 .deb、.rpm、AppImage 和 Flatpak 四种安装包，并在干净容器里逐一冒烟测试，让 Linux 用户第一次安装就成功，而不是被缺依赖的报错弹回来。 → 完整拆解见下方 行动触发 部分。"
+    "title": "做一个本地优先的 agent 记忆，把会话蒸馏成可搜索笔记",
+    "whyNow": "agent 记忆搜索一周暴涨 1,900%，还没有产品接住，今天花两小时就能抢占先机",
+    "timeboxTitle": "今日 2 小时构建",
+    "timeboxDetail": "今日 2 小时构建"
   },
   "topSignals": [
-    "犯罪学家主张车牌数据库检索须有搜查令（555 票、332 条讨论），与伦敦扩大实时人脸扫描同日落地（377 票、504 条讨论）——监控争论的新前线是\"检索\"，不是\"采集\"。",
-    "ngrok 的《压缩即预测》(644 票、278 条讨论) 重构了思考模型的方式——今天讨论度最高的理论文章。",
-    "Google 论证 Go 是 AI 辅助软件工程的理想语言（424 票、500 条讨论）——本周最大的开发者工具之争。"
+    "开发者社区对「代码从来不是最难部分」争议升温，验证与证据成为焦点。",
+    "自托管 / 免费替代品搜索热度上行，订阅疲劳仍在制造流量入口。",
+    "智能体信任与审查工具在 Product Hunt / Show HN 重叠出现。"
   ],
   "opportunities": [
     {
       "id": "opp-1",
       "category": "search_trends",
       "title": "过去一周哪些搜索词暴涨？",
-      "signal": "7 天窗口的新涨势：\"vmware fusion\" +100%，\"ai text to video generator free\" +90%，\"janitor ai\" +90%，\"aider\" +90%，\"kdenlive\" +80%，\"oh my pi\" +70%，\"meta ai\" +70%，\"software testing strategies\" +50%，\"self hosted discord alternative\" +50%，\"meta ai agent\" +40%。",
-      "plainSpeak": "VMware Fusion、免费 AI 视频工具和 aider 编程代理的搜索量同时跳涨——\"找免费替代品\"这台机器还在运转。",
-      "judgment": "VMware Fusion 式的付费转免费浪潮和开源模型的视频需求，是两个反复出现的搜索模式——都是等一个 builder 来做的迁移型产品。",
-      "counterpoint": "一个 +90% 的查询可能只是一条爆款视频——没有持续意图的搜索尖峰，追起来便宜，亏钱也容易。"
+      "signal": "baserow +300%、asana +200%、librecad +120%、gamma ai alternative +110%、owncloud +110%、mattermost +70%、openproject +60%；\"ai text to video generator free\" +90% → +200%。",
+      "plainSpeak": "自托管浪潮刚刚从视频工具轮动到生产力应用——Airtable、Asana、Slack 和 CAD 是下一批被替代的对象。",
+      "judgment": "自托管迁移正在轮动到生产力套件——Airtable、Asana 和 Slack 的替代品是下一个 micro-SaaS 战场。",
+      "counterpoint": "Baserow、Mattermost、OpenProject 已经是成熟的开源产品——搜索增长是对现有软件的需求，而不是新进入者；在免费自托管工具旁边做变现是最经典的陷阱。"
     },
     {
       "id": "opp-2",
       "category": "oss_gap",
       "title": "GitHub 上哪些快速增长的开源项目还没有商业版本？",
-      "signal": "Comfy-Org/ComfyUI —— 每周新增 3,321 stars，\"最强大、最模块化的扩散模型 GUI\"。drawdb-io/drawdb —— 每周 665，免费在线数据库图表编辑器。本周的基础设施领跑者（pdf-inspector、semantica、loopx、code-graph-rag）在早报后保持平稳；技能包品类（reverse-skill、book-to-skill、google/skills、agent-skills）进入平台期。",
-      "plainSpeak": "本周新增 star 最猛的是 ComfyUI——开源视频模型浪潮的图形界面——以及一个免费数据库图表编辑器；两者都还没有清晰的付费层。",
-      "judgment": "视频模型 GUI 和数据库图表是仅有的两个\"有新动能但没人商业化\"的品类——ComfyUI 的付费层还等着人去拿。",
-      "counterpoint": "ComfyUI 是个老项目，已有现成的商业外壳（托管云、节点市场）——\"没有商业版本\"可能意味着\"没有需求\"，而不是\"没有供给\"。"
+      "signal": "DeepSeek-Reasonix（每周 2,419 stars）、loopx（每周 1,967）、book-to-skill（每周 3,789）；prime-agent 以每周 12,476 领跑该品类，且没有付费档位。",
+      "plainSpeak": "两个全新的 agent 基础设施项目——一个终端 agent 和一个团队循环内核——都还没有付费版本；缺口敞开着。",
+      "judgment": "agent 记忆是尚未变现的层——每周 2,000-4,000 stars，却没有一个定价页面。",
+      "counterpoint": "\"没有商业版本\"往往是因为项目只是大公司技术栈的周末 demo——DeepSeek-Reasonix 是 DeepSeek 生态原生的，随时可能被上游吸收；护城河是基准测试，不是 stars。"
     },
     {
       "id": "opp-3",
-      "category": "tech_choice",
-      "title": "有没有大公司关闭或降级了产品？",
-      "signal": "车牌识别器检索应要求搜查令 —— 555 票、332 条讨论。伦敦地铁扩大实时人脸识别试点 —— 377 票、504 条讨论。uBlock Origin 从 Facebook 广告战场撤退（330 票、453 条讨论）继续发酵。",
-      "plainSpeak": "今天真正的\"降级\"发生在隐私基础设施上——车牌数据库无需搜查令就能检索，而伦敦在更多站点扫描人脸。",
-      "judgment": "\"权力在检索，不在采集\"是今天最锋利的框架——让检索变得可审计的工具，正是监管会要求的东西。",
-      "counterpoint": "两个故事都是西方执法叙事——在世界大部分地区，车牌数据库从来就不是私有的，搜查令之争改变不了 builder 能卖什么。"
+      "category": "complaints",
+      "title": "开发者在抱怨哪些工具？",
+      "signal": "systemd-journald 的单个日志行要消耗 49KB+（ext4）或 110KB+（btrfs）的磁盘写入（146 分 / 93 条评论）；\"Guide to (not) fucking up QR codes\"登顶 Lobsters（104 分 / 11 条评论）。",
+      "plainSpeak": "开发者正在为日志刷屏、坏掉的二维码和连接池问题恼火——无聊的基础设施持续制造最大的抱怨声。",
+      "judgment": "日志、二维码、连接池、打包——每个默认行为有缺陷的无聊层，都是一个等待被构建的运维产品。",
+      "counterpoint": "这些抱怨常年存在——journald 的 issue 是重度用户用极端负载提出的，二维码批评是设计审美之争，不是市场。"
     },
     {
       "id": "opp-4",
       "category": "tech_choice",
-      "title": "本周增长最快的开发者工具有哪些？",
-      "signal": "Go 是 AI 辅助软件工程的理想语言 —— 424 票、500 条讨论。真实使用 100 小时后：Pi Agent vs Claude Code —— 40 reactions、17 条讨论。Opus 5：删掉你的 CLAUDE.md？ —— 22/7。GitHub 悄悄干掉了无法审阅的巨型 PR —— 35/10。搜索里 \"aider\" +90%。",
-      "plainSpeak": "Google 称 Go 是智能体时代的语言，500 条评论吵成一团；开发者一边把 Pi Agent 和 Claude Code 放上对比台，一边开始质疑 CLAUDE.md 这个仪式。",
-      "judgment": "\"易于验证\"正在成为语言的卖点——Go 是站出来论证的老玩家，而每个智能体工具厂商都需要一个\"它产出的东西可审阅\"的故事。",
-      "counterpoint": "Google 的\"Go 是理想语言\"是自利论证——它想让智能体都写云原生 Go——而 500 条反对说明大多数开发者并不买账。"
+      "title": "有没有大公司关闭或降级了产品？",
+      "signal": "uBlock Origin 放弃对抗 Facebook 广告（680 分，838 条讨论——比一天前的 453 条几乎翻倍）；九家 PBS 电视台起诉 Iron Mountain 封锁档案访问（242 分 / 135 条评论）。",
+      "plainSpeak": "一个广告拦截器退出了它的 Facebook 战争，一家电视网起诉了它的档案供应商——平台和数据持有者继续赢。",
+      "judgment": "平台军备竞赛结束时，输的是用户；当供应商握有你的原件，唯一的手段就是打官司。产品负责人：为退出而设计。",
+      "counterpoint": "uBlock 的决定是理性的资源分配——Facebook 广告只是广告拦截面的一小片；Iron Mountain 大概率会和解。两个故事都很戏剧化，但都不是商业崩盘。"
     },
     {
       "id": "opp-5",
       "category": "tech_choice",
       "title": "HuggingFace 上最热的模型是什么？它们能催生哪些消费者产品？",
-      "signal": "榜单与早前报道一致（Muse Glimmer-30B 1,241、MiniMax-H3 家族、DeepSeek-V4-Flash-0731 有 1,048,685 次下载、Qwen3.8-2.4T）。新名字：inclusionAI/Ling-3.0-tiny —— 195，MIT 许可，新混合架构，8 月 10 日创建。NVIDIA Nemotron-3.5-Lightning-30B-A3B-NVFP4 —— 206，19,250 次下载。Lightricks/LTX-2.5 —— 523。热门 spaces：wan2-2-i2v-v3（297）、Qwen-Image-Edit LoRA 包（148）。",
-      "plainSpeak": "没有新的头条模型——真正的动作在第二梯队：一个 MIT 小模型、一个 NVFP4 量化的 Nemotron，以及视频模型的空间竞赛。",
-      "judgment": "开源视频生成是唯一一个搜索需求、模型供给、工具链同时在涨的品类——\"免费 AI 视频生成器\"的包装位还空着。",
-      "counterpoint": "每个热门视频 space 不是 LoRA 就是外壳——基础模型每周都在换，消费者视频产品是烧钱冠军的坟场。"
+      "signal": "MiniMax-Music3（trending 320）、Mistral OCR 4.1（250 分 / 98 条评论）、Liquid LFM2.5-2.6B（trending 255，116K 下载）；Muse-Glimmer-30B 持续攀升（trending 1,335，121K 下载）。",
+      "plainSpeak": "开源模型进入了音乐、OCR 和端侧设备——消费者赢面在音频、文档和离线场景，而不是聊天。",
+      "judgment": "音乐、OCR 和端侧是开源模型在性价比上击败闭源的战场——音频和文档自动化是本周最安全的消费者构建目标。",
+      "counterpoint": "音乐生成输出仍需人工筛选才能用，OCR 质量取决于版面运气，Muse-Glimmer 在真实世界的可靠性还没经过大规模验证——\"HF 上最热\"是注意力，不是生产就绪。"
     },
     {
       "id": "opp-6",
       "category": "oss_gap",
       "title": "本周最重要的开源 AI 进展是什么？",
-      "signal": "LLM 擅长哪种数学？ 作者 Timothy Gowers —— 242 票、135 条讨论。微模型现实检查来自 Needle2 帖：\"make it a little warmer in here\"（把屋里调暖一点）→ 空调设成 65°F 制冷；查询 \"HN\" → 触发前门 lockdoor；一个 1 + 1 工具调用测试 → \"completely useless\"（完全没用）。",
-      "plainSpeak": "一位菲尔兹奖得主写了今天最重要的 AI 文章：LLM 在数学上能做什么、不能做什么——而 14MB 模型证明工具调用依然惨烈。",
-      "judgment": "今天的两条 AI 故事——Gowers 的数学分类学和微模型工具调用翻车——说的是同一件事：能力是狭窄的，脚手架才是产品。",
-      "counterpoint": "Gowers 描述的是昨天的模型，Needle2 只是个 14MB 演示——两者都预测不了六个月的微调会把前沿推到哪。"
+      "signal": "DeepSeek 开放 Harness 开发者预览（554 分 / 241 条评论）；\"anthropic ai agent memory management\" 7 天 +1,900%，MCP Memory 登上 Show HN，出现 agent 记忆排行榜；四个来源同时指向 agent 安全护栏。",
+      "plainSpeak": "本周的开源 AI 新闻是基础设施，不是模型——执行外壳、记忆和护栏。",
+      "judgment": "执行外壳、记忆、护栏——本周的开源 AI 属于 agent 的操作系统，而不是 agent 的大脑。",
+      "counterpoint": "Harness 只是预览，可能一直保持闭源；记忆\"方案\"才一天大，而 Mem0 级工具已经耕耘多年；护栏产品彼此重叠，很快就会整合。"
     },
     {
       "id": "opp-7",
       "category": "tech_choice",
       "title": "最受欢迎的 Show HN 项目在用哪些技术栈？",
-      "signal": "Ask HN：电子墨水屏 UI 开发的合理规范 —— 212 票、72 条讨论。TRMNL 刚开源了它的 ePaper CSS framework 和固件；一位 Boox 用户分享了 inka.page。HTML over WebSockets —— 157 票、112 条讨论。来自 WYOW 帖：OBD2 iPhone 应用、Cassava、一个 Rust 原生 UI 框架。",
-      "plainSpeak": "今天的栈故事属于电子墨水屏：72 条评论把显示规则成文化——无动画、分页、大触摸目标——开源框架恰好也在同一周出现。",
-      "judgment": "电子墨水屏 UI 正在成为一个正经平台——成文的规则、开源的组件、一波设备——既早又具体，足够一个 solo 开发者拿下。",
-      "counterpoint": "电子墨水屏设备是几家厂商把持的小型硬件市场——UI 框架的天花板就是 Boox 和 reMarkable，而这两家都可能自己做。"
+      "signal": "OxiSH（Rust SSH 服务器，15 分 / 0 条评论）和 Bsdkrun（microVM/unikernel）加入 MCP Memory（SQLite FTS5）；Woxi 的新评论让 Rust 重写故事持续发酵。",
+      "plainSpeak": "Rust 统治系统重写，SQLite 正在成为 agent 记忆，其余全是瘦客户端 JavaScript。",
+      "judgment": "技术栈的故事是\"老工具，新工作\"——Rust 用于重写、SQLite 用于记忆、MCP 用于接线——没有任何新框架在抢占阵地。",
+      "counterpoint": "Show HN 偏向爱好者；Woxi 级的势头是 308 分的异类，这里的大多数项目在生产之前就死了——Show HN 上的技术栈时尚比真实世界的采用滞后一年。"
     },
     {
       "id": "opp-8",
       "category": "competition",
-      "title": "Indie 开发者在讨论哪些收入和定价问题？",
-      "signal": "也许我们不是效率有问题，而是上下文有问题。 —— 25 赞、63 条讨论。我花了两年做没人用的东西。这次我停在 v0.2.0。 —— 18 赞、75 条讨论。我在找用户聊天之前先做了两个网站。我想我现在看出问题了。 —— 7 赞、39 条讨论。Photosynthesis 的定价之争还在发酵（300 条讨论）：\"the free tier lets you export 3 images a month and the alternative is a subscription? No thanks.\"（免费层一个月只能导出 3 张图，替代方案是订阅？不了谢谢。）",
-      "plainSpeak": "创始人们在争论：真正的工具缺口是上下文丢失而不是效率，以及停在 v0.2.0 胜过埋头做两年。",
-      "judgment": "创始人的讨论正在收敛到同一个想法——本周就给真实用户发一个最小版本——帖子里所有收入故事都是它的下游。",
-      "counterpoint": "\"v0.2.0 哲学\"是幸存者偏差——火起来的帖子是诚实的失败，而不是那些分发无聊但安静成功的产品。"
+      "title": "有没有沉寂的老项目突然复活？",
+      "signal": "\"Choose Boring Technology\"（2015 年）重新登上首页（247 分 / 131 条评论）；Donkey.bas 迎来 45 岁生日（186 分 / 79 条评论）；NP-Overrated 拿到 145 分 / 89 条评论。",
+      "plainSpeak": "一篇 2015 年的文章和一个 45 岁的 BASIC 游戏重新上了首页——当新技术栈不断出问题时，旧信条就会回归。",
+      "judgment": "当当下的痛苦够高时，老文章和老游戏会重新上榜——\"无聊\"现在是增长关键词，怀旧是一门市场。",
+      "counterpoint": "首页重登只是算法的回声——2015 年的无聊技术建议早于 AI 生成的基础设施更迭；Donkey.bas 是花边新闻，不是需求。"
     },
     {
       "id": "opp-9",
       "category": "competition",
       "title": "有没有\"XX 已死\"或迁移类文章？",
-      "signal": "你没有 AI 问题，你有思考问题。 —— 54 reactions、36 条讨论。我用 AI 重新发明了管理：9 件我做得不一样的事 —— 62/37。Stratagems 24：Leo 建了一条走廊，AI 以为是条路。 —— 58/22。教你的 AI 网页设计一点真正的品味 —— 44/16。Ask HN：你觉得 2026 年的就业市场怎么样？ —— 4/3。",
-      "plainSpeak": "今天的迁移故事：从提示词转向策展——AI 问题等于思考问题、用智能体做管理、品味成为最后一项技能。",
-      "judgment": "今天每一条\"XX 已死\"故事都是同一个迁移——从\"做事\"到\"验证\"——验证技能（审阅、品味、提示词纪律）的市场才是真故事。",
-      "counterpoint": "\"AI 问题等于思考问题\"是一种舒适的散文体裁，它无视了一个事实：思考问题恰恰是最先被自动化掉的东西。"
+      "signal": "\"Where did the old web go?\"——一次对 657,607 个链接的爬行找到了答案（131 分 / 107 条评论）；软件工程中产阶级的帖子涨到 890 条评论；出现一个求职市场 Ask HN（13 分 / 18 条评论）。",
+      "plainSpeak": "死亡叙事已经从\"旧互联网\"转移到了\"职业阶梯中段\"——两者本质上都是迁移故事。",
+      "judgment": "今天每一个\"X 已死\"的故事都是迁移故事——内容、职业和公司都在决定什么迁往新栈，什么被留在原地。",
+      "counterpoint": "链接腐烂研究衡量的是死站的遗弃，不是活互联网的健康度；中产阶级 SWE 文章的 890 条评论里有很多反驳指出\"中产阶级\"从来不是静态的。"
     },
     {
       "id": "opp-10",
-      "category": "search_trends",
-      "title": "本周最常见的技术关键词是什么？它们如何变化？",
-      "signal": "\"joplin\" +90%，\"kdenlive\" +80%，\"self hosted discord alternative\" +50%，\"software testing strategies\" +50%，\"meta ai agent\" +40%，\"meta ai\" +70%，\"bandlab\" +160%（保持）。",
-      "plainSpeak": "自托管笔记和开源视频剪辑在搜索里继续涨，而测试策略类查询随着智能体验证之争同步爬升。",
-      "judgment": "自托管笔记和 AI 代码验证是两个有真实产品形态需求的关键词簇——joplin 和 testing-strategies 都指向品类，而不是品牌。",
-      "counterpoint": "joplin 和 kdenlive 是十年老将——它们的搜索增长是存量轮换，不是新市场；\"self hosted discord alternative\" 是个爱好型查询。"
+      "category": "trends",
+      "title": "VC 和 YC 正在关注哪些话题？",
+      "signal": "OpenAI 发布 \"How Organizations Use AI: Evidence from ChatGPT\"（65 分 / 35 条评论）；agent 评估和 agent 劳动力产品占领 Product Hunt（Coarena 105、Oasis 211）；Grok 4.6 在 Artificial Analysis Index 上拿下 61 分（336 分 / 399 条评论）。",
+      "plainSpeak": "VC 的注意力在 agent 评估和 agent 劳动力上——如何衡量和信任 agent 才是被投资的问题。",
+      "judgment": "被投资的层是\"信任与度量\"——agent 评估、agent 竞技场、agent 劳动力——而不是又一个模型。",
+      "counterpoint": "两个 PH 发布和一个基准分数，作为 VC 配置的证据很单薄；大多数 agent 评估创业公司在解决在位者（OpenAI、Anthropic、Google）迟早会原生解决的问题。"
     },
     {
       "id": "opp-11",
-      "category": "trends",
-      "title": "VC 和 YC 正在关注哪些话题？",
-      "signal": "Nvidia 的危险生意 —— 349 票、175 条讨论。Solo → Pre-Seed：决定你头 18 个月生死的技术栈选择 —— 23 赞、20 条讨论。如果一个 AI 员工真能干活，而不只是陪客户聊天呢？ —— 4/4。Lovable 的 $400M C 轮（102 票、98 条讨论）继续发酵。",
-      "plainSpeak": "VC 的讨论转向了 Nvidia 的资本开支赌注和 solo 到种子轮的选型——而 Lovable 的 $400M 证明 AI 应用构建者照样能融到钱。",
-      "judgment": "两个资本故事框定了今天：Nvidia 的需求赌注（349/175）和 Lovable 的 $400M——两者都在说：此刻资本只在 AI 工具链上便宜。",
-      "counterpoint": "Stratechery 的文章不推动资本——Nvidia 的风险已经定价，Lovable 的倍数更多说明 AI 增长资产的稀缺，而不是基本面。"
+      "category": "search_trends",
+      "title": "哪些 AI 搜索词正在降温？",
+      "signal": "cisco ai agent employee rollout 三个月 +3,550% 却从 7 天榜单消失；hermes agent 家族（3 个月 Breakout）缺席 7 天上升榜；核心词进入平台期：ai coding agent +60%、codex +60%、mcp +50%。",
+      "plainSpeak": "炒作词在降温——Cisco 的部署和 hermes 家族从 7 天窗口消失，核心 agent 词汇进入平台期。",
+      "judgment": "降温词是最好的\"哪些已是入场门槛\"分类学——如果 hermes/cisco 式词汇消退而 codex/mcp 稳住，说明品类在成熟，而不是在死亡。",
+      "counterpoint": "7 天窗口会掩盖季节性模式——有声书和课程词会回来；一个词离开上升榜也可能意味着饱和（感兴趣的用户都找到了它），而不是被抛弃。"
     },
     {
       "id": "opp-12",
-      "category": "search_trends",
-      "title": "哪些 AI 搜索词正在降温？",
-      "signal": "3 个月上涨但缺席 7 天窗口：\"appflowy\" +200%，\"affine\" +70%，\"free alternative to hootsuite\" +250%，\"free alternative to ahrefs\" +130%，\"where to find free audiobooks\" +2,100%，\"alternative to uggs\" +250%，\"fifa world cup 2026 final date\" +2,700%。智能体名字潮（hermes、GLM 5.2、cisco ai agent）继续缺席 7 天窗口。",
-      "plainSpeak": "自托管笔记应用（AppFlowy、AFFiNE）和\"免费替代\"常青词正从周搜索里退场——hermes/GLM 智能体那一波确认凉了。",
-      "judgment": "AppFlowy 和 AFFiNE 降温而 joplin 上涨，意味着自托管笔记这个坑还空着——而 hootsuite/ahrefs 替代词是最持久的付费替代查询。",
-      "counterpoint": "降温词和 7 天窗口的测量节奏不同——一个新闻周期就能把 hermes 这类词重新加热；3 个月降温不是死亡。"
+      "category": "trends",
+      "title": "新词雷达：哪些全新概念正在从零升起？",
+      "signal": "一道逐字复制的测验题（+4,500%）——\"what are the variables that the model learns during its training process? a versions b placeholders c books d parameters\"——登顶新词榜；\"anthropic ai agent memory management\" +1,900%；baserow +300%。",
+      "plainSpeak": "新词全是\"管理 agent\"的动词——记忆、检测、拦截——外加一个惊喜：学生在整道整道地搜考试题。",
+      "judgment": "新词是和 agent 共处所需的动词——记住、检测、拦截、核验——其中考试查询异类是本周唯一真正全新的人类行为。",
+      "counterpoint": "一条爆火的 TikTok 或一个 bot 就能推动长尾趋势数字；+4,500% 的测验词组很可能是作业在班里传开，不是持久需求。"
     }
   ],
   "trackRecord": [
     {
-      "date": "2026-08-13",
+      "date": "2026-08-19",
       "summary": "证据层 / 真实性回执成为公开讨论焦点"
     }
   ],

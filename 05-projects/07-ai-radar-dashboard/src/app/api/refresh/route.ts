@@ -6,7 +6,9 @@ export const runtime = "nodejs";
 export const dynamic = "force-dynamic";
 export const maxDuration = 300;
 
-type Mode = "full" | "quick" | "hot" | "hourly";
+type Mode = "full" | "quick" | "hot" | "hourly" | "twitter" | "github" | "github-hot" | "producthunt" | "opp";
+
+const MODES: Mode[] = ["full", "quick", "hot", "hourly", "twitter", "github", "github-hot", "producthunt", "opp"];
 
 function allowed(): boolean {
   if (process.env.ALLOW_LIVE_REFRESH === "1") return true;
@@ -33,11 +35,11 @@ export async function POST(req: Request) {
   try {
     const url = new URL(req.url);
     const q = url.searchParams.get("mode");
-    if (q === "full" || q === "quick" || q === "hot" || q === "hourly") mode = q;
+    if (q && MODES.includes(q as Mode)) mode = q as Mode;
     else {
       const body = (await req.json().catch(() => ({}))) as { mode?: string };
-      if (body.mode === "full" || body.mode === "quick" || body.mode === "hot" || body.mode === "hourly") {
-        mode = body.mode;
+      if (body.mode && MODES.includes(body.mode as Mode)) {
+        mode = body.mode as Mode;
       }
     }
   } catch {
@@ -56,29 +58,49 @@ export async function POST(req: Request) {
   };
 
   const startedAt = new Date().toISOString();
+  const maxMs = mode === "twitter" || mode === "github" || mode === "github-hot" || mode === "producthunt" || mode === "opp" ? 120_000 : 280_000;
+  const script =
+    mode === "twitter"
+      ? "scripts/sync-twitter-live.ts"
+      : mode === "github"
+        ? "scripts/sync-github-stars.ts"
+        : mode === "github-hot"
+          ? "scripts/sync-github-hot.ts"
+          : mode === "producthunt"
+            ? "scripts/sync-producthunt.ts"
+            : mode === "opp"
+              ? "scripts/generate-opportunity-report.ts"
+              : "scripts/daily-refresh.ts";
 
   const result = await new Promise<{
     code: number | null;
     stdout: string;
     stderr: string;
   }>((resolve) => {
-    const child = spawn("npx", ["tsx", "scripts/daily-refresh.ts"], {
+    const child = spawn("npx", ["tsx", script], {
       cwd: root,
       env,
       shell: process.platform === "win32",
     });
     let stdout = "";
     let stderr = "";
+    const timer = setTimeout(() => {
+      child.kill("SIGKILL");
+    }, maxMs);
     child.stdout.on("data", (d) => {
       stdout += String(d);
     });
     child.stderr.on("data", (d) => {
       stderr += String(d);
     });
-    child.on("close", (code) => resolve({ code, stdout, stderr }));
-    child.on("error", (err) =>
-      resolve({ code: 1, stdout, stderr: `${stderr}\n${err.message}` }),
-    );
+    child.on("close", (code) => {
+      clearTimeout(timer);
+      resolve({ code, stdout, stderr });
+    });
+    child.on("error", (err) => {
+      clearTimeout(timer);
+      resolve({ code: 1, stdout, stderr: `${stderr}\n${err.message}` });
+    });
   });
 
   const ok = result.code === 0;
@@ -98,7 +120,7 @@ export async function POST(req: Request) {
 export async function GET() {
   return NextResponse.json({
     ok: true,
-    endpoints: "POST /api/refresh?mode=hourly|quick|hot|full",
+    endpoints: "POST /api/refresh?mode=twitter|github|github-hot|producthunt|opp|hourly|quick|hot|full",
     allowed: allowed(),
   });
 }

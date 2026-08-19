@@ -8,3 +8,4 @@ out
 .vercel
 vendor/BuilderPulse
 *.tsbuildinfo
+graphify-out/

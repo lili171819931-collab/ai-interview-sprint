@@ -1,7 +1,11 @@
+"use client";
+
 import Link from "next/link";
+import { ExternalLink } from "lucide-react";
 import type { HotRankItem } from "@/lib/intel/aihot-types";
 import { HOT_STATUS_LABEL } from "@/lib/intel/hot-rank";
 import { formatRelativeZh } from "@/lib/intel/time";
+import { tr, useTranslatedTexts } from "@/components/i18n/useTranslatedTexts";
 
 function pad(n: number) {
   return String(n).padStart(2, "0");
@@ -32,25 +36,50 @@ function Sparkline({ id, rising, heat }: { id: string; rising: boolean; heat: nu
   );
 }
 
-function TitleLink({ item }: { item: HotRankItem }) {
+function StoryMeta({ item }: { item: HotRankItem }) {
+  if (!item.storyHref && !item.externalUrl) return null;
+  return (
+    <span className="inline-flex items-center gap-1.5">
+      {item.storyHref ? (
+        <Link href={item.storyHref} className="hot-story-chip">
+          故事线
+        </Link>
+      ) : null}
+      {item.externalUrl ? (
+        <a
+          href={item.externalUrl}
+          target="_blank"
+          rel="noreferrer"
+          className="hot-story-ext"
+          title="AIHOT 原站故事页"
+        >
+          原站 <ExternalLink size={10} aria-hidden />
+        </a>
+      ) : null}
+    </span>
+  );
+}
+
+function TitleLink({ item, title }: { item: HotRankItem; title: string }) {
   const external = item.href.startsWith("http");
   const className = "zh-title";
   const style = { fontSize: "0.98rem" } as const;
   if (external) {
     return (
       <a href={item.href} target="_blank" rel="noreferrer" className={className} style={style}>
-        {item.title}
+        {title}
       </a>
     );
   }
   return (
     <Link href={item.href} className={className} style={style}>
-      {item.title}
+      {title}
     </Link>
   );
 }
 
 export function HotRankList({ items, compact = false }: { items: HotRankItem[]; compact?: boolean }) {
+  const txMap = useTranslatedTexts(items.map((it) => it.title));
   if (!items.length) {
     return <p className="text-sm text-[var(--muted)]">暂无 AI热点榜。请运行 npm run aihot:sync 或 npm run intel:refresh。</p>;
   }
@@ -62,11 +91,12 @@ export function HotRankList({ items, compact = false }: { items: HotRankItem[]; 
           <li key={`${it.origin}-${it.id}`} className="flex gap-3">
             <span className="rank-index hot-rank-compact">{pad(it.rank)}</span>
             <div className="min-w-0 space-y-1">
-              <TitleLink item={it} />
+              <TitleLink item={it} title={tr(txMap, it.title)} />
               <p className="zh-source">
                 {it.sourceName}
                 {it.sourceCount > 1 ? ` · ${it.sourceCount} 源` : ""}
               </p>
+              <StoryMeta item={it} />
             </div>
           </li>
         ))}
@@ -88,8 +118,9 @@ export function HotRankList({ items, compact = false }: { items: HotRankItem[]; 
               <span className="hot-rank">{pad(it.rank)}</span>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                  <TitleLink item={it} />
+                  <TitleLink item={it} title={tr(txMap, it.title)} />
                   {it.status ? <span className={`hot-badge hot-badge-${it.status}`}>{HOT_STATUS_LABEL[it.status]}</span> : null}
+                  <StoryMeta item={it} />
                 </div>
                 <p className="zh-source hot-meta">
                   {it.sourceName} · {formatRelativeZh(it.latestAt)}

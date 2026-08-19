@@ -1,0 +1,103 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-18T13:53:02.430Z",
+  "story": {
+    "publicId": "c1ee9c7d-7701-4167-9d8a-e378568c4960",
+    "title": "亚马逊在拉斯维加斯仓库切掉书脊扫描书籍并销毁原书",
+    "status": "active",
+    "sourceCount": 4,
+    "reportCount": 5,
+    "firstReportAt": "2026-08-17T15:22:20.136Z",
+    "latestAt": "2026-08-17T20:53:05.960Z",
+    "latest": "亚马逊拒绝就销毁书籍置评，仅称通过商业渠道购书以改进产品。",
+    "digest": "404 Media 通过在珍本图书中植入 AirTag 追踪发现，亚马逊在拉斯维加斯的 VGT3 设施批量处理书籍，先切掉书脊以提高扫描效率，原书在过程中被销毁，扫描数据用于训练其 Nova 模型。\n亚马逊回应称通过商业渠道购书以改进客户使用的产品与服务，但拒绝就销毁书籍的具体做法置评。调查还证实了书商的理论：AI 公司按 ISBN 清单系统扫描图书，且亚马逊曾因图书供应短缺而担忧仓库关闭。\nAnthropic 此前也开展过类似的“巴拿马计划”，相关诉讼中法官裁定此类扫描属合理使用，不构成版权侵权。",
+    "digestUpdatedAt": "2026-08-17T21:25:27.980Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/c1ee9c7d-7701-4167-9d8a-e378568c4960"
+    },
+    "reports": [
+      {
+        "id": "cmsxpniwv06r2roz02peoshlu",
+        "title": "AirTag追踪证实亚马逊为训练AI销毁珍本图书",
+        "summary": "404 Media通过藏在珍本中的AirTag追踪发现，亚马逊在拉斯维加斯的AI训练设施VGT3将批量采购的珍本图书拆毁扫描，用于训练其前沿模型。亚马逊拒绝就此事置评，仅称通过商业渠道购书以改进产品服务。此前书商怀疑AI公司按ISBN系统化扫描全球图书，此次调查为这一理论提供了佐证。",
+        "source": {
+          "name": "Hacker News 热门（buzzing.cc 中文翻译）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T20:53:05.960Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxpniwv06r2roz02peoshlu",
+          "original": "https://arstechnica.com/tech-policy/2026/08/hidden-airtag-reveals-amazon-is-trashing-rare-books-to-train-ai"
+        }
+      },
+      {
+        "id": "cmsxld6es03o8roz0jblf3ii9",
+        "title": "404 Media 追踪珍本图书流向：亚马逊批量购书扫描用于 AI 训练后销毁",
+        "summary": "404 Media 通过在一本珍本图书中放置追踪设备，首次揭露亚马逊未公开的购书行动：批量购入大量书籍，扫描用于 AI 训练数据，随后销毁。追踪显示这些书最终被送往亚马逊的一处人工智能训练中心。",
+        "source": {
+          "name": "Hacker News 热门（buzzing.cc 中文翻译）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T18:53:04.323Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxld6es03o8roz0jblf3ii9",
+          "original": "https://www.404media.co/we-tracked-a-shipment-of-rare-books-it-ended-at-an-amazon-ai-training-facility"
+        }
+      },
+      {
+        "id": "cmsxkc5e5035mroz0ev5qge2y",
+        "title": "隐藏 Airtag 追踪显示亚马逊正在销毁珍本图书以训练 AI",
+        "summary": "404 Media 调查发现，书商在珍本图书中植入 Airtag，追踪到亚马逊位于拉斯维加斯的 AI 训练设施 VGT3，该团队将书籍拆解并扫描页面。亚马逊拒绝就此事置评，仅称通过商业渠道购书以改进产品。调查还证实了书商理论：AI 公司按 ISBN 清单系统扫描图书，且亚马逊曾因图书供应短缺而担忧仓库关闭。",
+        "source": {
+          "name": "Ars Technica：AI（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T18:24:16.994Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxkc5e5035mroz0ev5qge2y",
+          "original": "https://arstechnica.com/tech-policy/2026/08/hidden-airtag-reveals-amazon-is-trashing-rare-books-to-train-ai"
+        }
+      },
+      {
+        "id": "cmsxh2ro701rdrosw8etdu17i",
+        "title": "亚马逊为训练 AI 模型大量购入并销毁珍稀书籍",
+        "summary": "据 404 Media 报道，亚马逊正大量购入珍稀书籍，切掉书脊后扫描用于 AI 训练，其追踪器最终抵达亚马逊位于拉斯维加斯的 VGT3 设施。亚马逊回应称通过商业渠道购书以改善客户使用的产品与服务。这些绝版或网上难寻的书籍提供了宝贵训练数据，因 2022 年前出版的文本可避免“模型崩溃”风险。",
+        "source": {
+          "name": "TechCrunch：AI（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T16:53:01.024Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxh2ro701rdrosw8etdu17i",
+          "original": "https://techcrunch.com/2026/08/17/amazon-once-an-online-bookseller-is-destroying-rare-books-to-train-ai-models"
+        }
+      },
+      {
+        "id": "cmsxdu6n401h9roi2oitrnr9y",
+        "title": "AirTag 追踪调查：亚马逊为训练 AI 扫描书籍，先切掉书脊致原书销毁",
+        "summary": "外媒 404 Media 通过藏入 AirTag 的追踪调查发现，亚马逊在拉斯维加斯仓库由 VGT3 团队处理书籍，为提高扫描效率先切掉书脊，原书在过程中被毁，扫描数据用于训练 Nova 模型。Anthropic 此前也开展过类似“巴拿马计划”，相关诉讼中法官裁定此类扫描属合理使用，不构成版权侵权。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T15:22:20.136Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxdu6n401h9roi2oitrnr9y",
+          "original": "https://www.ithome.com/0/990/845.htm"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "e47df443-14dd-42ac-8f7d-cb85d4c7137c",
+        "title": "404 Media 通过 AirTag 追踪调查亚马逊书籍处理流程",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/e47df443-14dd-42ac-8f7d-cb85d4c7137c",
+          "api": "https://aihot.virxact.com/api/v1/stories/e47df443-14dd-42ac-8f7d-cb85d4c7137c"
+        }
+      }
+    ],
+    "related": []
+  }
+}

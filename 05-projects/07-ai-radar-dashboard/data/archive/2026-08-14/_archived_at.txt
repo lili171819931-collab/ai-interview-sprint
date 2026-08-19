@@ -1,0 +1,3 @@
+2026-08-14T03:35:29.491Z
+reason=post-hot-refresh
+files=trendradar-hot.json,global-hot-topics.json

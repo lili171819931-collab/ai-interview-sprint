@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:21.697Z",
+  "story": {
+    "publicId": "138babd3-b1fe-4683-bc17-8354285297b5",
+    "title": "Anthropic 将 Claude in Chrome 侧边栏升级为 Claude Cowork 会话",
+    "status": "active",
+    "sourceCount": 2,
+    "reportCount": 2,
+    "firstReportAt": "2026-08-12T20:15:51.977Z",
+    "latestAt": "2026-08-13T10:21:04.567Z",
+    "latest": "Claude in Chrome 侧边栏升级为 Claude Cowork 会话，支持技能与连接器。",
+    "digest": "Anthropic 将 Chrome 浏览器扩展中的 Claude 侧边栏升级为 Claude Cowork 会话。升级后，对话会保存至历史记录，技能和连接器可在浏览器中直接工作，任务可在桌面、网页和移动端应用间无缝切换。\nClaude Cowork 首次在浏览器中支持技能、插件和连接器，无需额外设置。Claude 负责研究，Cowork 可将其转化为 Excel 文件、PowerPoint 幻灯片或报告。",
+    "digestUpdatedAt": "2026-08-13T10:48:12.828Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/138babd3-b1fe-4683-bc17-8354285297b5"
+    },
+    "reports": [
+      {
+        "id": "cmsrdbdwd0v32roz23sibeboc",
+        "title": "Anthropic 将 Claude Cowork 引入 Chrome 扩展，在浏览器中支持技能与插件",
+        "summary": "Anthropic 的 Chrome 扩展现可在侧边栏直接运行完整 Claude Cowork 会话，首次在浏览器中支持技能、插件和连接器，无需额外设置。Claude 负责研究，Cowork 可将其转化为 Excel 文件、PowerPoint 幻灯片或报告。",
+        "source": {
+          "name": "The Decoder：AI News（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T10:21:04.567Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrdbdwd0v32roz23sibeboc",
+          "original": "https://the-decoder.com/anthropic-brings-claude-cowork-to-its-chrome-extension-adding-skills-and-plugins-to-the-browser"
+        }
+      },
+      {
+        "id": "cmsqj4ly004izroxvzl349s3r",
+        "title": "Claude in Chrome 侧边栏升级为 Claude Cowork 会话",
+        "summary": "Claude in Chrome 浏览器扩展的侧边栏现已升级为 Claude Cowork 会话，对话会保存至历史记录，技能和连接器可在浏览器中工作，且任务可在桌面、网页和移动端应用间无缝切换。",
+        "source": {
+          "name": "Claude：Blog（网页）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-12T20:15:51.977Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqj4ly004izroxvzl349s3r",
+          "original": "https://claude.com/blog/cowork-chrome-side-panel"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

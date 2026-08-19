@@ -36,6 +36,7 @@ async function ensurePulse() {
 
 async function main() {
   await ensurePulse();
+  // 默认生成“今天”的报告：若 BuilderPulse 已发布当天则对齐其方法，否则由智衡实时数据联动生成
   const date = process.env.PULSE_DATE?.trim() || process.env.OPP_DATE?.trim() || shanghaiDay();
   const report = buildOpportunityReport(date);
   // 若 pulse 实际是另一天，以 brief 日期为准已在 build 内处理；这里强制归档键用 report.reportDate

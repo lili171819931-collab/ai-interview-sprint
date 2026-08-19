@@ -2,12 +2,14 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 import { formatUpdatedAt } from "@/lib/intel/time";
 
 const HOUR_MS = 60 * 60 * 1000;
 
 export function AutoRefresh({ fetchedAt }: { fetchedAt: string | null }) {
   const router = useRouter();
+  const { locale, t } = useLocale();
   const busy = useRef(false);
 
   useEffect(() => {
@@ -39,7 +41,7 @@ export function AutoRefresh({ fetchedAt }: { fetchedAt: string | null }) {
 
   return (
     <p className="text-xs text-[var(--muted)]">
-      更新于 {formatUpdatedAt(fetchedAt)} · 每小时自动更新
+      {t("time.updated", { stamp: formatUpdatedAt(fetchedAt, locale) })} · {t("refresh.hourly")}
     </p>
   );
 }

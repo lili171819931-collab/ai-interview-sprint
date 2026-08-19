@@ -1,0 +1,177 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:20.791Z",
+  "story": {
+    "publicId": "5fe3ff3d-4e3d-43d1-959b-4aad7e6d239c",
+    "title": "xAI 发布 Grok 4.6",
+    "status": "active",
+    "sourceCount": 10,
+    "reportCount": 11,
+    "firstReportAt": "2026-08-12T15:47:50.849Z",
+    "latestAt": "2026-08-13T06:21:00.587Z",
+    "latest": "Grok 4.6为后训练升级，支持500K上下文和xhigh推理档位。",
+    "digest": "2026年8月12日，xAI（报道中亦称SpaceXAI）发布Grok 4.6模型。该模型在多项基准测试中表现突出，在GDPVal-AA v2、AA-Briefcase、Harvey LAB等基准上排名第一，在CursorBench、FrontierCode、APEX-Agents、APEX-SWE等基准上排名第二。在综合9项基准的Artificial Analysis Intelligence Index上，Grok 4.6获得61分，与GPT-5.6 Sol（或GPT-5.6 Sol Max）持平，仅比Fable 5低1分。\nGrok 4.6定价与Grok 4.5一致，为每百万输入token 2美元、每百万输出token 6美元。模型已在Cursor、Grok Build、OpenRouter等平台上线，首周提供双倍使用额度。\nGrok 4.6针对长时间运行的智能体任务进行了强化，提升了跨代码库分析和自我验证能力，并改进了复杂交互和视觉工作。在Frontend Arena中，Grok 4.6以1553分位列第13名。xAI发布了Grok 4.6的模型卡，详细介绍了其在编码、工程、知识工作等评测中的能力，以及部署前的安全测试和防护栈。\n最新报道补充，Grok 4.6是基于Grok 4.5的后训练升级而非更大规模的基础模型，支持500K上下文token、文本与图像输入，并新增xhigh推理强度档位。",
+    "digestUpdatedAt": "2026-08-14T00:25:52.100Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/5fe3ff3d-4e3d-43d1-959b-4aad7e6d239c"
+    },
+    "reports": [
+      {
+        "id": "cmsr4qnai0km3roz2vb3s1z0v",
+        "title": "SpaceXAI 发布 Grok 4.6：面向长时运行智能体、编程与知识工作的 50 万上下文模型",
+        "summary": "SpaceXAI 发布 Grok 4.6，这是基于 Grok 4.5 的后训练升级而非更大规模的基础模型，支持 500K 上下文 token、文本与图像输入，并新增 xhigh 推理强度档位。",
+        "source": {
+          "name": "MarkTechPost（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T06:21:00.587Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsr4qnai0km3roz2vb3s1z0v",
+          "original": "https://www.marktechpost.com/2026/08/12/spacexai-releases-grok-4-6"
+        }
+      },
+      {
+        "id": "cmsqkde5105ekroxv1bhdqcyd",
+        "title": "Grok 4.6 模型卡发布详解能力与安全测试",
+        "summary": "我们发布了 Grok 4.6 的模型卡！\n\n其中深入介绍了该模型在编码、工程、知识工作等多个不同评测中的能力。我们还讨论了部署前的安全测试及我们的防护栈。\n\nhttps://media.x.ai/v1/website/card-4p6-4cd2dc57.pdf",
+        "source": {
+          "name": "X：Lee Robinson (@leerob)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T20:50:52.506Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqkde5105ekroxv1bhdqcyd",
+          "original": "https://x.com/leerob/status/2087640149442404584"
+        }
+      },
+      {
+        "id": "cmsqg32or01ztroxvddtjcevu",
+        "title": "SpaceXAI's Grok 4.6 matches OpenAI's best model and undercuts it on price",
+        "summary": null,
+        "source": {
+          "name": "The Decoder：AI News（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T18:50:51.319Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqg32or01ztroxvddtjcevu",
+          "original": "https://the-decoder.com/spacexais-grok-4-6-matches-openais-best-model-and-undercuts-it-on-price"
+        }
+      },
+      {
+        "id": "cmsqan1p60196roucp7t1hexf",
+        "title": "Grok 4.6发布，多项基准比肩Fable 5与GPT 5.6",
+        "summary": "BREAKING 🔥: SPACEXAI 发布 GROK 4.6，多项基准测试已与 FABLE 5 和 GPT 5.6 SOL 持平！\n\n> 同时以 1553 分位列 Frontend Arena 第 13 名。\n\n> Grok 4.6 即日起在 Cursor 和 Grok Build 中可用，首周包含 2 倍用量。\n\n开测！👀",
+        "source": {
+          "name": "X：Testing Catalog (@testingcatalog)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:18:26.345Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqan1p60196roucp7t1hexf",
+          "original": "https://x.com/testingcatalog/status/2087567672695275584"
+        }
+      },
+      {
+        "id": "cmsqahsco00zyroucpmeb4k7b",
+        "title": "Grok 4.6 发布：价格不变，智能跃居第一梯队",
+        "summary": "Grok 4.6 正式发布，价格与 4.5 完全一致（$2/M input、$6/M output），智能大幅跃升，AA智能指数61，与 GPT-5.6 Sol Max 持平，仅比 Fable 5 低1分。模型已在 Cursor、grok Build、OpenRouter 全平台上线，首周双倍额度，并针对长运行 Agent 升级了跨代码库分析与自我验证能力。",
+        "source": {
+          "name": "X：阿易 AI Notes (@AYi_AInotes)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:14:19.166Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqahsco00zyroucpmeb4k7b",
+          "original": "https://x.com/AYi_AInotes/status/2087572977348911250"
+        }
+      },
+      {
+        "id": "cmsqagyyz00ywroucrs6d9byv",
+        "title": "剑指 GPT-5.6 Sol，SpaceXAI 发布 Grok 4.6 模型",
+        "summary": "SpaceXAI 发布 Grok 4.6，强化长时间运行的智能体任务及复杂交互和视觉工作。在综合 9 项基准测试的 Artificial Analysis Intelligence Index 上，Grok 4.6 与 GPT-5.6 Sol 取得相同成绩。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:13:41.612Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqagyyz00ywroucrs6d9byv",
+          "original": "https://www.ithome.com/0/988/999.htm"
+        }
+      },
+      {
+        "id": "cmsqabu0f001krouc6sfhic2d",
+        "title": "xAI 发布 Grok 4.6，强化长时运行智能体能力",
+        "summary": "xAI 今日发布 Grok 4.6，在 Grok 4.5 基础上重点强化长时运行智能体及更复杂的交互式与视觉工作能力。该模型在多项智能体编码与知识工作基准上达到前沿水平，在 Artificial Analysis Intelligence Index（九项基准综合分）上追平 GPT-5.6 Sol。",
+        "source": {
+          "name": "xAI：News（网页）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-12T16:09:42.032Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqabu0f001krouc6sfhic2d",
+          "original": "https://x.ai/news/grok-4-6"
+        }
+      },
+      {
+        "id": "cmsq9k89v020vronddoxp07vt",
+        "title": "Grok 4.6 发布：智能、快速且性价比高",
+        "summary": "Grok 4.6 现已推出 🚀🚀🚀\n\n智能、快速，性价比惊人！",
+        "source": {
+          "name": "X：Elon Musk (@elonmusk, xAI)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T15:48:15.281Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsq9k89v020vronddoxp07vt",
+          "original": "https://x.com/elonmusk/status/2087565020158992709"
+        }
+      },
+      {
+        "id": "cmsq9k7rw0209rondx211py6w",
+        "title": "Grok 4.6 发布，多基准登顶",
+        "summary": "Grok 4.6 是一次重大升级 🚀\n\n它在所列出的每一项基准测试中都超越了 Grok 4.5 High，目前排名如下：\n\n🥇 #1 GDPVal-AA v2 — 1,753 🥇 #1 AA-Briefcase — 1,577 🥇 #1 Harvey LAB — 15.8% 🥈 #2 CursorBench — 69.9% 🥈 #2 FrontierCode — 61.3% 🥈 #2 APEX-Agents — 57.5% 🥈 #2 APEX-SWE — 56.4%\n\n它在 Artificial Analysis Intelligence Index 上以 61 分的成绩与 GPT-5.6 Sol Max 持平。\n\nGrok 4.6 即日起在 Cursor 和 Grok Build 中可用，首周使用量翻倍。",
+        "source": {
+          "name": "X：cb_doge (@cb_doge)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T15:48:14.820Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsq9k7rw0209rondx211py6w",
+          "original": "https://x.com/cb_doge/status/2087565206272823552"
+        }
+      },
+      {
+        "id": "cmsq9jpuj01ykrondyrvq42e0",
+        "title": "Grok 4.6 released, absolutely insane crazy jump! xAI was cooking!\n\nAccording to xAI’s benchmarks, Gr...",
+        "summary": null,
+        "source": {
+          "name": "X：Kim (@kimmonismus)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T15:47:50.849Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsq9jpuj01ykrondyrvq42e0",
+          "original": "https://x.com/kimmonismus/status/2087563670054211704"
+        }
+      },
+      {
+        "id": "cmsq9jpuj01yjrondb3anqtc5",
+        "title": "Grok 4.6 has become a VERY strong competitor. It's extremely impressive what xAI and Cursor have ach...",
+        "summary": null,
+        "source": {
+          "name": "X：Kim (@kimmonismus)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T15:47:50.849Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsq9jpuj01yjrondb3anqtc5",
+          "original": "https://x.com/kimmonismus/status/2087564573834428927"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

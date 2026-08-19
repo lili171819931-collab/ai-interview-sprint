@@ -1,8 +1,11 @@
+"use client";
+
 import Link from "next/link";
 import type { ReactNode } from "react";
 import { Newspaper } from "lucide-react";
 import type { AihotDailyIndexItem, AihotDailyReport } from "@/lib/intel/aihot-types";
 import { formatLiteraryDateZh } from "@/lib/intel/time";
+import { tr, useTranslatedTexts } from "@/components/i18n/useTranslatedTexts";
 
 const SECTION_EN: Record<string, string> = {
   "模型发布/更新": "MODEL RELEASES",
@@ -84,6 +87,11 @@ export function DailyDigestView({
   const groups = groupByMonth(index);
   const count = report ? storyCount(report) : 0;
   const when = report ? formatLiteraryDateZh(report.date) : null;
+  const txMap = useTranslatedTexts([
+    report?.lead || "",
+    ...(report?.sections.flatMap((sec) => [sec.label, ...sec.items.flatMap((it) => [it.title, it.summary || ""])]) || []),
+    ...index.map((it) => it.leadTitle || ""),
+  ]);
 
   return (
     <div className="daily-shell">
@@ -120,7 +128,7 @@ export function DailyDigestView({
                     <li key={it.date}>
                       <Link href={`/briefs?date=${it.date}`} className={on ? "daily-date daily-date-on" : "daily-date"}>
                         <span className="daily-date-num">{dayLabel(it.date)}</span>
-                        <span className="daily-date-lead">{it.leadTitle || "日报"}</span>
+                        <span className="daily-date-lead">{tr(txMap, it.leadTitle || "日报")}</span>
                       </Link>
                     </li>
                   );
@@ -177,17 +185,17 @@ export function DailyDigestView({
                     <span className="daily-hl-n">{pad(i + 1)}</span>
                     <div className="min-w-0">
                       <div className="daily-hl-top">
-                        <span className="daily-hl-cat">{sec.label}</span>
+                        <span className="daily-hl-cat">{tr(txMap, sec.label)}</span>
                         <span className="daily-hl-count">{sec.items.length} 篇</span>
                       </div>
-                      <p className="daily-hl-lead">{sec.items[0]?.title}</p>
+                      <p className="daily-hl-lead">{tr(txMap, sec.items[0]?.title || "")}</p>
                     </div>
                   </li>
                 ))}
               </ol>
             </section>
 
-            {report.lead ? <p className="daily-lead">{report.lead}</p> : null}
+            {report.lead ? <p className="daily-lead">{tr(txMap, report.lead)}</p> : null}
 
             {report.sections.map((sec, i) => (
               <details key={sec.label} className="daily-sec" open>
@@ -195,7 +203,7 @@ export function DailyDigestView({
                   <div>
                     <p className="daily-sec-title">
                       <span className="daily-sec-n">{pad(i + 1)}</span>
-                      {sec.label}
+                      {tr(txMap, sec.label)}
                     </p>
                     <p className="daily-sec-en">{SECTION_EN[sec.label] || "SECTION"}</p>
                   </div>
@@ -211,9 +219,9 @@ export function DailyDigestView({
                       <li key={`${sec.label}-${it.title}`} className="daily-entry">
                         <EntryLink href={href} className="zh-title daily-entry-title">
                           <Newspaper size={15} className="daily-entry-icon" aria-hidden />
-                          <span>{it.title}</span>
+                          <span>{tr(txMap, it.title)}</span>
                         </EntryLink>
-                        {it.summary ? <p className="zh-summary daily-entry-sum">{it.summary}</p> : null}
+                        {it.summary ? <p className="zh-summary daily-entry-sum">{tr(txMap, it.summary)}</p> : null}
                         <p className="zh-source daily-entry-src">{it.source.name}</p>
                       </li>
                     );

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-19T03:26:22.123Z",
+  "story": {
+    "publicId": "411a1a5a-e329-4eeb-83d0-34d48dbb7214",
+    "title": "sentence-transformers 发布多向量（后期交互）嵌入模型",
+    "status": "active",
+    "sourceCount": 1,
+    "reportCount": 1,
+    "firstReportAt": "2026-08-18T14:05:05.620Z",
+    "latestAt": "2026-08-18T14:05:05.620Z",
+    "latest": "Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型",
+    "digest": null,
+    "digestUpdatedAt": null,
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/411a1a5a-e329-4eeb-83d0-34d48dbb7214"
+    },
+    "reports": [
+      {
+        "id": "cmsyqip4o14umroz0ch5iv0iv",
+        "title": "Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型",
+        "summary": "Sentence Transformers v6.0 新增第四种模型类型 MultiVectorEncoder，可直接加载 PyLate、Stanford-NLP ColBERT 及 colpali-engine 检查点，用于 ColBERT 式晚期交互检索。",
+        "source": {
+          "name": "Hugging Face：Blog（RSS）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-18T14:05:05.620Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsyqip4o14umroz0ch5iv0iv",
+          "original": "https://huggingface.co/blog/multi-vector-encoder"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

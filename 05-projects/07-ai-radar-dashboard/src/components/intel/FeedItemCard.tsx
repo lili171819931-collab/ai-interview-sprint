@@ -1,3 +1,7 @@
+"use client";
+
+import { Tx } from "@/components/i18n/Tx";
+import { tr, useTranslatedTexts } from "@/components/i18n/useTranslatedTexts";
 import Link from "next/link";
 import { Bookmark, ExternalLink } from "lucide-react";
 import type { FeedItem } from "@/lib/intel/aihot-types";
@@ -12,13 +16,17 @@ export function FeedItemCard({ item, variant = "story" }: { item: FeedItem; vari
       <div className="story-card-top">
         <div className="story-card-meta">
           <span className="zh-source">{item.sourceName}</span>
-          {showPick ? <span className="zh-badge-pick">✨ 精选</span> : null}
+          {showPick ? (
+            <span className="zh-badge-pick">
+              <Tx k="feed.pick" />
+            </span>
+          ) : null}
         </div>
         <div className="story-card-right">
           {score != null ? (
             <span className="zh-score">
               <span className="zh-score-dot" aria-hidden />
-              AI 评分 {score}/100
+              <Tx k="feed.score" values={{ n: score }} />
             </span>
           ) : null}
           <span className="story-card-bookmark" aria-hidden>
@@ -37,7 +45,9 @@ export function FeedItemCard({ item, variant = "story" }: { item: FeedItem; vari
         <>
           <hr className="story-card-rule" />
           <p className={showPick ? "zh-reason zh-reason-pick" : "zh-reason"}>
-            <span className="zh-reason-label">推荐理由：</span>
+            <span className="zh-reason-label">
+              <Tx k="feed.reason" />
+            </span>
             {item.recommendReason}
           </p>
         </>
@@ -47,7 +57,7 @@ export function FeedItemCard({ item, variant = "story" }: { item: FeedItem; vari
         <span>{beijingTime(item.publishedAt || item.discoveredAt)}</span>
         {item.originalUrl ? (
           <a href={item.originalUrl} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1">
-            原文 <ExternalLink size={11} aria-hidden />
+            <Tx k="feed.source" /> <ExternalLink size={11} aria-hidden />
           </a>
         ) : null}
       </div>
@@ -56,17 +66,26 @@ export function FeedItemCard({ item, variant = "story" }: { item: FeedItem; vari
 }
 
 export function FeedItemList({ items }: { items: FeedItem[] }) {
+  const txMap = useTranslatedTexts(items.flatMap((it) => [it.title, it.summary, it.recommendReason]));
   if (!items.length) {
     return (
       <div className="surface p-6 text-sm text-[var(--muted)]">
-        这个时间窗里没有精选。试试「最近 7 天」，或等待下一轮整点更新。
+        <Tx k="feed.empty.featured" />
       </div>
     );
   }
   return (
     <div className="story-list">
       {items.map((it) => (
-        <FeedItemCard key={`${it.origin}-${it.id}`} item={it} />
+        <FeedItemCard
+          key={`${it.origin}-${it.id}`}
+          item={{
+            ...it,
+            title: tr(txMap, it.title),
+            summary: tr(txMap, it.summary),
+            recommendReason: tr(txMap, it.recommendReason),
+          }}
+        />
       ))}
     </div>
   );

@@ -26,7 +26,7 @@ export type OpportunityDailyReport = {
   generatedAt: string;
   reportDate: string;
   timezone: "Asia/Shanghai";
-  method: "builderpulse-aligned";
+  method: "builderpulse-aligned" | "live";
   attribution: string;
   sourceUrl: string;
   editorNote: string;

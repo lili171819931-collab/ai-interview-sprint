@@ -1,0 +1,93 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:21.205Z",
+  "story": {
+    "publicId": "5829f929-b678-424c-995f-f9047b2f7833",
+    "title": "Qwen 在 Hugging Face 上线 Qwen3.8-2.4T-A95B",
+    "status": "active",
+    "sourceCount": 4,
+    "reportCount": 5,
+    "firstReportAt": "2026-08-12T15:56:45.503Z",
+    "latestAt": "2026-08-13T14:52:12.026Z",
+    "latest": "硅基流动宣布 Day-0 支持并公布 API 定价。",
+    "digest": "阿里 Qwen 团队在 Hugging Face 上线 Qwen3.8-2.4T-A95B 模型权重，这是 Qwen-Max 级别模型首次开源。模型总参数 2.4T，每个 Token 激活 95B，原生支持 262,144 Token 上下文，并可扩展至 1,010,000 Token。\nHugging Face CEO Clément Delangue 在 X 平台转发并评论“走起！”。随后 IT之家报道确认模型权重开放，并强调其为 Qwen-Max 级别模型首次开源。\n8 月 13 日，AI 领域人士 Rohan Paul 在 X 平台再次提及该模型已上线 HuggingFace，确认其开源权重混合专家模型属性。同日，硅基流动宣布提供 Day-0 支持，并公布 API 定价：输入 $2.00/百万 token，输出 $6.00/百万 token，缓存输入 $0.25/百万 token。",
+    "digestUpdatedAt": "2026-08-13T14:57:37.771Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/5829f929-b678-424c-995f-f9047b2f7833"
+    },
+    "reports": [
+      {
+        "id": "cmsrmzzs3001prosrja5hbsqd",
+        "title": "Qwen3.8-2.4T-A95B 开源，硅基流动即日上线",
+        "summary": "阿里开源 Qwen3.8-2.4T-A95B，硅基流动已提供 Day-0 支持。该模型总参数 2.4T、激活参数 95B，主打自主编码、深度研究与端到端智能体执行。API 定价为输入 $2.00/百万 token、输出 $6.00/百万 token、缓存输入 $0.25/百万 token。",
+        "source": {
+          "name": "X：硅基流动 SiliconFlow (@SiliconFlowAI)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T14:52:12.026Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrmzzs3001prosrja5hbsqd",
+          "original": "https://x.com/SiliconFlowAI/status/2087911506113683756"
+        }
+      },
+      {
+        "id": "cmsrlvwfp05gdro46mbfqtsgm",
+        "title": "Qwen3.8-2.4T-A95B 开源，硅基流动即日上线",
+        "summary": "阿里开源 Qwen3.8-2.4T-A95B，硅基流动已提供 Day-0 支持。该模型拥有 2.4T 参数、95B 激活参数，主打自主编码、深度研究与端到端智能体执行。API 定价为输入 $2.00/百万 token，输出 $6.00/百万 token，缓存输入 $0.25/百万 token。",
+        "source": {
+          "name": "X：硅基流动 SiliconFlow (@SiliconFlowAI)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T14:21:01.224Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrlvwfp05gdro46mbfqtsgm",
+          "original": "https://x.com/SiliconFlowAI/status/2087903227224412222"
+        }
+      },
+      {
+        "id": "cmsr4qkcq0kkiroz2c8vqmyph",
+        "title": "Qwen3.8-2.4T-A95B 开源 MoE 模型上线 HuggingFace",
+        "summary": "Qwen3.8-2.4T-A95B，这款 2.4T 参数的开源权重混合专家模型，已上线 HuggingFace。",
+        "source": {
+          "name": "X：Rohan Paul (@rohanpaul_ai)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T06:20:58.006Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsr4qkcq0kkiroz2c8vqmyph",
+          "original": "https://x.com/rohanpaul_ai/status/2087781790400545261"
+        }
+      },
+      {
+        "id": "cmsqagyyz00yuroucf55e5fue",
+        "title": "阿里开放 Qwen3.8-2.4T-A95B 模型权重：2.4T MoE、激活 95B、原生 256K 上下文",
+        "summary": "阿里 Qwen 团队正式开放 Qwen3.8-2.4T-A95B 模型权重，这是 Qwen-Max 级别模型首次开源。模型总参数 2.4T，每个 Token 激活 95B，原生支持 262,144 Token 上下文并可扩展至 1,010,000 Token。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T16:13:41.612Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsqagyyz00yuroucf55e5fue",
+          "original": "https://www.ithome.com/0/989/001.htm"
+        }
+      },
+      {
+        "id": "cmsq9vbj601sgroxa1kpm6vqe",
+        "title": "Qwen3.8-2.4T-A95B 上线 Hugging Face",
+        "summary": "走起！\n\nhttps://huggingface.co/Qwen/Qwen3.8-2.4T-A95B",
+        "source": {
+          "name": "X：Clément Delangue（Hugging Face CEO） (@ClementDelangue)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-12T15:56:45.503Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsq9vbj601sgroxa1kpm6vqe",
+          "original": "https://x.com/ClementDelangue/status/2087562019788697818"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-08-19T03:41:47.644Z",
+  "reportDate": "2026-08-14",
+  "timezone": "Asia/Shanghai",
+  "method": "builderpulse-aligned",
+  "attribution": "内容解析自 BuilderPulse 公开中文日报（CC BY-NC 4.0，非商业用途）。原作者：Liu Xiaopai / BuilderPulse。",
+  "sourceUrl": "https://raw.githubusercontent.com/BuilderPulse/BuilderPulse/main/zh/2026/2026-08-14.md",
+  "editorNote": "行业正在从「AI 能造什么」转向「谁能证明 AI 造了什么」。公开讨论里反复出现「真实性回执 / 审计」需求，却缺少可交付的小工具。",
+  "plainBrief": "一句话概括今天： Google 发布了一个又快又便宜的模型；DeepSeek 开放了 agent 执行外壳；\"agent 记忆\"搜索量突然 +1,900%——本周的瓶颈是记忆，不是模型智商。",
+  "headline": "做一个本地优先的 agent 记忆，把会话蒸馏成可搜索笔记",
+  "summary": "一句话概括今天： Google 发布了一个又快又便宜的模型；DeepSeek 开放了 agent 执行外壳；\"agent 记忆\"搜索量突然 +1,900%——本周的瓶颈是记忆，不是模型智商。",
+  "buildIdea": {
+    "title": "做一个本地优先的 agent 记忆，把会话蒸馏成可搜索笔记",
+    "whyNow": "agent 记忆搜索一周暴涨 1,900%，还没有产品接住，今天花两小时就能抢占先机",
+    "timeboxTitle": "今日 2 小时构建",
+    "timeboxDetail": "今日 2 小时构建"
+  },
+  "topSignals": [
+    "开发者社区对「代码从来不是最难部分」争议升温，验证与证据成为焦点。",
+    "自托管 / 免费替代品搜索热度上行，订阅疲劳仍在制造流量入口。",
+    "智能体信任与审查工具在 Product Hunt / Show HN 重叠出现。"
+  ],
+  "evidence": [
+    {
+      "label": "开发者社区对「代码从来不是最难部分」争议升温，验证与证据成为焦点。",
+      "discussion": "多源交叉验证公开讨论",
+      "meaning": "开发者社区对「代码从来不是最难部分」争议升温，验证与证据成为焦点。"
+    },
+    {
+      "label": "自托管 / 免费替代品搜索热度上行，订阅疲劳仍在制造流量入口。",
+      "discussion": "多源交叉验证公开讨论",
+      "meaning": "自托管 / 免费替代品搜索热度上行，订阅疲劳仍在制造流量入口。"
+    },
+    {
+      "label": "智能体信任与审查工具在 Product Hunt / Show HN 重叠出现。",
+      "discussion": "多源交叉验证公开讨论",
+      "meaning": "智能体信任与审查工具在 Product Hunt / Show HN 重叠出现。"
+    }
+  ],
+  "lenses": [
+    {
+      "id": "ai-rank",
+      "title": "AI 热点榜信号",
+      "blurb": "精选事件热度 · 对齐热点榜名次",
+      "items": [
+        {
+          "title": "OpenAI 在“关键网络能力”时代放缓模型开发节奏",
+          "meta": "OpenAI：官网动态（RSS · 排除企业/客户案例） · 热度值 102",
+          "href": "/story/1c28288a-22d7-4d4e-9bf1-a384527b1454",
+          "note": "发酵中"
+        },
+        {
+          "title": "GLM-5.3上线：AA智能指数60分并列开源第一，成本更低",
+          "meta": "公众号：智谱（GLM） · 热度值 45",
+          "href": "/story/7f3cbcf6-3c01-4e1a-a296-45ffd92f099a",
+          "note": "发酵中"
+        },
+        {
+          "title": "Claude 如何加速蛋白质设计与分析化学研究",
+          "meta": "Anthropic：Research（发表成果 · 网页） · 热度值 30",
+          "href": "/story/6ed4b694-76eb-4642-8e0e-e1d26ddd0b44",
+          "note": "发酵中"
+        },
+        {
+          "title": "NVIDIA 与 SB Energy 合作锁定俄亥俄州 PORTS-Pike 园区电力容量，OpenAI 将入驻",
+          "meta": "NVIDIA Blog（RSS） · 热度值 27",
+          "href": "/story/fdc2b29b-0377-40f1-a044-5c1a667d18fd"
+        },
+        {
+          "title": "Sentence Transformers v6.0 新增 MultiVectorEncoder，支持 ColBERT 风格多向量模型",
+          "meta": "Hugging Face：Blog（RSS） · 热度值 9",
+          "href": "/story/411a1a5a-e329-4eeb-83d0-34d48dbb7214"
+        }
+      ]
+    },
+    {
+      "id": "cn-hot",
+      "title": "国内热点切入",
+      "blurb": "公开聚合榜 · 优先 AI 相关",
+      "items": [
+        {
+          "title": "我们做了一款专注于股票投资与投研领域的垂类 AI Agent，评论区送 5 个价值 ¥1000+ 的 Pro 年付会员",
+          "meta": "V2EX 热门 · #3 · 热度 85",
+          "href": "https://www.v2ex.com/t/1235297"
+        },
+        {
+          "title": "80后老登，1人，4个月，113分钟AI长片电影《出马仙镇东北》【AI全民制作人】",
+          "meta": "B站热门视频 · #3 · 热度 1810666",
+          "href": "https://www.bilibili.com/video/BV1gMgM6KEUM"
+        },
+        {
+          "title": "作为AI时代的顶梁柱，这段时间密集分析了阿里巴巴的相关研报，忽然发现其实阿里巴巴，和我在投的药明，非常的相似。熟悉药明模式的，最常见的就是拎出来说一句：它的黄金漏斗——R端早期发现分子，最早摸到那些有眼光的项目；M端早扩产，等商业化洪...",
+          "meta": "雪球热帖 · #4 · 热度 112",
+          "href": "https://xueqiu.com/5673225518/405541023"
+        },
+        {
+          "title": "AI Coding 时代作为面试官已经不会面试开发了",
+          "meta": "V2EX 热门 · #8 · 热度 49",
+          "href": "https://www.v2ex.com/t/1235472"
+        },
+        {
+          "title": "互联网大厂开始后悔搞 AI 了吗？",
+          "meta": "知乎热榜 · #11 · 热度 39",
+          "href": "https://www.zhihu.com/question/2053164433577338668"
+        }
+      ]
+    },
+    {
+      "id": "intl-hot",
+      "title": "海外热点切入",
+      "blurb": "HN / PH / TechCrunch 等",
+      "items": [
+        {
+          "title": "Clara AI SDR",
+          "meta": "Product Hunt · #1 · 热度 49",
+          "href": "https://www.producthunt.com/products/clara-ai-sdr?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+        },
+        {
+          "title": "OpenAI slows the frontier to regain control | The Deep View",
+          "meta": "Exa 全球科技热点 · #1",
+          "href": "https://www.thedeepview.com/articles/openai-slows-the-frontier-to-regain-control"
+        },
+        {
+          "title": "Taku AI",
+          "meta": "Product Hunt · #2 · 热度 48",
+          "href": "https://www.producthunt.com/products/taku-ai?utm_campaign=producthunt-api&utm_medium=api-v2&utm_source=Application%3A+newsnow+%28ID%3A+239216%29"
+        },
+        {
+          "title": "OpenAI is slowing down its most powerful AI — the reason is the AI | Malay Mail",
+          "meta": "Exa 全球科技热点 · #2",
+          "href": "https://www.malaymail.com/news/tech-gadgets/2026/08/19/openai-is-slowing-down-its-most-powerful-ai-the-reason-is-the-ai/231851"
+        },
+        {
+          "title": "Why people aren’t buying Mark Zuckerberg’s AI future",
+          "meta": "TechCrunch Social · #3 · 热度 38",
+          "href": "https://techcrunch.com/2026/08/16/why-people-arent-buying-mark-zuckerbergs-ai-future/"
+        }
+      ]
+    }
+  ],
+  "opportunities": [
+    {
+      "id": "opp-1",
+      "category": "search_trends",
+      "title": "过去一周哪些搜索词暴涨？",
+      "signal": "baserow +300%、asana +200%、librecad +120%、gamma ai alternative +110%、owncloud +110%、mattermost +70%、openproject +60%；\"ai text to video generator free\" +90% → +200%。",
+      "plainSpeak": "自托管浪潮刚刚从视频工具轮动到生产力应用——Airtable、Asana、Slack 和 CAD 是下一批被替代的对象。",
+      "judgment": "自托管迁移正在轮动到生产力套件——Airtable、Asana 和 Slack 的替代品是下一个 micro-SaaS 战场。",
+      "counterpoint": "Baserow、Mattermost、OpenProject 已经是成熟的开源产品——搜索增长是对现有软件的需求，而不是新进入者；在免费自托管工具旁边做变现是最经典的陷阱。"
+    },
+    {
+      "id": "opp-2",
+      "category": "oss_gap",
+      "title": "GitHub 上哪些快速增长的开源项目还没有商业版本？",
+      "signal": "DeepSeek-Reasonix（每周 2,419 stars）、loopx（每周 1,967）、book-to-skill（每周 3,789）；prime-agent 以每周 12,476 领跑该品类，且没有付费档位。",
+      "plainSpeak": "两个全新的 agent 基础设施项目——一个终端 agent 和一个团队循环内核——都还没有付费版本；缺口敞开着。",
+      "judgment": "agent 记忆是尚未变现的层——每周 2,000-4,000 stars，却没有一个定价页面。",
+      "counterpoint": "\"没有商业版本\"往往是因为项目只是大公司技术栈的周末 demo——DeepSeek-Reasonix 是 DeepSeek 生态原生的，随时可能被上游吸收；护城河是基准测试，不是 stars。"
+    },
+    {
+      "id": "opp-3",
+      "category": "complaints",
+      "title": "开发者在抱怨哪些工具？",
+      "signal": "systemd-journald 的单个日志行要消耗 49KB+（ext4）或 110KB+（btrfs）的磁盘写入（146 分 / 93 条评论）；\"Guide to (not) fucking up QR codes\"登顶 Lobsters（104 分 / 11 条评论）。",
+      "plainSpeak": "开发者正在为日志刷屏、坏掉的二维码和连接池问题恼火——无聊的基础设施持续制造最大的抱怨声。",
+      "judgment": "日志、二维码、连接池、打包——每个默认行为有缺陷的无聊层，都是一个等待被构建的运维产品。",
+      "counterpoint": "这些抱怨常年存在——journald 的 issue 是重度用户用极端负载提出的，二维码批评是设计审美之争，不是市场。"
+    },
+    {
+      "id": "opp-4",
+      "category": "tech_choice",
+      "title": "有没有大公司关闭或降级了产品？",
+      "signal": "uBlock Origin 放弃对抗 Facebook 广告（680 分，838 条讨论——比一天前的 453 条几乎翻倍）；九家 PBS 电视台起诉 Iron Mountain 封锁档案访问（242 分 / 135 条评论）。",
+      "plainSpeak": "一个广告拦截器退出了它的 Facebook 战争，一家电视网起诉了它的档案供应商——平台和数据持有者继续赢。",
+      "judgment": "平台军备竞赛结束时，输的是用户；当供应商握有你的原件，唯一的手段就是打官司。产品负责人：为退出而设计。",
+      "counterpoint": "uBlock 的决定是理性的资源分配——Facebook 广告只是广告拦截面的一小片；Iron Mountain 大概率会和解。两个故事都很戏剧化，但都不是商业崩盘。"
+    },
+    {
+      "id": "opp-5",
+      "category": "tech_choice",
+      "title": "HuggingFace 上最热的模型是什么？它们能催生哪些消费者产品？",
+      "signal": "MiniMax-Music3（trending 320）、Mistral OCR 4.1（250 分 / 98 条评论）、Liquid LFM2.5-2.6B（trending 255，116K 下载）；Muse-Glimmer-30B 持续攀升（trending 1,335，121K 下载）。",
+      "plainSpeak": "开源模型进入了音乐、OCR 和端侧设备——消费者赢面在音频、文档和离线场景，而不是聊天。",
+      "judgment": "音乐、OCR 和端侧是开源模型在性价比上击败闭源的战场——音频和文档自动化是本周最安全的消费者构建目标。",
+      "counterpoint": "音乐生成输出仍需人工筛选才能用，OCR 质量取决于版面运气，Muse-Glimmer 在真实世界的可靠性还没经过大规模验证——\"HF 上最热\"是注意力，不是生产就绪。"
+    },
+    {
+      "id": "opp-6",
+      "category": "oss_gap",
+      "title": "本周最重要的开源 AI 进展是什么？",
+      "signal": "DeepSeek 开放 Harness 开发者预览（554 分 / 241 条评论）；\"anthropic ai agent memory management\" 7 天 +1,900%，MCP Memory 登上 Show HN，出现 agent 记忆排行榜；四个来源同时指向 agent 安全护栏。",
+      "plainSpeak": "本周的开源 AI 新闻是基础设施，不是模型——执行外壳、记忆和护栏。",
+      "judgment": "执行外壳、记忆、护栏——本周的开源 AI 属于 agent 的操作系统，而不是 agent 的大脑。",
+      "counterpoint": "Harness 只是预览，可能一直保持闭源；记忆\"方案\"才一天大，而 Mem0 级工具已经耕耘多年；护栏产品彼此重叠，很快就会整合。"
+    },
+    {
+      "id": "opp-7",
+      "category": "tech_choice",
+      "title": "最受欢迎的 Show HN 项目在用哪些技术栈？",
+      "signal": "OxiSH（Rust SSH 服务器，15 分 / 0 条评论）和 Bsdkrun（microVM/unikernel）加入 MCP Memory（SQLite FTS5）；Woxi 的新评论让 Rust 重写故事持续发酵。",
+      "plainSpeak": "Rust 统治系统重写，SQLite 正在成为 agent 记忆，其余全是瘦客户端 JavaScript。",
+      "judgment": "技术栈的故事是\"老工具，新工作\"——Rust 用于重写、SQLite 用于记忆、MCP 用于接线——没有任何新框架在抢占阵地。",
+      "counterpoint": "Show HN 偏向爱好者；Woxi 级的势头是 308 分的异类，这里的大多数项目在生产之前就死了——Show HN 上的技术栈时尚比真实世界的采用滞后一年。"
+    },
+    {
+      "id": "opp-8",
+      "category": "competition",
+      "title": "有没有沉寂的老项目突然复活？",
+      "signal": "\"Choose Boring Technology\"（2015 年）重新登上首页（247 分 / 131 条评论）；Donkey.bas 迎来 45 岁生日（186 分 / 79 条评论）；NP-Overrated 拿到 145 分 / 89 条评论。",
+      "plainSpeak": "一篇 2015 年的文章和一个 45 岁的 BASIC 游戏重新上了首页——当新技术栈不断出问题时，旧信条就会回归。",
+      "judgment": "当当下的痛苦够高时，老文章和老游戏会重新上榜——\"无聊\"现在是增长关键词，怀旧是一门市场。",
+      "counterpoint": "首页重登只是算法的回声——2015 年的无聊技术建议早于 AI 生成的基础设施更迭；Donkey.bas 是花边新闻，不是需求。"
+    },
+    {
+      "id": "opp-9",
+      "category": "competition",
+      "title": "有没有\"XX 已死\"或迁移类文章？",
+      "signal": "\"Where did the old web go?\"——一次对 657,607 个链接的爬行找到了答案（131 分 / 107 条评论）；软件工程中产阶级的帖子涨到 890 条评论；出现一个求职市场 Ask HN（13 分 / 18 条评论）。",
+      "plainSpeak": "死亡叙事已经从\"旧互联网\"转移到了\"职业阶梯中段\"——两者本质上都是迁移故事。",
+      "judgment": "今天每一个\"X 已死\"的故事都是迁移故事——内容、职业和公司都在决定什么迁往新栈，什么被留在原地。",
+      "counterpoint": "链接腐烂研究衡量的是死站的遗弃，不是活互联网的健康度；中产阶级 SWE 文章的 890 条评论里有很多反驳指出\"中产阶级\"从来不是静态的。"
+    },
+    {
+      "id": "opp-10",
+      "category": "trends",
+      "title": "VC 和 YC 正在关注哪些话题？",
+      "signal": "OpenAI 发布 \"How Organizations Use AI: Evidence from ChatGPT\"（65 分 / 35 条评论）；agent 评估和 agent 劳动力产品占领 Product Hunt（Coarena 105、Oasis 211）；Grok 4.6 在 Artificial Analysis Index 上拿下 61 分（336 分 / 399 条评论）。",
+      "plainSpeak": "VC 的注意力在 agent 评估和 agent 劳动力上——如何衡量和信任 agent 才是被投资的问题。",
+      "judgment": "被投资的层是\"信任与度量\"——agent 评估、agent 竞技场、agent 劳动力——而不是又一个模型。",
+      "counterpoint": "两个 PH 发布和一个基准分数，作为 VC 配置的证据很单薄；大多数 agent 评估创业公司在解决在位者（OpenAI、Anthropic、Google）迟早会原生解决的问题。"
+    },
+    {
+      "id": "opp-11",
+      "category": "search_trends",
+      "title": "哪些 AI 搜索词正在降温？",
+      "signal": "cisco ai agent employee rollout 三个月 +3,550% 却从 7 天榜单消失；hermes agent 家族（3 个月 Breakout）缺席 7 天上升榜；核心词进入平台期：ai coding agent +60%、codex +60%、mcp +50%。",
+      "plainSpeak": "炒作词在降温——Cisco 的部署和 hermes 家族从 7 天窗口消失，核心 agent 词汇进入平台期。",
+      "judgment": "降温词是最好的\"哪些已是入场门槛\"分类学——如果 hermes/cisco 式词汇消退而 codex/mcp 稳住，说明品类在成熟，而不是在死亡。",
+      "counterpoint": "7 天窗口会掩盖季节性模式——有声书和课程词会回来；一个词离开上升榜也可能意味着饱和（感兴趣的用户都找到了它），而不是被抛弃。"
+    },
+    {
+      "id": "opp-12",
+      "category": "trends",
+      "title": "新词雷达：哪些全新概念正在从零升起？",
+      "signal": "一道逐字复制的测验题（+4,500%）——\"what are the variables that the model learns during its training process? a versions b placeholders c books d parameters\"——登顶新词榜；\"anthropic ai agent memory management\" +1,900%；baserow +300%。",
+      "plainSpeak": "新词全是\"管理 agent\"的动词——记忆、检测、拦截——外加一个惊喜：学生在整道整道地搜考试题。",
+      "judgment": "新词是和 agent 共处所需的动词——记住、检测、拦截、核验——其中考试查询异类是本周唯一真正全新的人类行为。",
+      "counterpoint": "一条爆火的 TikTok 或一个 bot 就能推动长尾趋势数字；+4,500% 的测验词组很可能是作业在班里传开，不是持久需求。"
+    }
+  ],
+  "trackRecord": [
+    {
+      "date": "2026-08-19",
+      "summary": "证据层 / 真实性回执成为公开讨论焦点",
+      "reportPath": "/opportunities?date=2026-08-19"
+    }
+  ],
+  "methodNote": "方法对齐 BuilderPulse（CC BY-NC）：跨源交叉验证 → 一条高置信构建建议 + Why now + Top 信号 + 机会题库（信号／白话／关键判断／反向视角）。本地再叠 AI 热点榜与国内／海外看板。命令：npm run opp:sync",
+  "stats": {
+    "aiHot": 5,
+    "cnHot": 5,
+    "intlHot": 5,
+    "opportunities": 12
+  }
+}

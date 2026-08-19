@@ -1,10 +1,23 @@
 {
-  "updatedAt": "2026-08-13T11:42:07.095Z",
+  "updatedAt": "2026-08-14T03:35:29.504Z",
   "timezone": "Asia/Shanghai",
   "days": [
     {
+      "date": "2026-08-14",
+      "archivedAt": "2026-08-14T03:35:29.491Z\nreason=post-hot-refresh\nfiles=trendradar-hot.json,global-hot-topics.json",
+      "files": [
+        "global-hot-topics.json",
+        "trendradar-hot.json"
+      ],
+      "summary": {
+        "hotGeneratedAt": "2026-08-14T11:35:29+08:00",
+        "sourcesOk": 16,
+        "sourcesTotal": 16
+      }
+    },
+    {
       "date": "2026-08-13",
-      "archivedAt": "2026-08-13T11:42:07.084Z\nreason=post-quick-refresh\nfiles=daily-bundle.json,radar-daily-report.json,builder-pulse-daily.json,opportunity-report-daily.json,trendradar-hot.json,global-hot-topics.json",
+      "archivedAt": "2026-08-14T03:35:29.491Z\nreason=post-hot-refresh\nfiles=daily-bundle.json,radar-daily-report.json,builder-pulse-daily.json,opportunity-report-daily.json",
       "files": [
         "builder-pulse-daily.json",
         "daily-bundle.json",
@@ -18,7 +31,7 @@
         "radarReportDate": "2026-08-13",
         "radarSignals": 32,
         "pulseReportDate": "2026-08-13",
-        "hotGeneratedAt": "2026-08-13T19:42:05+08:00",
+        "hotGeneratedAt": "2026-08-13T23:37:43+08:00",
         "bundleGeneratedAt": "2026-08-13T10:59:38.790Z",
         "sourcesOk": 16,
         "sourcesTotal": 16

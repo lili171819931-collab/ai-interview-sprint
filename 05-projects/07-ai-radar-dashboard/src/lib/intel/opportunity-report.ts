@@ -3,6 +3,11 @@ import path from "path";
 import { queryHotTopics } from "@/lib/intel/feed";
 import { getGlobalHotTopicsView } from "@/lib/global-hot-data";
 import { getPulseBriefView } from "@/lib/pulse-data";
+import { getGithubHotSnapshot } from "@/lib/intel/github-data";
+import { getProductHuntSnapshot } from "@/lib/intel/producthunt-data";
+import type { GithubHotItem } from "@/lib/intel/github-types";
+import type { ProductHuntItem } from "@/lib/intel/producthunt-types";
+import type { BuilderPulseBrief, PulseOpportunity, PulseTrackItem } from "@/lib/pulse-types";
 import type { HotRankItem } from "@/lib/intel/aihot-types";
 import type { GlobalHotItem } from "@/lib/global-hot-types";
 import type {
@@ -39,12 +44,189 @@ function evidenceFromSignals(signals: string[]): OpportunityEvidence[] {
   });
 }
 
+function short(s: string, n = 46): string {
+  const t = (s || "").trim().replace(/\s+/g, " ");
+  return t.length > n ? `${t.slice(0, n)}…` : t;
+}
+
+function ghRisingTop(): GithubHotItem[] {
+  const snap = getGithubHotSnapshot();
+  if (!snap) return [];
+  return snap.categories
+    .flatMap((b) => b.rising || [])
+    .sort((a, b) => (b.starsDelta || 0) - (a.starsDelta || 0) || b.stars - a.stars)
+    .slice(0, 6);
+}
+
+function phTop(): ProductHuntItem[] {
+  return (getProductHuntSnapshot()?.items || []).slice(0, 6);
+}
+
+/** BuilderPulse 上游未发布当天日报时，用智衡全平台实时数据合成当天简报 */
+function buildLiveBrief(date: string): BuilderPulseBrief {
+  const hot = queryHotTopics();
+  const global = getGlobalHotTopicsView();
+  const ghRising = ghRisingTop();
+  const ph = phTop();
+
+  const cnItems = global.snapshot.platforms
+    .filter((p) => p.region === "国内")
+    .flatMap((p) => p.items);
+  const intlItems = global.snapshot.platforms
+    .filter((p) => p.region === "海外")
+    .flatMap((p) => p.items);
+
+  const signals: string[] = [];
+  for (const it of hot.items.slice(0, 4)) {
+    signals.push(`「${short(it.title, 40)}」 · ${it.sourceCount} 个信源（AI 热点榜 #${it.rank}）`);
+  }
+  for (const it of ghRising.slice(0, 2)) {
+    signals.push(
+      `GitHub 增速 ${it.starsDelta ? `+${it.starsDelta}` : "↑"} · ${it.name}：${short(it.description || "", 42)}`,
+    );
+  }
+  for (const it of ph.slice(0, 2)) {
+    signals.push(`Product Hunt ${it.votes} 票 · ${it.title}：${short(it.tagline || "", 42)}`);
+  }
+  if (signals.length < 3) {
+    for (const it of [...cnItems, ...intlItems].slice(0, 2)) {
+      signals.push(`「${short(it.title, 40)}」· ${it.platform} #${it.rank}`);
+    }
+  }
+
+  const target = ghRising[0] || ph[0] || hot.items[0];
+  const tAny = (target || {}) as Record<string, unknown>;
+  const targetName =
+    typeof tAny.name === "string" ? tAny.name : typeof tAny.title === "string" ? tAny.title : "";
+  const targetDesc =
+    typeof tAny.description === "string"
+      ? tAny.description
+      : typeof tAny.tagline === "string"
+        ? tAny.tagline
+        : typeof tAny.title === "string"
+          ? tAny.title
+          : "";
+  const targetDelta =
+    typeof tAny.starsDelta === "number" && tAny.starsDelta > 0
+      ? `近况 +${tAny.starsDelta} stars`
+      : typeof tAny.votes === "number"
+        ? `PH ${tAny.votes} 票`
+        : typeof tAny.sourceCount === "number"
+          ? `${tAny.sourceCount} 个信源热议`
+          : "";
+
+  const ideaTitle = targetName
+    ? `做一款「${targetName}」式产品：${short(targetDesc, 30)}`
+    : "围绕今日最强 AI 信号做一个 2 小时可验证原型";
+  const whyNow = targetName
+    ? `「${targetName}」${targetDelta}，处于公开信源热度高点；同类直接竞品仍少，适合 24–72 小时快速验证并抢占窗口。`
+    : "今日 AI 热点密集、公开讨论量大，先用最小原型验证需求再放大。";
+
+  const opportunities: PulseOpportunity[] = [];
+  for (const it of ph.slice(0, 4)) {
+    opportunities.push({
+      id: `live-launch-${it.slug || it.rank}`,
+      category: "launches",
+      title: `${it.title} 今日上线 Product Hunt`,
+      signal: short(it.tagline || "", 60) || `${it.title}（${it.votes} 票）`,
+      plainSpeak: `${it.title} 今日在 Product Hunt 获 ${it.votes} 票，可研究其定位、定价与差异化。`,
+      judgment: "新品集中出现说明该方向需求在放大，适合跟进做垂直细分。",
+      counterpoint: "头部产品已占先发优势，需找到未被满足的细分场景。",
+    });
+  }
+  for (const it of ghRising.slice(0, 4)) {
+    opportunities.push({
+      id: `live-oss-${it.fullName || it.name}`,
+      category: "oss_gap",
+      title: `${it.name} 高速增长的开源项目`,
+      signal: short(it.description || "", 60),
+      plainSpeak: `${it.name}（${it.stars.toLocaleString()} stars）增速快，可基于其能力做本地化 / 垂直化封装。`,
+      judgment: "开源底座成熟，商业化缺口在于体验与场景化交付。",
+    });
+  }
+  for (const it of hot.items.slice(0, 2)) {
+    opportunities.push({
+      id: `live-trend-${it.id}`,
+      category: "trends",
+      title: short(it.title, 50),
+      signal: `${it.sourceName} · ${it.sourceCount} 个信源`,
+      plainSpeak: `事件热度高，围绕其生态（工具 / 教程 / 集成）有二次创作空间。`,
+    });
+  }
+  opportunities.push({
+    id: "live-action-1",
+    category: "action",
+    title: ideaTitle,
+    signal: whyNow,
+    plainSpeak: "用 2 小时先做一个单点 MVP（登录 + 核心动作 + 分享链接），验证后再扩展。",
+  });
+
+  const trackRecord: PulseTrackItem[] = (() => {
+    const dir = path.join(DATA, "opportunities");
+    const out: PulseTrackItem[] = [];
+    if (existsSync(dir)) {
+      const files = readdirSync(dir)
+        .filter((f) => /^\d{4}-\d{2}-\d{2}\.json$/.test(f))
+        .sort()
+        .reverse()
+        .slice(0, 7);
+      for (const f of files) {
+        try {
+          const r = JSON.parse(readFileSync(path.join(dir, f), "utf8")) as OpportunityDailyReport;
+          out.push({
+            date: r.reportDate,
+            summary: r.buildIdea?.title || r.headline || r.reportDate,
+            reportPath: `/opportunities?date=${r.reportDate}`,
+          });
+        } catch {
+          /* skip */
+        }
+      }
+    }
+    return out;
+  })();
+
+  const methodNote =
+    "实时生成模式：BuilderPulse 上游尚未发布 " +
+    date +
+    " 日报，本报告由智衡全平台实时数据（AI 热点榜 / GitHub 热点 / Product Hunt / 国内外全域热点）自动联动生成；命令：npm run opp:sync";
+
+  return {
+    generatedAt: new Date().toISOString(),
+    reportDate: date,
+    timezone: "Asia/Shanghai",
+    source: "seed",
+    sourceUrl: "",
+    attribution: "智衡 · 实时数据联动（AIHOT / GitHub / Product Hunt / NewsNow 全域热点）",
+    editorNote:
+      `今日（${date}）${hot.items.length} 条 AI 热点、${ghRising.length} 个 GitHub 高速增长项目、` +
+      `${ph.length} 款 Product Hunt 新品。最强信号：${signals[0] || "暂无"}。报告由实时数据联动生成。`,
+    plainBrief:
+      `今日聚焦「${targetName || "最强 AI 信号"}」：${short(whyNow, 80)} 先做最小验证，再决定是否加码。`,
+    buildIdea: {
+      title: ideaTitle,
+      whyNow,
+      timeboxTitle: "2 小时验证：单点 MVP（核心动作 + 分享 + 数据埋点）",
+      timeboxDetail:
+        "① 搭登录与核心页面 ② 实现最关键的一个动作闭环 ③ 用分享链接在 1-2 个社区获取首批反馈 ④ 记录转化数据决定下一步。",
+    },
+    topSignals: signals.slice(0, 5),
+    opportunities: opportunities.slice(0, 12),
+    trackRecord,
+    methodNote,
+  };
+}
+
 /** 按 BuilderPulse 方法合成：一条建议 + Why now + Top 信号 + 题库（信号/白话/判断/反方）+ 三棱镜 */
 export function buildOpportunityReport(reportDate?: string): OpportunityDailyReport {
   const hot = queryHotTopics();
   const global = getGlobalHotTopicsView();
-  const { brief } = getPulseBriefView();
-  const date = reportDate || brief.reportDate || shanghaiDay();
+  const pulse = getPulseBriefView().brief;
+  const date = reportDate || pulse.reportDate || shanghaiDay();
+  // BuilderPulse 未发布当天日报时 → 用智衡实时数据联动生成
+  const live = pulse.reportDate !== date;
+  const brief = live ? buildLiveBrief(date) : pulse;
+  const method: OpportunityDailyReport["method"] = live ? "live" : "builderpulse-aligned";
 
   const cnItems = global.snapshot.platforms
     .filter((p) => p.region === "国内")
@@ -71,7 +253,7 @@ export function buildOpportunityReport(reportDate?: string): OpportunityDailyRep
     generatedAt: new Date().toISOString(),
     reportDate: date,
     timezone: "Asia/Shanghai",
-    method: "builderpulse-aligned",
+    method,
     attribution: brief.attribution,
     sourceUrl: brief.sourceUrl,
     editorNote: brief.editorNote,
@@ -149,7 +331,11 @@ export function getLatestOpportunityReport(): OpportunityDailyReport | null {
   if (stored) {
     try {
       const { brief } = getPulseBriefView();
-      if (brief.buildIdea?.title && brief.buildIdea.title !== stored.buildIdea?.title) {
+      if (
+        brief.buildIdea?.title &&
+        brief.reportDate === stored.reportDate &&
+        brief.buildIdea.title !== stored.buildIdea?.title
+      ) {
         return {
           ...stored,
           generatedAt: brief.generatedAt || stored.generatedAt,

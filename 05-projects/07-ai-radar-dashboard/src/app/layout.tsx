@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans, Space_Grotesk } from "next/font/google";
+import { LocaleProvider } from "@/components/i18n/LocaleProvider";
 import { Sidebar } from "@/components/Sidebar";
+import { SiteFooter } from "@/components/SiteFooter";
 import { getRadarStatus } from "@/lib/intel/status";
+import { LOCALE_KEY } from "@/lib/i18n/messages";
 import "./globals.css";
 
 const plex = IBM_Plex_Sans({
@@ -17,8 +20,11 @@ const space = Space_Grotesk({
 });
 
 export const metadata: Metadata = {
-  title: "智衡 AI Radar",
-  description: "精选、热点分析、日报、模型共识榜与机会点报告",
+  title: {
+    default: "智衡 · AI动态",
+    template: "%s · 智衡",
+  },
+  description: "AI动态、国内外全域热点、GitHub- Lily、GitHub热点、日报、模型共识榜与机会点报告",
   icons: {
     icon: [{ url: "/zhiheng-mark.svg", type: "image/svg+xml" }, { url: "/zhiheng-mark.png" }],
     apple: "/zhiheng-mark.png",
@@ -28,20 +34,22 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   const status = getRadarStatus();
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" data-locale="zh" suppressHydrationWarning>
       <body className={`${plex.variable} ${space.variable}`}>
-        <div className="app-shell">
-          <Sidebar fetchedAt={status.fetchedAt} />
-          <div className="app-content">
-            <main>{children}</main>
-            <footer className="page-main pt-12 pb-8 text-xs text-[var(--muted)]">
-              智衡 AI Radar · 每小时自动更新 ·{" "}
-              <a href="https://aihot.virxact.com/terms" className="hover:text-[var(--text)]">
-                数据使用规则
-              </a>
-            </footer>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `try{var l=localStorage.getItem("${LOCALE_KEY}");var en=l==="en";document.documentElement.lang=en?"en":"zh-CN";document.documentElement.setAttribute("data-locale",en?"en":"zh")}catch(e){}`,
+          }}
+        />
+        <LocaleProvider>
+          <div className="app-shell">
+            <Sidebar fetchedAt={status.fetchedAt} />
+            <div className="app-content">
+              <main>{children}</main>
+              <SiteFooter />
+            </div>
           </div>
-        </div>
+        </LocaleProvider>
       </body>
     </html>
   );

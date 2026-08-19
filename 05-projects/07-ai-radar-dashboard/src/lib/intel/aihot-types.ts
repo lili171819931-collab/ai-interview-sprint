@@ -111,7 +111,7 @@ export type FeedItem = {
   discoveredAt: string;
   category: FeedCategory;
   selected: boolean;
-  origin: "aihot" | "intel" | "event";
+  origin: "aihot" | "intel" | "event" | "twitter" | "hot";
   score: number | null;
   recommendReason: string;
   eventId?: string;
@@ -130,6 +130,12 @@ export type HotRankItem = {
   sourceNames: string[];
   latestAt: string;
   href: string;
+  /** 本地故事线页（/story/{publicId}） */
+  storyHref?: string | null;
+  /** 第三方原始报道链接 */
+  originalUrl?: string | null;
+  /** AIHOT 原站故事/条目链接（仅作署名） */
+  externalUrl?: string | null;
   origin: "aihot" | "event";
   heat: number;
   status: HotStatus;

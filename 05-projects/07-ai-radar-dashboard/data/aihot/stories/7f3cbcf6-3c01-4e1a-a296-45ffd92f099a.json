@@ -1,0 +1,125 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-19T03:26:21.800Z",
+  "story": {
+    "publicId": "7f3cbcf6-3c01-4e1a-a296-45ffd92f099a",
+    "title": "Z.ai 发布 GLM-5.3 API",
+    "status": "active",
+    "sourceCount": 4,
+    "reportCount": 4,
+    "firstReportAt": "2026-08-18T21:05:19.015Z",
+    "latestAt": "2026-08-19T01:23:46.651Z",
+    "latest": "官方确认 GLM-5.3 权重将于下周五开源。",
+    "digest": "智谱 Z.ai 于 2026 年 8 月 18 日发布 GLM-5.3 API，定价与 GLM-5.2 持平，可通过官方 API 及合作伙伴模型网关使用。该模型专为编程、防御性网络安全及长周期智能体任务打造。\n在 Artificial Analysis 智能指数上，GLM-5.3 获得 60 分，追平 Kimi K3，成为最强开源权重模型，并与 Claude Fable 5、GPT-5.6 Sol 等闭源旗舰同级。模型保持 753B 总参数/40B 激活的 MoE 架构，上下文 1M tokens，MIT 许可。\nGLM-5.3 每任务成本 $0.68，较 Kimi K3 便宜 19%，但 token 效率较前代下降约 20%。模型权重预计一周内发布，官方公众号称将于下周五开源。",
+    "digestUpdatedAt": "2026-08-19T01:55:19.545Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/7f3cbcf6-3c01-4e1a-a296-45ffd92f099a"
+    },
+    "reports": [
+      {
+        "id": "cmszerhzy0bcvrodp5kulzpex",
+        "title": "智谱 GLM-5.3 API 上线，AA 指数 60 分并列开源模型第一，权重下周五开源",
+        "summary": "智谱今日宣布 GLM-5.3 API 正式上线，在 Artificial Analysis 综合智能指数中取得 60 分，与 Claude Fable 5、GPT-5.6 Sol 等闭源旗舰同级，并与 Kimi K3 并列开源模型第一。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-19T01:23:46.651Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmszerhzy0bcvrodp5kulzpex",
+          "original": "https://www.ithome.com/0/991/417.htm"
+        }
+      },
+      {
+        "id": "cmszeb2mx0b3srodpef1ub0j0",
+        "title": "GLM-5.3上线：AA智能指数60分并列开源第一，成本更低",
+        "summary": "GLM-5.3 API即日上线，擅长复杂编码、防御性网络安全与长程任务，在AA综合智能指数中取得60分，与Claude Fable 5、GPT-5.6 Sol等闭源旗舰同级，并与Kimi K3并列开源模型第一。该模型以更小参数规模和更低调用成本降低前沿智能门槛，单任务成本为旗舰模型中最低。API定价与GLM-5.2持平，模型权重将于下周五开源。",
+        "source": {
+          "name": "公众号：智谱（GLM）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-19T01:11:01.484Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmszeb2mx0b3srodpef1ub0j0",
+          "original": "https://mp.weixin.qq.com/s?__biz=MzkyMzI3NzQ0Mg%3D%3D&mid=2247494105&idx=1&sn=8d7409e0fb846a3c7803c142b5d1a8e7"
+        }
+      },
+      {
+        "id": "cmsz79x5804j4rodppx6491m3",
+        "title": "GLM-5.3 发布：智能指数追平 Kimi K3，登顶开源",
+        "summary": "智谱发布 GLM-5.3，在 Artificial Analysis 智能指数上获 60 分，追平 Kimi K3，成为最强开源权重模型（权重预计一周内发布）。该模型保持 753B 总参数/40B 激活的 MoE 架构，上下文 1M tokens，MIT 许可；每任务成本 $0.68，较 Kimi K3 便宜 19%，但 token 效率较前代下降约 20%。",
+        "source": {
+          "name": "X：Artificial Analysis (@ArtificialAnlys)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-18T21:54:09.383Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsz79x5804j4rodppx6491m3",
+          "original": "https://x.com/ArtificialAnlys/status/2089830890709135426"
+        }
+      },
+      {
+        "id": "cmsz5j5i8038grodp4ifzu5vi",
+        "title": "GLM-5.3 API 上线，定价与 5.2 持平",
+        "summary": "GLM-5.3 API 现已上线。\n\n- 专为编程、防御性网络安全及长周期智能体任务打造\n- 定价与 GLM-5.2 相同\n- 可通过官方 API 及合作伙伴模型网关使用\n\n开始使用：https://docs.z.ai/guides/llm/glm-5.3",
+        "source": {
+          "name": "X：智谱 Z.ai (@Zai_org)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-18T21:05:19.015Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsz5j5i8038grodp4ifzu5vi",
+          "original": "https://x.com/Zai_org/status/2089816129011098048"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "e5bc7fff-a770-4de9-8f0f-93b3febc57f5",
+        "title": "GLM-5.3 在 Artificial Analysis 智能指数上获 60 分",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/e5bc7fff-a770-4de9-8f0f-93b3febc57f5",
+          "api": "https://aihot.virxact.com/api/v1/stories/e5bc7fff-a770-4de9-8f0f-93b3febc57f5"
+        }
+      },
+      {
+        "publicId": "8b6c290a-5bdf-4a7d-b51d-3d04f6566875",
+        "title": "GLM-5.3 追平 Kimi K3",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/8b6c290a-5bdf-4a7d-b51d-3d04f6566875",
+          "api": "https://aihot.virxact.com/api/v1/stories/8b6c290a-5bdf-4a7d-b51d-3d04f6566875"
+        }
+      },
+      {
+        "publicId": "1e4041bf-e50c-4b6f-923a-13d9bb853dd5",
+        "title": "GLM-5.3在Terminal Bench 3.0取得开源第一",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/1e4041bf-e50c-4b6f-923a-13d9bb853dd5",
+          "api": "https://aihot.virxact.com/api/v1/stories/1e4041bf-e50c-4b6f-923a-13d9bb853dd5"
+        }
+      },
+      {
+        "publicId": "377f652d-2a7e-4376-bbf9-429cf111d5ed",
+        "title": "智谱发布 GLM-5.3",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/377f652d-2a7e-4376-bbf9-429cf111d5ed",
+          "api": "https://aihot.virxact.com/api/v1/stories/377f652d-2a7e-4376-bbf9-429cf111d5ed"
+        }
+      },
+      {
+        "publicId": "3e53357e-691a-4bf1-a81d-22266390d3c3",
+        "title": "GLM-5.3在CyberGym测试中得分84.5%",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/3e53357e-691a-4bf1-a81d-22266390d3c3",
+          "api": "https://aihot.virxact.com/api/v1/stories/3e53357e-691a-4bf1-a81d-22266390d3c3"
+        }
+      }
+    ],
+    "related": []
+  }
+}

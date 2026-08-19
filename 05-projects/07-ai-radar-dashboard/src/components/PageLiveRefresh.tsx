@@ -2,8 +2,10 @@
 
 import { useEffect, useRef } from "react";
 import { useRouter } from "next/navigation";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import type { MessageKey } from "@/lib/i18n/messages";
 
-type SyncMode = "hourly" | "hot" | null;
+type SyncMode = "hourly" | "hot" | "github" | "github-hot" | "producthunt" | "opp" | null;
 
 /**
  * 页面级实时刷新：
@@ -15,16 +17,16 @@ export function PageLiveRefresh({
   syncMode = null,
   syncEveryCycles = 1,
   fetchedAt = null,
-  label,
+  labelKey,
 }: {
   intervalMs: number;
   syncMode?: SyncMode;
-  /** 每 N 个 refresh 周期才跑一次同步（避免每分钟重抓海外全量） */
   syncEveryCycles?: number;
   fetchedAt?: string | null;
-  label: string;
+  labelKey: MessageKey;
 }) {
   const router = useRouter();
+  const { t } = useLocale();
   const busy = useRef(false);
   const cycles = useRef(0);
 
@@ -54,12 +56,12 @@ export function PageLiveRefresh({
     };
   }, [intervalMs, syncMode, syncEveryCycles, router]);
 
-  const cadence =
-    intervalMs < 90_000 ? "每分钟自动更新" : intervalMs < 3_600_000 ? "定时自动更新" : "每小时自动更新";
+  const cadenceKey: MessageKey =
+    intervalMs < 90_000 ? "refresh.minutely" : intervalMs < 3_600_000 ? "refresh.timed" : "refresh.hourly";
 
   return (
     <p className="text-xs text-[var(--muted)]" data-fetched-at={fetchedAt || undefined}>
-      {label} · {cadence}
+      {t(labelKey)} · {t(cadenceKey)}
     </p>
   );
 }

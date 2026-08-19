@@ -1,0 +1,84 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:21.297Z",
+  "story": {
+    "publicId": "2187bbdf-9658-475f-9871-1a389677483a",
+    "title": "DeepSeek 发布 Harness v0.1 开发者预览版",
+    "status": "active",
+    "sourceCount": 3,
+    "reportCount": 3,
+    "firstReportAt": "2026-08-13T13:15:59.064Z",
+    "latestAt": "2026-08-13T13:21:00.781Z",
+    "latest": "DeepSeek 发布 Harness v0.1 开发者预览版，MIT 协议开源。",
+    "digest": "DeepSeek 于 2026 年 8 月 13 日发布开源代码智能体框架 Harness v0.1 开发者预览版，采用 MIT 许可证。该框架基于 Cordis 元框架构建，核心设计为“一切皆插件”，模型、工具、技能、会话、沙箱、文件系统、循环、编排及 UI 均可自由组合、替换和扩展。\nHarness 对标 OpenAI Codex 与 Anthropic Claude Cowork，并开放插件生态。官方及开发者均表示当前版本为开发者预览版，可能仍有许多不完善之处，欢迎社区反馈。",
+    "digestUpdatedAt": "2026-08-13T13:35:34.502Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/2187bbdf-9658-475f-9871-1a389677483a"
+    },
+    "reports": [
+      {
+        "id": "cmsrjqqfg02z0ro469zple5jl",
+        "title": "DeepSeek Harness v0.1 开发者预览版发布",
+        "summary": "DeepSeek Harness v0.1 现已推出开发者预览版，并以 MIT 许可证开源。该智能体框架基于 Cordis 元框架构建，核心设计为“一切皆插件”，模型、工具、技能、会话、沙箱、文件系统、循环、编排及 UI 均可自由组合、替换和扩展。",
+        "source": {
+          "name": "X：DeepSeek (@deepseek_ai)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T13:21:00.781Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrjqqfg02z0ro469zple5jl",
+          "original": "https://x.com/deepseek_ai/status/2087887408440164663"
+        }
+      },
+      {
+        "id": "cmsrjlb1i02wlro46ndglr18h",
+        "title": "DeepSeek Harness 开源发布预览版",
+        "summary": "DeepSeek Harness 刚刚以 MIT 协议发布。当前 0.1.0 版本为开发者预览版，可能仍有许多不完善之处。欢迎反馈！",
+        "source": {
+          "name": "X：Tianyi Cui（@tianyi）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T13:16:47.304Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrjlb1i02wlro46ndglr18h",
+          "original": "https://x.com/tianyi/status/2087888089759015218"
+        }
+      },
+      {
+        "id": "cmsrjkbcd02tiro46cfjwidak",
+        "title": "DeepSeek Harness 公测，对标 Claude Cowork 并开放插件生态",
+        "summary": "DeepSeek 开源 MIT 协议的代码智能体框架 Harness v0.1 开发者预览版，采用“一切皆插件”架构，对标 OpenAI Codex 与 Anthropic Claude Cowork。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T13:15:59.064Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrjkbcd02tiro46cfjwidak",
+          "original": "https://www.ithome.com/0/989/446.htm"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "e496f4ac-f6e2-4382-a470-01a0c0598822",
+        "title": "DeepSeek Harness 开启公测",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/e496f4ac-f6e2-4382-a470-01a0c0598822",
+          "api": "https://aihot.virxact.com/api/v1/stories/e496f4ac-f6e2-4382-a470-01a0c0598822"
+        }
+      },
+      {
+        "publicId": "b6b06782-75bd-4750-8dd3-5a583b4e7ecd",
+        "title": "DeepSeek Harness 开放插件生态",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/b6b06782-75bd-4750-8dd3-5a583b4e7ecd",
+          "api": "https://aihot.virxact.com/api/v1/stories/b6b06782-75bd-4750-8dd3-5a583b4e7ecd"
+        }
+      }
+    ],
+    "related": []
+  }
+}

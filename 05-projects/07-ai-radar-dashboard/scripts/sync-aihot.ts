@@ -6,6 +6,7 @@
  * https://aihot.virxact.com/terms
  */
 import { existsSync, mkdirSync, readFileSync, writeFileSync } from "fs";
+import { cacheStory, storiesDir } from "../src/lib/intel/story-data";
 import path from "path";
 import { buildRecommendReason } from "../src/lib/intel/recommend";
 
@@ -131,6 +132,50 @@ async function enrichRecommendReasons(items: ReasonItem[]) {
   }
 }
 
+type HotItem = { id?: string; links?: { story?: string | null } };
+
+function storyPublicIds(items: HotItem[]): string[] {
+  const ids: string[] = [];
+  for (const it of items) {
+    const m = (it.links?.story || "").match(
+      /([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/,
+    );
+    if (m) ids.push(m[1].toLowerCase());
+  }
+  return [...new Set(ids)];
+}
+
+async function syncStories(publicIds: string[], errors: string[]): Promise<number> {
+  const todo = publicIds.filter((id) => !existsSync(`${storiesDir()}/${id}.json`));
+  let ok = 0;
+  const concurrency = 3;
+  for (let i = 0; i < todo.length; i += concurrency) {
+    const chunk = todo.slice(i, i + concurrency);
+    const results = await Promise.all(
+      chunk.map(async (id) => {
+        try {
+          const res = await fetch(`${BASE}/api/v1/stories/${id}`, {
+            headers: { Accept: "application/json", "User-Agent": UA },
+          });
+          if (!res.ok) return { id, ok: false as const, msg: `HTTP ${res.status}` };
+          const json = (await res.json()) as { story?: { publicId?: string } };
+          if (!json.story || !json.story.publicId) return { id, ok: false as const, msg: "empty story" };
+          cacheStory(json.story as unknown as import("../src/lib/intel/story-types").AihotStory);
+          return { id, ok: true as const };
+        } catch (err) {
+          return { id, ok: false as const, msg: err instanceof Error ? err.message : String(err) };
+        }
+      }),
+    );
+    for (const r of results) {
+      if (r.ok) ok += 1;
+      else errors.push(`story ${r.id}: ${r.msg}`);
+    }
+    if (i + concurrency < todo.length) await new Promise((r) => setTimeout(r, 200));
+  }
+  return ok;
+}
+
 async function main() {
   if (process.env.INTEL_OFFLINE === "1" || process.env.RADAR_OFFLINE === "1" || process.env.AIHOT_SKIP === "1") {
     console.log("[aihot:sync] skipped (offline / AIHOT_SKIP=1)");
@@ -149,6 +194,11 @@ async function main() {
       items: hot.items || [],
     });
     console.log(`[aihot:sync] hot-topics ${(hot.items as unknown[] | undefined)?.length ?? 0}`);
+    const storyIds = storyPublicIds((hot.items as HotItem[]) || []);
+    if (storyIds.length) {
+      const synced = await syncStories(storyIds, errors);
+      console.log(`[aihot:sync] stories ${synced}/${storyIds.length}`);
+    }
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     errors.push(`hot-topics: ${msg}`);

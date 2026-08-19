@@ -1,0 +1,56 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:21.308Z",
+  "story": {
+    "publicId": "ac78c7de-4715-47f8-8a93-0f82a093ed4d",
+    "title": "DeepSeek 发布 DeepSeek Harness",
+    "status": "active",
+    "sourceCount": 1,
+    "reportCount": 1,
+    "firstReportAt": "2026-08-14T00:01:01.197Z",
+    "latestAt": "2026-08-14T00:01:01.197Z",
+    "latest": "从0到1带你速通DeepSeek Harness。",
+    "digest": null,
+    "digestUpdatedAt": null,
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/ac78c7de-4715-47f8-8a93-0f82a093ed4d"
+    },
+    "reports": [
+      {
+        "id": "cmss6lsb701tsroib0kxz9q8q",
+        "title": "从0到1带你速通DeepSeek Harness。",
+        "summary": null,
+        "source": {
+          "name": "公众号：数字生命卡兹克",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-14T00:01:01.197Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmss6lsb701tsroib0kxz9q8q",
+          "original": "https://mp.weixin.qq.com/s?__biz=MzIyMzA5NjEyMA%3D%3D&mid=2647685238&idx=1&sn=c3159dba0dd5a141f8dd726fd474e6e2"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "e496f4ac-f6e2-4382-a470-01a0c0598822",
+        "title": "DeepSeek Harness 开启公测",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/e496f4ac-f6e2-4382-a470-01a0c0598822",
+          "api": "https://aihot.virxact.com/api/v1/stories/e496f4ac-f6e2-4382-a470-01a0c0598822"
+        }
+      },
+      {
+        "publicId": "b6b06782-75bd-4750-8dd3-5a583b4e7ecd",
+        "title": "DeepSeek Harness 开放插件生态",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/b6b06782-75bd-4750-8dd3-5a583b4e7ecd",
+          "api": "https://aihot.virxact.com/api/v1/stories/b6b06782-75bd-4750-8dd3-5a583b4e7ecd"
+        }
+      }
+    ],
+    "related": []
+  }
+}

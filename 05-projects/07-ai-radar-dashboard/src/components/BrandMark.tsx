@@ -1,9 +1,13 @@
+"use client";
+
 import Link from "next/link";
+import { useLocale } from "@/components/i18n/LocaleProvider";
 
 /** 智衡 AI 品牌标记：聚焦雷达 + 锁定点 */
 export function BrandMark({ size = 28, withWordmark = true }: { size?: number; withWordmark?: boolean }) {
+  const { t } = useLocale();
   return (
-    <Link href="/" className="brand-mark inline-flex items-center gap-2.5 min-w-0" aria-label="智衡 AI 首页">
+    <Link href="/" className="brand-mark inline-flex items-center gap-2.5 min-w-0" aria-label={t("brand.home")}>
       <svg
         width={size}
         height={size}
@@ -31,7 +35,7 @@ export function BrandMark({ size = 28, withWordmark = true }: { size?: number; w
       </svg>
       {withWordmark ? (
         <span className="display text-lg font-semibold tracking-tight truncate">
-          智衡 <span className="text-[var(--signal)]">AI</span>
+          智衡 <span className="text-[var(--signal)]">{t("brand.product")}</span>
         </span>
       ) : null}
     </Link>

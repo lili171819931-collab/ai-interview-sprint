@@ -299,13 +299,17 @@ async function main() {
   mkdirSync(dataDir, { recursive: true });
   const preferred = process.env.PULSE_DATE?.trim() || shanghaiDay();
 
-  let loaded = await loadMarkdown(preferred);
+  // 从今天向前最多找 10 天，取最近一份已发布的 BuilderPulse 日报
+  let loaded = null;
   let reportDate = preferred;
-  if (!loaded) {
-    // try previous day once
-    const prev = shanghaiDay(new Date(Date.now() - 24 * 60 * 60 * 1000));
-    loaded = await loadMarkdown(prev);
-    if (loaded) reportDate = prev;
+  for (let i = 0; i < 10; i++) {
+    const candidate = i === 0 ? preferred : shanghaiDay(new Date(Date.now() - i * 24 * 60 * 60 * 1000));
+    loaded = await loadMarkdown(candidate);
+    if (loaded) {
+      reportDate = candidate;
+      break;
+    }
+    console.warn(`[pulse:sync] ${candidate} 未发布，尝试更早一天`);
   }
 
   let brief: BuilderPulseBrief;

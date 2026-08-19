@@ -137,11 +137,19 @@ export function aihotItemToFeed(it: AihotItem): FeedItem {
   };
 }
 
+function storyPublicIdOf(it: AihotHotSnapshot["items"][number]): string | null {
+  const m = (it.links.story || "").match(
+    /([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12})/,
+  );
+  return m ? m[1].toLowerCase() : null;
+}
+
 export function aihotHotToRank(items: AihotHotSnapshot["items"]): HotRankItem[] {
   return [...items]
     .sort((a, b) => a.rank - b.rank)
-    .map((it) =>
-      enrichHotRank({
+    .map((it) => {
+      const storyId = storyPublicIdOf(it);
+      return enrichHotRank({
         rank: it.rank,
         id: it.id,
         title: it.title,
@@ -150,9 +158,13 @@ export function aihotHotToRank(items: AihotHotSnapshot["items"]): HotRankItem[] 
         signalCount: it.signalCount || 0,
         sourceNames: it.sourceNames || [],
         latestAt: it.latestAt,
-        href: it.links.story || it.links.aihot || `/items/${it.id}`,
+        // 点击进入本站故事线页（图 2 模式：搜索逻辑 + 故事线 + 推荐理由），不再跳外部 AIHOT 链接
+        href: storyId ? `/story/${storyId}` : `/items/${it.id}`,
+        storyHref: storyId ? `/story/${storyId}` : null,
+        originalUrl: it.links.original || it.links.aihot,
+        externalUrl: it.links.story || it.links.aihot,
         origin: "aihot",
         attribution: { name: "AIHOT", url: it.links.aihot || "https://aihot.virxact.com" },
-      }),
-    );
+      });
+    });
 }

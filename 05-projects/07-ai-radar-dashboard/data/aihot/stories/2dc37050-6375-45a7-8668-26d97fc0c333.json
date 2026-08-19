@@ -1,0 +1,266 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-14T03:18:20.762Z",
+  "story": {
+    "publicId": "2dc37050-6375-45a7-8668-26d97fc0c333",
+    "title": "Google 发布 Gemini 3.7 Flash",
+    "status": "active",
+    "sourceCount": 16,
+    "reportCount": 16,
+    "firstReportAt": "2026-08-13T17:09:56.030Z",
+    "latestAt": "2026-08-14T00:19:55.879Z",
+    "latest": "Gemini 3.7 Flash 发布，入门价减半至 $0.75/$3.75，性能大幅提升。",
+    "digest": "Google 于 2026 年 8 月 13 日发布 Gemini 3.7 Flash，距上一代 3.6 Flash 仅三周。该模型在编程、知识工作和网页开发方面显著提升，尤其擅长长周期软件工程任务、PDF 理解和智能体任务。官方演示展示了其构建复杂 3D 网页游戏的能力，涵盖 Three.js 引擎逻辑、素材生成与程序化音频集成。\n价格方面，Gemini 3.7 Flash 入门价仅为 3.6 Flash 原价的一半，年底前提供优惠：输入 $0.75/1M tokens，输出 $3.75/1M tokens。模型已上线 Gemini API、AI Studio、Antigravity、Gemini Enterprise 等平台，并集成至 Gemini App 的 Spark 功能，可跨 Gmail、Google 日历和 Google 文档处理多步骤任务。\n多位业内人士给予积极评价，称其速度快、能力强，已成为日常主力模型。MarkTechPost 报道指出，Gemini 3.7 Flash 是对 3.6 Flash 的算法改进而非新预训练模型，支持 1M-token 上下文窗口和最高 64K 输出 token。Artificial Analysis 数据显示，该模型在智能指数上得分 56，较 3.6 Flash 提升 4 分，并登上智能 vs. 单任务耗时帕累托前沿。",
+    "digestUpdatedAt": "2026-08-14T00:25:49.410Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/2dc37050-6375-45a7-8668-26d97fc0c333"
+    },
+    "reports": [
+      {
+        "id": "cmss7a4if02bnroibyuf4jl92",
+        "title": "谷歌推出 Gemini 3.7 Flash 模型，首发优惠价为原 3.6 Flash 的一半",
+        "summary": "谷歌推出专为编程与 Agents 场景打造的 Gemini 3.7 Flash 模型，距 3.6 Flash 发布仅约三周，在软件工程、知识工作及网页开发工作流方面大幅提升。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-14T00:19:55.879Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmss7a4if02bnroibyuf4jl92",
+          "original": "https://www.ithome.com/0/989/497.htm"
+        }
+      },
+      {
+        "id": "cmsrxpyau04p2rozed29r67ee",
+        "title": "Gemini 3.7 Flash 发布，API 价格减半",
+        "summary": "Google 在 3.6 Flash 发布仅 3 周后推出 Gemini 3.7 Flash，入门 API 价格减半至 $0.75/$3.75（每百万输入/输出 token），2027 年 1 月 1 日起恢复为 $1.50/$7.50。",
+        "source": {
+          "name": "X：Rohan Paul (@rohanpaul_ai)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T19:52:19.251Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrxpyau04p2rozed29r67ee",
+          "original": "https://x.com/rohanpaul_ai/status/2087986154260037817"
+        }
+      },
+      {
+        "id": "cmsrxpvyb04obroze3ofd9inq",
+        "title": "Gemini 3.7 Flash 发布，降价五成",
+        "summary": "Gemini 3.7 Flash 来了 🔥\n\n全年价格比 3.6 Flash 便宜 50%，在设计遵循、Web 开发和游戏制作方面都有显著改进！\n\n现已登陆 AI Studio、Antigravity 和 Gemini API。\n\n下面是一些一次性演示！",
+        "source": {
+          "name": "X：Ammaar Reshi (@ammaar)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T19:52:16.379Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrxpvyb04obroze3ofd9inq",
+          "original": "https://x.com/ammaar/status/2087985302597926979"
+        }
+      },
+      {
+        "id": "cmsrwn9vr03y7rozenxspyvrf",
+        "title": "Gemini 3.7 Flash 发布，登顶智能与速度帕累托前沿",
+        "summary": "Google 发布 Gemini 3.7 Flash，在 Artificial Analysis 智能指数上得分 56，较 3.6 Flash 提升 4 分，并登上智能 vs. 单任务耗时帕累托前沿。",
+        "source": {
+          "name": "X：Artificial Analysis (@ArtificialAnlys)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T19:22:14.513Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrwn9vr03y7rozenxspyvrf",
+          "original": "https://x.com/ArtificialAnlys/status/2087975627391717461"
+        }
+      },
+      {
+        "id": "cmsrvkw0s030prozev20mdn3v",
+        "title": "Gemini 3.7 Flash lands with coding gains and undercuts its three-week-old predecessor's price by 50%",
+        "summary": null,
+        "source": {
+          "name": "The Decoder：AI News（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T18:52:22.822Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrvkw0s030prozev20mdn3v",
+          "original": "https://the-decoder.com/gemini-3-7-flash-lands-with-coding-gains-and-undercuts-its-three-week-old-predecessors-price-by-50"
+        }
+      },
+      {
+        "id": "cmsrtfopg04anro0n5b67zaf2",
+        "title": "Google 发布 Gemini 3.7 Flash：主打编程与智能体，输入 token 定价 $0.75/1M",
+        "summary": "Google 推出 Gemini 3.7 Flash，这是对 3.6 Flash 的算法改进而非新预训练模型，支持 1M-token 上下文窗口和最高 64K 输出 token。",
+        "source": {
+          "name": "MarkTechPost（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:52:20.675Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrtfopg04anro0n5b67zaf2",
+          "original": "https://www.marktechpost.com/2026/08/13/google-ai-just-released-gemini-3-7-flash"
+        }
+      },
+      {
+        "id": "cmsrszpmv041dro0nlmse7kyq",
+        "title": "Gemini 3.7 Flash 发布，性能升级价格减半",
+        "summary": "Gemini 3.7 Flash 为软件工程、Web 开发和知识工作带来重大升级。且 introductory 价格仅为原 3.6 Flash 的一半。祝构建愉快！",
+        "source": {
+          "name": "X：Demis Hassabis (@demishassabis)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:39:56.270Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrszpmv041dro0nlmse7kyq",
+          "original": "https://x.com/demishassabis/status/2087950102455271765"
+        }
+      },
+      {
+        "id": "cmsrsqxny03txro0nwc9s72ss",
+        "title": "Gemini 3.7 Flash 发布：编码智能体主力模型",
+        "summary": "Google AI 推出 Gemini 3.7 Flash，定位编码与智能体场景的主力模型。该模型已集成至 Gemini App 的 Spark 功能，可跨 Gmail、Google 日历和 Google 文档处理多步骤复杂任务。3.7 Flash 年底前提供半价优惠，输入 $0.75/1M tokens，输出 $3.75/1M tokens。",
+        "source": {
+          "name": "X：Google AI (@GoogleAI)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T17:33:06.700Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrsqxny03txro0nwc9s72ss",
+          "original": "https://x.com/GoogleAI/status/2087949042961514983"
+        }
+      },
+      {
+        "id": "cmsrsnnv403o9ro0n8wah1n4i",
+        "title": "Gemini 3.7 Flash 发布：主打编码与智能体任务",
+        "summary": "Google 发布 Gemini 3.7 Flash，定位为面向编码和智能体任务的高性能模型，具备更强的指令遵循、首遍代码准确率与智能体任务执行能力。官方演示其构建复杂 3D 网页游戏，涵盖 Three.js 引擎逻辑、Nano Banana 素材生成与程序化音频集成。",
+        "source": {
+          "name": "X：Google AI for Developers (@googleaidevs)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T17:30:33.654Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrsnnv403o9ro0n8wah1n4i",
+          "original": "https://x.com/googleaidevs/status/2087952344738648246"
+        }
+      },
+      {
+        "id": "cmsrsnnj903o7ro0n5xs0gycu",
+        "title": "Gemini 3.7 Flash 发布，性能大增价格减半",
+        "summary": "Google 在 3.6 Flash 发布仅 3 周后推出 Gemini 3.7 Flash，在软件工程、知识工作和网页开发方面显著提升，尤其擅长编码和智能体任务。其入门价格仅为 3.6 Flash 原价的一半，已上线 Antigravity、Gemini API、Gemini Enterprise 等平台。",
+        "source": {
+          "name": "X：Sundar Pichai (@sundarpichai)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:30:33.654Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrsnnj903o7ro0n5xs0gycu",
+          "original": "https://x.com/sundarpichai/status/2087948583890985263"
+        }
+      },
+      {
+        "id": "cmsrsd6jk03kfro0nrb9wr0lw",
+        "title": "Google 发布 Gemini 3.7 Flash，距上一代仅三周",
+        "summary": "Google 今日推出 Gemini 3.7 Flash，取代三周前发布的 3.6 Flash，主打改进的编码与智能体性能，并以更低“入门价”应对竞品低价。",
+        "source": {
+          "name": "Ars Technica：AI（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:22:24.560Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrsd6jk03kfro0nrb9wr0lw",
+          "original": "https://arstechnica.com/ai/2026/08/google-announces-gemini-3-7-flash-just-three-weeks-after-previous-release"
+        }
+      },
+      {
+        "id": "cmsrsd5dz03k6ro0nc76y15wj",
+        "title": "Gemini 3.7 Flash 发布：更快更便宜更智能",
+        "summary": "推出 Gemini 3.7 Flash :)\n\n- 速度快！- 价格比 3.6 Flash 低 50%（持续到年底）- 仅约 3 周内智能水平大幅提升（得益于一些出色的算法改进）- 可在 API、AI Studio、Antigravity 等平台使用！",
+        "source": {
+          "name": "X：Logan Kilpatrick (@OfficialLoganK)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:22:23.752Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrsd5dz03k6ro0nc76y15wj",
+          "original": "https://x.com/OfficialLoganK/status/2087948481721962669"
+        }
+      },
+      {
+        "id": "cmsrsd11c03hsro0ndclugu8u",
+        "title": "Gemini 3.7 Flash 发布，fofr 力荐日常使用",
+        "summary": "Gemini 3.7 Flash 现已发布。\n\n我很期待大家来试试这个版本。它已成为我的新日常主力。它速度快、能力强，用起来很有趣。表现超出预期。\n\nhttps://blog.google/innovation-and-ai/models-and-research/gemini-models/introducing-gemini-3-7-flash",
+        "source": {
+          "name": "X：fofr (@fofrAI)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:22:17.800Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrsd11c03hsro0ndclugu8u",
+          "original": "https://x.com/fofrAI/status/2087950512964452550"
+        }
+      },
+      {
+        "id": "cmsrscwfn03f7ro0n7qijclds",
+        "title": "Google DeepMind 推出 Gemini 3.7 Flash：面向编程与智能体的最强工作模型",
+        "summary": "Google DeepMind 发布 Gemini 3.7 Flash，距 3.6 Flash 仅三周，主打编程与智能体任务，输入/输出价格分别为每百万 token $0.75 和 $3.75，为原 3.6 Flash 的一半。",
+        "source": {
+          "name": "Google DeepMind：Blog（RSS）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T17:22:11.372Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrscwfn03f7ro0n7qijclds",
+          "original": "https://deepmind.google/blog/introducing-gemini-3-7-flash"
+        }
+      },
+      {
+        "id": "cmsrs8and03dsro0nkod01l18",
+        "title": "Gemini 3.7 Flash 发布，强化长程编程与PDF理解",
+        "summary": "Gemini 3.7 Flash 来了！\n\n改进了长周期软件工程任务的能力，同时在 PDF 理解方面也很出色。",
+        "source": {
+          "name": "X：Elvis Saravia (@omarsar0, DAIR.AI)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-13T17:18:37.276Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrs8and03dsro0nkod01l18",
+          "original": "https://x.com/omarsar0/status/2087949444272558282"
+        }
+      },
+      {
+        "id": "cmsrrx4t903bfro0n02pwj9g6",
+        "title": "Gemini 3.7 Flash 发布，强化编程与知识工作",
+        "summary": "Gemini 3.7 Flash 来了。\n\n它在编程、知识工作和网页开发方面更加强大。🧵",
+        "source": {
+          "name": "X：Google DeepMind (@GoogleDeepMind)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-13T17:09:56.030Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsrrx4t903bfro0n02pwj9g6",
+          "original": "https://x.com/GoogleDeepMind/status/2087948366294515977"
+        }
+      }
+    ],
+    "storyline": [
+      {
+        "publicId": "1304594e-ecdb-4a6a-83d7-b819ad38505f",
+        "title": "Gemini 3.7 Flash 提供年底前半价优惠",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/1304594e-ecdb-4a6a-83d7-b819ad38505f",
+          "api": "https://aihot.virxact.com/api/v1/stories/1304594e-ecdb-4a6a-83d7-b819ad38505f"
+        }
+      },
+      {
+        "publicId": "5efd37d3-3dd7-42fd-b74b-346faffc218a",
+        "title": "Gemini 3.7 Flash 集成至 Gemini App Spark 功能",
+        "relation": "同一故事线",
+        "links": {
+          "aihot": "https://aihot.virxact.com/story/5efd37d3-3dd7-42fd-b74b-346faffc218a",
+          "api": "https://aihot.virxact.com/api/v1/stories/5efd37d3-3dd7-42fd-b74b-346faffc218a"
+        }
+      }
+    ],
+    "related": []
+  }
+}

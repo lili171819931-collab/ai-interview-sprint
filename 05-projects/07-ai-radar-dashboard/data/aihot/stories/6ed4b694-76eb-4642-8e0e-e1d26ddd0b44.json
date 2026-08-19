@@ -1,0 +1,65 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-19T03:26:21.767Z",
+  "story": {
+    "publicId": "6ed4b694-76eb-4642-8e0e-e1d26ddd0b44",
+    "title": "Anthropic 公布 Claude 蛋白质设计实验",
+    "status": "active",
+    "sourceCount": 3,
+    "reportCount": 3,
+    "firstReportAt": "2026-08-18T22:27:16.191Z",
+    "latestAt": "2026-08-18T23:18:18.849Z",
+    "latest": "Claude 自主完成蛋白质设计全流程，命中率 26.8%。",
+    "digest": "Anthropic 公布了两项 Claude 参与蛋白质设计的实验。在实验中，Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。\n在人类专家编写的蛋白设计提示词下，Claude 自主完成了针对 15 个靶点中 14 个的设计。随后 Adaptyv Bio 与 Twist Bioscience 独立构建并测试了这些蛋白，验证了其可行性。\n在另一项实验中，Claude 自主完成计算蛋白质设计全流程，无需人类专家逐项决策。在 1,320 个设计中，354 个成功结合靶标（命中率 26.8%），并为 15 个靶标中的 14 个找到结合剂；在 6 个可比竞赛靶标中，Claude 在 4 个上命中率更高。",
+    "digestUpdatedAt": "2026-08-18T23:25:17.380Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/6ed4b694-76eb-4642-8e0e-e1d26ddd0b44"
+    },
+    "reports": [
+      {
+        "id": "cmszaa5g207t6rodpogl70yd5",
+        "title": "Anthropic 发布迄今最雄心勃勃的科学实验：Claude 自主完成计算蛋白质设计全流程",
+        "summary": "Anthropic 让 Claude 自主完成计算蛋白质设计全流程，无需人类专家逐项决策。在 1,320 个设计中，354 个成功结合靶标（命中率 26.8%），并为 15 个靶标中的 14 个找到结合剂；在 6 个可比竞赛靶标中，Claude 在 4 个上命中率更高。",
+        "source": {
+          "name": "X：Rohan Paul (@rohanpaul_ai)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-18T23:18:18.849Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmszaa5g207t6rodpogl70yd5",
+          "original": "https://x.com/rohanpaul_ai/status/2089850167302500483"
+        }
+      },
+      {
+        "id": "cmsz9kmg307csrodpg1yl1xdu",
+        "title": "Claude 从头设计蛋白结合剂命中 14/15 靶点",
+        "summary": "Anthropic 测试 Claude 能否从头设计新型蛋白结合剂：在人类专家编写的蛋白设计提示词下，Claude 自主针对 15 个靶点中的 14 个完成了设计。随后 Adaptyv Bio 与 Twist Bioscience 独立构建并测试了这些蛋白，验证了其可行性。",
+        "source": {
+          "name": "X：Anthropic (@AnthropicAI)",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-18T22:58:28.008Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsz9kmg307csrodpg1yl1xdu",
+          "original": "https://x.com/AnthropicAI/status/2089842387845804246"
+        }
+      },
+      {
+        "id": "cmsz8gh3n06e4rodpl8l2syek",
+        "title": "Claude 如何加速蛋白质设计与分析化学研究",
+        "summary": "Anthropic 公布两项实验：Claude（Mythos Preview 和 Opus 4.8）针对 15 个靶点设计蛋白质结合剂，成功 14 个，命中率达 22.6%-35.1%。",
+        "source": {
+          "name": "Anthropic：Research（发表成果 · 网页）",
+          "firstParty": true
+        },
+        "publishedAt": "2026-08-18T22:27:16.191Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsz8gh3n06e4rodpl8l2syek",
+          "original": "https://www.anthropic.com/research/Claude-accelerates-protein-design"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

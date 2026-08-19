@@ -4,6 +4,8 @@ import { useMemo, useState } from "react";
 import type { GlobalHotRegion } from "@/lib/global-hot-types";
 import type { MergedHotTopic } from "@/lib/global-hot-merge";
 import { HOT_STATUS_LABEL } from "@/lib/intel/hot-rank";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { tr, useTranslatedTexts } from "@/components/i18n/useTranslatedTexts";
 import { formatRelativeZh, formatUpdatedAt } from "@/lib/intel/time";
 
 function pad(n: number) {
@@ -43,6 +45,8 @@ function Sparkline({ id, rising, heat }: { id: string; rising: boolean; heat: nu
 }
 
 function MergedList({ items, region }: { items: MergedHotTopic[]; region: GlobalHotRegion }) {
+  const { locale } = useLocale();
+  const txMap = useTranslatedTexts(items.map((it) => it.title));
   if (!items.length) {
     return <p className="text-sm text-[var(--muted)]">{region}版暂无可用条目。可运行 npm run hot:sync。</p>;
   }
@@ -56,15 +60,15 @@ function MergedList({ items, region }: { items: MergedHotTopic[]; region: Global
       <ol>
         {items.map((it) => {
           const rising = it.status === "fermenting" || it.status === "new" || it.status === "hot";
-          const when = it.latestAt ? formatRelativeZh(it.latestAt) : null;
-          const stamp = it.latestAt ? formatUpdatedAt(it.latestAt) : null;
+          const when = it.latestAt ? formatRelativeZh(it.latestAt, Date.now(), locale) : null;
+          const stamp = it.latestAt ? formatUpdatedAt(it.latestAt, locale) : null;
           return (
             <li key={it.id} className="hot-row">
               <span className="hot-rank">{pad(it.rank)}</span>
               <div className="min-w-0">
                 <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
                   <a href={it.href} target="_blank" rel="noreferrer" className="zh-title" style={{ fontSize: "0.98rem" }}>
-                    {it.title}
+                    {tr(txMap, it.title)}
                   </a>
                   {it.status ? (
                     <span className={`hot-badge hot-badge-${it.status}`}>{HOT_STATUS_LABEL[it.status]}</span>
@@ -101,6 +105,7 @@ export function HotTopicsBoard({
 }: {
   byRegion: Record<GlobalHotRegion, MergedHotTopic[]>;
 }) {
+  const { t } = useLocale();
   const [tab, setTab] = useState<GlobalHotRegion>("国内");
   const items = useMemo(() => byRegion[tab] || [], [byRegion, tab]);
 
@@ -114,7 +119,7 @@ export function HotTopicsBoard({
             onClick={() => setTab(r)}
             className={tab === r ? "hot-region-tab hot-region-tab-on" : "hot-region-tab"}
           >
-            {r}版
+            {r === "国内" ? t("hot.cn") : t("hot.global")}
             <span className="ml-1.5 text-[11px] opacity-70">{byRegion[r]?.length || 0}</span>
           </button>
         ))}

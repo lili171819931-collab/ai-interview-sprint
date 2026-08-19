@@ -1,11 +1,17 @@
 import Link from "next/link";
+import type { Metadata } from "next";
 import { HotTopicsBoard } from "@/components/HotTopicsBoard";
 import { PageLiveRefresh } from "@/components/PageLiveRefresh";
 import { getGlobalHotTopicsView } from "@/lib/global-hot-data";
 import { analyzeFailedSources, mergeRegionalHotTopics } from "@/lib/global-hot-merge";
-import { formatUpdatedAt } from "@/lib/intel/time";
+import { Tx } from "@/components/i18n/Tx";
+import { UpdatedAt } from "@/components/i18n/UpdatedAt";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "国内外全域热点",
+};
 
 export default function HotTopicsPage() {
   const { snapshot, fromFile } = getGlobalHotTopicsView();
@@ -20,14 +26,18 @@ export default function HotTopicsPage() {
   return (
     <div className="page-main space-y-8">
       <header className="space-y-3">
-        <p className="kicker">REGION RADAR</p>
-        <h1 className="page-title">热点分析</h1>
+        <p className="kicker">
+          <Tx k="hot.kicker" />
+        </p>
+        <h1 className="page-title">
+          <Tx k="hot.title" />
+        </h1>
         <p className="page-sub max-w-2xl">
-          国内 / 海外分版：同话题跨平台合并后按热度值排序；标题可跳转原文（无原文则搜索）。信息条每小时自动同步。
+          <Tx k="hot.sub" />
         </p>
         <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-[var(--muted)]">
-          <span>更新于 {formatUpdatedAt(snapshot.generatedAt)}</span>
-          <span>{fromFile ? "已同步" : "seed 降级"}</span>
+          <UpdatedAt iso={snapshot.generatedAt} />
+          <span>{fromFile ? <Tx k="hot.synced" /> : "seed"}</span>
           <span>
             源 {stats.sourcesOk}/{stats.sourcesTotal}
           </span>
@@ -39,10 +49,10 @@ export default function HotTopicsPage() {
             syncMode="hot"
             syncEveryCycles={1}
             fetchedAt={snapshot.generatedAt}
-            label="热点分析"
+            labelKey="refresh.hot"
           />
           <Link href="/opportunities" className="text-[var(--signal)] hover:underline">
-            查看 AI 机会报告 →
+            <Tx k="nav.opportunities" /> →
           </Link>
         </div>
       </header>

@@ -1,0 +1,37 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-18T13:53:02.740Z",
+  "story": {
+    "publicId": "1a6febe1-053d-4dab-ad21-d1ab648da020",
+    "title": "Unitree Robotics to list on STAR Market on August 19, 2026",
+    "status": "active",
+    "sourceCount": 1,
+    "reportCount": 1,
+    "firstReportAt": "2026-08-17T13:22:19.094Z",
+    "latestAt": "2026-08-17T13:22:19.094Z",
+    "latest": "A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市",
+    "digest": null,
+    "digestUpdatedAt": null,
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/1a6febe1-053d-4dab-ad21-d1ab648da020"
+    },
+    "reports": [
+      {
+        "id": "cmsx9jy2a05yerommy1e0jc6t",
+        "title": "A 股迎来“人形机器人第一股”，宇树科技官宣 8 月 19 日科创板上市",
+        "summary": "宇树科技宣布股票将于 2026 年 8 月 19 日在科创板上市，发行价 150.80 元/股，对应市值约 609.93 亿元，预计募资约 60.99 亿元。该公司 2023 至 2025 年营收分别为 1.59 亿元、3.93 亿元和 16.99 亿元，净利润分别为-1114.51 万元、9547.47 万元和 2.78 亿元，是全球少数实现盈利的高性能通用机器人公司。",
+        "source": {
+          "name": "IT之家（RSS）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T13:22:19.094Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsx9jy2a05yerommy1e0jc6t",
+          "original": "https://www.ithome.com/0/990/812.htm"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

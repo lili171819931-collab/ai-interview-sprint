@@ -48,12 +48,23 @@ function main() {
   console.log(`智衡日更 · ${today} · mode=${mode}${offline ? " · offline" : ""}`);
   console.log("══════════════════════════════════════");
 
+  if (mode === "twitter") {
+    if (!offline) runOptional("twitter:sync", ["scripts/sync-twitter-live.ts"]);
+    console.log("\n✅ Twitter 实时推送完成（未归档）");
+    return;
+  }
+
   if (mode === "hourly") {
-    // 全部动态分钟级：热点 + TrendRadar + 入库合并 + AIHOT 精选
+    // 全部动态分钟级：热点 + TrendRadar + 入库合并 + AIHOT 精选 + Twitter
     if (!offline) {
+      runOptional("twitter:sync", ["scripts/sync-twitter-live.ts"], {
+        ...process.env,
+        TWITTER_CLI: process.env.TWITTER_CLI || "1",
+      });
       runOptional("hot:sync", ["scripts/sync-global-hot-topics.ts"]);
       runOptional("trendradar:sync", ["scripts/sync-trendradar.ts"]);
       runOptional("aihot:sync", ["scripts/sync-aihot.ts"]);
+      runOptional("github:hot", ["scripts/sync-github-hot.ts"]);
     }
     runOptional("intel:ingest", ["scripts/pipeline/ingest.ts"], {
       ...process.env,
@@ -88,6 +99,8 @@ function main() {
     }
     run("trendradar:sync", ["scripts/sync-trendradar.ts"], env);
     if (!offline) runOptional("aihot:sync", ["scripts/sync-aihot.ts"], env);
+    if (!offline) runOptional("github:sync", ["scripts/sync-github-stars.ts"], env);
+    if (!offline) runOptional("github:hot", ["scripts/sync-github-hot.ts"], env);
     run("radar:daily", ["scripts/refresh-radar-report.ts"], env);
     run("pulse:sync", ["scripts/sync-builder-pulse.ts"], env);
     run("opp:sync", ["scripts/generate-opportunity-report.ts"], { ...env, OPP_SKIP_PULSE: "1" });

@@ -1,0 +1,51 @@
+{
+  "schemaVersion": 1,
+  "fetchedAt": "2026-08-18T13:53:01.836Z",
+  "story": {
+    "publicId": "a0b46a26-95de-4cae-b75e-54c1f123937c",
+    "title": "Origin 上线",
+    "status": "active",
+    "sourceCount": 2,
+    "reportCount": 2,
+    "firstReportAt": "2026-08-17T22:05:23.138Z",
+    "latestAt": "2026-08-17T22:23:07.832Z",
+    "latest": "Cursor 上线 Origin 代码托管服务，向付费用户开放早期测试版。",
+    "digest": "Cursor 于 2026 年 8 月 17 日上线 Origin 代码托管服务，作为 GitHub 的替代方案。该服务向所有付费计划用户开放早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。\nVercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。",
+    "digestUpdatedAt": "2026-08-17T22:55:26.173Z",
+    "links": {
+      "aihot": "https://aihot.virxact.com/story/a0b46a26-95de-4cae-b75e-54c1f123937c"
+    },
+    "reports": [
+      {
+        "id": "cmsxsvb5s0a4troz0z2q2nu3h",
+        "title": "Cursor 推出 Origin 代码托管服务，作为 GitHub 的替代方案",
+        "summary": "Cursor 今日起向所有付费计划用户开放 Origin 代码托管的早期测试版，提供仓库、拉取请求、代码浏览及 GitHub 同步功能。用户可创建以 cursor.com/codebase/ 为前缀的仓库，或将 GitHub 仓库同步至 Origin，双向同步评论与审查。Vercel、Depot 和 Buildkite 集成已可用，智能体功能即将推出。",
+        "source": {
+          "name": "Hacker News 热门（buzzing.cc 中文翻译）",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T22:23:07.832Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxsvb5s0a4troz0z2q2nu3h",
+          "original": "https://cursor.com/changelog/origin-code-hosting"
+        }
+      },
+      {
+        "id": "cmsxs8i0t09ylroz07x23fwv0",
+        "title": "Origin 上线，托管代码即刻开始",
+        "summary": "Origin 已上线，随时可以托管你的代码！\n\n以下是你如何开始使用的方法 https://x.com/i/article/2089461798265384960",
+        "source": {
+          "name": "X：Eric Zakariasson (@ericzakariasson)",
+          "firstParty": false
+        },
+        "publishedAt": "2026-08-17T22:05:23.138Z",
+        "links": {
+          "aihot": "https://aihot.virxact.com/items/cmsxs8i0t09ylroz07x23fwv0",
+          "original": "https://x.com/ericzakariasson/status/2089466749943152806"
+        }
+      }
+    ],
+    "storyline": [],
+    "related": []
+  }
+}

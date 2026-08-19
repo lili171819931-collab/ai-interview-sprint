@@ -1,8 +1,15 @@
+"use client";
+
 import Link from "next/link";
 import { ExternalLink } from "lucide-react";
 import type { FeedItem } from "@/lib/intel/aihot-types";
 import { beijingTime, timelineMs } from "@/lib/intel/categories";
-import { formatRelativeZh, shanghaiDay } from "@/lib/intel/time";
+import { shanghaiDay } from "@/lib/intel/time";
+import { RelativeTime } from "@/components/i18n/RelativeTime";
+import { Tx } from "@/components/i18n/Tx";
+import { useLocale } from "@/components/i18n/LocaleProvider";
+import { tr, useTranslatedTexts } from "@/components/i18n/useTranslatedTexts";
+import type { MessageKey } from "@/lib/i18n/messages";
 
 function itemAxisIso(item: FeedItem, fallback: string): string {
   const ms = timelineMs(item.publishedAt, item.discoveredAt, fallback);
@@ -15,27 +22,48 @@ function dayKey(iso: string): string {
   return shanghaiDay(new Date(t).toISOString());
 }
 
-function dayHeading(ymd: string): string {
-  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return ymd || "未知日期";
+function dayHeading(ymd: string, locale: "zh" | "en"): string {
+  if (!/^\d{4}-\d{2}-\d{2}$/.test(ymd)) return ymd || (locale === "en" ? "Unknown date" : "未知日期");
+  const date = new Date(`${ymd}T12:00:00+08:00`);
+  if (locale === "en") {
+    return new Intl.DateTimeFormat("en-US", {
+      weekday: "short",
+      month: "short",
+      day: "numeric",
+      year: "numeric",
+      timeZone: "Asia/Shanghai",
+    }).format(date);
+  }
   const [y, m, d] = ymd.split("-");
   let weekday = "";
   try {
     weekday = new Intl.DateTimeFormat("zh-CN", {
       weekday: "short",
       timeZone: "Asia/Shanghai",
-    }).format(new Date(`${ymd}T12:00:00+08:00`));
+    }).format(date);
   } catch {
     weekday = "";
   }
   return `${Number(y)}年${Number(m)}月${Number(d)}日${weekday ? ` · ${weekday}` : ""}`;
 }
 
-/** 全部动态：按时间线流动展示（日分组 + 纵向时间轴），最新在上 */
+function originKey(origin: FeedItem["origin"]): MessageKey {
+  if (origin === "twitter") return "feed.origin.twitter";
+  if (origin === "hot") return "feed.origin.hot";
+  if (origin === "intel") return "feed.origin.intel";
+  if (origin === "event") return "feed.origin.event";
+  return "feed.origin.aihot";
+}
+
+/** AI动态：按时间线流动展示（日分组 + 纵向时间轴），最新在上 */
 export function FeedTimeline({ items }: { items: FeedItem[] }) {
+  const { locale } = useLocale();
+  const txMap = useTranslatedTexts(items.flatMap((it) => [it.title, it.summary, it.recommendReason]));
+
   if (!items.length) {
     return (
       <div className="surface p-6 text-sm text-[var(--muted)]">
-        这个时间窗里没有动态。试试「最近 7 天」，或等待下一分钟自动刷新。
+        <Tx k="feed.empty.all" />
       </div>
     );
   }
@@ -59,8 +87,10 @@ export function FeedTimeline({ items }: { items: FeedItem[] }) {
         <section key={g.day} className="tl-day">
           <header className="tl-day-head">
             <span className="tl-day-dot" aria-hidden />
-            <h2 className="tl-day-title">{dayHeading(g.day)}</h2>
-            <span className="tl-day-count">{g.items.length} 条</span>
+            <h2 className="tl-day-title">{dayHeading(g.day, locale)}</h2>
+            <span className="tl-day-count">
+              <Tx k="feed.items" values={{ n: g.items.length }} />
+            </span>
           </header>
           <ol className="tl-rail">
             {g.items.map((it) => {
@@ -73,36 +103,46 @@ export function FeedTimeline({ items }: { items: FeedItem[] }) {
                   </div>
                   <article className="tl-card">
                     <div className="tl-meta">
-                      <time dateTime={when} title={beijingTime(when)}>
-                        {formatRelativeZh(when)}
-                      </time>
+                      <span title={beijingTime(when)}>
+                        <RelativeTime iso={when} />
+                      </span>
                       <span className="zh-source">{it.sourceName}</span>
-                      {showPick ? <span className="zh-badge-pick">✨ 精选</span> : null}
+                      <span className={it.origin === "twitter" ? "tw-badge" : "tl-origin"}>
+                        <Tx k={originKey(it.origin)} />
+                      </span>
+                      {showPick ? (
+                        <span className="zh-badge-pick">
+                          <Tx k="feed.pick" />
+                        </span>
+                      ) : null}
                       {it.score != null ? (
                         <span className="zh-score">
                           <span className="zh-score-dot" aria-hidden />
-                          AI 评分 {Math.round(it.score)}/100
+                          <Tx k="feed.score" values={{ n: Math.round(it.score) }} />
                         </span>
                       ) : null}
                     </div>
                     <h3 className="zh-title tl-title-size">
-                      <Link href={it.localHref}>{it.title}</Link>
+                      {it.localHref.startsWith("http") ? (
+                        <a href={it.localHref} target="_blank" rel="noreferrer">
+                          {tr(txMap, it.title)}
+                        </a>
+                      ) : (
+                        <Link href={it.localHref}>{tr(txMap, it.title)}</Link>
+                      )}
                     </h3>
-                    {it.summary ? <p className="zh-summary">{it.summary}</p> : null}
+                    {it.summary ? <p className="zh-summary">{tr(txMap, it.summary)}</p> : null}
                     {it.recommendReason ? (
                       <p className={showPick ? "zh-reason zh-reason-pick" : "zh-reason"}>
-                        <span className="zh-reason-label">推荐理由：</span>
-                        {it.recommendReason}
+                        <span className="zh-reason-label">
+                          <Tx k="feed.reason" />
+                        </span>
+                        {tr(txMap, it.recommendReason)}
                       </p>
                     ) : null}
                     {it.originalUrl ? (
-                      <a
-                        href={it.originalUrl}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="tl-ext"
-                      >
-                        原文 <ExternalLink size={11} aria-hidden />
+                      <a href={it.originalUrl} target="_blank" rel="noreferrer" className="tl-ext">
+                        <Tx k="feed.source" /> <ExternalLink size={11} aria-hidden />
                       </a>
                     ) : null}
                   </article>
