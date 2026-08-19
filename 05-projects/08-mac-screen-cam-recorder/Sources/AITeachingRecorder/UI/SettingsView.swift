@@ -208,10 +208,16 @@ struct SettingsView: View {
         panel.canChooseFiles = false
         panel.canChooseDirectories = true
         panel.allowsMultipleSelection = false
-        panel.prompt = "Choose"
-        if panel.runModal() == .OK, let url = panel.url {
-            settings.outputDirectory = url
-        }
+        panel.canCreateDirectories = true
+        panel.prompt = "Select"
+        panel.message = "Choose where recordings are saved."
+        // Default to the current output folder so an accidental "Select" never
+        // silently moves recordings to ~/Documents or another wrong location.
+        panel.directoryURL = settings.outputDirectory
+        guard panel.runModal() == .OK, let url = panel.url else { return }
+        var isDir: ObjCBool = false
+        guard FileManager.default.fileExists(atPath: url.path, isDirectory: &isDir), isDir.boolValue else { return }
+        settings.outputDirectory = url
     }
 }
 

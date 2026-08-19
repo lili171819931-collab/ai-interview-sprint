@@ -33,6 +33,10 @@ final class DrawingCanvasView: NSView {
     private var textField: NSTextField?
     private let lock = NSLock()
 
+    private let drawingCIContext = CIContext(options: [.useSoftwareRenderer: false])
+    private var needsRender = true
+    private var renderedCGImage: CGImage?
+
     var canvasImage: CIImage? {
         lock.lock()
         defer { lock.unlock() }
@@ -97,6 +101,9 @@ final class DrawingCanvasView: NSView {
             draw(live, in: ctx, scale: scale)
         }
         CVPixelBufferUnlockBaseAddress(buffer, [])
+        lock.lock()
+        needsRender = true
+        lock.unlock()
         needsDisplay = true
         onChanged?()
     }
@@ -170,9 +177,17 @@ final class DrawingCanvasView: NSView {
             bounds.fill()
             return
         }
-        let ciImage = CIImage(cvPixelBuffer: buffer)
-        let context = CIContext(options: [.useSoftwareRenderer: false])
-        if let cg = context.createCGImage(ciImage, from: ciImage.extent) {
+        // Only re-render when the canvas content actually changed; AppKit may call
+        // draw() repeatedly (e.g. transparent overlay above animating content).
+        lock.lock()
+        if needsRender {
+            let ciImage = CIImage(cvPixelBuffer: buffer)
+            renderedCGImage = drawingCIContext.createCGImage(ciImage, from: ciImage.extent)
+            needsRender = false
+        }
+        let cg = renderedCGImage
+        lock.unlock()
+        if let cg {
             NSGraphicsContext.current?.cgContext.draw(cg, in: bounds)
         }
     }

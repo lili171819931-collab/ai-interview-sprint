@@ -26,6 +26,11 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
                                   forKey: "aitr.screenGrantedAtLaunch")
         startPermissionMonitor()
         dumpPermissions()
+        // Clean launch: never restore "during recording" floating windows.
+        hideControlBar()
+        hideCameraPanel()
+        hideAnnotationOverlay()
+        hideTeleprompter()
     }
 
     private func statusString(_ s: PermissionStatus) -> String {
@@ -321,6 +326,7 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
         panel.hasShadow = false
         panel.isMovableByWindowBackground = movable
         panel.becomesKeyOnlyIfNeeded = true
+        panel.isRestorable = false
         panel.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary, .stationary, .ignoresCycle]
         panel.contentView = content
         panel.setContentSize(size)
