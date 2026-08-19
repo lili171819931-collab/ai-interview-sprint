@@ -25,6 +25,7 @@
 ├── 02-ai-weekly-insight/          ← B. AI 功能主作品
 ├── 03-rag-validation-lab/         ← C. 评测验证 Lab
 ├── 04-workbuddy-invoice-reimburse/← 发票报销 · WorkBuddy Skill 载体
+├── 04-05-06-发票报销三平台合集.md ← 04/05/06 三平台合并总览（同域三载体）
 ├── 05-invoice-reimburse-web/      ← 发票报销 · Web「票易报」可运行 MVP
 ├── 06-piaoji-product/             ← 发票报销 · 微信「票迹」包装+商业
 ├── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包 · GTI）
@@ -49,6 +50,7 @@
 
 ## 推荐阅读顺序（60 分钟）
 
+0. [`04-05-06-发票报销三平台合集.md`](04-05-06-发票报销三平台合集.md) → 发票报销三平台合并总览
 1. [`01-weiji-product/README.md`](01-weiji-product/README.md) → C 端闭环  
 2. [`05-invoice-reimburse-web/README.md`](05-invoice-reimburse-web/README.md) → Web 跑通审批  
 3. [`06-piaoji-product/README.md`](06-piaoji-product/README.md) → 小程序闭环  

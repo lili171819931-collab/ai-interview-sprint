@@ -36,6 +36,7 @@ git clone --recurse-submodules https://github.com/lili171819931-collab/ai-interv
 | 顺序 | 文件 | 内容 |
 |------|------|------|
 | 0 | [`README.md`](README.md) | 总览与操作入口（本文） |
+| 0+ | [**04/05/06 三平台合集**](../04-05-06-发票报销三平台合集.md) | 报销流程在 Skill / Web / 小程序三平台的合并实现 |
 | 1 | [`01-prd.md`](01-prd.md) | 定位、用户、Must/Won’t、成功标准 |
 | 2 | [`02-ia-and-flows.md`](02-ia-and-flows.md) | IA、主/异常流程、状态机、思维链 |
 | 3 | [`03-data-and-rules.md`](03-data-and-rules.md) | 模型、匹配/合规伪代码、案例索引 |

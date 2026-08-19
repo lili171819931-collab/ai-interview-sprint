@@ -20,6 +20,7 @@
 | 微信小程序「票迹」源码 | `ai-projects/products/piaoji-mini/`（子模块） | 员工侧收票/对账/HR 包 |
 | 票迹项目包装+商业 | `05-projects/06-piaoji-product/` | PRD→上线→商业价值 |
 | 三载体对比报告 | `05-projects/06-piaoji-product/08-trio-comparison-report.md` | Skill / Web / 小程序对照 |
+| **三平台合并总览** | `05-projects/04-05-06-发票报销三平台合集.md` | **04/05/06 合并成一份：报销流程在三种平台上的实现** |
 
 ## 规范 URL
 
@@ -32,6 +33,7 @@
 | WorkBuddy Skill（04） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/04-workbuddy-invoice-reimburse |
 | 票易报 Web（05） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/05-invoice-reimburse-web |
 | 票迹项目文档（06） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/06-piaoji-product |
+| 三平台合并总览（04/05/06） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/04-05-06-发票报销三平台合集.md |
 | 智衡 AI Radar（07 · 主交付） | https://github.com/lili171819931-collab/ai-interview-sprint/tree/main/05-projects/07-ai-radar-dashboard |
 
 ## AI 动态雷达（智衡）
