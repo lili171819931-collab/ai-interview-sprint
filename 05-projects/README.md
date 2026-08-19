@@ -32,7 +32,9 @@
 ├── 07-ai-radar-dashboard/         ← 智衡 AI Radar（源码+文档完整包 · GTI）
 ├── 09-goal-compiler/             ← Goal Compiler（目标编译）
 ├── 10-creatoros-platform/        ← CreatorOS 平台
-└── 11-lily-skills/               ← Lily-Skills（个人 AI Skill 操作系统）
+├── 11-lily-skills/               ← Lily-Skills（个人 AI Skill 操作系统）
+├── 13-ai-pm-career-os/           ← AI PM 职业 OS
+└── 14-ai-oss-intel/             ← AI OSS Intel（GitHub AI 开源情报平台）
 ```
 
 ## 类别速览
@@ -49,6 +51,7 @@
 | **合集** | 三平台聚合副本 | [`invoice-reimburse-trio/`](invoice-reimburse-trio/) | 04/05/06 合并查看/演示 | ✅ |
 | **07** | AI 情报看板闭环 | [`07-ai-radar-dashboard/`](07-ai-radar-dashboard/) | 日更+GTI 事件聚类+Agent/MCP+简报推送 | ✅ |
 | **11** | 个人 AI Skill 操作系统 | [`11-lily-skills/`](11-lily-skills/) | Skill 注册/检索/Agent/Workflow/权限/分析全闭环 | ✅ |
+| **14** | GitHub AI 开源情报平台 | [`14-ai-oss-intel/`](14-ai-oss-intel/) | 分类 TOP 榜(≥100×3)+全链路逆向分析(六件套)+生产级 GitHub API 数据层+工程资产全套 | ✅ |
 
 ## 推荐阅读顺序（60 分钟）
 

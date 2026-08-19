@@ -1,0 +1,32 @@
+{
+  "name": "ai-oss-intel",
+  "version": "1.0.0",
+  "private": true,
+  "description": "GitHub AI Open Source Intelligence & Product Analysis Platform — Discover. Analyze. Build. Monetize.",
+  "scripts": {
+    "dev": "next dev --port 3012",
+    "build": "next build",
+    "start": "next start --port 3012",
+    "typecheck": "tsc --noEmit",
+    "test": "tsx tests/engines.test.ts",
+    "github:sync": "tsx scripts/sync-github.ts",
+    "data:build": "tsx scripts/build-data.ts"
+  },
+  "dependencies": {
+    "clsx": "^2.1.1",
+    "lucide-react": "^1.30.0",
+    "next": "^15.2.0",
+    "react": "^19.0.0",
+    "react-dom": "^19.0.0",
+    "zod": "^3.24.2"
+  },
+  "devDependencies": {
+    "@tailwindcss/postcss": "^4.0.9",
+    "@types/node": "^22.13.5",
+    "@types/react": "^19.0.10",
+    "@types/react-dom": "^19.0.4",
+    "tailwindcss": "^4.0.9",
+    "tsx": "^4.19.3",
+    "typescript": "^5.8.2"
+  }
+}

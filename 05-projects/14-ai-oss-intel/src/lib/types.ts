@@ -1,0 +1,511 @@
+/**
+ * Core domain types for the AI Open Source Intelligence Platform.
+ * TypeScript strict — every data shape is explicit.
+ */
+
+export type CategoryId =
+  | "agent" | "skill" | "mcp" | "coding" | "devtools" | "saas" | "productivity"
+  | "automation" | "content" | "selfmedia" | "video" | "image" | "audio"
+  | "writing" | "resume" | "sidehustle" | "money" | "ecommerce" | "marketing"
+  | "data" | "rag" | "llm" | "vision" | "robotics" | "education" | "research"
+  | "infra" | "devproductivity" | "pkm" | "life";
+
+export interface Category {
+  id: CategoryId;
+  name: string;
+  nameZh: string;
+  emoji: string;
+}
+
+/** 0-10 intelligence attributes used by the scoring engine. */
+export interface ProjectProfile {
+  innovation: number;
+  productValue: number;
+  userDemand: number;
+  commercialPotential: number;
+  ecosystem: number;
+  personalDevValue: number;
+  /** Lower = less competition (10 = very crowded). */
+  competition: number;
+  sideHustleFit: number;
+  skillFit: number;
+  resumeFit: number;
+  contentFit: number;
+  startupFit: number;
+  moneyFit: number;
+}
+
+export interface GrowthPoint {
+  date: string; // YYYY-MM-DD
+  stars: number;
+}
+
+export interface Project {
+  id: string;
+  slug: string;
+  name: string;
+  owner: string;
+  fullName: string;
+  tagline: string;
+  description: string;
+  homepage?: string;
+  language: string;
+  license?: string;
+  stars: number;
+  forks: number;
+  contributors: number;
+  openIssues: number;
+  releases: number;
+  createdAt: string;
+  updatedAt: string;
+  categories: CategoryId[];
+  topics: string[];
+  /** stars gained in last 7 / 30 / 90 days */
+  growth7d: number;
+  growth30d: number;
+  growth90d: number;
+  profile: ProjectProfile;
+  /** weekly star history (>= 14 points) used for charts */
+  growthHistory: GrowthPoint[];
+  /** per-agent notes used by report generator (optional overrides) */
+  notes?: Partial<Record<AgentId, string>>;
+}
+
+export type AgentId =
+  | "discovery" | "classification" | "repo" | "product" | "business"
+  | "growth" | "startup" | "content" | "portfolio" | "chief";
+
+export interface ProjectScores {
+  aiScore: number;          // 0-100 AI Project Score
+  technical: number;
+  product: number;
+  growth: number;
+  commercial: number;
+  sideHustle: number;
+  skill: number;
+  resume: number;
+  content: number;
+  startup: number;
+  opportunity: number;      // core Opportunity Score
+  money: number;
+  health: number;           // Open Source Health Score
+}
+
+export interface OpportunityIdea {
+  name: string;
+  targetUsers: string;
+  painPoint: string;
+  coreFeatures: string;
+  aiCapabilities: string;
+  mvp: string;
+  businessModel: string;
+  moat: string;
+  devDifficulty: "低" | "中" | "高";
+  devTime: string;
+  potential: number; // 0-100
+}
+
+export interface ReportSection {
+  title: string;
+  body: string;
+}
+
+export interface VerdictRating {
+  key: string;
+  label: string;
+  stars: number; // 1-5
+}
+
+export interface ProjectReport {
+  projectId: string;
+  generatedAt: string;
+  sections: ReportSection[];
+  verdict: VerdictRating[];
+  oneLiner: string;
+  opportunities: OpportunityIdea[];
+  onePersonStartup: {
+    developerReq: string;
+    aiReq: string;
+    designReq: string;
+    operationReq: string;
+    mvpTime: string;
+    cost: "Low" | "Medium" | "High";
+    monetization: "Easy" | "Medium" | "Hard";
+    score: number;
+  };
+  copyPath: { step: string; detail: string }[];
+  dna: { label: string; value: string }[];
+  recommendedActions: { action: string; why: string; effort: "低" | "中" | "高" }[];
+}
+
+export type RankKind =
+  | "stars" | "growth" | "hot" | "opportunity" | "money" | "sidehustle"
+  | "skills" | "resume" | "content" | "new";
+
+export interface RankedItem {
+  project: Project;
+  scores: ProjectScores;
+  rank: number;
+  delta: number; // rank movement vs previous (positive = up)
+}
+
+/* ── AI PM Learning & Content Intelligence OS ─────────────────────────── */
+
+export type LearningLevel = "beginner" | "intermediate" | "advanced" | "expert";
+
+export interface HiddenNeeds {
+  surface: string;
+  functional: string;
+  scenario: string;
+  core: string;
+  deep: string;
+  latent: string;
+}
+
+export interface RequirementNode {
+  question: string;
+  answer: string;
+  children: RequirementNode[];
+}
+
+export interface JTBD {
+  when: string;
+  want: string;
+  soThat: string;
+  functional: string;
+  emotional: string;
+  social: string;
+}
+
+export interface EvidenceItem {
+  type: "Evidence" | "Inference" | "Hypothesis";
+  source: string;
+  claim: string;
+}
+
+export interface FiveLayers {
+  userProblem: string;
+  productExperience: string;
+  aiCapability: string;
+  agentWorkflow: string;
+  businessModel: string;
+}
+
+export interface AiNativeAnalysis {
+  before: string;
+  after: string;
+  native: string;
+}
+
+export interface DnaChainNode {
+  label: string;
+  value: string;
+}
+
+export interface PmVsUser {
+  userView: string;
+  pmView: string;
+}
+
+export interface ChallengeOption {
+  id: string;
+  text: string;
+  best: boolean;
+}
+
+export interface Challenge {
+  id: string;
+  level: LearningLevel;
+  question: string;
+  hint: string;
+  skill: string;
+  options: ChallengeOption[];
+  projectFacts: string;
+  bestPractice: string;
+  expertReview: { bestAnswer: string; why: string; keyInsight: string; good: string; missing: string; wrong: string; deeper: string };
+}
+
+export interface InterviewQuestion {
+  id: string;
+  category: "Product Sense" | "User Research" | "AI Product" | "Metrics" | "Growth" | "Business" | "Technical" | "Strategy";
+  question: string;
+  modelAnswer: string;
+}
+
+export interface OpinionFrame {
+  biggestInnovation: string;
+  biggestFlaw: string;
+  ifPmSteps: string[];
+  futureOpportunity: string;
+}
+
+export interface ContentScore {
+  hook: number;
+  information: number;
+  originality: number;
+  productInsight: number;
+  practicalValue: number;
+  shareability: number;
+  total: number;
+}
+
+export interface ContentPlatform {
+  platform: string;
+  title: string;
+  body: string;
+  hashtags: string[];
+}
+
+export interface VideoScriptSegment {
+  label: string;
+  text: string;
+}
+
+export interface VideoScript {
+  title: string;
+  segments: VideoScriptSegment[];
+  cta: string;
+}
+
+export interface PrdDraft {
+  productBrief: string;
+  problem: string;
+  users: string;
+  prd: string;
+  userFlow: string[];
+  features: string[];
+  mvp: string;
+  aiArchitecture: string;
+  dataArchitecture: string;
+  metrics: string[];
+  gtm: string;
+}
+
+export interface CaseStudy {
+  id: string;
+  projectId: string;
+  projectName: string;
+  category: string;
+  title: string;
+  problem: string;
+  user: string;
+  productLogic: string;
+  aiArchitecture: string;
+  businessModel: string;
+  myDecision: string;
+  improvement: string;
+}
+
+export interface AbilityScores {
+  productThinking: number;
+  requirementAnalysis: number;
+  aiUnderstanding: number;
+  agentUnderstanding: number;
+  ux: number;
+  businessModel: number;
+  growth: number;
+  dataAnalysis: number;
+  technical: number;
+  communication: number;
+}
+
+export interface LearningStep {
+  id: string;
+  label: string;
+}
+
+export const LEARNING_STEPS: LearningStep[] = [
+  { id: "overview", label: "Overview" },
+  { id: "user", label: "User" },
+  { id: "problem", label: "Problem" },
+  { id: "feature", label: "Feature" },
+  { id: "aiLogic", label: "AI Logic" },
+  { id: "architecture", label: "Architecture" },
+  { id: "business", label: "Business" },
+  { id: "opinion", label: "Opinion" },
+  { id: "challenge", label: "Challenge" },
+];
+
+
+/* ── 2026 Radar: Time Status / Scenario / Deep Analysis / Build Plan ── */
+
+export type TimeStatus = "2026NEW" | "2026RISING" | "2026ACTIVE" | "2026RELEVANT";
+
+export interface Scenario {
+  id: string;
+  group: string;   // A-Q
+  name: string;
+  nameZh: string;
+  emoji: string;
+}
+
+export interface PmDeepAnalysisItem {
+  key: string;
+  label: string;
+  value: string;
+}
+
+export interface WhyAi {
+  needAi: string;
+  withoutAi: string;
+  costReduced: string;
+  efficiencyGained: string;
+  newExperience: string;
+}
+
+export interface AiNativeTest {
+  current: string;
+  enhanced: string;
+  native: string;
+}
+
+export interface BuildStep {
+  phase: string;
+  days: string;
+  tasks: string[];
+}
+
+export interface BuildPlan {
+  summary: string;
+  architectureLayers: { layer: string; desc: string }[];
+  techStack: string[];
+  dataFlow: string[];
+  modules: string[];
+  steps: BuildStep[];
+  copy: string[];
+  dontCopy: string[];
+  dependencies: string[];
+  cost: string;
+  checklist: string[];
+}
+
+/* ── Reverse Engineering OS ──────────────────────────────────────────── */
+
+export type EvidenceLevel = "Confirmed" | "Inferred" | "Hypothesis" | "Unknown";
+
+export interface JourneyStep {
+  step: string;
+  what: string;
+  why: string;
+  module: string;
+  input: string;
+  output: string;
+  aiRole: "AI" | "Agent" | "RAG" | "MCP" | "Workflow" | "None";
+}
+
+export interface ImplStep {
+  step: string;
+  layer: string;
+  detail: string;
+  evidence: EvidenceLevel;
+}
+
+export interface TechChoice {
+  tech: string;
+  why: string;
+  alternative: string;
+  impact: string;
+}
+
+export interface ProductToTechMap {
+  productRequirement: string;
+  feature: string;
+  ux: string;
+  workflow: string;
+  ai: string;
+  infrastructure: string;
+  output: string;
+}
+
+export interface IfWerePm {
+  keep: string[];
+  remove: string[];
+  add: string[];
+  redesign: string[];
+  priority: string[];
+  notDo: string[];
+}
+
+export interface MvpReverse {
+  mvp: string[];
+  v1: string[];
+  v2: string[];
+  scale: string[];
+}
+
+export interface ProductDecision {
+  decision: string;
+  reason: string;
+  tradeoff: string;
+  alternative: string;
+}
+
+export interface IndustryApp {
+  industry: string;
+  scenario: string;
+  value: string;
+  difficulty: "低" | "中" | "高";
+  potential: number;
+}
+
+export interface Competitor {
+  type: string;
+  name: string;
+  note: string;
+}
+
+export interface ValueScore {
+  label: string;
+  value: number;
+  color: string;
+}
+
+export interface AiArchComponent {
+  component: string;
+  role: string;
+}
+
+export interface MediaValue {
+  worth: boolean;
+  hook: string;
+  topic: string;
+  angle: string;
+  controversy: string;
+  pmInsight: string;
+  title: string;
+  script: string;
+  thumbnail: string;
+}
+
+export interface ReverseEngineering {
+  productDnaFlow: string[];
+  userJourney: JourneyStep[];
+  implementationPath: ImplStep[];
+  sourceArchitecture: { tree: string[]; coreModules: { module: string; role: string; evidence: EvidenceLevel }[] };
+  featureToCode: { feature: string; chain: string[] }[];
+  techStackExplained: TechChoice[];
+  productToTech: ProductToTechMap;
+  ifWerePm: IfWerePm;
+  mvpReverse: MvpReverse;
+  productDecisions: ProductDecision[];
+  businessModelDetail: { streams: string[]; moneyPoint: string };
+  businessOpportunities: { type: string; opportunity: string }[];
+  industries: IndustryApp[];
+  competitors: Competitor[];
+  comparison: string[];
+  valueScores: ValueScore[];
+  aiArchitecture: AiArchComponent[];
+  learningValue: string[];
+  mediaValue: MediaValue;
+}
+
+export interface MyProjectReport {
+  whyStarred: string;
+  worthStudying: string;
+  focusLearn: string[];
+  careerHelp: string;
+  mediaWorth: boolean;
+  mediaTitle: string;
+  portfolioWorth: boolean;
+  rebuildWorth: boolean;
+}
