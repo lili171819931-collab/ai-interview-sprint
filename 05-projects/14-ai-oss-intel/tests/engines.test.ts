@@ -333,3 +333,11 @@ assert(onePager.length === 14 && onePager.every((x) => x.stars >= 0 && x.stars <
 const fj = buildExpertFinalJudgment(sample);
 assert(fj.deep.includes("而是") && fj.opportunity.length > 0, "expert: final judgment");
 assert(buildSourceExpertReport(fakeRepo, srcIntel).length === 27, "expert: source report");
+
+/* ── Resume / Money category data tests ───────────────────────────────── */
+assert(PROJECTS.some((p) => p.categories.includes("resume") && p.slug === "reactive-resume"), "resume: reactive-resume present");
+assert(PROJECTS.some((p) => p.categories.includes("resume")), "resume: has projects");
+assert(PROJECTS.some((p) => p.categories.includes("money") && p.slug === "ghost"), "money: ghost present");
+assert(PROJECTS.some((p) => p.categories.includes("money")), "money: has projects");
+assert(guessCategoryFromRepo({ name: "reactive-resume", description: "开源简历生成器", topics: ["resume"], language: "TypeScript" }) === "resume", "categorize: resume");
+assert(guessCategoryFromRepo({ name: "ghost", description: "创作者变现平台", topics: ["monetization"], language: "JavaScript" }) === "money", "categorize: money");

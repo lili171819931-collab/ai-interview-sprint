@@ -13,6 +13,9 @@ export function guessCategoryFromRepo(input: {
 }): CategoryId | "other" {
   const hay = `${input.name} ${input.description ?? ""} ${(input.topics ?? []).join(" ")} ${input.language ?? ""}`.toLowerCase();
   const rules: [RegExp, CategoryId][] = [
+    [/resume|career|job|portfolio|interview|recruit|cv/i, "resume"],
+    [/monetiz|fintech|paywall|creator-economy|marketplace|pricing|payment|money|affiliate|subscription-revenue/i, "money"],
+    [/side.?project|freelanc|gig|earn|side-hustle/i, "sidehustle"],
     [/agent|autogen|crew|langgraph|smolagents|browser-use|orchestrat/i, "agent"],
     [/mcp|model-context/i, "mcp"],
     [/llm|gpt|transformer|ollama|inference|finetun|model/i, "llm"],
