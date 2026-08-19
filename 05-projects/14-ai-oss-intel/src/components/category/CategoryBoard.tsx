@@ -12,9 +12,10 @@ import { getAddedProjects } from "@/lib/db";
 import { buildBoardRows } from "@/lib/boardRows";
 import { guessCategoryFromRepo } from "@/lib/categorize";
 import { GithubIcon } from "@/components/icons";
+import { githubRepoUrl } from "@/lib/github";
 import type { CategoryId, Project } from "@/lib/types";
 
-const LIMIT = 100;
+const LIMIT = 30;
 type Tab = "opportunity" | "stars" | "growth";
 const TABS: { id: Tab; label: string; desc: string }[] = [
   { id: "opportunity", label: "机会 TOP 榜", desc: "按 AI Opportunity Score" },
@@ -84,10 +85,10 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
     const shortage = rows.length < LIMIT;
     const head =
       tab === "opportunity"
-        ? `机会 TOP 榜 = 仅本分类 · 2025 年至今项目 · 共 ${rows.length}/${LIMIT} 个（快照真实评分 + 实时启发式评分）· 从高到低 · 实时 ${liveCount}`
+        ? `机会 TOP 榜 = 仅本分类 · 2026 年发布 · 前 ${rows.length}/${LIMIT} 名（快照真实评分 + 实时启发式评分）· 从高到低 · 实时 ${liveCount}`
         : tab === "stars"
-          ? `收藏榜 = 仅本分类 · 2025 年至今项目 · 共 ${rows.length}/${LIMIT} 个 · 从高到低 · 实时 ${liveCount}`
-          : `收藏增长最快榜 = 仅本分类 · 2025 年至今项目 · 共 ${rows.length}/${LIMIT} 个 · 从高到低 · 实时 ${liveCount}`;
+          ? `收藏榜 = 仅本分类 · 2026 年发布 · 前 ${rows.length}/${LIMIT} 名 · 从高到低 · 实时 ${liveCount}`
+          : `收藏增长最快榜 = 仅本分类 · 2026 年发布 · 前 ${rows.length}/${LIMIT} 名 · 从高到低 · 实时 ${liveCount}`;
     return (
       <>
         <div className="px-1 text-[11.5px] text-[#5b6885]">{head}</div>
@@ -189,7 +190,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
       </div>
 
       <p className="text-[11px] text-[#4d5a75]">
-        📡 三榜只展示**本分类相关且发布时间为 2025 年至今**的开源项目（创建或最近更新在 2025 年至今；不做跨分类凑数），**从高到低**排列；配置 Token 后实时拉取可每榜补齐 {LIMIT} 条本分类真实项目。每次打开页面自动拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」与每 10 分钟自动重拉同步本榜）；未配置 Token 限流时自动降级，不会挂起。
+        📡 三榜只展示**本分类相关、2026 年发布**的开源项目（不读以前数据、不做跨分类凑数），取**前 {LIMIT} 名**、**从高到低**排列。每次打开页面自动拉取实时数据（缓存 30 分钟，可点「立即刷新」；顶栏「实时同步」与每 10 分钟自动重拉同步本榜）；未配置 Token 限流时自动降级，不会挂起。项目名旁的 GitHub 图标直达真实仓库。
         每个项目均可「分析」打开完整逆向工程（40 节报告 + 全景图），「产品框图」查看功能实现路径框图，「产品总监视角」查看边界 / 痛点 / 真实案例预测。
       </p>
     </div>
@@ -258,7 +259,7 @@ function SeedRow({ p, s, rank, color, expandedKey, panelTab, onToggle, columns }
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-[#0e1626]">
         <span className="w-8 font-bold num" style={{ color: rank <= 3 ? color : "#8b98b3" }}>#{String(rank).padStart(2, "0")}</span>
         <div className="min-w-0 flex-1">
-          <Link href={`/projects/${p.slug}`} className="font-semibold text-white hover:text-[#7dd3fc]">{p.name}</Link>
+          <Link href={`/projects/${p.slug}`} className="font-semibold text-white hover:text-[#7dd3fc]">{p.name}</Link> <a href={githubRepoUrl(p.fullName)} target="_blank" title="打开 GitHub 真实项目" className="inline-block align-middle text-[#4d5a75] hover:text-[#7dd3fc]"><GithubIcon size={13} /></a>
           <div className="text-[11px] text-[#5b6885] truncate max-w-[420px]">{p.tagline}</div>
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
             <span className="flex items-center gap-1 text-[10.5px] text-[#5b6885]"><Clock size={10} /> 发布于 {p.createdAt}</span>
@@ -290,7 +291,7 @@ function LiveRow({ repo, rank, color, expandedKey, panelTab, onToggle, columns }
       <div className="flex flex-wrap items-center gap-x-4 gap-y-2 px-4 py-3 hover:bg-[#0e1626]">
         <span className="w-8 font-bold num" style={{ color: rank <= 3 ? color : "#8b98b3" }}>#{String(rank).padStart(2, "0")}</span>
         <div className="min-w-0 flex-1">
-          <a href={`https://github.com/${repo.fullName}`} target="_blank" className="font-semibold text-white hover:text-[#7dd3fc]">{repo.name} <ExternalLink size={11} className="inline text-[#4d5a75]" /></a>
+          <a href={githubRepoUrl(repo.fullName)} target="_blank" className="font-semibold text-white hover:text-[#7dd3fc]">{repo.name} <ExternalLink size={11} className="inline text-[#4d5a75]" /></a>
           <div className="text-[11px] text-[#5b6885] truncate max-w-[420px]">{repo.description ?? repo.fullName}</div>
           <div className="flex items-center gap-1.5 mt-0.5 flex-wrap">
             <span className="flex items-center gap-1 text-[10.5px] text-[#5b6885]"><Clock size={10} /> 发布于 {repo.createdAt}</span>

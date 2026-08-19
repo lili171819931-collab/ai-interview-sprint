@@ -2,6 +2,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Globe, Star, GitFork, Users, CircleDot, Calendar, Scale, Radar, BrainCircuit, Layers, Boxes, Rocket, BarChart3, Target, Briefcase, Puzzle, FileText, Megaphone, HeartPulse, GitBranch, Lightbulb, CheckCircle2 } from "lucide-react";
 import { GithubIcon } from "@/components/icons";
+import { githubRepoUrl } from "@/lib/github";
 import { PROJECTS } from "@/data/projects";
 import { projectBySlug as getProject, relatedProjects, projectScores } from "@/lib/store";
 import { computeScores, formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
@@ -108,7 +109,7 @@ export default async function ProjectPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
         <div className="mt-5 flex flex-wrap items-center gap-2">
-          <a href={`https://github.com/${project.fullName}`} target="_blank" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-[#1a2a4a] border border-[#2c4370] text-[12.5px] font-semibold text-white hover:bg-[#1f3158]">
+          <a href={githubRepoUrl(project.fullName)} target="_blank" className="inline-flex items-center gap-1.5 h-9 px-4 rounded-lg bg-[#1a2a4a] border border-[#2c4370] text-[12.5px] font-semibold text-white hover:bg-[#1f3158]">
             <GithubIcon size={14} /> GitHub
           </a>
           {project.homepage && (

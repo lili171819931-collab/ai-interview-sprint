@@ -61,14 +61,12 @@ export function buildBoardRows({
     return row.kind === "seed" ? (row.p.growth90d ?? 0) / 90 : starsPerDay(row.r);
   };
 
-  // 时间窗：2025 年至今（创建或最近更新 ≥2025，剔除 2025 前已停更的旧仓库）
+  // 时间窗：只保留 2026 年发布的项目（createdAt ≥2026，不读以前数据）
   const year = (d?: string) => parseInt((d ?? "").slice(0, 4), 10);
   const inWindow = (row: BoardRow): boolean =>
-    row.kind === "seed"
-      ? year(row.p.createdAt) >= 2025 || year(row.p.updatedAt) >= 2025
-      : year(row.r.createdAt) >= 2025 || year(row.r.updatedAt) >= 2025;
+    row.kind === "seed" ? year(row.p.createdAt) >= 2026 : year(row.r.createdAt) >= 2026;
 
-  // 只保留：本分类相关 且 2025 年至今项目 —— 不做跨分类补齐，从高到低排列
+  // 只保留：本分类相关 且 2026 年发布项目 —— 不做跨分类补齐，从高到低排列
   const rows = all
     .filter((row) => isCat(row) && inWindow(row))
     .sort((a, b) => metric(b, tab) - metric(a, tab))
