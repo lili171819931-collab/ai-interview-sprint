@@ -8,12 +8,14 @@ import { isOpenSourceLicense } from "@/lib/licenses";
 import { fetchRepoSource, type SourceIntel } from "@/lib/source";
 import { addProject } from "@/lib/db";
 import { buildSourceReportMarkdown, buildProjectReportMarkdown } from "@/lib/report";
+import { buildProjectPrompt } from "@/lib/prompt";
+import { useState as usePromptState } from "react";
 import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel } from "@/components/analysis/AnalysisView";
 import { ReportActions } from "@/components/ReportActions";
 import type { LiveRepo } from "@/lib/live";
 import type { Project } from "@/lib/types";
 
-type Tab = "analysis" | "diagram" | "director" | "report";
+type Tab = "analysis" | "diagram" | "director" | "prompt" | "report";
 
 export default function AddProjectPage() {
   const [input, setInput] = useState("");
@@ -126,6 +128,7 @@ export default function AddProjectPage() {
             <button onClick={() => setTab("analysis")} className={`chip cursor-pointer ${tab === "analysis" ? "chip-accent" : ""}`}><FileText size={12} /> 分析（完整逆向工程）</button>
             <button onClick={() => setTab("diagram")} className={`chip cursor-pointer ${tab === "diagram" ? "chip-accent" : ""}`}><Boxes size={12} /> 产品框图</button>
             <button onClick={() => setTab("director")} className={`chip cursor-pointer ${tab === "director" ? "chip-accent" : ""}`}><UserRoundCheck size={12} /> 产品总监视角</button>
+            <button onClick={() => setTab("prompt")} className={`chip cursor-pointer ${tab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
             <button onClick={() => setTab("report")} className={`chip cursor-pointer ${tab === "report" ? "chip-accent" : ""}`}><Database size={12} /> 完整报告</button>
             <div className="ml-auto">
               <ReportActions markdown={result.seed ? buildProjectReportMarkdown(result.seed) : buildSourceReportMarkdown(result.repo, result.intel)} />
@@ -136,6 +139,14 @@ export default function AddProjectPage() {
             {tab === "analysis" && (result.seed ? <MasterAnalysis project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="analysis" />)}
             {tab === "diagram" && (result.seed ? <FeaturePathDiagram project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="diagram" />)}
             {tab === "director" && (result.seed ? <DirectorView project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="director" />)}
+            {tab === "prompt" && (result.seed ? (
+              <div>
+                <div className="text-[12px] font-bold text-white mb-2">⚡ 项目 Prompt（展示与复制）</div>
+                <LivePromptPage seed={result.seed} />
+              </div>
+            ) : (
+              <LiveSourcePanel repo={result.repo} mode="prompt" />
+            ))}
             {tab === "report" && (
               <div>
                 <div className="text-[12px] font-bold text-[#7dd3fc] mb-2">📄 全项目分析报告（Markdown · 完整链路 + 40 节 + 总监视角）</div>
@@ -184,4 +195,20 @@ async function fetchRepoMeta(owner: string, repo: string): Promise<LiveRepo> {
     homepage: it.homepage ?? null,
     license: it.license?.spdx_id ?? null,
   };
+}
+
+
+function LivePromptPage({ seed }: { seed: Project }) {
+  const [copied, setCopied] = usePromptState(false);
+  const md = buildProjectPrompt(seed);
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[12px] font-bold text-white">⚡ 项目 Prompt（展示与复制）</span>
+        <button onClick={async () => { try { await navigator.clipboard.writeText(md); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch {} }} className="chip hover:!text-[#7dd3fc] ml-auto">{copied ? "✓ 已复制" : "📋 复制"}</button>
+        <button onClick={() => { const b = new Blob([md], { type: "text/markdown;charset=utf-8" }); const u = URL.createObjectURL(b); const a = document.createElement("a"); a.href = u; a.download = `${seed.slug}-prompt.md`; a.click(); URL.revokeObjectURL(u); }} className="chip hover:!text-[#7dd3fc]">⬇️ 下载 .md</button>
+      </div>
+      <pre className="whitespace-pre-wrap font-mono text-[11px] text-[#cfe0ff] bg-[#0c1322] border border-[#16213a] rounded-xl p-4 max-h-[520px] overflow-y-auto leading-relaxed">{md}</pre>
+    </div>
+  );
 }

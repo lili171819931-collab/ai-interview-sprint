@@ -305,3 +305,18 @@ assert(prompt.includes("Q：") && prompt.includes("A："), "prompt: Q&A embedded
 assert(prompt.includes("不要描述产品，要解释产品"), "prompt: standards");
 const sp = buildSourceProjectPrompt(fakeRepo, srcIntel);
 assert(sp.includes("【Master Prompt】") && sp.includes("源码驱动") && sp.includes("EVIDENCE MODE"), "prompt: source");
+
+/* ── AI Agent / Workflow reverse-engineering tests ────────────────────── */
+import { buildAgentDirectorReport, buildWorkflowReport, buildAgentMasterMap, buildSourceAgentDirectorReport, buildSourceWorkflowReport, buildSourceAgentMasterMap } from "../src/lib/agent";
+
+const repA = buildAgentDirectorReport(sample);
+assert(repA.length === 24, "agent: Report A 24 sections");
+assert(repA[0].title === "Executive Summary" && repA[23].title.includes("Verdict"), "agent: Report A first/last");
+const repB = buildWorkflowReport(sample);
+assert(repB.length === 26, "agent: Report B 26 sections");
+assert(repB[25].title.includes("Workflow 2.0"), "agent: Report B last");
+const mm = buildAgentMasterMap(sample);
+assert(mm.length >= 15 && mm.every((n) => n.answers.length === n.questions.length), "agent: master map with answers");
+assert(buildSourceAgentDirectorReport(fakeRepo, srcIntel).length === 24, "agent: source Report A");
+assert(buildSourceWorkflowReport(fakeRepo, srcIntel).length === 26, "agent: source Report B");
+assert(buildSourceAgentMasterMap(fakeRepo, srcIntel).length >= 10, "agent: source master map");

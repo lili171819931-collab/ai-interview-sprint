@@ -15,6 +15,7 @@ import { buildSourceMasterReport, buildSourcePanorama, buildSourceDirectorView, 
 import { buildCompleteChain, buildTechRouteMainline } from "@/lib/master";
 import { buildSourceCompleteChain, buildSourceTechRouteMainline } from "@/lib/sourceMaster";
 import { buildDirectorReport, buildSourceDirectorReport } from "@/lib/director";
+import { buildAgentDirectorReport, buildWorkflowReport, buildAgentMasterMap, buildSourceAgentDirectorReport, buildSourceWorkflowReport, buildSourceAgentMasterMap } from "@/lib/agent";
 import { buildProjectReportMarkdown, buildSourceReportMarkdown } from "@/lib/report";
 import { buildProjectPrompt, buildSourceProjectPrompt } from "@/lib/prompt";
 import { ReportActions } from "@/components/ReportActions";
@@ -50,6 +51,39 @@ export function MasterAnalysis({ project }: { project: Project }) {
 
       {/* 完整链路（平台灵魂） */}
       <CompleteChain project={project} />
+
+      {/* AI Agent 拆解层 */}
+      <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-4">
+        <div className="flex flex-wrap items-center gap-2 mb-3">
+          <span className="text-[13px] font-bold text-white">🤖 AI AGENT 拆解驾驶舱</span>
+          <Link href={`/projects/${project.slug}#content`} className="chip chip-accent ml-auto">📱 一键自媒体拆解 →</Link>
+        </div>
+        <InteractiveMap title="AI AGENT MASTER MAP · 点击节点查看详细分析" nodes={buildAgentMasterMap(project)} />
+        <div className="grid gap-2 md:grid-cols-2 mt-3">
+          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#34d399]">REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节）</summary>
+            <div className="px-3 pb-3 space-y-1.5">
+              {buildAgentDirectorReport(project).map((sec) => (
+                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+                  <div className="text-[11px] font-bold text-[#34d399]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+                </div>
+              ))}
+            </div>
+          </details>
+          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#7dd3fc]">REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节）</summary>
+            <div className="px-3 pb-3 space-y-1.5">
+              {buildWorkflowReport(project).map((sec) => (
+                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+                  <div className="text-[11px] font-bold text-[#7dd3fc]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+                </div>
+              ))}
+            </div>
+          </details>
+        </div>
+      </div>
 
       {/* 三结论 */}
       <div className="grid gap-2 md:grid-cols-3">
@@ -443,7 +477,7 @@ export function SourceDirectorView({ repo, intel }: { repo: LiveRepo; intel: Sou
 }
 
 /* ── Live（实时项目）源码深度分析 ─────────────────────────────── */
-export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" }) {
+export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" | "prompt" }) {
   const [intel, setIntel] = useState<SourceIntel | null>(() => getCachedSource(repo.fullName));
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState("");
@@ -496,7 +530,8 @@ export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysi
 
   if (mode === "analysis") return <LiveSourceAnalysis repo={repo} intel={intel} degraded={degraded} onRefresh={run} />;
   if (mode === "diagram") return <LiveSourceDiagram repo={repo} intel={intel} />;
-  return <SourceDirectorView repo={repo} intel={intel} />;
+  if (mode === "director") return <SourceDirectorView repo={repo} intel={intel} />;
+  return <LivePromptView repo={repo} intel={intel} />;
 }
 
 function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRepo; intel: SourceIntel; degraded?: string; onRefresh: () => void }) {
@@ -518,6 +553,35 @@ function LiveSourceAnalysis({ repo, intel, degraded, onRefresh }: { repo: LiveRe
       {degraded && <div className="rounded-xl bg-[#101a2e] border border-amber-400/30 p-2.5 text-[11.5px] text-[#fbbf24]">⚠️ {degraded}</div>}
       {/* 完整链路（源码驱动） */}
       <SourceCompleteChain repo={repo} intel={intel} />
+      {/* AI Agent 拆解层（源码驱动） */}
+      <div className="rounded-xl bg-[#0c1322] border border-[#2c4370] p-4">
+        <div className="text-[13px] font-bold text-white mb-3">🤖 AI AGENT 拆解驾驶舱（源码驱动）</div>
+        <InteractiveMap title="AI AGENT MASTER MAP · 点击节点查看详细分析" nodes={buildSourceAgentMasterMap(repo, intel)} />
+        <div className="grid gap-2 md:grid-cols-2 mt-3">
+          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#34d399]">REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节）</summary>
+            <div className="px-3 pb-3 space-y-1.5">
+              {buildSourceAgentDirectorReport(repo, intel).map((sec) => (
+                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+                  <div className="text-[11px] font-bold text-[#34d399]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+                </div>
+              ))}
+            </div>
+          </details>
+          <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+            <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#7dd3fc]">REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节）</summary>
+            <div className="px-3 pb-3 space-y-1.5">
+              {buildSourceWorkflowReport(repo, intel).map((sec) => (
+                <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+                  <div className="text-[11px] font-bold text-[#7dd3fc]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+                  <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+                </div>
+              ))}
+            </div>
+          </details>
+        </div>
+      </div>
       {/* 产品全景图（源码驱动） */}
       <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
         <InteractiveMap title={`产品全景图 · PRODUCT PANORAMA（源码驱动 · 源码 ${intel.treeSource === "tree" ? "✓ 目录树" : "README/依赖"}）`} nodes={panorama} />
@@ -721,3 +785,40 @@ export function SourceCompleteChain({ repo, intel }: { repo: LiveRepo; intel: So
     </div>
   );
 }
+
+
+export function LivePromptView({ repo, intel }: { repo: LiveRepo; intel: SourceIntel }) {
+  const md = buildSourceProjectPrompt(repo, intel);
+  return (
+    <div className="space-y-3">
+      <div className="flex flex-wrap items-center gap-2">
+        <span className="text-[12px] font-bold text-white">⚡ 项目 Prompt（源码驱动）· 展示与复制</span>
+        <LivePromptActions markdown={md} />
+      </div>
+      <pre className="whitespace-pre-wrap font-mono text-[11px] text-[#cfe0ff] bg-[#0c1322] border border-[#16213a] rounded-xl p-4 max-h-[520px] overflow-y-auto leading-relaxed">{md}</pre>
+    </div>
+  );
+}
+
+function LivePromptActions({ markdown }: { markdown: string }) {
+  const [copied, setCopied] = useState(false);
+  return (
+    <div className="flex flex-wrap gap-1.5 ml-auto">
+      <button
+        onClick={async () => { try { await navigator.clipboard.writeText(markdown); setCopied(true); setTimeout(() => setCopied(false), 1500); } catch {} }}
+        className="chip hover:!text-[#7dd3fc]"
+      >{copied ? "✓ 已复制" : "📋 复制"}</button>
+      <button
+        onClick={() => {
+          const blob = new Blob([markdown], { type: "text/markdown;charset=utf-8" });
+          const url = URL.createObjectURL(blob);
+          const a = document.createElement("a");
+          a.href = url; a.download = "live-project-prompt.md"; a.click();
+          URL.revokeObjectURL(url);
+        }}
+        className="chip hover:!text-[#7dd3fc]"
+      >⬇️ 下载 .md</button>
+    </div>
+  );
+}
+

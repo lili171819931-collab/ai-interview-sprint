@@ -363,7 +363,7 @@ async function fetchStars(username: string): Promise<StarredRepo[]> {
 
 function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePool: StarredRepo[] }) {
   const [expanded, setExpanded] = useState<string | null>(null);
-  const [panel, setPanel] = useState<"analysis" | "diagram" | "director">("analysis");
+  const [panel, setPanel] = useState<"analysis" | "diagram" | "director" | "prompt">("analysis");
   const [mode, setMode] = useState<"primary" | "secondary">("primary");
   const groups = useMemo(() => {
     const map = new Map<string, { label: string; emoji: string; catId?: string; seeds: Project[]; lives: StarredRepo[] }>();
@@ -400,7 +400,7 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
       .sort((a, b) => b.seeds.length + b.lives.length - (a.seeds.length + a.lives.length));
   }, [seedPool, livePool, mode]);
 
-  const toggle = (key: string, pt: "analysis" | "diagram" | "director") => {
+  const toggle = (key: string, pt: "analysis" | "diagram" | "director" | "prompt") => {
     if (expanded === key && panel === pt) { setExpanded(null); return; }
     setExpanded(key); setPanel(pt);
   };
@@ -486,6 +486,7 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                         <button onClick={() => toggle(key, "analysis")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "analysis" ? "chip-accent" : ""}`}>分析</button>
                         <button onClick={() => toggle(key, "diagram")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
                         <button onClick={() => toggle(key, "director")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                        <button onClick={() => toggle(key, "prompt")} className={`chip !text-[10.5px] cursor-pointer ${open && panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
                         <a href={r.url} target="_blank" className="chip !text-[10.5px]">GitHub</a>
                       </div>
                     </div>
@@ -495,6 +496,7 @@ function GroupedByCategory({ seedPool, livePool }: { seedPool: Project[]; livePo
                           <button onClick={() => toggle(key, "analysis")} className={`chip cursor-pointer ${panel === "analysis" ? "chip-accent" : ""}`}>分析（源码抓取）</button>
                           <button onClick={() => toggle(key, "diagram")} className={`chip cursor-pointer ${panel === "diagram" ? "chip-accent" : ""}`}>产品框图</button>
                           <button onClick={() => toggle(key, "director")} className={`chip cursor-pointer ${panel === "director" ? "chip-accent" : ""}`}>产品总监视角</button>
+                          <button onClick={() => toggle(key, "prompt")} className={`chip cursor-pointer ${panel === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
                         </div>
                         <LiveSourcePanel repo={toLiveRepo(r)} mode={panel} />
                       </div>
