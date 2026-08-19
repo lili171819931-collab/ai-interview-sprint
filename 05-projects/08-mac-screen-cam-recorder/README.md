@@ -25,6 +25,18 @@
 
 ---
 
+## 📚 Documentation
+
+| Doc | Content |
+|---|---|
+| [Product Definition](./docs/product/PRODUCT-DEFINITION.md) | 定位 / 用户 / 痛点 / 功能地图 / 商业模式 / 竞品对比 |
+| [Architecture](./docs/architecture/ARCHITECTURE.md) | 分层架构 / 数据流 / 技术栈 / 设计规则 |
+| [Workflow](./docs/workflow/WORKFLOW.md) | 录制 / 时间线 / CLI / 元数据 schema / 测试流程 |
+| [Development](./docs/development/DEVELOPMENT.md) | 构建 / 签名 / 权限 / 添加功能 / 已知约束 |
+| [Project Intelligence](./docs/PROJECT-INTELLIGENCE.md) | 一页纸总览 / 差距分析 / P0-P3 优先级 |
+| [AI Teaching Studio Blueprint](./docs/AI-TEACHING-STUDIO-BLUEPRINT.md) | 开源竞品 Top 30 研究与 30 天开发蓝图 |
+| [CHANGELOG](./CHANGELOG.md) · [ROADMAP](./ROADMAP.md) · [CONTRIBUTING](./CONTRIBUTING.md) · [SECURITY](./SECURITY.md) | 变更 / 路线 / 贡献 / 安全 |
+
 ## ✨ Features
 
 ### Screen recording (ScreenCaptureKit)

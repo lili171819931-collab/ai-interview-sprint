@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [main, 'codex/**']
+  pull_request:
+
+jobs:
+  build-and-test:
+    name: Build + Unit Tests (macOS)
+    runs-on: macos-14
+    steps:
+      - uses: actions/checkout@v4
+      - name: Swift version
+        run: swift --version
+      - name: Build
+        run: swift build
+        working-directory: 05-projects/08-mac-screen-cam-recorder
+      - name: Unit tests
+        run: swift run AITRCoreUnitTests
+        working-directory: 05-projects/08-mac-screen-cam-recorder
+      - name: Release app bundle
+        run: |
+          swift build -c release --product AITeachingRecorder
+          mkdir -p dist/"AI Teaching Recorder.app"/Contents/MacOS
+          cp "$(swift build -c release --show-bin-path)/AITeachingRecorder" dist/"AI Teaching Recorder.app"/Contents/MacOS/
+        working-directory: 05-projects/08-mac-screen-cam-recorder
