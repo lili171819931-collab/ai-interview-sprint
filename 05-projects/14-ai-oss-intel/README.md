@@ -172,6 +172,7 @@ Next.js App Router UI (Server Components + 少量 Client Components)
 | [`docs/demo/03-mainline-workflow.png`](docs/demo/03-mainline-workflow.png) | 技术路线主线 · 「WORKFLOW」节点展开 |
 | [`docs/demo/04-panorama-expanded.png`](docs/demo/04-panorama-expanded.png) | 产品全景图 · 「USER」节点展开 |
 | [`docs/demo/05-panorama-workflow.png`](docs/demo/05-panorama-workflow.png) | 产品全景图 · 「WORKFLOW」节点展开 |
+| 🧑‍⚖️ 行业专家实战报告 | 每个项目新增独立「专家实战」动作：行业专家联合评审（按领域自动切换身份）+ 27 节业务向专家报告（行业背景/真实客户画像/业务场景/案例推演/JTBD/痛点 P0-P2/替代方案/价值链/核心价值/商业 ROI/付费意愿/功能价值排序/AI·Agent·Workflow 机会/竞争/开源商业化/机会矩阵/专家重设计/MVP/验证/商业化/一页纸结论/“真正解决的是什么”最终判断） |
 | 🤖 AI AGENT 拆解驾驶舱 | 每个项目新增两层独立分析：REPORT A · AI AGENT PRODUCT DIRECTOR REPORT（24 节，Agent 必要性矩阵/职责边界/自主等级/人在回路/Memory/Agent 2.0）+ REPORT B · WORKFLOW REVERSE ENGINEERING REPORT（26 节，完整 Workflow/失败路径/成本/延迟/优化/Workflow 2.0）+ 可点击 AI AGENT MASTER MAP + 「一键自媒体拆解」入口 |
 | ⚡ 项目 Prompt 展示/复制 | 实时（源码驱动）项目分析面板新增 Prompt 展示与复制（完整 Master Prompt）；已收录项目有独立 /prompt 页 |
 | 💡 产品自问答案 | 产品全景图 / 技术路线主线 / 总监全景图的每个节点展开后，自问问题均附带项目专属答案（用户/护城河/数据/增长/时机/开源等，源码驱动版带 Evidence） |

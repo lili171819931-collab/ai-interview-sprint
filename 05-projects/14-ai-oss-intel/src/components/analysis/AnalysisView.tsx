@@ -16,6 +16,7 @@ import { buildCompleteChain, buildTechRouteMainline } from "@/lib/master";
 import { buildSourceCompleteChain, buildSourceTechRouteMainline } from "@/lib/sourceMaster";
 import { buildDirectorReport, buildSourceDirectorReport } from "@/lib/director";
 import { buildAgentDirectorReport, buildWorkflowReport, buildAgentMasterMap, buildSourceAgentDirectorReport, buildSourceWorkflowReport, buildSourceAgentMasterMap } from "@/lib/agent";
+import { buildExpertReport, buildExpertOnePager, buildExpertFinalJudgment, buildSourceExpertReport, expertIdentity } from "@/lib/expert";
 import { buildProjectReportMarkdown, buildSourceReportMarkdown } from "@/lib/report";
 import { buildProjectPrompt, buildSourceProjectPrompt } from "@/lib/prompt";
 import { ReportActions } from "@/components/ReportActions";
@@ -444,7 +445,7 @@ export function SourceDirectorView({ repo, intel }: { repo: LiveRepo; intel: Sou
 }
 
 /* ── Live（实时项目）源码深度分析 ─────────────────────────────── */
-export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" | "agent" | "prompt" }) {
+export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt" }) {
   const [intel, setIntel] = useState<SourceIntel | null>(() => getCachedSource(repo.fullName));
   const [loading, setLoading] = useState(false);
   const [step, setStep] = useState("");
@@ -499,6 +500,7 @@ export function LiveSourcePanel({ repo, mode }: { repo: LiveRepo; mode: "analysi
   if (mode === "diagram") return <LiveSourceDiagram repo={repo} intel={intel} />;
   if (mode === "director") return <SourceDirectorView repo={repo} intel={intel} />;
   if (mode === "agent") return <SourceAgentCockpit repo={repo} intel={intel} />;
+  if (mode === "expert") return <SourceExpertCockpit repo={repo} intel={intel} />;
   return <LivePromptView repo={repo} intel={intel} />;
 }
 
@@ -816,5 +818,74 @@ function AgentReportBlock({ title, color, sections }: { title: string; color: st
         ))}
       </div>
     </details>
+  );
+}
+
+
+/* ── 行业专家实战报告（独立动作面板） ───────────────────────────── */
+export function ExpertCockpit({ project }: { project: Project }) {
+  const onePager = buildExpertOnePager(project);
+  const final = buildExpertFinalJudgment(project);
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
+        <span className="text-[12px] font-bold text-white">🧑‍⚖️ 行业专家实战报告</span>
+        <span className="chip chip-accent ml-auto">{expertIdentity(project).length} 位专家联合评审</span>
+      </div>
+
+      {/* 最终判断 */}
+      <div className="rounded-xl bg-[#0c1322] border border-[#fbbf24]/30 p-4">
+        <div className="text-[12px] font-bold text-[#fbbf24] mb-2">🎯 “真正解决的是什么” 最终判断</div>
+        <div className="text-[13.5px] text-[#cfe0ff] leading-relaxed">{final.surface}，{final.deep}。</div>
+        <div className="text-[12.5px] text-[#aab6cd] mt-1">{final.opportunity}</div>
+      </div>
+
+      {/* 一页纸结论 */}
+      <div className="rounded-xl bg-[#0c1322] border border-[#16213a] p-4">
+        <div className="text-[12px] font-bold text-[#7dd3fc] mb-3">📄 专家一页纸结论</div>
+        <div className="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 gap-2">
+          {onePager.map((x) => (
+            <div key={x.label} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2 text-center">
+              <div className="text-[10px] text-[#8b98b3]">{x.label}</div>
+              <div className="text-[13px] text-amber-300 mt-0.5">{"★".repeat(x.stars)}<span className="text-[#33415e]">{"★".repeat(5 - x.stars)}</span></div>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* 27 节报告 */}
+      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+        <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#34d399]">行业专家实战报告 · 27 节（展开）</summary>
+        <div className="px-3 pb-3 space-y-1.5">
+          {buildExpertReport(project).map((sec) => (
+            <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+              <div className="text-[11px] font-bold text-[#34d399]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+              <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+            </div>
+          ))}
+        </div>
+      </details>
+    </div>
+  );
+}
+
+export function SourceExpertCockpit({ repo, intel }: { repo: LiveRepo; intel: SourceIntel }) {
+  return (
+    <div className="space-y-4">
+      <div className="flex flex-wrap items-center gap-2 rounded-xl bg-[#101a2e] border border-[#2c4370] p-2.5">
+        <span className="text-[12px] font-bold text-white">🧑‍⚖️ 行业专家实战报告（源码驱动）</span>
+      </div>
+      <details className="rounded-xl bg-[#0c1322] border border-[#16213a]" open={false}>
+        <summary className="cursor-pointer px-3 py-2.5 text-[12px] font-bold text-[#34d399]">行业专家实战报告 · 27 节（展开）</summary>
+        <div className="px-3 pb-3 space-y-1.5">
+          {buildSourceExpertReport(repo, intel).map((sec) => (
+            <div key={sec.n} className="rounded-lg bg-[#101a2e] border border-[#16213a] p-2">
+              <div className="text-[11px] font-bold text-[#34d399]">{String(sec.n).padStart(2, "0")} · {sec.title}</div>
+              <div className="text-[11.5px] text-[#aab6cd] leading-relaxed mt-0.5">{sec.body}</div>
+            </div>
+          ))}
+        </div>
+      </details>
+    </div>
   );
 }

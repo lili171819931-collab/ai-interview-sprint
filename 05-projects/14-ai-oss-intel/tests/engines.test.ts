@@ -320,3 +320,16 @@ assert(mm.length >= 15 && mm.every((n) => n.answers.length === n.questions.lengt
 assert(buildSourceAgentDirectorReport(fakeRepo, srcIntel).length === 24, "agent: source Report A");
 assert(buildSourceWorkflowReport(fakeRepo, srcIntel).length === 26, "agent: source Report B");
 assert(buildSourceAgentMasterMap(fakeRepo, srcIntel).length >= 10, "agent: source master map");
+
+/* ── 行业专家实战报告 tests ───────────────────────────────────────────── */
+import { buildExpertReport, buildExpertOnePager, buildExpertFinalJudgment, buildSourceExpertReport, expertIdentity } from "../src/lib/expert";
+
+const exp = buildExpertReport(sample);
+assert(exp.length === 27, "expert: 27 sections");
+assert(exp[1].title.includes("专家身份") && exp[26].title.includes("最终判断"), "expert: first/last");
+assert(expertIdentity(sample).length >= 4, "expert: identity auto-switch");
+const onePager = buildExpertOnePager(sample);
+assert(onePager.length === 14 && onePager.every((x) => x.stars >= 0 && x.stars <= 5), "expert: one-pager 14 dims");
+const fj = buildExpertFinalJudgment(sample);
+assert(fj.deep.includes("而是") && fj.opportunity.length > 0, "expert: final judgment");
+assert(buildSourceExpertReport(fakeRepo, srcIntel).length === 27, "expert: source report");

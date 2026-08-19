@@ -6,7 +6,7 @@ import { PROJECTS } from "@/data/projects";
 import { computeScores, formatPct, formatSigned, formatStars, growthRate } from "@/lib/engines";
 import { timeStatusOf, TIME_STATUS_META } from "@/lib/scenarios";
 import { categoryOf } from "@/lib/categories";
-import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, SourceAgentCockpit } from "@/components/analysis/AnalysisView";
+import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, SourceAgentCockpit, ExpertCockpit, SourceExpertCockpit } from "@/components/analysis/AnalysisView";
 import { loadLive, liveStatus, starsPerDay, type LiveRepo, type LiveState } from "@/lib/live";
 import { getAddedProjects } from "@/lib/db";
 import { guessCategoryFromRepo } from "@/lib/categorize";
@@ -26,7 +26,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
   const [live, setLive] = useState<LiveState | null>(null);
   const [loading, setLoading] = useState(true);
   const [expandedKey, setExpandedKey] = useState<string | null>(null);
-  const [panelTab, setPanelTab] = useState<"analysis" | "diagram" | "director" | "agent" | "prompt">("analysis");
+  const [panelTab, setPanelTab] = useState<"analysis" | "diagram" | "director" | "agent" | "expert" | "prompt">("analysis");
 
   const load = useCallback(async (f: boolean) => {
     setLoading(true);
@@ -53,7 +53,7 @@ export function CategoryBoard({ id }: { id: CategoryId }) {
   const growthSeed = [...seed].sort((a, b) => b.growth90d - a.growth90d);
   const liveOn = !!live && live.source !== "seed" && live.repos.length > 0;
 
-  const toggle = (key: string, pt: "analysis" | "diagram" | "director" | "agent" | "prompt") => {
+  const toggle = (key: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => {
     if (expandedKey === key && panelTab === pt) { setExpandedKey(null); return; }
     setExpandedKey(key); setPanelTab(pt);
   };
@@ -166,8 +166,8 @@ function StatusChip({ status }: { status: "2026NEW" | "2026ACTIVE" | "2026RELEVA
 }
 
 function Actions({ seed, repo, expandedKey, panelTab, onToggle }: {
-  seed?: Project; repo?: LiveRepo; expandedKey: string | null; panelTab: "analysis" | "diagram" | "director" | "agent" | "prompt";
-  onToggle: (key: string, pt: "analysis" | "diagram" | "director" | "agent" | "prompt") => void;
+  seed?: Project; repo?: LiveRepo; expandedKey: string | null; panelTab: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt";
+  onToggle: (key: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => void;
 }) {
   const key = seed ? `seed:${seed.slug}` : `live:${repo!.fullName}`;
   const isOpen = expandedKey === key;
@@ -178,6 +178,9 @@ function Actions({ seed, repo, expandedKey, panelTab, onToggle }: {
       </button>
       <button onClick={() => onToggle(key, "diagram")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "diagram" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <Boxes size={11} /> 产品框图
+      </button>
+      <button onClick={() => onToggle(key, "expert")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "expert" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
+        <UserRoundCheck size={11} /> 专家实战
       </button>
       <button onClick={() => onToggle(key, "agent")} className={`chip !text-[11px] cursor-pointer ${isOpen && panelTab === "agent" ? "chip-accent" : "hover:!text-[#7dd3fc]"}`}>
         <Bot size={11} /> Agent 拆解
@@ -198,7 +201,7 @@ function Actions({ seed, repo, expandedKey, panelTab, onToggle }: {
 
 function SeedRow({ p, s, rank, color, expandedKey, panelTab, onToggle, columns }: {
   p: Project; s: ReturnType<typeof computeScores>; rank: number; color: string;
-  expandedKey: string | null; panelTab: "analysis" | "diagram" | "director" | "agent" | "prompt"; onToggle: (k: string, pt: "analysis" | "diagram" | "director" | "agent" | "prompt") => void;
+  expandedKey: string | null; panelTab: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt"; onToggle: (k: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => void;
   columns: React.ReactNode;
 }) {
   const ts = timeStatusOf(p);
@@ -231,7 +234,7 @@ function SeedRow({ p, s, rank, color, expandedKey, panelTab, onToggle, columns }
 
 function LiveRow({ repo, rank, color, expandedKey, panelTab, onToggle, columns }: {
   repo: LiveRepo; rank: number; color: string;
-  expandedKey: string | null; panelTab: "analysis" | "diagram" | "director" | "agent" | "prompt"; onToggle: (k: string, pt: "analysis" | "diagram" | "director" | "agent" | "prompt") => void;
+  expandedKey: string | null; panelTab: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt"; onToggle: (k: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => void;
   columns: React.ReactNode;
 }) {
   const status = liveStatus(repo);
@@ -262,8 +265,8 @@ function LiveRow({ repo, rank, color, expandedKey, panelTab, onToggle, columns }
 
 function ExpandPanel({ seed, repo, panelTab, onTab }: {
   seed?: Project; repo?: LiveRepo;
-  panelTab: "analysis" | "diagram" | "director" | "agent" | "prompt";
-  onTab: (k: string, pt: "analysis" | "diagram" | "director" | "agent" | "prompt") => void;
+  panelTab: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt";
+  onTab: (k: string, pt: "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt") => void;
 }) {
   const key = seed ? `seed:${seed.slug}` : `live:${repo!.fullName}`;
   return (
@@ -271,6 +274,7 @@ function ExpandPanel({ seed, repo, panelTab, onTab }: {
       <div className="flex flex-wrap gap-1.5 mb-3">
         <button onClick={() => onTab(key, "analysis")} className={`chip cursor-pointer ${panelTab === "analysis" ? "chip-accent" : ""}`}><FileText size={11} /> 分析（完整逆向工程）</button>
         <button onClick={() => onTab(key, "diagram")} className={`chip cursor-pointer ${panelTab === "diagram" ? "chip-accent" : ""}`}><Boxes size={11} /> 产品框图（功能实现路径）</button>
+        <button onClick={() => onTab(key, "expert")} className={`chip cursor-pointer ${panelTab === "expert" ? "chip-accent" : ""}`}><UserRoundCheck size={11} /> 专家实战</button>
         <button onClick={() => onTab(key, "agent")} className={`chip cursor-pointer ${panelTab === "agent" ? "chip-accent" : ""}`}><Bot size={11} /> Agent 拆解</button>
         <button onClick={() => onTab(key, "director")} className={`chip cursor-pointer ${panelTab === "director" ? "chip-accent" : ""}`}><UserRoundCheck size={11} /> 产品总监视角</button>
         {seed ? (
@@ -284,6 +288,7 @@ function ExpandPanel({ seed, repo, panelTab, onTab }: {
         panelTab === "diagram" ? <FeaturePathDiagram project={seed} /> :
         panelTab === "director" ? <DirectorView project={seed} /> :
         panelTab === "agent" ? <AgentCockpit project={seed} /> :
+        panelTab === "expert" ? <ExpertCockpit project={seed} /> :
         <Link href={`/projects/${seed.slug}/prompt`} className="chip chip-accent">打开「项目全部 Prompt」页 →</Link>
       ) : (
         <LiveSourcePanel repo={repo!} mode={panelTab} />

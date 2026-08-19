@@ -10,12 +10,12 @@ import { addProject } from "@/lib/db";
 import { buildSourceReportMarkdown, buildProjectReportMarkdown } from "@/lib/report";
 import { buildProjectPrompt } from "@/lib/prompt";
 import { useState as usePromptState } from "react";
-import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit } from "@/components/analysis/AnalysisView";
+import { MasterAnalysis, FeaturePathDiagram, DirectorView, LiveSourcePanel, AgentCockpit, ExpertCockpit } from "@/components/analysis/AnalysisView";
 import { ReportActions } from "@/components/ReportActions";
 import type { LiveRepo } from "@/lib/live";
 import type { Project } from "@/lib/types";
 
-type Tab = "analysis" | "diagram" | "director" | "agent" | "prompt" | "report";
+type Tab = "analysis" | "diagram" | "director" | "agent" | "expert" | "prompt" | "report";
 
 export default function AddProjectPage() {
   const [input, setInput] = useState("");
@@ -129,6 +129,7 @@ export default function AddProjectPage() {
             <button onClick={() => setTab("diagram")} className={`chip cursor-pointer ${tab === "diagram" ? "chip-accent" : ""}`}><Boxes size={12} /> 产品框图</button>
             <button onClick={() => setTab("director")} className={`chip cursor-pointer ${tab === "director" ? "chip-accent" : ""}`}><UserRoundCheck size={12} /> 产品总监视角</button>
             <button onClick={() => setTab("agent")} className={`chip cursor-pointer ${tab === "agent" ? "chip-accent" : ""}`}>🤖 Agent 拆解</button>
+            <button onClick={() => setTab("expert")} className={`chip cursor-pointer ${tab === "expert" ? "chip-accent" : ""}`}>🧑‍⚖️ 专家实战</button>
             <button onClick={() => setTab("prompt")} className={`chip cursor-pointer ${tab === "prompt" ? "chip-accent" : ""}`}>⚡ Prompt</button>
             <button onClick={() => setTab("report")} className={`chip cursor-pointer ${tab === "report" ? "chip-accent" : ""}`}><Database size={12} /> 完整报告</button>
             <div className="ml-auto">
@@ -141,6 +142,7 @@ export default function AddProjectPage() {
             {tab === "diagram" && (result.seed ? <FeaturePathDiagram project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="diagram" />)}
             {tab === "director" && (result.seed ? <DirectorView project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="director" />)}
             {tab === "agent" && (result.seed ? <AgentCockpit project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="agent" />)}
+            {tab === "expert" && (result.seed ? <ExpertCockpit project={result.seed} /> : <LiveSourcePanel repo={result.repo} mode="expert" />)}
             {tab === "prompt" && (result.seed ? (
               <div>
                 <div className="text-[12px] font-bold text-white mb-2">⚡ 项目 Prompt（展示与复制）</div>
