@@ -14,7 +14,6 @@ struct HomeView: View {
     @State private var selectedWindowID: CGWindowID?
     @State private var region: CGRect?
     @State private var permissions = PermissionsManager.shared.readiness()
-    @State private var showSettings = false
     @State private var screenGrantedAtLaunch = UserDefaults.standard.bool(forKey: "aitr.screenGrantedAtLaunch")
 
     var body: some View {
@@ -56,7 +55,6 @@ struct HomeView: View {
         .onReceive(NotificationCenter.default.publisher(for: .permissionsChanged)) { _ in
             refreshPermissions()
         }
-        .sheet(isPresented: $showSettings) { SettingsView() }
     }
 
     // MARK: Header
@@ -85,7 +83,7 @@ struct HomeView: View {
                 .help("Start recording (⌘⇧R)")
             }
             Button {
-                showSettings = true
+                (NSApp.delegate as? AppDelegate)?.showSettingsWindow()
             } label: {
                 Image(systemName: "gearshape.fill")
                     .font(.system(size: 15))

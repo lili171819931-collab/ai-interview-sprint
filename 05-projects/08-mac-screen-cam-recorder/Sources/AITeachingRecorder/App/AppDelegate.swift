@@ -5,9 +5,11 @@ import AITeachingRecorderCore
 final class AppDelegate: NSObject, NSApplicationDelegate {
     static let controlBarTitle = "AITR-ControlBar"
     static let cameraPanelTitle = "AITR-CameraPreview"
+    static let settingsWindowTitle = "AI Teaching Recorder Settings"
 
     private var controlBarPanel: NSPanel?
     private var cameraPanel: NSPanel?
+    private var settingsWindow: NSWindow?
     private var regionPicker: RegionPickerController?
     private(set) var annotationController = AnnotationController()
     private var countdownPanel: NSPanel?
@@ -149,6 +151,26 @@ final class AppDelegate: NSObject, NSApplicationDelegate {
             ids.append(CGWindowID(teleprompterID))
         }
         return ids
+    }
+
+    // MARK: - Settings window (titled: close / minimize / zoom)
+
+    func showSettingsWindow() {
+        if settingsWindow == nil {
+            let hosting = NSHostingView(rootView: SettingsView())
+            let window = NSWindow(contentRect: NSRect(x: 0, y: 0, width: 720, height: 640),
+                                  styleMask: [.titled, .closable, .miniaturizable, .resizable],
+                                  backing: .buffered,
+                                  defer: false)
+            window.title = Self.settingsWindowTitle
+            window.isReleasedWhenClosed = false
+            window.contentView = hosting
+            window.setContentSize(NSSize(width: 720, height: 640))
+            window.center()
+            settingsWindow = window
+        }
+        settingsWindow?.makeKeyAndOrderFront(nil)
+        NSApp.activate(ignoringOtherApps: true)
     }
 
     // MARK: - Teleprompter
