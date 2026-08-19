@@ -3,7 +3,7 @@ import { randomUUID } from "node:crypto";
 export type Json = Record<string, unknown>;
 
 export type SkillStatus = "draft" | "testing" | "active" | "deprecated" | "archived";
-export type ExecutionType = "local" | "api" | "cli" | "mcp" | "webhook" | "composite" | "echo" | "http";
+export type ExecutionType = "local" | "api" | "cli" | "mcp" | "webhook" | "composite" | "echo" | "http" | "knowledge";
 export type RiskLevel = "low" | "medium" | "high" | "critical";
 export type HealthStatus = "healthy" | "degraded" | "down" | "unknown";
 export type ExecutionStatus = "queued" | "running" | "completed" | "failed" | "cancelled" | "awaiting_approval";
@@ -60,9 +60,11 @@ export interface TagRow {
   usage_count: number;
 }
 
-export interface SkillDetail extends SkillRow {
+export interface SkillDetail extends Omit<SkillRow, "use_cases" | "examples"> {
   category: CategoryRow | null;
   tags: string[];
+  use_cases: string[];
+  examples: string[];
   permissions_list: string[];
   dependencies_list: { name: string; kind: string; version_constraint: string | null }[];
 }

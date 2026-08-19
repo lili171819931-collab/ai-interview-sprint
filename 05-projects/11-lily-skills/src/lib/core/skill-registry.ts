@@ -174,6 +174,8 @@ export function toDetail(db: Db, row: SkillRow): SkillDetail {
     ...row,
     category: category ?? null,
     tags,
+    use_cases: parseJson<string[]>(row.use_cases, []),
+    examples: parseJson<string[]>(row.examples, []),
     permissions_list: [...new Set([...permissions_list, ...parseJson<string[]>(row.permissions, [])])],
     dependencies_list,
   };

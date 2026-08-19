@@ -1,0 +1,32 @@
+name: AI Radar hourly refresh
+
+on:
+  schedule:
+    - cron: "0 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: 05-projects/07-ai-radar-dashboard
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: npm ci
+      - run: npm run aihot:sync
+        env:
+          AIHOT_SKIP: "0"
+      - run: |
+          git config user.name "ai-radar-bot"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add 05-projects/07-ai-radar-dashboard/data/aihot
+          git diff --cached --quiet || git commit -m "chore(radar): hourly aihot snapshot"
+          git push
+        working-directory: .

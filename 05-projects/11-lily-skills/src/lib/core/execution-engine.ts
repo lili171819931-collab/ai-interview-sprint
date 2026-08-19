@@ -9,6 +9,7 @@ import { executeEchoSkill } from "./adapters/echo-adapter";
 import { executeHttpSkill } from "./adapters/http-adapter";
 import { executeCliSkill } from "./adapters/cli-adapter";
 import { executeCompositeSkill } from "./adapters/composite-adapter";
+import { executeKnowledgeSkill } from "./adapters/knowledge-adapter";
 
 export interface ExecuteParams {
   skillId: string;
@@ -122,6 +123,8 @@ export class ExecutionEngine {
         return executeHttpSkill(skill, input, ctx);
       case "cli":
         return executeCliSkill(skill, input, ctx);
+      case "knowledge":
+        return executeKnowledgeSkill(skill, input, ctx);
       case "composite":
         return executeCompositeSkill(skill, input, ctx, async (subId, subInput) => {
           const sub = await this.execute({ skillId: subId, input: subInput, trigger: "composite", skipApproval: true });

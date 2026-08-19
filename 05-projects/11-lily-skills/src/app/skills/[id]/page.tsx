@@ -1,6 +1,6 @@
 "use client";
 
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams } from "next/navigation";
 import Link from "next/link";
 import { Play, Star, ArrowLeft, ShieldCheck, Clock } from "lucide-react";
@@ -47,6 +47,8 @@ interface Execution {
 
 function DetailContent() {
   const params = useParams<{ id: string }>();
+  const search = useSearchParams();
+  const autoRan = useRef(false);
   const { t } = useI18n();
   const [skill, setSkill] = useState<SkillDetail | null>(null);
   const [inputs, setInputs] = useState<Record<string, string>>({});
@@ -72,13 +74,12 @@ function DetailContent() {
   }, [params.id, t]);
 
   useEffect(() => {
-    if (skill) {
-      api<{ skill: SkillDetail }>(`/api/skills/${params.id}`).then((d) => setSkill(d.skill));
+    if (skill?.name) {
       api<{ results: { skill: { id: string; name: string; icon: string | null } }[] }>(`/api/search?q=${encodeURIComponent(skill.name)}&limit=4`)
         .then((d) => setRelated(d.results.filter((r) => r.skill.id !== skill.id).map((r) => r.skill)))
         .catch(() => {});
     }
-  }, [params.id, execution?.id, skill]);
+  }, [params.id, skill?.name]);
 
   const run = async (skipApproval = false) => {
     if (!skill) return;
@@ -105,6 +106,17 @@ function DetailContent() {
       setRunning(false);
     }
   };
+
+  // Auto-run when arriving from a Skill card's "运行" button (?run=1)
+  useEffect(() => {
+    if (!skill || search.get("run") !== "1" || autoRan.current) return;
+    const schema = JSON.parse(skill.input_schema || "{}");
+    const required = schema.required ?? [];
+    if (required.length === 0) {
+      autoRan.current = true;
+      void run(false);
+    }
+  }, [skill]);
 
   if (error && !skill) return <AppShell><div className="p-10 text-center text-sm text-muted">{error}</div></AppShell>;
   if (!skill) return <AppShell><div className="p-10 text-center text-sm text-muted">{t("common.loading")}</div></AppShell>;

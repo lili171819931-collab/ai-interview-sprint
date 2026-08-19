@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>CFBundleDevelopmentRegion</key>
+    <string>en</string>
+    <key>CFBundleExecutable</key>
+    <string>AITeachingRecorder</string>
+    <key>CFBundleIdentifier</key>
+    <string>com.liliyang.AITeachingRecorder</string>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
+    <key>CFBundleIconName</key>
+    <string>AppIcon</string>
+    <key>CFBundleInfoDictionaryVersion</key>
+    <string>6.0</string>
+    <key>CFBundleName</key>
+    <string>AI Teaching Recorder</string>
+    <key>CFBundleDisplayName</key>
+    <string>AI Teaching Recorder</string>
+    <key>CFBundlePackageType</key>
+    <string>APPL</string>
+    <key>CFBundleShortVersionString</key>
+    <string>1.0.0</string>
+    <key>CFBundleVersion</key>
+    <string>1</string>
+    <key>LSMinimumSystemVersion</key>
+    <string>14.0</string>
+    <key>LSApplicationCategoryType</key>
+    <string>public.app-category.video</string>
+    <key>NSHighResolutionCapable</key>
+    <true/>
+    <key>NSHumanReadableCopyright</key>
+    <string>© 2026 AI Teaching Recorder</string>
+    <key>NSCameraUsageDescription</key>
+    <string>AI Teaching Recorder uses your camera to show a live picture-in-picture overlay in your screen recordings.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>AI Teaching Recorder uses your microphone to record your voice alongside your screen.</string>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>AI Teaching Recorder opens System Settings so you can grant recording permissions.</string>
+</dict>
+</plist>

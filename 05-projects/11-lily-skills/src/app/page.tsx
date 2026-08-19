@@ -105,6 +105,20 @@ export default function DashboardPage() {
           <StatCard label={t("dash.stat_rec")} value={`${analytics?.recommendationAcceptanceRate ?? 0}%`} sub={t("dash.stat_rec_sub")} icon="🧠" />
         </div>
 
+        {/* Tutorial video */}
+        <div className="mt-8">
+          <SectionTitle sub={t("dash.tutorial_sub")}>{t("dash.tutorial")}</SectionTitle>
+          <Card className="overflow-hidden">
+            <video
+              src="/tutorial.mp4"
+              controls
+              preload="metadata"
+              playsInline
+              className="aspect-video w-full bg-black"
+            />
+          </Card>
+        </div>
+
         {/* Quick actions */}
         <div className="mt-8">
           <SectionTitle>{t("dash.quick")}</SectionTitle>

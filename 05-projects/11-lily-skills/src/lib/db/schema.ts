@@ -54,7 +54,7 @@ export function createSchema(db: Db): void {
     status          TEXT NOT NULL DEFAULT 'active'
                     CHECK (status IN ('draft','testing','active','deprecated','archived')),
     execution_type  TEXT NOT NULL DEFAULT 'local'
-                    CHECK (execution_type IN ('local','api','cli','mcp','webhook','composite','echo','http')),
+                    CHECK (execution_type IN ('local','api','cli','mcp','webhook','composite','echo','http','knowledge')),
     endpoint        TEXT,
     command         TEXT,
     input_schema    TEXT NOT NULL DEFAULT '{}',

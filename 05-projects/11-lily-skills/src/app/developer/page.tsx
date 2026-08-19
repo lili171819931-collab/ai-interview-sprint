@@ -1,7 +1,7 @@
 "use client";
 
 import { Suspense, useEffect, useState } from "react";
-import { Code2, FileJson, FlaskConical, RefreshCw, Rocket } from "lucide-react";
+import { Code2, FileJson, FlaskConical, RefreshCw, Rocket, GitBranch } from "lucide-react";
 import { AppShell } from "@/components/app-shell";
 import { Card, Button, Badge, Input, Select, Textarea, SectionTitle, StatusLabel, Spinner } from "@/components/ui";
 import { api } from "@/lib/client";
@@ -19,11 +19,13 @@ const EXEC_TYPES = [
 
 function DeveloperContent() {
   const { t } = useI18n();
-  const [tab, setTab] = useState<"create" | "import" | "test" | "scan">("create");
+  const [tab, setTab] = useState<"create" | "github" | "import" | "test" | "scan">("create");
   const [categories, setCategories] = useState<Category[]>([]);
   const [result, setResult] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
+  const [ghUrl, setGhUrl] = useState("");
+  const [ghResult, setGhResult] = useState<{ type: "collection" | "single"; count: number; skills: { name: string; category?: { name?: string } | null; execution_type?: string }[]; source?: { url?: string; language?: string | null; topics?: string[]; stars?: number | null } } | null>(null);
 
   // create form
   const [form, setForm] = useState({
@@ -80,9 +82,22 @@ function DeveloperContent() {
     } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
   };
 
+  const ghImport = async () => {
+    if (!ghUrl.trim() || busy) return;
+    setBusy(true); setError(null); setGhResult(null); setResult(null);
+    try {
+      const d = await api<{ type: "collection" | "single"; count: number; skills: { name: string; category?: { name?: string } | null; execution_type?: string }[]; source?: { url?: string; language?: string | null; topics?: string[]; stars?: number | null }; message?: string }>("/api/skills/import-skills", {
+        method: "POST", body: JSON.stringify({ url: ghUrl.trim() }),
+      });
+      setGhResult({ type: d.type, count: d.count, skills: d.skills, source: d.source });
+      setResult(d.message ?? "导入成功");
+    } catch (e) { setError((e as Error).message); } finally { setBusy(false); }
+  };
+
   const inputCls = "h-9 w-full rounded-lg border border-border2 bg-surface px-3 text-sm outline-none focus:border-accent/60";
   const tabs = [
     { key: "create" as const, labelKey: "dev.tab.create", icon: Code2 },
+    { key: "github" as const, labelKey: "dev.tab.github", icon: GitBranch },
     { key: "import" as const, labelKey: "dev.tab.import", icon: FileJson },
     { key: "test" as const, labelKey: "dev.tab.test", icon: FlaskConical },
     { key: "scan" as const, labelKey: "dev.tab.scan", icon: RefreshCw },
@@ -167,6 +182,52 @@ function DeveloperContent() {
               >{busy ? <Spinner className="h-3.5 w-3.5" /> : <FileJson className="h-4 w-4" />} {t("dev.import_btn")}</Button>
               {error && <span className="text-xs text-danger">{error}</span>}
             </div>
+            {result && <pre className="code mt-3 rounded-lg border border-accent2/30 bg-accent2/5 p-3 text-xs text-accent2">{result}</pre>}
+          </Card>
+        )}
+
+        {tab === "github" && (
+          <Card className="max-w-2xl p-5">
+            <SectionTitle sub={t("dev.github_sub")}>{t("dev.tab.github")}</SectionTitle>
+            <div className="rounded-lg border border-accent/25 bg-accent/5 p-3 text-xs text-muted">
+              {t("dev.github_hint")}
+            </div>
+            <div className="mt-3 grid gap-3 sm:grid-cols-2">
+              <div className="sm:col-span-2">
+                <label className="mb-1 block text-xs text-muted">{t("dev.github_url")}</label>
+                <Input value={ghUrl} onChange={(e) => setGhUrl(e.target.value)} placeholder={t("dev.github_url_ph")} className="font-mono" />
+              </div>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.github_name")}</label><Input placeholder="auto" className="text-subtle" disabled /></div>
+              <div><label className="mb-1 block text-xs text-muted">{t("dev.github_category")}</label><Input placeholder="auto" className="text-subtle" disabled /></div>
+            </div>
+            <div className="mt-4 flex items-center gap-2">
+              <Button onClick={ghImport} disabled={busy || !ghUrl.trim()}>
+                {busy ? <Spinner className="h-3.5 w-3.5" /> : <GitBranch className="h-4 w-4" />} {t("dev.github_import_btn")}
+              </Button>
+              {busy && <span className="text-xs text-muted">{t("dev.github_analyzing")}</span>}
+              {error && <span className="text-xs text-danger">{error}</span>}
+            </div>
+            {ghResult && (
+              <div className="mt-4 rounded-lg border border-accent2/30 bg-accent2/5 p-3 text-xs">
+                <div className="font-medium text-accent2">
+                  ✅ {ghResult.type === "collection" ? `${t("dev.github_import_btn")} · ${ghResult.count} Skills` : ghResult.skills[0]?.name}
+                </div>
+                {ghResult.type === "collection" ? (
+                  <div className="mt-2 flex max-h-40 flex-wrap gap-1.5 overflow-auto">
+                    {ghResult.skills.map((sk) => <Badge key={sk.name} tone="neutral">{sk.name}</Badge>)}
+                  </div>
+                ) : (
+                  <div className="mt-1 flex flex-wrap gap-1.5">
+                    {ghResult.skills[0]?.category?.name && <Badge tone="accent">{ghResult.skills[0].category.name}</Badge>}
+                    <Badge tone="info">{ghResult.skills[0]?.execution_type}</Badge>
+                    {ghResult.source?.language && <Badge tone="neutral">{ghResult.source.language}</Badge>}
+                    {ghResult.source?.topics?.slice(0, 4).map((tp) => <Badge key={tp}>{tp}</Badge>)}
+                  </div>
+                )}
+                {ghResult.source?.url && <div className="mt-1 code text-subtle">{ghResult.source.url} {ghResult.source.stars != null ? `⭐ ${ghResult.source.stars}` : ""}</div>}
+                <div className="mt-2 text-muted">→ {t("dev.github_sub")}</div>
+              </div>
+            )}
             {result && <pre className="code mt-3 rounded-lg border border-accent2/30 bg-accent2/5 p-3 text-xs text-accent2">{result}</pre>}
           </Card>
         )}
